@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quest Sessione</title>
+<meta name="theme-color" content="#0b0c14">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0c14; --bg2:#12141f; --card:#161926; --card2:#1d2131; --line:#262b3f;
+  --ink:#eef0f8; --mute:#8a90a8; --dim:#5a6079;
+  --geo:#a78bfa; --ana:#38bdf8; --fon:#4ade80; --mix:#fbbf24; --free:#64748b;
+  --xp:#facc15; --fire:#fb7185; --ok:#4ade80; --bad:#f43f5e;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;min-height:100vh;
+  background-image:radial-gradient(1200px 600px at 10% -10%,#1c1840 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0e2a3a 0%,transparent 55%);background-attachment:fixed}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 90px}
+
+/* header */
+.top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+.brand .logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,#7c3aed,#0ea5e9);box-shadow:0 0 24px #7c3aed55}
+.sync{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:99px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.sync.on i{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.sync.off i{background:var(--mix)}
+.spacer{flex:1}
+
+/* player bar */
+.player{display:grid;grid-template-columns:auto 1fr auto auto;gap:18px;align-items:center;background:linear-gradient(135deg,#1a1d2e,#141724);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:18px}
+.lvl{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;position:relative}
+.lvl svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.lvl b{font-size:22px;font-family:'JetBrains Mono',monospace}
+.rank{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute)}
+.rankname{font-size:20px;font-weight:700}
+.xpbar{height:10px;border-radius:99px;background:#0b0d16;overflow:hidden;margin-top:8px;border:1px solid var(--line)}
+.xpbar>div{height:100%;background:linear-gradient(90deg,#f59e0b,var(--xp));box-shadow:0 0 12px var(--xp);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.xptxt{font-size:12px;color:var(--mute);margin-top:6px}
+.stat{text-align:center;min-width:76px}
+.stat .v{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+.stat .k{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+.fire .v{color:var(--fire);text-shadow:0 0 16px #fb718566}
+.coins .v{color:var(--xp)}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin-bottom:18px;background:var(--bg2);padding:5px;border-radius:14px;border:1px solid var(--line);width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{padding:9px 16px;border-radius:10px;color:var(--mute);font-weight:600;font-size:14px;white-space:nowrap}
+.tabs button.act{background:var(--card2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.view{display:none}.view.act{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* grid */
+.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.h{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--mute);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* quest card */
+.quest{position:relative;overflow:hidden;padding:0}
+.quest .band{height:6px;background:var(--sc)}
+.quest .in{padding:20px 22px 22px}
+.qnav{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.qnav button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--mute)}
+.qnav button:hover{color:var(--ink);border-color:var(--dim)}
+.qnav .today{width:auto;padding:0 12px;font-size:13px}
+.qdate{font-size:13px;color:var(--mute)}
+.qtag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:99px;background:color-mix(in srgb,var(--sc) 16%,transparent);color:var(--sc);border:1px solid color-mix(in srgb,var(--sc) 35%,transparent)}
+.qtitle{font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.1;margin:12px 0 6px}
+.qmeta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-bottom:16px}
+.goal{background:var(--bg2);border:1px dashed var(--line);border-radius:14px;padding:12px 14px;font-size:15px;margin-bottom:16px}
+.goal small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+.tasks{display:flex;flex-direction:column;gap:10px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--line);text-align:left;width:100%;transition:transform .15s,border-color .2s,background .2s}
+.task:hover{border-color:var(--dim)}
+.task:active{transform:scale(.99)}
+.task .bx{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid var(--dim);display:grid;place-items:center;margin-top:1px;transition:all .2s}
+.task .t{font-size:14.5px;line-height:1.45}
+.task .t b{color:var(--sc);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;margin-right:4px}
+.task .xp{margin-left:auto;flex:none;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--xp);opacity:.7;padding-top:3px}
+.task.done{background:color-mix(in srgb,var(--sc) 9%,var(--card2));border-color:color-mix(in srgb,var(--sc) 40%,transparent)}
+.task.done .bx{background:var(--sc);border-color:var(--sc)}
+.task.done .bx:after{content:'✓';color:#0b0c14;font-weight:800;font-size:14px}
+.task.done .t{color:var(--mute);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--sc) 60%,transparent)}
+.task.done .xp{opacity:1}
+.task.goalt{border-style:dashed}
+.task.goalt .bx{border-radius:50%}
+.task.goalt.done .bx:after{content:'★'}
+.qprog{display:flex;align-items:center;gap:12px;margin:18px 0 6px}
+.qprog .bar{flex:1;height:8px;border-radius:99px;background:var(--bg2);overflow:hidden}
+.qprog .bar div{height:100%;background:var(--sc);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.qprog span{font-size:13px;color:var(--mute);font-family:'JetBrains Mono',monospace}
+.mats{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.mats a{display:flex;align-items:center;gap:10px;font-size:13.5px;text-decoration:none;padding:8px 10px;border-radius:10px;color:var(--mute)}
+.mats a:hover{background:var(--card2);color:var(--ink)}
+.mats a span{width:22px;height:22px;flex:none;border-radius:6px;display:grid;place-items:center;background:var(--card2);font-size:11px}
+details.more{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+details.more summary{cursor:pointer;font-size:13px;color:var(--mute);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+textarea,input,select{font:inherit;color:var(--ink);background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+textarea{min-height:70px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--dim)}
+.check{font-size:13px;color:var(--mute);margin-top:10px;line-height:1.5}
+.clear{margin-top:16px;padding:14px;border-radius:14px;text-align:center;font-weight:700;background:linear-gradient(135deg,color-mix(in srgb,var(--sc) 25%,transparent),transparent);border:1px solid color-mix(in srgb,var(--sc) 45%,transparent);display:none}
+.clear.show{display:block;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+
+/* bosses */
+.boss{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:10px;position:relative;overflow:hidden}
+.boss:last-child{margin-bottom:0}
+.boss .row{display:flex;align-items:center;gap:12px}
+.boss .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--c) 18%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.boss .nm{font-weight:700;font-size:15px}
+.boss .dt{font-size:12px;color:var(--mute)}
+.boss .cd{margin-left:auto;text-align:right}
+.boss .cd b{font-size:24px;font-family:'JetBrains Mono',monospace;color:var(--c);line-height:1}
+.boss .cd small{display:block;font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+.hp{margin-top:12px}
+.hp .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--mute);margin-bottom:5px}
+.hp .bar{height:9px;border-radius:99px;background:#0b0d16;overflow:hidden;border:1px solid var(--line)}
+.hp .bar div{height:100%;background:linear-gradient(90deg,var(--bad),#fb923c);transition:width .6s}
+.boss.dead{opacity:.6}.boss.dead .nm:after{content:' · sconfitto 🏆'}
+
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.mini div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.mini b{display:block;font-size:22px;font-family:'JetBrains Mono',monospace}
+.mini span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
+
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd{border-radius:12px;padding:8px 4px;text-align:center;background:var(--card2);border:1px solid var(--line);font-size:11px;color:var(--mute);cursor:pointer;position:relative}
+.wd b{display:block;font-size:16px;color:var(--ink);margin:2px 0}
+.wd .dot{width:6px;height:6px;border-radius:50%;margin:4px auto 0;background:var(--c)}
+.wd.done{background:color-mix(in srgb,var(--c) 18%,var(--card2));border-color:color-mix(in srgb,var(--c) 45%,transparent)}
+.wd.sel{outline:2px solid var(--ink);outline-offset:1px}
+.wd.miss:after{content:'';position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--bad)}
+
+/* map */
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-bottom:16px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.month{margin-bottom:22px}
+.month h3{font-size:14px;color:var(--mute);font-weight:600;margin-bottom:10px;text-transform:capitalize}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.cal .hd{font-size:10px;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:.1em}
+.tile{aspect-ratio:1/1;border-radius:12px;background:var(--card);border:1px solid var(--line);position:relative;cursor:pointer;padding:6px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s;overflow:hidden;min-width:0}
+.tile{border-top:3px solid color-mix(in srgb,var(--c) 65%,transparent)}
+.tile:hover{transform:translateY(-2px);border-color:var(--c)}
+.tile .n{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--mute)}
+.tile .s{font-size:9.5px;line-height:1.15;color:var(--mute);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tile:before{content:'';position:absolute;left:0;right:0;bottom:0;height:var(--p,0%);background:color-mix(in srgb,var(--c) 22%,transparent);transition:height .4s}
+.tile>*{position:relative}
+.tile.full{border-color:color-mix(in srgb,var(--c) 70%,transparent)}
+.tile.full .n{color:var(--c)}
+.tile.star:after{content:'★';position:absolute;top:5px;right:7px;color:var(--xp);font-size:12px}
+.tile.today{box-shadow:0 0 0 2px var(--ink),0 0 18px color-mix(in srgb,var(--c) 50%,transparent)}
+.tile.exam{background:linear-gradient(135deg,color-mix(in srgb,var(--c) 30%,var(--card)),var(--card))}
+.tile.exam .s{color:var(--ink);font-weight:700}
+.tile.miss .n{color:var(--bad)}
+.tile.empty{visibility:hidden}
+.tile.fut{opacity:.55}
+
+/* errors */
+.erradd{display:grid;grid-template-columns:180px 1fr auto;gap:10px;margin-bottom:16px}
+.btn{padding:10px 16px;border-radius:12px;background:var(--ink);color:var(--bg);font-weight:700;white-space:nowrap}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:6px 12px;border-radius:99px;font-size:12.5px;border:1px solid var(--line);color:var(--mute)}
+.chip.act{background:var(--card2);color:var(--ink);border-color:var(--dim)}
+.err{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--bad);margin-bottom:8px}
+.err.fixed{border-left-color:var(--ok);opacity:.55}
+.err.fixed .et{text-decoration:line-through}
+.err .et{font-size:14.5px;flex:1;line-height:1.45}
+.err .em{font-size:11px;color:var(--mute);margin-top:4px}
+.err button{font-size:12px;padding:6px 10px;border-radius:9px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.err button:hover{color:var(--ink)}
+.empty-st{text-align:center;color:var(--mute);padding:30px 10px;font-size:14px}
+
+/* achievements */
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ach div{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line);text-align:center;filter:grayscale(1);opacity:.4}
+.ach div.got{filter:none;opacity:1;border-color:color-mix(in srgb,var(--xp) 40%,transparent)}
+.ach .e{font-size:28px}
+.ach b{display:block;font-size:13px;margin-top:6px}
+.ach span{font-size:11px;color:var(--mute)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--card2);border:1px solid var(--line);padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;z-index:50;transition:transform .35s cubic-bezier(.2,1.4,.4,1);box-shadow:0 10px 40px #0008;max-width:calc(100% - 32px)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast .x{color:var(--xp);font-family:'JetBrains Mono',monospace}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
+.banner{background:color-mix(in srgb,var(--mix) 12%,var(--card));border:1px solid color-mix(in srgb,var(--mix) 40%,transparent);color:var(--ink);padding:12px 16px;border-radius:14px;font-size:13.5px;margin-bottom:16px;display:none;line-height:1.5}
+.banner.show{display:block}
+.banner code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0006;padding:2px 6px;border-radius:6px}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .player{grid-template-columns:auto 1fr;row-gap:14px}
+  .player .stats{grid-column:1/-1;display:flex;justify-content:space-around}
+}
+@media (max-width:560px){
+  .qtitle{font-size:24px}
+  .erradd{grid-template-columns:1fr}
+  .tile .s{display:none}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);width:100%}
+  .tabs button{padding:9px 4px;font-size:12.5px}
+  .cal{gap:4px}.tile{border-radius:9px;padding:4px}
+  .quest .in{padding:16px}
+}
+.stats{display:flex;gap:10px}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><div class="logo">⚔️</div>Quest Sessione</div>
+    <div class="spacer"></div>
+    <div class="sync" id="sync"><i></i><span>connessione…</span></div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="banner" id="catchup" style="border-color:color-mix(in srgb,var(--geo) 45%,transparent);background:color-mix(in srgb,var(--geo) 10%,var(--card))"></div>
+
+  <div class="player">
+    <div class="lvl" id="lvlRing"></div>
+    <div>
+      <div class="rank">Livello <span id="lvlN">1</span></div>
+      <div class="rankname" id="rankName">Matricola</div>
+      <div class="xpbar"><div id="xpFill" style="width:0"></div></div>
+      <div class="xptxt mono" id="xpTxt">0 / 150 XP</div>
+    </div>
+    <div class="stats">
+      <div class="stat fire"><div class="v" id="streak">0</div><div class="k">🔥 streak</div></div>
+      <div class="stat coins"><div class="v" id="xpTot">0</div><div class="k">⚡ XP totali</div></div>
+      <div class="stat"><div class="v" id="daysDone">0</div><div class="k">✅ giorni</div></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button data-v="oggi" class="act">🎯 Missione</button>
+    <button data-v="mappa">🗺️ Mappa</button>
+    <button data-v="errori">🟥 Errori</button>
+    <button data-v="trofei">🏆 Trofei</button>
+  </div>
+
+  <section class="view act" id="v-oggi">
+    <div class="grid">
+      <div class="card quest" id="quest"></div>
+      <div>
+        <div class="card" style="margin-bottom:18px">
+          <div class="h">👹 Boss finali</div>
+          <div id="bosses"></div>
+        </div>
+        <div class="card">
+          <div class="h">📅 Questa settimana</div>
+          <div class="week" id="week"></div>
+          <div class="mini">
+            <div><b id="mBack" style="color:var(--bad)">0</b><span>arretrati</span></div>
+            <div><b id="mErr" style="color:var(--fire)">0</b><span>errori aperti</span></div>
+            <div><b id="mLeft">0</b><span>giorni rimasti</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-mappa">
+    <div class="card">
+      <div class="legend">
+        <span style="--c:var(--geo)"><i></i>Geometria</span>
+        <span style="--c:var(--ana)"><i></i>Analisi</span>
+        <span style="--c:var(--fon)"><i></i>Fondamenti</span>
+        <span style="--c:var(--mix)"><i></i>Ripasso / misto</span>
+        <span style="--c:var(--free)"><i></i>Libero</span>
+        <span>★ obiettivo raggiunto</span>
+      </div>
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-errori">
+    <div class="card">
+      <div class="h">🟥 Errori in rosso — da rifare la domenica</div>
+      <div class="erradd">
+        <select id="eSub">
+          <option>Geometria</option><option>Analisi</option><option>Fondamenti</option>
+        </select>
+        <input id="eTxt" placeholder="Es. foglio 3 es. 4 — sbagliato il segno nel determinante" maxlength="400">
+        <button class="btn" id="eAdd">+ Aggiungi</button>
+      </div>
+      <div class="filters" id="eFil"></div>
+      <div id="eList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-trofei">
+    <div class="card">
+      <div class="h">🏆 Trofei</div>
+      <div class="ach" id="ach"></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="h">⚙️ Impostazioni</div>
+      <label style="font-size:13px;color:var(--mute);display:block;margin-bottom:6px">Data esame Fondamenti (quando esce su AlmaEsami)</label>
+      <div style="display:flex;gap:10px;max-width:380px"><input type="date" id="fonDate"><button class="btn ghost" id="fonSave">Salva</button></div>
+      <div style="margin-top:18px"><button class="btn ghost" id="markPast">✓ Segna tutti i giorni passati come fatti</button></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="days.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL='https://tifqyqysvvrmjiqdcqvi.supabase.co';
+const SB_KEY='sb_publishable_Q33mzOEyFrhogXcGxUby_g_FLCql7Yi';
+const XP_TASK=10, XP_GOAL=25, XP_CLEAR=15, XP_ERRFIX=5, XP_LVL=150;
+const RANKS=['Matricola','Apprendista','Studente','Secchione','Stratega','Veterano','Maestro','Leggenda','Semidio del 18'];
+const DAYS=window.DAYS;
+const byDate=Object.fromEntries(DAYS.map(d=>[d.date,d]));
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>{const z=new Date(d);z.setMinutes(z.getMinutes()-z.getTimezoneOffset());return z.toISOString().slice(0,10)};
+const TODAY=iso(new Date());
+const parseD=s=>new Date(s+'T12:00:00');
+const diffDays=(a,b)=>Math.round((parseD(b)-parseD(a))/864e5);
+const fmtLong=s=>parseD(s).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+
+function subj(d){
+  const s=(d.subject||'').toLowerCase(), t=(d.title||'').toLowerCase();
+  if(t.includes('libero')) return {k:'free',c:'var(--free)',n:'Giorno libero',e:'🎄'};
+  if(s.startsWith('geometria')) return {k:'geo',c:'var(--geo)',n:'Geometria e Algebra',e:'📐'};
+  if(s.startsWith('analisi matematica')) return {k:'ana',c:'var(--ana)',n:'Analisi Matematica',e:'∫'};
+  if(s.startsWith('fondamenti')) return {k:'fon',c:'var(--fon)',n:'Fondamenti di Informatica',e:'💻'};
+  return {k:'mix',c:'var(--mix)',n:d.subject&&d.subject!=='-'?d.subject:'Ripasso',e:'🔁'};
+}
+const isExam=d=>/^ESAME/i.test(d.title);
+
+/* ---------- state ---------- */
+const LS='quest-sessione-v1';
+let S={progress:{},errors:[],settings:{fon_date:''}};
+try{const r=JSON.parse(localStorage.getItem(LS));if(r)S=Object.assign(S,r)}catch(e){}
+const saveLocal=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
+const P=date=>S.progress[date]||(S.progress[date]={done:[],goal_ok:false,note:''});
+
+let sb=null, online=false;
+function setSync(state,msg){const el=$('#sync');el.className='sync '+state;el.querySelector('span').textContent=msg}
+async function initSB(){
+  try{
+    sb=window.supabase.createClient(SB_URL,SB_KEY);
+    const [p,e,st]=await Promise.all([
+      sb.from('studio_progress').select('*'),
+      sb.from('studio_errors').select('*').order('created_at',{ascending:false}),
+      sb.from('studio_settings').select('*')]);
+    if(p.error||e.error||st.error) throw (p.error||e.error||st.error);
+    const remoteDays=new Set();
+    p.data.forEach(r=>{remoteDays.add(r.day);S.progress[r.day]={done:r.done||[],goal_ok:r.goal_ok,note:r.note||''}});
+    // push local-only progress (made while offline)
+    const push=Object.entries(S.progress).filter(([d,v])=>!remoteDays.has(d)&&(v.done.length||v.goal_ok||v.note)).map(([d,v])=>({day:d,...v}));
+    if(push.length) await sb.from('studio_progress').upsert(push);
+    const remoteIds=new Set(e.data.map(x=>x.id));
+    const localOnly=S.errors.filter(x=>!remoteIds.has(x.id));
+    if(localOnly.length) await sb.from('studio_errors').upsert(localOnly);
+    S.errors=[...localOnly,...e.data];
+    st.data.forEach(r=>S.settings[r.key]=r.value);
+    online=true;setSync('on','sincronizzato');$('#banner').classList.remove('show');
+    saveLocal();renderAll();
+  }catch(err){
+    online=false;setSync('off','solo su questo dispositivo');
+    const b=$('#banner');
+    b.innerHTML='⚠️ Database non ancora pronto: i progressi vengono salvati solo su questo dispositivo. Apri Supabase → <b>SQL Editor</b>, incolla il contenuto di <code>supabase.sql</code> e premi <b>Run</b>. Poi ricarica la pagina: quello che hai fatto finora viene caricato in automatico.';
+    b.classList.add('show');
+    console.warn('Supabase:',err);
+  }
+}
+async function pushDay(date){
+  saveLocal();if(!online)return;
+  const v=P(date);
+  const {error}=await sb.from('studio_progress').upsert({day:date,done:v.done,goal_ok:v.goal_ok,note:v.note,updated_at:new Date().toISOString()});
+  if(error){setSync('off','errore di sync');console.warn(error)}
+}
+
+/* ---------- scoring ---------- */
+function dayXP(d){
+  const v=S.progress[d.date];if(!v)return 0;
+  let x=v.done.length*XP_TASK+(v.goal_ok?XP_GOAL:0);
+  if(d.tasks.length&&v.done.length>=d.tasks.length)x+=XP_CLEAR;
+  return x;
+}
+const isFree=d=>subj(d).k==='free'||/^0h|^-$/.test(d.time)&&!d.tasks.length;
+const dayFull=d=>{const v=S.progress[d.date];return !!v&&d.tasks.length>0&&v.done.length>=d.tasks.length};
+const dayPct=d=>{const v=S.progress[d.date];return d.tasks.length?Math.min(1,(v?v.done.length:0)/d.tasks.length):0};
+function totals(){
+  let xp=DAYS.reduce((a,d)=>a+dayXP(d),0)+S.errors.filter(e=>e.fixed).length*XP_ERRFIX;
+  const done=DAYS.filter(dayFull).length;
+  // streak: consecutive days back from today (today counts only if done; free days don't break)
+  let st=0;
+  const past=DAYS.filter(d=>d.date<=TODAY).reverse();
+  for(const d of past){
+    if(subj(d).k==='free'||isExam(d)){continue}
+    if(dayFull(d))st++;
+    else if(d.date===TODAY)continue;
+    else break;
+  }
+  const back=DAYS.filter(d=>d.date<TODAY&&!isExam(d)&&subj(d).k!=='free'&&!dayFull(d)).length;
+  return {xp,done,st,back};
+}
+function examDates(){
+  return [
+    {k:'geo',n:'Geometria e Algebra T',e:'📐',c:'var(--geo)',date:'2027-01-11',info:'ore 9:30 · Aula Magna Fisica'},
+    {k:'ana',n:'Analisi Matematica T-1',e:'∫',c:'var(--ana)',date:'2027-01-25',info:'ore 10:00'},
+    {k:'fon',n:'Fondamenti di Informatica T',e:'💻',c:'var(--fon)',date:S.settings.fon_date||'',info:S.settings.fon_date?'':'data da verificare su AlmaEsami'},
+  ];
+}
+
+/* ---------- render ---------- */
+let sel=byDate[TODAY]?TODAY:(TODAY<DAYS[0].date?DAYS[0].date:DAYS[DAYS.length-1].date);
+let eFilter='aperti';
+
+function renderPlayer(){
+  const t=totals();
+  const lvl=Math.floor(t.xp/XP_LVL)+1, into=t.xp%XP_LVL;
+  $('#lvlN').textContent=lvl;
+  $('#rankName').textContent=RANKS[Math.min(RANKS.length-1,Math.floor((lvl-1)/2))];
+  $('#xpFill').style.width=(into/XP_LVL*100)+'%';
+  $('#xpTxt').textContent=`${into} / ${XP_LVL} XP al livello ${lvl+1}`;
+  $('#streak').textContent=t.st;$('#xpTot').textContent=t.xp;$('#daysDone').textContent=t.done;
+  const C=2*Math.PI*28;
+  $('#lvlRing').innerHTML=`<svg viewBox="0 0 62 62"><circle cx="31" cy="31" r="28" fill="none" stroke="#262b3f" stroke-width="5"/><circle cx="31" cy="31" r="28" fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-into/XP_LVL)}" style="transition:stroke-dashoffset .6s"/><defs><linearGradient id="g"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#facc15"/></linearGradient></defs></svg><b>${lvl}</b>`;
+  $('#mBack').textContent=t.back;
+  $('#mErr').textContent=S.errors.filter(e=>!e.fixed).length;
+  $('#mLeft').textContent=Math.max(0,diffDays(TODAY,DAYS[DAYS.length-1].date));
+}
+
+function renderQuest(){
+  const d=byDate[sel], s=subj(d), v=P(sel);
+  const i=DAYS.indexOf(d);
+  const total=d.tasks.length;
+  const rel=sel===TODAY?'Oggi':(sel<TODAY?`${-diffDays(TODAY,sel)} giorni fa`:`tra ${diffDays(TODAY,sel)} giorni`);
+  const q=$('#quest');q.style.setProperty('--sc',s.c);
+  q.innerHTML=`<div class="band"></div><div class="in">
+    <div class="qnav">
+      <button id="qPrev" ${i===0?'disabled':''} aria-label="Giorno precedente">←</button>
+      <button id="qNext" ${i===DAYS.length-1?'disabled':''} aria-label="Giorno successivo">→</button>
+      ${sel!==TODAY&&byDate[TODAY]?'<button class="today" id="qToday">Torna a oggi</button>':''}
+      <div class="spacer"></div>
+      <div class="qdate">${esc(rel)} · <span style="text-transform:capitalize">${esc(fmtLong(sel))}</span></div>
+    </div>
+    <span class="qtag">${s.e} ${esc(s.n)}</span>
+    <div class="qtitle">${isExam(d)?'👹 ':''}${esc(d.title)}</div>
+    <div class="qmeta"><span>🗓️ Livello ${d.n} di ${DAYS.length}</span>${d.time&&d.time!=='-'?`<span>⏱️ ${esc(d.time)}</span>`:''}<span class="mono">⚡ ${dayXP(d)} / ${total*XP_TASK+XP_GOAL+(total?XP_CLEAR:0)} XP</span></div>
+    ${d.goal&&d.goal!=='-'?`<div class="goal"><small>Obiettivo</small>${esc(d.goal)}</div>`:''}
+    <div class="tasks">
+      ${d.tasks.map((t,k)=>{const m=t.match(/^([^-]+?)\s+-\s+(.*)$/);const head=m&&m[1].length<22?`<b>${esc(m[1])}</b>${esc(m[2])}`:esc(t);
+        return `<button class="task ${v.done.includes(k)?'done':''}" data-k="${k}"><span class="bx"></span><span class="t">${head}</span><span class="xp">+${XP_TASK}</span></button>`}).join('')}
+      ${d.check&&d.check!=='-'?`<button class="task goalt ${v.goal_ok?'done':''}" data-k="goal"><span class="bx"></span><span class="t"><b>BONUS</b>Obiettivo raggiunto: ${esc(d.check)}</span><span class="xp">+${XP_GOAL}</span></button>`:''}
+    </div>
+    <div class="qprog"><div class="bar"><div style="width:${dayPct(d)*100}%"></div></div><span>${v.done.length}/${total}</span></div>
+    <div class="clear ${dayFull(d)?'show':''}">🎉 Livello completato! +${XP_CLEAR} XP bonus</div>
+    ${d.mats.length?`<details class="more" open><summary>📚 Materiale (${d.mats.length}) — i PDF sono anche nella cartella del giorno</summary><div class="mats">${d.mats.map((m,k)=>m.u?`<a href="${esc(m.u)}" target="_blank" rel="noopener"><span>${k+1}</span>${esc(m.n)}</a>`:`<a><span>${k+1}</span>${esc(m.n)}</a>`).join('')}</div></details>`:''}
+    <details class="more"><summary>📝 Note del giorno ${v.note?'•':''}</summary><textarea id="note" placeholder="Com'è andata? Cosa non ti è chiaro?" style="margin-top:10px">${esc(v.note)}</textarea></details>
+  </div>`;
+  $('#qPrev').onclick=()=>go(-1);$('#qNext').onclick=()=>go(1);
+  const qt=$('#qToday');if(qt)qt.onclick=()=>{sel=TODAY;renderOggi()};
+  q.querySelectorAll('.task').forEach(b=>b.onclick=e=>toggle(b.dataset.k,b));
+  let nt;$('#note').oninput=e=>{v.note=e.target.value;clearTimeout(nt);nt=setTimeout(()=>pushDay(sel),600)};
+}
+function go(dx){const i=DAYS.findIndex(d=>d.date===sel)+dx;if(DAYS[i]){sel=DAYS[i].date;renderOggi()}}
+
+function toggle(k,el){
+  const d=byDate[sel], v=P(sel), wasFull=dayFull(d);
+  let gain=0;
+  if(k==='goal'){v.goal_ok=!v.goal_ok;gain=v.goal_ok?XP_GOAL:-XP_GOAL}
+  else{k=+k;const j=v.done.indexOf(k);if(j>=0){v.done.splice(j,1);gain=-XP_TASK}else{v.done.push(k);gain=XP_TASK}}
+  const lvlBefore=Math.floor((totals().xp-gain)/XP_LVL);
+  const nowFull=dayFull(d);
+  if(nowFull&&!wasFull)gain+=XP_CLEAR;
+  pushDay(sel);
+  renderAll();
+  if(gain>0){
+    const r=el.getBoundingClientRect();burst(r.left+24,r.top+r.height/2,16,subj(d).c);
+    toast(`<span class="x">+${gain} XP</span> ${nowFull&&!wasFull?'· Livello completato! 🎉':k==='goal'?'· Obiettivo! ⭐':''}`);
+    if(nowFull&&!wasFull)confetti();
+    if(Math.floor(totals().xp/XP_LVL)>lvlBefore){setTimeout(()=>{confetti();toast(`⬆️ LEVEL UP! Ora sei livello <b>${Math.floor(totals().xp/XP_LVL)+1}</b>`)},700)}
+  }
+}
+
+function renderBosses(){
+  $('#bosses').innerHTML=examDates().map(b=>{
+    const days=DAYS.filter(d=>subj(d).k===b.k&&!isExam(d));
+    const doneN=days.filter(dayFull).length;
+    const hp=days.length?100-Math.round(doneN/days.length*100):100;
+    const left=b.date?diffDays(TODAY,b.date):null;
+    const dead=left!==null&&left<0;
+    return `<div class="boss ${dead?'dead':''}" style="--c:${b.c}">
+      <div class="row"><div class="ic">${b.e}</div><div><div class="nm">${esc(b.n)}</div><div class="dt">${b.date?esc(parseD(b.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})):'📅 ?'} ${b.info?'· '+esc(b.info):''}</div></div>
+      <div class="cd">${left===null?'<b>?</b><small>da fissare</small>':dead?'<b>✓</b><small>fatto</small>':`<b>${left}</b><small>${left===1?'giorno':'giorni'}</small>`}</div></div>
+      <div class="hp"><div class="lab"><span>HP boss</span><span class="mono">${doneN}/${days.length} livelli · ${hp}%</span></div><div class="bar"><div style="width:${hp}%"></div></div></div>
+    </div>`}).join('');
+}
+
+function renderWeek(){
+  const base=parseD(sel);const dow=(base.getDay()+6)%7;
+  const mon=new Date(base);mon.setDate(base.getDate()-dow);
+  let h='';
+  for(let i=0;i<7;i++){const dt=new Date(mon);dt.setDate(mon.getDate()+i);const ds=iso(dt);const d=byDate[ds];
+    if(!d){h+=`<div class="wd" style="opacity:.3">${dt.toLocaleDateString('it-IT',{weekday:'short'})}<b>${dt.getDate()}</b></div>`;continue}
+    const s=subj(d);const miss=ds<TODAY&&!dayFull(d)&&s.k!=='free'&&!isExam(d);
+    h+=`<div class="wd ${dayFull(d)?'done':''} ${ds===sel?'sel':''} ${miss?'miss':''}" style="--c:${s.c}" data-d="${ds}">${dt.toLocaleDateString('it-IT',{weekday:'short'})}<b>${dt.getDate()}</b><div class="dot"></div></div>`}
+  $('#week').innerHTML=h;
+  $('#week').querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{sel=x.dataset.d;renderOggi()});
+}
+
+function renderMap(){
+  const months={};
+  DAYS.forEach(d=>{const k=d.date.slice(0,7);(months[k]=months[k]||[]).push(d)});
+  $('#map').innerHTML=Object.entries(months).map(([k,list])=>{
+    const first=parseD(list[0].date);const pad=(first.getDay()+6)%7;
+    const name=parseD(k+'-01').toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+    return `<div class="month"><h3>${name}</h3><div class="cal">${['lun','mar','mer','gio','ven','sab','dom'].map(x=>`<div class="hd">${x}</div>`).join('')}
+      ${'<div class="tile empty"></div>'.repeat(pad)}
+      ${list.map(d=>{const s=subj(d),v=S.progress[d.date];const miss=d.date<TODAY&&!dayFull(d)&&s.k!=='free'&&!isExam(d);
+        return `<div class="tile ${dayFull(d)?'full':''} ${v&&v.goal_ok?'star':''} ${d.date===TODAY?'today':''} ${isExam(d)?'exam':''} ${miss?'miss':''} ${d.date>TODAY?'fut':''}" style="--c:${s.c};--p:${dayPct(d)*100}%" data-d="${d.date}" title="${esc(d.title)}"><span class="n">${parseD(d.date).getDate()}</span><span class="s">${isExam(d)?'👹 ':''}${esc(d.title)}</span></div>`}).join('')}
+    </div></div>`}).join('');
+  $('#map').querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{sel=x.dataset.d;showTab('oggi');renderOggi();window.scrollTo({top:0,behavior:'smooth'})});
+}
+
+function renderErrors(){
+  const subs=['aperti','tutti','Geometria','Analisi','Fondamenti','risolti'];
+  $('#eFil').innerHTML=subs.map(s=>`<button class="chip ${eFilter===s?'act':''}" data-f="${s}">${s[0].toUpperCase()+s.slice(1)}</button>`).join('');
+  $('#eFil').querySelectorAll('button').forEach(b=>b.onclick=()=>{eFilter=b.dataset.f;renderErrors()});
+  let L=S.errors.slice();
+  if(eFilter==='aperti')L=L.filter(e=>!e.fixed);else if(eFilter==='risolti')L=L.filter(e=>e.fixed);else if(eFilter!=='tutti')L=L.filter(e=>e.subject===eFilter);
+  $('#eList').innerHTML=L.length?L.map(e=>`<div class="err ${e.fixed?'fixed':''}"><div style="flex:1"><div class="et">${esc(e.text)}</div><div class="em">${esc(e.subject)}${e.day?' · '+esc(parseD(e.day).toLocaleDateString('it-IT',{day:'numeric',month:'short'})):''}</div></div>
+    <button data-fix="${e.id}">${e.fixed?'↺ riapri':'✓ rifatto +'+XP_ERRFIX}</button><button data-del="${e.id}" aria-label="Elimina">✕</button></div>`).join('')
+    :`<div class="empty-st">${eFilter==='aperti'?'Nessun errore aperto. Pulito! ✨':'Niente qui.'}</div>`;
+  $('#eList').querySelectorAll('[data-fix]').forEach(b=>b.onclick=async()=>{const e=S.errors.find(x=>x.id===b.dataset.fix);e.fixed=!e.fixed;saveLocal();renderAll();if(e.fixed){toast(`<span class="x">+${XP_ERRFIX} XP</span> errore sistemato 💪`)}if(online)await sb.from('studio_errors').update({fixed:e.fixed}).eq('id',e.id)});
+  $('#eList').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Eliminare questo errore?'))return;S.errors=S.errors.filter(x=>x.id!==b.dataset.del);saveLocal();renderAll();if(online)await sb.from('studio_errors').delete().eq('id',b.dataset.del)});
+}
+async function addError(){
+  const t=$('#eTxt').value.trim();if(!t)return;
+  const e={id:crypto.randomUUID(),subject:$('#eSub').value,text:t,day:TODAY,fixed:false,created_at:new Date().toISOString()};
+  S.errors.unshift(e);$('#eTxt').value='';saveLocal();renderAll();toast('🟥 Segnato. Lo rifai domenica.');
+  if(online){const {error}=await sb.from('studio_errors').insert(e);if(error)console.warn(error)}
+}
+
+function renderAch(){
+  const t=totals();const p=S.progress;
+  const geoD=DAYS.filter(d=>subj(d).k==='geo'&&!isExam(d)), anaD=DAYS.filter(d=>subj(d).k==='ana'&&!isExam(d)), fonD=DAYS.filter(d=>subj(d).k==='fon'&&!isExam(d));
+  const sims=DAYS.filter(d=>/SIMULAZIONE|PROVA AL PC|SCRITT/i.test(d.title));
+  const stars=Object.values(p).filter(v=>v.goal_ok).length;
+  const fixed=S.errors.filter(e=>e.fixed).length;
+  const L=[
+    ['🚀','Si parte','Completa il primo livello',t.done>=1],
+    ['🔥','In fiamme','Streak di 3 giorni',t.st>=3],
+    ['🌋','Inarrestabile','Streak di 7 giorni',t.st>=7],
+    ['☄️','Macchina','Streak di 21 giorni',t.st>=21],
+    ['⭐','Centrato','5 obiettivi raggiunti',stars>=5],
+    ['🌟','Cecchino','25 obiettivi raggiunti',stars>=25],
+    ['🧯','Pompiere','Rifai 10 errori in rosso',fixed>=10],
+    ['📐','Vettoriale','10 livelli di Geometria',geoD.filter(dayFull).length>=10],
+    ['∫','Integrato','10 livelli di Analisi',anaD.filter(dayFull).length>=10],
+    ['💻','Compila!','10 livelli di Fondamenti',fonD.filter(dayFull).length>=10],
+    ['🎯','Simulatore','Completa 5 simulazioni/prove',sims.filter(dayFull).length>=5],
+    ['⚡','Mille volt','1000 XP',t.xp>=1000],
+    ['🧠','Mezzo cammino','45 livelli completati',t.done>=45],
+    ['👑','Leggenda','Tutti i livelli completati',t.done>=DAYS.filter(d=>d.tasks.length&&!isExam(d)&&subj(d).k!=='free').length],
+  ];
+  $('#ach').innerHTML=L.map(([e,n,dsc,g])=>`<div class="${g?'got':''}"><div class="e">${e}</div><b>${n}</b><span>${dsc}</span></div>`).join('');
+  $('#fonDate').value=S.settings.fon_date||'';
+}
+
+async function markPast(){
+  const list=DAYS.filter(d=>d.date<TODAY&&d.tasks.length&&!isExam(d)&&subj(d).k!=='free'&&!dayFull(d));
+  list.forEach(d=>{const v=P(d.date);v.done=d.tasks.map((_,k)=>k);v.goal_ok=!!(d.check&&d.check!=='-')});
+  S.settings.catchup_done='1';saveLocal();renderAll();confetti();toast(`✅ ${list.length} giorni segnati come fatti`);
+  if(online){await sb.from('studio_progress').upsert(list.map(d=>({day:d.date,...P(d.date),updated_at:new Date().toISOString()})));await sb.from('studio_settings').upsert({key:'catchup_done',value:'1'})}
+}
+function renderCatchup(){
+  const b=$('#catchup');const back=totals().back;
+  const anyProgress=Object.values(S.progress).some(v=>v.done.length||v.goal_ok);
+  const firstPast=DAYS.find(d=>d.date<TODAY);
+  if(S.settings.catchup_done||!back||!firstPast){b.classList.remove('show');return}
+  const lastPast=DAYS.filter(d=>d.date<TODAY).pop();
+  b.innerHTML=`👋 Il piano è partito il ${parseD(firstPast.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})}. Hai già fatto i giorni fino al ${parseD(lastPast.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})}? <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" id="cuYes">Sì, segnali fatti</button><button class="btn ghost" id="cuNo">No, li recupero</button></div>`;
+  b.classList.add('show');
+  $('#cuYes').onclick=markPast;
+  $('#cuNo').onclick=async()=>{S.settings.catchup_done='1';saveLocal();renderCatchup();if(online)await sb.from('studio_settings').upsert({key:'catchup_done',value:'1'})};
+}
+function renderOggi(){renderQuest();renderWeek();renderBosses();renderPlayer();renderCatchup()}
+function renderAll(){renderOggi();renderMap();renderErrors();renderAch()}
+function showTab(v){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('act',b.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('act',x.id==='v-'+v))}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.v)};
+$('#eAdd').onclick=addError;$('#eTxt').onkeydown=e=>{if(e.key==='Enter')addError()};
+$('#fonSave').onclick=async()=>{S.settings.fon_date=$('#fonDate').value;saveLocal();renderAll();toast('📅 Data salvata');if(online)await sb.from('studio_settings').upsert({key:'fon_date',value:S.settings.fon_date})};
+$('#markPast').onclick=()=>{if(confirm('Segnare come fatti tutti i giorni passati non completati?'))markPast()};
+document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select'))return;if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1)});
+
+/* ---------- fx ---------- */
+let tt;function toast(h){const t=$('#toast');t.innerHTML=h;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
+const cv=$('#fx'),cx=cv.getContext('2d');let parts=[];
+function fit(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}fit();addEventListener('resize',fit);
+const colOf=c=>getComputedStyle(document.documentElement).getPropertyValue(c.replace(/var\((.*)\)/,'$1')).trim()||c;
+function burst(x,y,n,c){const col=colOf(c);for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=2+Math.random()*4;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,l:1,c:i%3?col:'#facc15',r:2+Math.random()*3})}loop()}
+function confetti(){const cols=['#a78bfa','#38bdf8','#4ade80','#facc15','#fb7185'];for(let i=0;i<140;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*12-4,l:1.6,c:cols[i%5],r:3+Math.random()*4,sq:1});loop()}
+let raf=0;function loop(){if(raf)return;const f=()=>{cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.l>0);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.3;p.vx*=.98;p.l-=.016;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.sq){cx.save();cx.translate(p.x,p.y);cx.rotate(p.l*10);cx.fillRect(-p.r,-p.r/2,p.r*2,p.r);cx.restore()}else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()}});cx.globalAlpha=1;raf=parts.length?requestAnimationFrame(f):0};raf=requestAnimationFrame(f)}
+
+renderAll();
+if(window.supabase)initSB();else setSync('off','solo su questo dispositivo');
+</script>
+</body>
+</html>
