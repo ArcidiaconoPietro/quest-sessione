@@ -215,16 +215,75 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
   .quest .in{padding:16px}
 }
 .stats{display:flex;gap:10px}
+
+/* login & roles */
+#login{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:var(--bg);
+  background-image:radial-gradient(900px 500px at 20% 0%,#1c1840 0%,transparent 60%),radial-gradient(700px 400px at 100% 100%,#0e2a3a 0%,transparent 55%)}
+#login.hide{display:none}
+.lbox{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px}
+.lbox .logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,#7c3aed,#0ea5e9);box-shadow:0 0 30px #7c3aed55;margin-bottom:16px}
+.lbox h1{font-size:24px;letter-spacing:-.02em}
+.lbox p{color:var(--mute);font-size:14px;margin:6px 0 20px}
+.lbox label{display:block;font-size:12px;color:var(--mute);margin:12px 0 6px;letter-spacing:.06em;text-transform:uppercase}
+.lbox .btn{width:100%;margin-top:18px;padding:13px}
+.lerr{color:var(--bad);font-size:13px;margin-top:12px;min-height:18px}
+.roles{display:flex;gap:8px;margin-top:18px;font-size:12px;color:var(--mute)}
+.roles span{flex:1;padding:10px;border-radius:12px;background:var(--card2);border:1px solid var(--line);line-height:1.4}
+.who{display:flex;align-items:center;gap:8px;font-size:13px}
+.who .chip{padding:6px 10px}
+.who button{font-size:12px;color:var(--mute);padding:6px 10px;border:1px solid var(--line);border-radius:99px}
+.who button:hover{color:var(--ink)}
+body[data-role=genitore] .stu-only{display:none!important}
+body:not([data-role=genitore]) .par-only{display:none!important}
+body[data-role=genitore] .task{cursor:default}
+body[data-role=genitore] .task:active{transform:none}
+body[data-role=genitore] .task .xp{display:none}
+
+/* reminders */
+.rem{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:8px}
+.rem.new{border-color:color-mix(in srgb,var(--fire) 50%,transparent);background:color-mix(in srgb,var(--fire) 8%,var(--card2))}
+.rem .rt{flex:1;font-size:15px;line-height:1.45}
+.rem .rm{font-size:11.5px;color:var(--mute);margin-top:4px}
+.rem button{font-size:12px;padding:7px 11px;border-radius:9px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.rem button.go{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:700}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 18px}
+.sup{width:100%;border-collapse:collapse;font-size:13.5px}
+.sup td,.sup th{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left}
+.sup th{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.sup td.c{text-align:center;font-family:'JetBrains Mono',monospace}
+.sup .dotc{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.kpis div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpis b{display:block;font-size:24px;font-family:'JetBrains Mono',monospace}
+.kpis span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
+@media (max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}.tabs{grid-template-columns:repeat(5,1fr)}.tabs button{font-size:11px}.sup .hm{display:none}}
 </style>
 </head>
 <body>
 <canvas id="fx"></canvas>
+<div id="login">
+  <form class="lbox" id="lform" autocomplete="on">
+    <div class="logo">⚔️</div>
+    <h1>Quest Sessione</h1>
+    <p>Entra con il tuo account.</p>
+    <label for="lEmail">Email</label>
+    <input id="lEmail" type="email" autocomplete="username" required>
+    <label for="lPass">Password</label>
+    <input id="lPass" type="password" autocomplete="current-password" required>
+    <button class="btn" type="submit" id="lBtn">Entra</button>
+    <div class="lerr" id="lErr"></div>
+    <div class="roles"><span>🎓 <b>Studente</b><br>gioca, spunta, segna errori</span><span>👀 <b>Genitore</b><br>supervisiona e manda promemoria</span></div>
+  </form>
+</div>
 <div class="wrap">
   <div class="top">
     <div class="brand"><div class="logo">⚔️</div>Quest Sessione</div>
     <div class="spacer"></div>
     <div class="sync" id="sync"><i></i><span>connessione…</span></div>
+    <div class="who" id="who"></div>
   </div>
+
+  <div class="banner" id="remBanner" style="border-color:color-mix(in srgb,var(--fire) 50%,transparent);background:color-mix(in srgb,var(--fire) 10%,var(--card))"></div>
 
   <div class="banner" id="banner"></div>
 
@@ -247,6 +306,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
 
   <div class="tabs" id="tabs">
     <button data-v="oggi" class="act">🎯 Missione</button>
+    <button data-v="promemoria" id="tabProm">📣 Promemoria</button>
     <button data-v="mappa">🗺️ Mappa</button>
     <button data-v="errori">🟥 Errori</button>
     <button data-v="trofei">🏆 Trofei</button>
@@ -273,6 +333,22 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
     </div>
   </section>
 
+  <section class="view" id="v-promemoria">
+    <div class="card par-only" style="margin-bottom:18px">
+      <div class="h">👀 Supervisione</div>
+      <div class="kpis" id="kpis"></div>
+      <table class="sup" id="supTable"></table>
+    </div>
+    <div class="card">
+      <div class="h">📣 Promemoria</div>
+      <div class="par-only">
+        <div style="display:flex;gap:10px"><input id="rTxt" placeholder="Scrivi un promemoria…" maxlength="500"><button class="btn" id="rSend">Invia</button></div>
+        <div class="quick" id="rQuick"></div>
+      </div>
+      <div id="rList"></div>
+    </div>
+  </section>
+
   <section class="view" id="v-mappa">
     <div class="card">
       <div class="legend">
@@ -290,7 +366,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
   <section class="view" id="v-errori">
     <div class="card">
       <div class="h">🟥 Errori in rosso — da rifare la domenica</div>
-      <div class="erradd">
+      <div class="erradd stu-only">
         <select id="eSub">
           <option>Geometria</option><option>Analisi</option><option>Fondamenti</option>
         </select>
@@ -307,7 +383,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
       <div class="h">🏆 Trofei</div>
       <div class="ach" id="ach"></div>
     </div>
-    <div class="card" style="margin-top:18px">
+    <div class="card stu-only" style="margin-top:18px">
       <div class="h">⚙️ Impostazioni</div>
       <label style="font-size:13px;color:var(--mute);display:block;margin-bottom:6px">Data esame Fondamenti (quando esce su AlmaEsami)</label>
       <div style="display:flex;gap:10px;max-width:380px"><input type="date" id="fonDate"><button class="btn ghost" id="fonSave">Salva</button></div>
@@ -351,38 +427,83 @@ try{const r=JSON.parse(localStorage.getItem(LS));if(r)S=Object.assign(S,r)}catch
 const saveLocal=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
 const P=date=>S.progress[date]||(S.progress[date]={done:[],goal_ok:false,note:''});
 
-let sb=null, online=false;
+let sb=null, online=false, ROLE=null, ME=null;
+const STU=()=>ROLE==='studente';
+S.reminders=S.reminders||[];
 function setSync(state,msg){const el=$('#sync');el.className='sync '+state;el.querySelector('span').textContent=msg}
+
+/* ---------- auth ---------- */
+function showLogin(msg){$('#login').classList.remove('hide');$('#lErr').textContent=msg||'';$('#lBtn').disabled=false;$('#lBtn').textContent='Entra'}
+async function boot(){
+  if(!window.supabase){showLogin('Impossibile collegarsi. Controlla la connessione e ricarica.');return}
+  sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+  const {data:{session}}=await sb.auth.getSession();
+  if(session)await afterLogin(session.user);else showLogin();
+}
+async function afterLogin(user){
+  const m=await sb.from('studio_members').select('role,name').eq('user_id',user.id).maybeSingle();
+  if(m.error||!m.data){
+    await sb.auth.signOut();
+    showLogin(m.error?'Database da aggiornare: esegui supabase_accessi.sql in Supabase.':'Questo account non è abilitato alla dashboard.');
+    return;
+  }
+  ROLE=m.data.role;ME={id:user.id,name:m.data.name||'',email:user.email};
+  document.body.dataset.role=ROLE;
+  $('#who').innerHTML=`<span class="chip act">${ROLE==='studente'?'🎓':'👀'} ${esc(ME.name||ROLE)}</span><button id="logout">Esci</button>`;
+  $('#logout').onclick=async()=>{await sb.auth.signOut();try{localStorage.removeItem(LS)}catch(e){}location.reload()};
+  $('#tabProm').textContent=STU()?'📣 Promemoria':'👀 Supervisione';
+  $('#login').classList.add('hide');
+  if(!STU())showTab('promemoria');
+  await initSB();
+}
+$('#lform').onsubmit=async e=>{
+  e.preventDefault();
+  $('#lBtn').disabled=true;$('#lBtn').textContent='Accesso…';$('#lErr').textContent='';
+  const {data,error}=await sb.auth.signInWithPassword({email:$('#lEmail').value.trim(),password:$('#lPass').value});
+  if(error){showLogin(error.message==='Invalid login credentials'?'Email o password sbagliate.':error.message);return}
+  $('#lPass').value='';
+  await afterLogin(data.user);
+};
+
 async function initSB(){
   try{
-    sb=window.supabase.createClient(SB_URL,SB_KEY);
-    const [p,e,st]=await Promise.all([
+    const [p,e,st,rm]=await Promise.all([
       sb.from('studio_progress').select('*'),
       sb.from('studio_errors').select('*').order('created_at',{ascending:false}),
-      sb.from('studio_settings').select('*')]);
-    if(p.error||e.error||st.error) throw (p.error||e.error||st.error);
+      sb.from('studio_settings').select('*'),
+      sb.from('studio_reminders').select('*').order('created_at',{ascending:false}).limit(100)]);
+    if(p.error||e.error||st.error||rm.error) throw (p.error||e.error||st.error||rm.error);
     const remoteDays=new Set();
-    p.data.forEach(r=>{remoteDays.add(r.day);S.progress[r.day]={done:r.done||[],goal_ok:r.goal_ok,note:r.note||''}});
-    // push local-only progress (made while offline)
-    const push=Object.entries(S.progress).filter(([d,v])=>!remoteDays.has(d)&&(v.done.length||v.goal_ok||v.note)).map(([d,v])=>({day:d,...v}));
-    if(push.length) await sb.from('studio_progress').upsert(push);
-    const remoteIds=new Set(e.data.map(x=>x.id));
-    const localOnly=S.errors.filter(x=>!remoteIds.has(x.id));
-    if(localOnly.length) await sb.from('studio_errors').upsert(localOnly);
-    S.errors=[...localOnly,...e.data];
+    const localProg=S.progress;S.progress={};
+    p.data.forEach(r=>{remoteDays.add(r.day);S.progress[r.day]={done:r.done||[],goal_ok:r.goal_ok,note:r.note||'',updated_at:r.updated_at}});
+    let localErr=[];
+    if(STU()){
+      // push local-only progress (made while offline)
+      const push=Object.entries(localProg).filter(([d,v])=>!remoteDays.has(d)&&(v.done.length||v.goal_ok||v.note)).map(([d,v])=>({day:d,done:v.done,goal_ok:v.goal_ok,note:v.note}));
+      if(push.length){await sb.from('studio_progress').upsert(push);push.forEach(x=>S.progress[x.day]={...x})}
+      const remoteIds=new Set(e.data.map(x=>x.id));
+      localErr=S.errors.filter(x=>!remoteIds.has(x.id));
+      if(localErr.length) await sb.from('studio_errors').upsert(localErr);
+    }
+    S.errors=[...localErr,...e.data];
+    S.reminders=rm.data;
     st.data.forEach(r=>S.settings[r.key]=r.value);
     online=true;setSync('on','sincronizzato');$('#banner').classList.remove('show');
     saveLocal();renderAll();
   }catch(err){
-    online=false;setSync('off','solo su questo dispositivo');
+    online=false;setSync('off','offline');
     const b=$('#banner');
-    b.innerHTML='⚠️ Database non ancora pronto: i progressi vengono salvati solo su questo dispositivo. Apri Supabase → <b>SQL Editor</b>, incolla il contenuto di <code>supabase.sql</code> e premi <b>Run</b>. Poi ricarica la pagina: quello che hai fatto finora viene caricato in automatico.';
+    b.innerHTML='⚠️ Non riesco a leggere i dati dal database. Controlla la connessione e ricarica la pagina.';
     b.classList.add('show');
     console.warn('Supabase:',err);
   }
 }
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ROLE)initSB()});
+setInterval(()=>{if(ROLE&&!document.hidden&&!document.activeElement.matches('input,textarea'))initSB()},120000);
 async function pushDay(date){
+  if(!STU())return;
   saveLocal();if(!online)return;
+  P(date).updated_at=new Date().toISOString();
   const v=P(date);
   const {error}=await sb.from('studio_progress').upsert({day:date,done:v.done,goal_ok:v.goal_ok,note:v.note,updated_at:new Date().toISOString()});
   if(error){setSync('off','errore di sync');console.warn(error)}
@@ -466,7 +587,7 @@ function renderQuest(){
     <div class="qprog"><div class="bar"><div style="width:${dayPct(d)*100}%"></div></div><span>${v.done.length}/${total}</span></div>
     <div class="clear ${dayFull(d)?'show':''}">🎉 Livello completato! +${XP_CLEAR} XP bonus</div>
     ${d.mats.length?`<details class="more" open><summary>📚 Materiale (${d.mats.length}) — i PDF sono anche nella cartella del giorno</summary><div class="mats">${d.mats.map((m,k)=>m.u?`<a href="${esc(m.u)}" target="_blank" rel="noopener"><span>${k+1}</span>${esc(m.n)}</a>`:`<a><span>${k+1}</span>${esc(m.n)}</a>`).join('')}</div></details>`:''}
-    <details class="more"><summary>📝 Note del giorno ${v.note?'•':''}</summary><textarea id="note" placeholder="Com'è andata? Cosa non ti è chiaro?" style="margin-top:10px">${esc(v.note)}</textarea></details>
+    <details class="more"><summary>📝 Note del giorno ${v.note?'•':''}</summary><textarea id="note" ${STU()?'':'readonly'} placeholder="${STU()?"Com'è andata? Cosa non ti è chiaro?":'Nessuna nota'}" style="margin-top:10px">${esc(v.note)}</textarea></details>
   </div>`;
   $('#qPrev').onclick=()=>go(-1);$('#qNext').onclick=()=>go(1);
   const qt=$('#qToday');if(qt)qt.onclick=()=>{sel=TODAY;renderOggi()};
@@ -476,6 +597,7 @@ function renderQuest(){
 function go(dx){const i=DAYS.findIndex(d=>d.date===sel)+dx;if(DAYS[i]){sel=DAYS[i].date;renderOggi()}}
 
 function toggle(k,el){
+  if(!STU())return;
   const d=byDate[sel], v=P(sel), wasFull=dayFull(d);
   let gain=0;
   if(k==='goal'){v.goal_ok=!v.goal_ok;gain=v.goal_ok?XP_GOAL:-XP_GOAL}
@@ -540,7 +662,7 @@ function renderErrors(){
   let L=S.errors.slice();
   if(eFilter==='aperti')L=L.filter(e=>!e.fixed);else if(eFilter==='risolti')L=L.filter(e=>e.fixed);else if(eFilter!=='tutti')L=L.filter(e=>e.subject===eFilter);
   $('#eList').innerHTML=L.length?L.map(e=>`<div class="err ${e.fixed?'fixed':''}"><div style="flex:1"><div class="et">${esc(e.text)}</div><div class="em">${esc(e.subject)}${e.day?' · '+esc(parseD(e.day).toLocaleDateString('it-IT',{day:'numeric',month:'short'})):''}</div></div>
-    <button data-fix="${e.id}">${e.fixed?'↺ riapri':'✓ rifatto +'+XP_ERRFIX}</button><button data-del="${e.id}" aria-label="Elimina">✕</button></div>`).join('')
+    ${STU()?`<button data-fix="${e.id}">${e.fixed?'↺ riapri':'✓ rifatto +'+XP_ERRFIX}</button><button data-del="${e.id}" aria-label="Elimina">✕</button>`:''}</div>`).join('')
     :`<div class="empty-st">${eFilter==='aperti'?'Nessun errore aperto. Pulito! ✨':'Niente qui.'}</div>`;
   $('#eList').querySelectorAll('[data-fix]').forEach(b=>b.onclick=async()=>{const e=S.errors.find(x=>x.id===b.dataset.fix);e.fixed=!e.fixed;saveLocal();renderAll();if(e.fixed){toast(`<span class="x">+${XP_ERRFIX} XP</span> errore sistemato 💪`)}if(online)await sb.from('studio_errors').update({fixed:e.fixed}).eq('id',e.id)});
   $('#eList').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Eliminare questo errore?'))return;S.errors=S.errors.filter(x=>x.id!==b.dataset.del);saveLocal();renderAll();if(online)await sb.from('studio_errors').delete().eq('id',b.dataset.del)});
@@ -588,15 +710,80 @@ function renderCatchup(){
   const b=$('#catchup');const back=totals().back;
   const anyProgress=Object.values(S.progress).some(v=>v.done.length||v.goal_ok);
   const firstPast=DAYS.find(d=>d.date<TODAY);
-  if(S.settings.catchup_done||!back||!firstPast){b.classList.remove('show');return}
+  if(!STU()||S.settings.catchup_done||!back||!firstPast){b.classList.remove('show');return}
   const lastPast=DAYS.filter(d=>d.date<TODAY).pop();
   b.innerHTML=`👋 Il piano è partito il ${parseD(firstPast.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})}. Hai già fatto i giorni fino al ${parseD(lastPast.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})}? <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" id="cuYes">Sì, segnali fatti</button><button class="btn ghost" id="cuNo">No, li recupero</button></div>`;
   b.classList.add('show');
   $('#cuYes').onclick=markPast;
   $('#cuNo').onclick=async()=>{S.settings.catchup_done='1';saveLocal();renderCatchup();if(online)await sb.from('studio_settings').upsert({key:'catchup_done',value:'1'})};
 }
-function renderOggi(){renderQuest();renderWeek();renderBosses();renderPlayer();renderCatchup()}
-function renderAll(){renderOggi();renderMap();renderErrors();renderAch()}
+/* ---------- reminders & supervision ---------- */
+const QUICK=['📚 Hai fatto la missione di oggi?','🟥 Domenica: rifai gli errori in rosso','📝 Ricordati di iscriverti all\'esame su AlmaEsami','💪 Forza, manca poco!','😴 Stasera riposa, domani si riparte'];
+const ago=t=>{if(!t)return 'mai';const m=Math.round((Date.now()-new Date(t))/6e4);if(m<1)return 'adesso';if(m<60)return m+' min fa';const h=Math.round(m/60);if(h<24)return h+' h fa';const g=Math.round(h/24);return g===1?'ieri':g+' giorni fa'};
+const fmtT=t=>new Date(t).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+function autoReminders(){
+  // reminder generated from the plan, shown to the student
+  const out=[];const d=byDate[TODAY];
+  if(d&&/ISCRIZIONE/i.test(d.title))out.push('📝 Oggi devi <b>iscriverti all\'esame</b> su AlmaEsami. Non rimandare!');
+  const exams=examDates().filter(b=>b.date&&diffDays(TODAY,b.date)>=0&&diffDays(TODAY,b.date)<=3);
+  exams.forEach(b=>out.push(`👹 ${esc(b.n)} ${diffDays(TODAY,b.date)===0?'è <b>oggi</b>. In bocca al lupo!':`tra <b>${diffDays(TODAY,b.date)} giorni</b>.`}`));
+  if(parseD(TODAY).getDay()===0){const n=S.errors.filter(e=>!e.fixed).length;if(n)out.push(`🟥 È domenica: hai <b>${n}</b> errori in rosso da rifare.`)}
+  return out;
+}
+function renderRemBanner(){
+  const b=$('#remBanner');
+  if(!ROLE){b.classList.remove('show');return}
+  const unread=STU()?S.reminders.filter(r=>!r.read_at):[];
+  const auto=STU()?autoReminders():[];
+  if(!unread.length&&!auto.length){b.classList.remove('show');return}
+  b.innerHTML=[...unread.map(r=>`<div style="display:flex;gap:10px;align-items:center;margin:4px 0"><div style="flex:1">📣 <b>Promemoria:</b> ${esc(r.text)} <span style="color:var(--mute);font-size:12px">· ${ago(r.created_at)}</span></div><button class="btn" data-read="${r.id}" style="padding:7px 12px;font-size:12.5px">Letto ✓</button></div>`),...auto.map(a=>`<div style="margin:4px 0">${a}</div>`)].join('');
+  b.classList.add('show');
+  b.querySelectorAll('[data-read]').forEach(x=>x.onclick=()=>markRead(x.dataset.read));
+}
+async function markRead(id){
+  const r=S.reminders.find(x=>x.id===id);if(!r)return;
+  r.read_at=new Date().toISOString();saveLocal();renderAll();toast('👍 Segnato come letto');
+  const {error}=await sb.from('studio_reminders').update({read_at:r.read_at}).eq('id',id);
+  if(error){console.warn(error);toast('⚠️ Non salvato, riprova')}
+}
+async function sendReminder(txt){
+  txt=(txt||'').trim();if(!txt||STU())return;
+  const {data,error}=await sb.from('studio_reminders').insert({text:txt}).select().single();
+  if(error){toast('⚠️ Invio non riuscito');console.warn(error);return}
+  S.reminders.unshift(data);$('#rTxt').value='';saveLocal();renderAll();toast('📣 Promemoria inviato');
+}
+function renderReminders(){
+  const tabTxt=STU()?'📣 Promemoria':'👀 Supervisione';
+  const unread=S.reminders.filter(r=>!r.read_at).length;
+  $('#tabProm').textContent=tabTxt+(STU()&&unread?` (${unread})`:'');
+  $('#rQuick').innerHTML=QUICK.map((q,i)=>`<button class="chip" data-q="${i}">${esc(q)}</button>`).join('');
+  $('#rQuick').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>sendReminder(QUICK[b.dataset.q]));
+  $('#rList').innerHTML=S.reminders.length?S.reminders.map(r=>`<div class="rem ${!r.read_at?'new':''}"><div style="flex:1"><div class="rt">${esc(r.text)}</div><div class="rm">Inviato ${fmtT(r.created_at)} · ${r.read_at?'✓ letto '+ago(r.read_at):'non ancora letto'}</div></div>
+    ${STU()?(!r.read_at?`<button class="go" data-read="${r.id}">Letto ✓</button>`:''):`<button data-rdel="${r.id}" aria-label="Elimina">✕</button>`}</div>`).join('')
+    :`<div class="empty-st">${STU()?'Nessun promemoria. Tutto tranquillo 😎':'Nessun promemoria inviato. Scrivine uno o usa i pulsanti rapidi.'}</div>`;
+  $('#rList').querySelectorAll('[data-read]').forEach(x=>x.onclick=()=>markRead(x.dataset.read));
+  $('#rList').querySelectorAll('[data-rdel]').forEach(x=>x.onclick=async()=>{if(!confirm('Eliminare il promemoria?'))return;const {error}=await sb.from('studio_reminders').delete().eq('id',x.dataset.rdel);if(error){toast('⚠️ Non eliminato');return}S.reminders=S.reminders.filter(r=>r.id!==x.dataset.rdel);saveLocal();renderAll()});
+  if(STU())return;
+  // supervision
+  const t=totals();const today=byDate[TODAY];const tv=today&&S.progress[TODAY];
+  const lastAct=Object.values(S.progress).map(v=>v.updated_at).filter(Boolean).sort().pop();
+  const next=examDates().filter(b=>b.date&&diffDays(TODAY,b.date)>=0).sort((a,b)=>a.date<b.date?-1:1)[0];
+  $('#kpis').innerHTML=`
+    <div><b style="color:${today&&dayFull(today)?'var(--ok)':'var(--ink)'}">${today?(tv?tv.done.length:0)+'/'+today.tasks.length:'—'}</b><span>task di oggi</span></div>
+    <div><b style="color:var(--bad)">${t.back}</b><span>giorni arretrati</span></div>
+    <div><b style="color:var(--fire)">${t.st}</b><span>🔥 streak</span></div>
+    <div><b style="font-size:16px;line-height:1.7">${ago(lastAct)}</b><span>ultima attività</span></div>`;
+  const rows=DAYS.filter(d=>d.date<=TODAY).slice(-10).reverse();
+  $('#supTable').innerHTML=`<tr><th>Giorno</th><th class="hm">Missione</th><th style="text-align:center">Task</th><th style="text-align:center">Obiettivo</th></tr>`+
+    rows.map(d=>{const s=subj(d),v=S.progress[d.date];const full=dayFull(d);const free=s.k==='free'||isExam(d);
+      return `<tr style="--c:${s.c};cursor:pointer" data-d="${d.date}"><td><span class="dotc"></span>${esc(parseD(d.date).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'}))}${d.date===TODAY?' <b>· oggi</b>':''}</td><td class="hm" style="color:var(--mute)">${esc(d.title)}</td>
+      <td class="c" style="color:${free?'var(--mute)':full?'var(--ok)':d.date<TODAY?'var(--bad)':'var(--ink)'}">${free?'—':(v?v.done.length:0)+'/'+d.tasks.length}</td><td class="c">${v&&v.goal_ok?'⭐':free?'':'·'}</td></tr>`}).join('')+
+    (next?`<tr><td colspan="4" style="color:var(--mute);border:0;padding-top:14px">Prossimo esame: <b style="color:var(--ink)">${esc(next.n)}</b> tra ${diffDays(TODAY,next.date)} giorni · errori aperti: ${S.errors.filter(e=>!e.fixed).length}</td></tr>`:'');
+  $('#supTable').querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{sel=x.dataset.d;showTab('oggi');renderOggi()});
+}
+
+function renderOggi(){renderQuest();renderWeek();renderBosses();renderPlayer();renderCatchup();renderRemBanner()}
+function renderAll(){renderOggi();renderMap();renderErrors();renderAch();renderReminders()}
 function showTab(v){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('act',b.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('act',x.id==='v-'+v))}
 $('#tabs').onclick=e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.v)};
 $('#eAdd').onclick=addError;$('#eTxt').onkeydown=e=>{if(e.key==='Enter')addError()};
@@ -613,8 +800,10 @@ function burst(x,y,n,c){const col=colOf(c);for(let i=0;i<n;i++){const a=Math.ran
 function confetti(){const cols=['#a78bfa','#38bdf8','#4ade80','#facc15','#fb7185'];for(let i=0;i<140;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*12-4,l:1.6,c:cols[i%5],r:3+Math.random()*4,sq:1});loop()}
 let raf=0;function loop(){if(raf)return;const f=()=>{cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.l>0);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.3;p.vx*=.98;p.l-=.016;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.sq){cx.save();cx.translate(p.x,p.y);cx.rotate(p.l*10);cx.fillRect(-p.r,-p.r/2,p.r*2,p.r);cx.restore()}else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()}});cx.globalAlpha=1;raf=parts.length?requestAnimationFrame(f):0};raf=requestAnimationFrame(f)}
 
+$('#rSend').onclick=()=>sendReminder($('#rTxt').value);
+$('#rTxt').onkeydown=e=>{if(e.key==='Enter')sendReminder($('#rTxt').value)};
 renderAll();
-if(window.supabase)initSB();else setSync('off','solo su questo dispositivo');
+boot();
 </script>
 </body>
 </html>
