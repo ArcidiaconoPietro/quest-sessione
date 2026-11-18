@@ -226,6 +226,14 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
 .lbox p{color:var(--mute);font-size:14px;margin:6px 0 20px}
 .lbox label{display:block;font-size:12px;color:var(--mute);margin:12px 0 6px;letter-spacing:.06em;text-transform:uppercase}
 .lbox .btn{width:100%;margin-top:18px;padding:13px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pick button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 10px;border-radius:18px;background:var(--card2);border:1px solid var(--line);transition:transform .15s,border-color .2s,box-shadow .2s}
+.pick button:hover{transform:translateY(-3px)}
+.pick button[data-who=studente]:hover{border-color:var(--ana);box-shadow:0 0 24px #38bdf833}
+.pick button[data-who=genitore]:hover{border-color:#f472b6;box-shadow:0 0 24px #f472b633}
+.pick span{font-size:40px}
+.pick b{font-size:18px}
+.pick small{font-size:12px;color:var(--mute)}
 .lerr{color:var(--bad);font-size:13px;margin-top:12px;min-height:18px}
 .roles{display:flex;gap:8px;margin-top:18px;font-size:12px;color:var(--mute)}
 .roles span{flex:1;padding:10px;border-radius:12px;background:var(--card2);border:1px solid var(--line);line-height:1.4}
@@ -262,18 +270,16 @@ body[data-role=genitore] .task .xp{display:none}
 <body>
 <canvas id="fx"></canvas>
 <div id="login">
-  <form class="lbox" id="lform" autocomplete="on">
+  <div class="lbox">
     <div class="logo">⚔️</div>
-    <h1>Quest Sessione</h1>
-    <p>Entra con il tuo account.</p>
-    <label for="lEmail">Email</label>
-    <input id="lEmail" type="email" autocomplete="username" required>
-    <label for="lPass">Password</label>
-    <input id="lPass" type="password" autocomplete="current-password" required>
-    <button class="btn" type="submit" id="lBtn">Entra</button>
+    <h1>Chi sei?</h1>
+    <p>Scegli e si parte.</p>
+    <div class="pick">
+      <button data-who="studente"><span>🎓</span><b>Pietro</b><small>gioca la missione</small></button>
+      <button data-who="genitore"><span>💖</span><b>Barbie</b><small>supervisiona e ricorda</small></button>
+    </div>
     <div class="lerr" id="lErr"></div>
-    <div class="roles"><span>🎓 <b>Studente</b><br>gioca, spunta, segna errori</span><span>👀 <b>Genitore</b><br>supervisiona e manda promemoria</span></div>
-  </form>
+  </div>
 </div>
 <div class="wrap">
   <div class="top">
@@ -432,47 +438,34 @@ const STU=()=>ROLE==='studente';
 S.reminders=S.reminders||[];
 function setSync(state,msg){const el=$('#sync');el.className='sync '+state;el.querySelector('span').textContent=msg}
 
-/* ---------- auth ---------- */
-function showLogin(msg){$('#login').classList.remove('hide');$('#lErr').textContent=msg||'';$('#lBtn').disabled=false;$('#lBtn').textContent='Entra'}
-async function boot(){
-  if(!window.supabase){showLogin('Impossibile collegarsi. Controlla la connessione e ricarica.');return}
-  sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
-  const {data:{session}}=await sb.auth.getSession();
-  if(session)await afterLogin(session.user);else showLogin();
+/* ---------- chi sei? ---------- */
+const WHO_KEY='quest-sessione-who';
+const PEOPLE={studente:{name:'Pietro',e:'🎓'},genitore:{name:'Barbie',e:'💖'}};
+function boot(){
+  if(!window.supabase){$('#lErr').textContent='Impossibile collegarsi. Controlla la connessione e ricarica.';return}
+  sb=window.supabase.createClient(SB_URL,SB_KEY);
+  let w=null;try{w=localStorage.getItem(WHO_KEY)}catch(e){}
+  if(PEOPLE[w])enter(w);
 }
-async function afterLogin(user){
-  const m=await sb.from('studio_members').select('role,name').eq('user_id',user.id).maybeSingle();
-  if(m.error||!m.data){
-    await sb.auth.signOut();
-    showLogin(m.error?'Database da aggiornare: esegui supabase_accessi.sql in Supabase.':'Questo account non è abilitato alla dashboard.');
-    return;
-  }
-  ROLE=m.data.role;ME={id:user.id,name:m.data.name||'',email:user.email};
+function enter(role){
+  ROLE=role;ME=PEOPLE[role];
+  try{localStorage.setItem(WHO_KEY,role)}catch(e){}
   document.body.dataset.role=ROLE;
-  $('#who').innerHTML=`<span class="chip act">${ROLE==='studente'?'🎓':'👀'} ${esc(ME.name||ROLE)}</span><button id="logout">Esci</button>`;
-  $('#logout').onclick=async()=>{await sb.auth.signOut();try{localStorage.removeItem(LS)}catch(e){}location.reload()};
-  $('#tabProm').textContent=STU()?'📣 Promemoria':'👀 Supervisione';
+  $('#who').innerHTML=`<span class="chip act">${ME.e} ${ME.name}</span><button id="logout">Cambia</button>`;
+  $('#logout').onclick=()=>{try{localStorage.removeItem(WHO_KEY)}catch(e){}location.reload()};
   $('#login').classList.add('hide');
   if(!STU())showTab('promemoria');
-  await initSB();
+  renderAll();initSB();
 }
-$('#lform').onsubmit=async e=>{
-  e.preventDefault();
-  $('#lBtn').disabled=true;$('#lBtn').textContent='Accesso…';$('#lErr').textContent='';
-  const {data,error}=await sb.auth.signInWithPassword({email:$('#lEmail').value.trim(),password:$('#lPass').value});
-  if(error){showLogin(error.message==='Invalid login credentials'?'Email o password sbagliate.':error.message);return}
-  $('#lPass').value='';
-  await afterLogin(data.user);
-};
+document.querySelectorAll('.pick button').forEach(b=>b.onclick=()=>enter(b.dataset.who));
 
 async function initSB(){
   try{
-    const [p,e,st,rm]=await Promise.all([
+    const [p,e,st]=await Promise.all([
       sb.from('studio_progress').select('*'),
       sb.from('studio_errors').select('*').order('created_at',{ascending:false}),
-      sb.from('studio_settings').select('*'),
-      sb.from('studio_reminders').select('*').order('created_at',{ascending:false}).limit(100)]);
-    if(p.error||e.error||st.error||rm.error) throw (p.error||e.error||st.error||rm.error);
+      sb.from('studio_settings').select('*')]);
+    if(p.error||e.error||st.error) throw (p.error||e.error||st.error);
     const remoteDays=new Set();
     const localProg=S.progress;S.progress={};
     p.data.forEach(r=>{remoteDays.add(r.day);S.progress[r.day]={done:r.done||[],goal_ok:r.goal_ok,note:r.note||'',updated_at:r.updated_at}});
@@ -486,14 +479,17 @@ async function initSB(){
       if(localErr.length) await sb.from('studio_errors').upsert(localErr);
     }
     S.errors=[...localErr,...e.data];
-    S.reminders=rm.data;
-    st.data.forEach(r=>S.settings[r.key]=r.value);
+    // i promemoria sono salvati in studio_settings con chiave "rem:<id>"
+    S.reminders=st.data.filter(r=>r.key.startsWith('rem:')).map(r=>{try{return JSON.parse(r.value)}catch(_){return null}}).filter(Boolean).sort((a,b)=>a.created_at<b.created_at?1:-1);
+    st.data.filter(r=>!r.key.startsWith('rem:')).forEach(r=>S.settings[r.key]=r.value);
     online=true;setSync('on','sincronizzato');$('#banner').classList.remove('show');
     saveLocal();renderAll();
   }catch(err){
     online=false;setSync('off','offline');
     const b=$('#banner');
-    b.innerHTML='⚠️ Non riesco a leggere i dati dal database. Controlla la connessione e ricarica la pagina.';
+    b.innerHTML=err&&err.code==='42501'
+      ?'⚠️ Il database è chiuso. Apri Supabase → <b>SQL Editor</b>, incolla <code>supabase_semplice.sql</code> e premi <b>Run</b>, poi ricarica.'
+      :'⚠️ Non riesco a leggere i dati dal database. Controlla la connessione e ricarica la pagina.';
     b.classList.add('show');
     console.warn('Supabase:',err);
   }
@@ -743,12 +739,13 @@ function renderRemBanner(){
 async function markRead(id){
   const r=S.reminders.find(x=>x.id===id);if(!r)return;
   r.read_at=new Date().toISOString();saveLocal();renderAll();toast('👍 Segnato come letto');
-  const {error}=await sb.from('studio_reminders').update({read_at:r.read_at}).eq('id',id);
+  const {error}=await sb.from('studio_settings').upsert({key:'rem:'+id,value:JSON.stringify(r)});
   if(error){console.warn(error);toast('⚠️ Non salvato, riprova')}
 }
 async function sendReminder(txt){
   txt=(txt||'').trim();if(!txt||STU())return;
-  const {data,error}=await sb.from('studio_reminders').insert({text:txt}).select().single();
+  const data={id:crypto.randomUUID(),text:txt.slice(0,500),created_at:new Date().toISOString(),read_at:null};
+  const {error}=await sb.from('studio_settings').insert({key:'rem:'+data.id,value:JSON.stringify(data)});
   if(error){toast('⚠️ Invio non riuscito');console.warn(error);return}
   S.reminders.unshift(data);$('#rTxt').value='';saveLocal();renderAll();toast('📣 Promemoria inviato');
 }
@@ -762,7 +759,7 @@ function renderReminders(){
     ${STU()?(!r.read_at?`<button class="go" data-read="${r.id}">Letto ✓</button>`:''):`<button data-rdel="${r.id}" aria-label="Elimina">✕</button>`}</div>`).join('')
     :`<div class="empty-st">${STU()?'Nessun promemoria. Tutto tranquillo 😎':'Nessun promemoria inviato. Scrivine uno o usa i pulsanti rapidi.'}</div>`;
   $('#rList').querySelectorAll('[data-read]').forEach(x=>x.onclick=()=>markRead(x.dataset.read));
-  $('#rList').querySelectorAll('[data-rdel]').forEach(x=>x.onclick=async()=>{if(!confirm('Eliminare il promemoria?'))return;const {error}=await sb.from('studio_reminders').delete().eq('id',x.dataset.rdel);if(error){toast('⚠️ Non eliminato');return}S.reminders=S.reminders.filter(r=>r.id!==x.dataset.rdel);saveLocal();renderAll()});
+  $('#rList').querySelectorAll('[data-rdel]').forEach(x=>x.onclick=async()=>{if(!confirm('Eliminare il promemoria?'))return;const {error}=await sb.from('studio_settings').delete().eq('key','rem:'+x.dataset.rdel);if(error){toast('⚠️ Non eliminato');return}S.reminders=S.reminders.filter(r=>r.id!==x.dataset.rdel);saveLocal();renderAll()});
   if(STU())return;
   // supervision
   const t=totals();const today=byDate[TODAY];const tv=today&&S.progress[TODAY];
