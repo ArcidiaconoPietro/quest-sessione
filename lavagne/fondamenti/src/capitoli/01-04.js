@@ -66,15 +66,15 @@ printf("%d %c %c\n", c, c + 2, k);`),
       { h:'Il secondo è c + 2 con %c. Che carattere è 65 + 2 = 67?', type:'text', ans:['C',"'C'"], ok:'Sì, la lettera due posti dopo A.', bad:'Le lettere sono in fila: A = 65, B = 66, …' },
       { h:'Il terzo è k (un int che vale 67) stampato con %c. Cosa compare?', type:'choice', opts:['67','C','errore di compilazione'], ans:1, ok:'Esatto: %c prende un numero e stampa il carattere con quel codice.', bad:'Il codice %c stampa sempre un carattere, anche se gli passi un int.' }
     ],
-    done:'<b>Fatto!</b> Stampa <code>65 C C</code>. Regola: lo stesso numero si può stampare come numero (%d) o come carattere (%c).' },
+    done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>c = \'A\'. Nella tabella ASCII \'A\' = 65, quindi dentro c c\'è il numero 65.</li><li>k = c + 2 = 65 + 2 = 67.</li><li>Primo valore: c con %d → stampa il numero: <b>65</b>.</li><li>Secondo valore: c + 2 = 65 + 2 = 67 con %c → il carattere con codice 67. A = 65, B = 66, C = 67 → <b>C</b>.</li><li>Terzo valore: k = 67 con %c → <b>C</b>.</li><li>Tra i valori ci sono gli spazi scritti nella stringa, poi \\n va a capo.</li></ol>Stampa <code>65 C C</code>. Regola: lo stesso numero si può stampare come numero (%d) o come carattere (%c).' },
   ex:[
     { id:'e1', type:'choice', q:'Quale codice usi in printf per stampare una variabile <code>float prezzo</code>?', opts:['%d','%f','%c','%s'], a:1, hint:'f come float.', sol:'<code>printf("%f", prezzo);</code> Con <code>%.2f</code> stampi solo 2 cifre dopo la virgola.' },
     { id:'e2', type:'choice', q:'Il compilatore ti dà un <b>warning</b> e nessun errore. Cosa succede?', opts:['Non viene creato nessun eseguibile','L\'eseguibile viene creato, ma probabilmente c\'è un problema da correggere','Il programma è sicuramente giusto'], a:1, hint:'Warning = avviso, non blocco.', sol:'Con i soli warning l\'eseguibile esiste. All\'esame però vanno tolti tutti.' },
-    { id:'e3', type:'text', q:'Che carattere stampa <code>printf("%c", \'a\' + 3);</code> ?', a:['d',"'d'"], hint:'\'a\' = 97. Conta tre lettere dopo la a.', sol:'97 + 3 = 100, che è \'d\'.' },
+    { id:'e3', type:'text', q:'Che carattere stampa <code>printf("%c", \'a\' + 3);</code> ?', a:['d',"'d'"], hint:'\'a\' = 97. Conta tre lettere dopo la a.', sol:'<ol class="pass"><li>Nella tabella ASCII \'a\' = 97.</li><li>\'a\' + 3 = 97 + 3 = 100.</li><li>Conto le lettere: 97 = a, 98 = b, 99 = c, 100 = d.</li><li>%c stampa il carattere con codice 100: <b>d</b>.</li></ol>' },
     { id:'e4', type:'out', q:'Cosa stampa?'+code(String.raw`
 int x = 4;
 float y = x / 8.0;
-printf("x=%d\ny=%f\n", x, y);`), a:'x=4\ny=0.500000', hint:'8.0 ha la virgola: la divisione è con la virgola. %f mette 6 cifre decimali. \\n va a capo.', sol:'<pre class="code">x=4\ny=0.500000</pre>4 / 8.0 = 0.5, e %f lo stampa come 0.500000.' },
+printf("x=%d\ny=%f\n", x, y);`), a:'x=4\ny=0.500000', hint:'8.0 ha la virgola: la divisione è con la virgola. %f mette 6 cifre decimali. \\n va a capo.', sol:'<pre class="code">x=4\ny=0.500000</pre><ol class="pass"><li>x = 4.</li><li>x / 8.0: 8.0 ha la virgola, quindi è una divisione con la virgola: 4 / 8.0 = 0.5. Quindi y = 0.5.</li><li>printf: "x=%d" → %d viene sostituito da x → <b>x=4</b>. Poi \\n va a capo.</li><li>"y=%f" → %f viene sostituito da y con 6 cifre dopo la virgola → <b>y=0.500000</b>. Poi \\n va a capo.</li></ol>' },
     { id:'e5', type:'code', tag:'al PC', q:'Scrivi, compila (con <code>-Wall</code>) ed esegui un programma che crea due variabili int <code>base = 6</code> e <code>altezza = 4</code>, calcola l\'area del rettangolo e stampa <code>Area: 24</code>.', hint:'Ti servono: #include &lt;stdio.h&gt;, int main(void), una variabile area, printf con %d, return 0.', sol:code(String.raw`
 #include <stdio.h>
 
@@ -85,7 +85,7 @@ int main(void) {
     area = base * altezza;
     printf("Area: %d\n", area);
     return 0;
-}`) }
+}`)+'<ol class="pass"><li>base = 6, altezza = 4.</li><li>area = base * altezza = 6 * 4 = 24.</li><li>printf("Area: %d\\n", area): %d viene sostituito da 24 → stampa <b>Area: 24</b> e va a capo.</li></ol>' }
   ],
   quaderno:[
     '<b>Schema di ogni programma:</b> <code>#include &lt;stdio.h&gt;</code>, poi <code>int main(void) { ... return 0; }</code>.',
@@ -109,14 +109,14 @@ CH.push({
     { type:'bits', title:'8 interruttori: accendi i bit', intro:'Clicca sui bit per accenderli. Sotto ogni bit c\'è il suo peso: il primo pesa <b>−128</b>. Il valore è la somma dei pesi dei bit accesi. Oppure scrivi un numero e guarda la ricetta.' },
     { type:'recipe', title:'Il tema del 9 febbraio 2026: −37 − 7', intro:'Ricetta dell\'esame. Trucco: una sottrazione si fa sempre come somma, −37 − 7 = (−37) + (−7).', steps:[
       { h:'Trasforma la sottrazione in somma', html:'<p>−37 − 7 = (−37) + (−7). Devo scrivere in complemento a 2 sia −37 sia −7.</p>' },
-      { h:'Scrivi −37: binario di 37, inverti, aggiungi 1', html:'<p>37 = 32 + 4 + 1 → <span class="mono">00100101</span><br>inverto tutti i bit → <span class="mono">11011010</span><br>aggiungo 1 → <b class="mono">11011011</b> = −37</p>' },
-      { h:'Scrivi −7 allo stesso modo', html:'<p>7 = 4 + 2 + 1 → <span class="mono">00000111</span><br>inverto → <span class="mono">11111000</span><br>aggiungo 1 → <b class="mono">11111001</b> = −7</p>' },
+      { h:'Scrivi −37: binario di 37, inverti, aggiungi 1', html:'<p>Scompongo 37 con i pesi 128, 64, 32, 16, 8, 4, 2, 1: 37 − 32 = 5, 5 − 4 = 1, 1 − 1 = 0. Quindi 37 = 32 + 4 + 1: bit accesi sotto 32, 4 e 1.<br>Pesi: 128 64 32 16 8 4 2 1 → bit: 0 0 1 0 0 1 0 1 → <span class="mono">00100101</span><br>inverto tutti i bit → <span class="mono">11011010</span><br>aggiungo 1 → <span class="mono">11011010</span> + 1: l\'ultimo bit fa 0 + 1 = 1, nessun riporto → <b class="mono">11011011</b> = −37<br>Controllo con i pesi: −128 + 64 + 16 + 8 + 2 + 1 = −128 + 91 = −37 ✓</p>' },
+      { h:'Scrivi −7 allo stesso modo', html:'<p>7 − 4 = 3, 3 − 2 = 1, 1 − 1 = 0, quindi 7 = 4 + 2 + 1 → <span class="mono">00000111</span><br>inverto → <span class="mono">11111000</span><br>aggiungo 1: ultimo bit 0 + 1 = 1 → <b class="mono">11111001</b> = −7<br>Controllo: −128 + 64 + 32 + 16 + 8 + 1 = −128 + 121 = −7 ✓</p>' },
       { h:'Somma in colonna, da destra, con i riporti', html:code(String.raw`
    11011011   (-37)
  + 11111001   (-7)
  ----------
- 1 11010100`)+'<p>Il risultato ha 9 bit: il <b>riporto oltre l\'ottavo bit si butta via</b>. Resta <b class="mono">11010100</b>.</p>' },
-      { h:'Verifica in decimale', html:'<p>Il primo bit è 1, quindi è negativo. Per sapere quanto vale rifaccio la ricetta al contrario: inverto e aggiungo 1.<br><span class="mono">11010100</span> → inverto <span class="mono">00101011</span> → +1 <span class="mono">00101100</span> = 44.<br>Quindi il risultato è <b>−44</b>, e infatti −37 − 7 = −44. ✓</p>' }
+ 1 11010100`)+'<p>Colonna per colonna, da destra (r = riporto che arriva dalla colonna prima):</p><ol class="pass"><li>colonna 1: 1 + 1 = 2 → scrivo 0, riporto 1</li><li>colonna 2: 1 + 0 + r1 = 2 → scrivo 0, riporto 1</li><li>colonna 3: 0 + 0 + r1 = 1 → scrivo 1, riporto 0</li><li>colonna 4: 1 + 1 + 0 = 2 → scrivo 0, riporto 1</li><li>colonna 5: 1 + 1 + r1 = 3 → scrivo 1, riporto 1</li><li>colonna 6: 0 + 1 + r1 = 2 → scrivo 0, riporto 1</li><li>colonna 7: 1 + 1 + r1 = 3 → scrivo 1, riporto 1</li><li>colonna 8: 1 + 1 + r1 = 3 → scrivo 1, riporto 1 (nono bit)</li></ol><p>Il risultato ha 9 bit: il <b>riporto oltre l\'ottavo bit si butta via</b>. Resta <b class="mono">11010100</b>.</p>' },
+      { h:'Verifica in decimale', html:'<p>Il primo bit è 1, quindi è negativo. Per sapere quanto vale rifaccio la ricetta al contrario: inverto e aggiungo 1.<br><span class="mono">11010100</span> → inverto <span class="mono">00101011</span> → +1: ultimo bit 1 + 1 = 0 riporto 1, penultimo 1 + 1 = 0 riporto 1, terzultimo 0 + 1 = 1 → <span class="mono">00101100</span> = 32 + 8 + 4 = 44.<br>(Oppure con i pesi: −128 + 64 + 16 + 4 = −44.)<br>Quindi il risultato è <b>−44</b>, e infatti −37 − 7 = −44. ✓</p>' }
     ] }
   ],
   why:[
@@ -126,19 +126,19 @@ CH.push({
     { easy:true, f:'Overflow: due positivi danno un negativo (o due negativi un positivo)', t:'Succede quando il risultato vero esce dall\'intervallo da −128 a 127. Esempio: 100 + 50 = 150, che con 8 bit non ci sta. Lo riconosci dal segno sbagliato.' }
   ],
   warn:{ title:'L\'overflow', html:'<p>Se sommi due numeri dello stesso segno e il risultato ha il segno opposto, c\'è <b>overflow</b>: il risultato vero non sta in 8 bit. All\'esame scrivi "overflow" e spiega che il risultato esce dall\'intervallo da −128 a 127.</p>'
-    +'<p>Esempio: −60 − 70 = −130, ma −130 &lt; −128. In binario: <span class="mono">11000100 + 10111010 = 1|01111110</span> → <span class="mono">01111110</span> = +126. Due negativi danno un positivo: overflow.</p>' },
+    +'<p>Esempio: −60 − 70 = −130, ma −130 &lt; −128. Tutti i passaggi:</p><ol class="pass"><li>60 = 32 + 16 + 8 + 4 = <span class="mono">00111100</span> → inverto <span class="mono">11000011</span> → +1 = <span class="mono">11000100</span> = −60</li><li>70 = 64 + 4 + 2 = <span class="mono">01000110</span> → inverto <span class="mono">10111001</span> → +1 = <span class="mono">10111010</span> = −70</li><li>Somma da destra: 0+0=0, 0+1=1, 1+0=1, 0+1=1, 0+1=1, 0+1=1, 1+0=1, 1+1=10 (scrivo 0, riporto 1) → <span class="mono">1|01111110</span></li><li>Butto il nono bit: <span class="mono">01111110</span> = 64 + 32 + 16 + 8 + 4 + 2 = +126</li><li>Due negativi hanno dato un positivo: <b>overflow</b>.</li></ol>' },
   guided:{ title:'Calcola −18 + 5 su 8 bit', steps:[
       { h:'Scrivi 18 in binario su 8 bit (18 = 16 + 2)', type:'text', ans:['00010010'], ok:'Giusto.', bad:'16 è il quarto bit da destra contando da 1, 2, 4, 8, 16. Scrivi 8 cifre.' },
       { h:'Inverti tutti i bit di 00010010 e aggiungi 1: quanto fa −18?', type:'text', ans:['11101110'], ok:'Sì: 11101101 + 1 = 11101110.', bad:'Inverti: 11101101. Ora aggiungi 1 all\'ultima cifra.' },
       { h:'5 = 00000101. Somma 11101110 + 00000101', type:'text', ans:['11110011'], ok:'Giusto, e qui non c\'è nessun nono bit da buttare.', bad:'Somma da destra: 0+1=1, 1+0=1, 1+1=10 (scrivo 0, riporto 1)…' },
       { h:'11110011 inizia con 1, quindi è negativo. Inverti e aggiungi 1 per trovare il valore: quanto fa?', type:'text', ans:['-13','−13'], ok:'Perfetto: 00001100 + 1 = 00001101 = 13, quindi −13. E infatti −18 + 5 = −13.', bad:'Inverti: 00001100. Aggiungi 1: 00001101. Quanto vale? Poi metti il meno.' }
-    ], done:'<b>Fatto!</b> −18 + 5 = <span class="mono">11110011</span> = −13. All\'esame scrivi tutti questi passaggi: si danno punti anche ai passaggi.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>18 − 16 = 2, 2 − 2 = 0 → 18 = 16 + 2 → <span class="mono">00010010</span></li><li>Inverto: <span class="mono">11101101</span>. Aggiungo 1: ultimo bit 1 + 1 = 0 riporto 1, penultimo 0 + 1 = 1 → <span class="mono">11101110</span> = −18</li><li>5 = 4 + 1 → <span class="mono">00000101</span></li><li>Somma da destra: 0+1=1, 1+0=1, 1+1=10 (0, riporto 1), 1+0+1=10 (0, riporto 1), 0+0+1=1, 1+0=1, 1+0=1, 1+0=1 → <span class="mono">11110011</span>, nessun nono bit</li><li>Inizia con 1 → negativo. Inverto <span class="mono">00001100</span>, +1 → <span class="mono">00001101</span> = 8 + 4 + 1 = 13 → <b>−13</b></li><li>Controllo: −18 + 5 = −13 ✓</li></ol>−18 + 5 = <span class="mono">11110011</span> = −13. All\'esame scrivi tutti questi passaggi: si danno punti anche ai passaggi.' },
   ex:[
-    { id:'e1', type:'text', q:'Scrivi −1 in complemento a 2 su 8 bit.', a:['11111111'], hint:'1 = 00000001. Inverti e aggiungi 1.', sol:'00000001 → 11111110 → +1 = <b>11111111</b>.' },
-    { id:'e2', type:'text', q:'Quanto vale in decimale <span class="mono">10000000</span> (complemento a 2, 8 bit)?', a:['-128','−128'], hint:'Solo il primo bit è acceso. Quanto pesa il primo bit?', sol:'Solo il bit di peso −128: vale <b>−128</b>, il numero più piccolo con 8 bit.' },
-    { id:'e3', type:'text', q:'Scrivi −20 in complemento a 2 su 8 bit.', a:['11101100'], hint:'20 = 16 + 4 = 00010100.', sol:'00010100 → inverto 11101011 → +1 = <b>11101100</b>.' },
-    { id:'e4', type:'text', q:'Calcola 12 − 30 su 8 bit e scrivi il risultato in binario.', a:['11101110'], hint:'12 − 30 = 12 + (−30). 12 = 00001100, 30 = 00011110 → −30 = 11100010.', sol:'00001100 + 11100010 = <b>11101110</b> → inverto 00010001, +1 = 00010010 = 18 → −18. ✓ (12 − 30 = −18)' },
-    { id:'e5', type:'choice', q:'100 + 50 su 8 bit in complemento a 2: cosa succede?', opts:['Fa 150, nessun problema','Overflow: 01100100 + 00110010 = 10010110, che vale −106','Errore del compilatore'], a:1, hint:'Il massimo con 8 bit è 127.', sol:'150 &gt; 127. La somma dà 10010110, che inizia con 1 quindi è negativo (−106): due positivi danno un negativo, è <b>overflow</b>.' }
+    { id:'e1', type:'text', q:'Scrivi −1 in complemento a 2 su 8 bit.', a:['11111111'], hint:'1 = 00000001. Inverti e aggiungi 1.', sol:'<ol class="pass"><li>1 in binario su 8 bit: 00000001</li><li>Inverto tutti i bit: 11111110</li><li>Aggiungo 1: ultimo bit 0 + 1 = 1 → <b>11111111</b></li><li>Controllo con i pesi: −128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = −128 + 127 = −1 ✓</li></ol>' },
+    { id:'e2', type:'text', q:'Quanto vale in decimale <span class="mono">10000000</span> (complemento a 2, 8 bit)?', a:['-128','−128'], hint:'Solo il primo bit è acceso. Quanto pesa il primo bit?', sol:'<ol class="pass"><li>Pesi: −128, 64, 32, 16, 8, 4, 2, 1.</li><li>Bit: 1, 0, 0, 0, 0, 0, 0, 0.</li><li>Valore = 1·(−128) + 0·64 + 0·32 + 0·16 + 0·8 + 0·4 + 0·2 + 0·1 = <b>−128</b>, il numero più piccolo con 8 bit.</li></ol>' },
+    { id:'e3', type:'text', q:'Scrivi −20 in complemento a 2 su 8 bit.', a:['11101100'], hint:'20 = 16 + 4 = 00010100.', sol:'<ol class="pass"><li>20 − 16 = 4, 4 − 4 = 0 → 20 = 16 + 4 → 00010100</li><li>Inverto: 11101011</li><li>Aggiungo 1: ultimo bit 1 + 1 = 0 riporto 1; penultimo 1 + 1 = 0 riporto 1; terzultimo 0 + 1 = 1 → <b>11101100</b></li><li>Controllo: −128 + 64 + 32 + 8 + 4 = −128 + 108 = −20 ✓</li></ol>' },
+    { id:'e4', type:'text', q:'Calcola 12 − 30 su 8 bit e scrivi il risultato in binario.', a:['11101110'], hint:'12 − 30 = 12 + (−30). 12 = 00001100, 30 = 00011110 → −30 = 11100010.', sol:'<ol class="pass"><li>12 − 30 = 12 + (−30).</li><li>12 = 8 + 4 → 00001100</li><li>30 = 16 + 8 + 4 + 2 → 00011110 → inverto 11100001 → +1 (1 + 1 = 0 riporto 1, 0 + 1 = 1) → 11100010 = −30</li><li>Somma da destra: 0+0=0, 0+1=1, 1+0=1, 1+0=1, 0+0=0, 0+1=1, 0+1=1, 0+1=1 → <b>11101110</b> (nessun riporto)</li><li>Inizia con 1 → negativo. Inverto 00010001, +1 = 00010010 = 16 + 2 = 18 → −18</li><li>Controllo: 12 − 30 = −18 ✓</li></ol>' },
+    { id:'e5', type:'choice', q:'100 + 50 su 8 bit in complemento a 2: cosa succede?', opts:['Fa 150, nessun problema','Overflow: 01100100 + 00110010 = 10010110, che vale −106','Errore del compilatore'], a:1, hint:'Il massimo con 8 bit è 127.', sol:'<ol class="pass"><li>100 = 64 + 32 + 4 → 01100100</li><li>50 = 32 + 16 + 2 → 00110010</li><li>Somma da destra: 0+0=0, 0+1=1, 1+0=1, 0+0=0, 0+1=1, 1+1=10 (0, riporto 1), 1+0+1=10 (0, riporto 1), 0+0+1=1 → 10010110</li><li>Valore: −128 + 16 + 4 + 2 = −106</li><li>100 + 50 = 150 &gt; 127: due positivi hanno dato un negativo → <b>overflow</b>.</li></ol>' }
   ],
   quaderno:[
     '<b>Intervallo con 8 bit:</b> da −128 a +127. Il primo bit pesa −128.',
@@ -205,7 +205,7 @@ printf("%d\n", a);`), steps:[
       { h:'Quindi quanto vale m e cosa stampa la prima printf?', type:'text', ans:['8'], ok:'Sì, m = b = 8.', bad:'Condizione falsa → si prende quello dopo i due punti.' },
       { h:'Quanto fa b % a, cioè 8 % 3?', type:'text', ans:['2'], ok:'Giusto: 8 = 3 · 2 + 2.', bad:'Il resto: 8 diviso 3 fa 2 con resto…' },
       { h:'La condizione 8 % 3 == 2 è vera. Cosa stampa la seconda printf?', type:'text', ans:['30'], ok:'Perfetto: a = a * 10 = 30.', bad:'Condizione vera → si prende quello prima dei due punti: a * 10.' }
-    ], done:'<b>Fatto!</b> Stampa <code>8</code> e poi <code>30</code>, su due righe.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>a = 3, b = 8.</li><li>(a &gt; b) → (3 &gt; 8) → falso → prendo quello dopo i due punti: m = b = 8.</li><li>Prima printf: <b>8</b>, poi a capo.</li><li>b % a = 8 % 3: 3 · 2 = 6, 8 − 6 = 2 → resto 2.</li><li>(2 == 2) → vero → prendo quello prima dei due punti: a * 10 = 3 * 10 = 30. Quindi a = 30.</li><li>Seconda printf: <b>30</b>, poi a capo.</li></ol>' },
   ex:[
     { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
 int x = 10, y = 4;
@@ -213,16 +213,16 @@ float f;
 f = x / y;
 printf("%d %d %.2f\n", x / y, x % y, f);
 f = x / (float) y;
-printf("%.2f\n", f);`), a:'2 2 2.00\n2.50', hint:'x / y è tra due int. Il cast (float) y cambia tutto.', sol:'<pre class="code">2 2 2.00\n2.50</pre>10 / 4 = 2 (intera), 10 % 4 = 2, f = 2.00 perché la divisione era intera. Col cast: 10 / 4.0 = 2.50.' },
+printf("%.2f\n", f);`), a:'2 2 2.00\n2.50', hint:'x / y è tra due int. Il cast (float) y cambia tutto.', sol:'<pre class="code">2 2 2.00\n2.50</pre><ol class="pass"><li>f = x / y = 10 / 4: tutti e due int → divisione intera. 10 / 4 = 2,5 → butto la parte decimale → 2. Poi 2 va nel float: f = 2.0.</li><li>Prima printf, primo valore: x / y = 2 (come sopra).</li><li>Secondo valore: x % y = 10 % 4: 4 · 2 = 8, 10 − 8 = 2 → 2.</li><li>Terzo valore: f = 2.0 con %.2f (2 cifre dopo la virgola) → 2.00. Riga stampata: <b>2 2 2.00</b>.</li><li>f = x / (float) y: il cast trasforma y in 4.0 → 10 / 4.0 = 2.5.</li><li>Seconda printf: 2.5 con %.2f → <b>2.50</b>.</li></ol>' },
     { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
 int i = 5, j;
 j = i++ * 2;
 printf("%d %d\n", i, j);
 j = --i * 3;
-printf("%d %d\n", i, j);`), a:'6 10\n5 15', hint:'i++ usa 5 e poi i diventa 6. --i prima diminuisce.', sol:'<pre class="code">6 10\n5 15</pre>j = 5 · 2 = 10 e i = 6. Poi --i porta i a 5 e j = 5 · 3 = 15.' },
-    { id:'e3', type:'text', q:'Quanto vale <code>17 % 5</code> ?', a:['2'], hint:'17 = 5 · 3 + ?', sol:'17 = 5 · 3 + 2, resto <b>2</b>.' },
+printf("%d %d\n", i, j);`), a:'6 10\n5 15', hint:'i++ usa 5 e poi i diventa 6. --i prima diminuisce.', sol:'<pre class="code">6 10\n5 15</pre><ol class="pass"><li>i = 5.</li><li>j = i++ * 2: i++ usa il valore vecchio, 5 → j = 5 * 2 = 10. Dopo, i diventa 5 + 1 = 6.</li><li>Prima printf: i = 6, j = 10 → <b>6 10</b>.</li><li>j = --i * 3: --i prima diminuisce: i = 6 − 1 = 5, poi usa 5 → j = 5 * 3 = 15.</li><li>Seconda printf: i = 5, j = 15 → <b>5 15</b>.</li></ol>' },
+    { id:'e3', type:'text', q:'Quanto vale <code>17 % 5</code> ?', a:['2'], hint:'17 = 5 · 3 + ?', sol:'<ol class="pass"><li>17 / 5 tra interi = 3 (quante volte il 5 sta nel 17).</li><li>5 · 3 = 15.</li><li>Resto = 17 − 15 = <b>2</b>.</li></ol>' },
     { id:'e4', type:'choice', q:'Come si controlla in C se un intero n è pari?', opts:['n / 2 == 0','n % 2 == 0','n % 2 == 1'], a:1, hint:'Pari = il resto della divisione per 2 è zero.', sol:'<code>if (n % 2 == 0)</code>. Serve spessissimo al PC.' },
-    { id:'e5', type:'text', q:'<code>char c = \'g\' - 3;</code> Che carattere c\'è in c?', a:['d',"'d'"], hint:'Tre lettere prima della g.', sol:'g, f, e, <b>d</b>. È lo stesso trucco del tema del 9 feb 2026 (source[i] − max).' }
+    { id:'e5', type:'text', q:'<code>char c = \'g\' - 3;</code> Che carattere c\'è in c?', a:['d',"'d'"], hint:'Tre lettere prima della g.', sol:'<ol class="pass"><li>\'g\' = 103 in ASCII (\'a\' = 97, b 98, c 99, d 100, e 101, f 102, g 103).</li><li>\'g\' − 3 = 103 − 3 = 100.</li><li>100 = <b>\'d\'</b>.</li></ol>È lo stesso trucco del tema del 9 feb 2026 (source[i] − max).' }
   ],
   quaderno:[
     '<b>int / int</b> butta la parte decimale. Per avere la virgola: almeno un numero float, oppure cast <code>(float)</code>.',
@@ -298,7 +298,7 @@ printf("%d %d\n", i, n);`), steps:[
       { h:'Scrivi i valori che prende i dentro il ciclo, separati da virgola', type:'text', ans:['10,7,4,1'], ok:'Giusto: dopo 1 viene −2, che non è &gt; 0.', bad:'Parti da 10 e togli 3 ogni volta, finché i &gt; 0.' },
       { h:'Quali di questi sono pari? Quindi quanto vale n alla fine?', type:'text', ans:['2'], ok:'Sì: 10 e 4 sono pari, n = 2.', bad:'Pari: resto della divisione per 2 uguale a 0.' },
       { h:'E quanto vale i quando esce dal ciclo?', type:'text', ans:['-2','−2'], ok:'Perfetto: 1 − 3 = −2, e −2 &gt; 0 è falso.', bad:'L\'ultimo i dentro il ciclo è 1. Poi si fa ancora i = i − 3.' }
-    ], done:'<b>Fatto!</b> Stampa <code>-2 2</code>.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>i = 10, n = 0. Controllo 10 &gt; 0: vero. 10 % 2 = 0 → pari → n = 1. Aggiorno i = 10 − 3 = 7.</li><li>7 &gt; 0 vero. 7 % 2 = 1 → dispari, n resta 1. i = 7 − 3 = 4.</li><li>4 &gt; 0 vero. 4 % 2 = 0 → pari → n = 2. i = 4 − 3 = 1.</li><li>1 &gt; 0 vero. 1 % 2 = 1 → dispari, n resta 2. i = 1 − 3 = −2.</li><li>−2 &gt; 0 falso → esco dal ciclo.</li><li>printf: i = −2, n = 2 → <b>-2 2</b>.</li></ol>' },
   ex:[
     { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
 int i = 1, p = 1;
@@ -306,16 +306,16 @@ while (i < 5) {
     p = p * 2;
     i = i + 2;
 }
-printf("%d %d\n", i, p);`), a:'5 4', hint:'Fai una tabellina con i e p a ogni giro.', sol:'<pre class="code">5 4</pre>Giro 1: p = 2, i = 3. Giro 2: p = 4, i = 5. 5 &lt; 5 è falso, esco.' },
+printf("%d %d\n", i, p);`), a:'5 4', hint:'Fai una tabellina con i e p a ogni giro.', sol:'<pre class="code">5 4</pre><ol class="pass"><li>Inizio: i = 1, p = 1.</li><li>Controllo 1 &lt; 5: vero. Giro 1: p = 1 * 2 = 2, i = 1 + 2 = 3.</li><li>Controllo 3 &lt; 5: vero. Giro 2: p = 2 * 2 = 4, i = 3 + 2 = 5.</li><li>Controllo 5 &lt; 5: falso → esco.</li><li>printf: i = 5, p = 4 → <b>5 4</b>.</li></ol>' },
     { id:'e2', type:'out', q:'Cosa stampa? (attento al tipo di ciclo)'+code(String.raw`
 int k = 10;
 do {
     printf("%d ", k);
     k = k - 4;
 } while (k > 10);
-printf("\nfine %d\n", k);`), a:'10\nfine 6', hint:'do-while fa sempre almeno un giro, e controlla dopo.', sol:'<pre class="code">10 \nfine 6</pre>Stampa 10, k diventa 6, 6 &gt; 10 è falso: esce. Un while normale non avrebbe fatto nessun giro.' },
+printf("\nfine %d\n", k);`), a:'10\nfine 6', hint:'do-while fa sempre almeno un giro, e controlla dopo.', sol:'<pre class="code">10 \nfine 6</pre><ol class="pass"><li>k = 10.</li><li>do: entro senza controllare. printf("%d ", k) → stampa "10 ".</li><li>k = 10 − 4 = 6.</li><li>Controllo alla fine: 6 &gt; 10 → falso → esco.</li><li>printf("\\nfine %d\\n", k): va a capo, stampa "fine 6", va a capo.</li></ol>Un while normale non avrebbe fatto nessun giro, perché 10 &gt; 10 è già falso.' },
     { id:'e3', type:'choice', q:'Quale riga legge correttamente un intero in <code>int eta;</code> ?', opts:['scanf("%d", eta);','scanf("%d", &amp;eta);','scanf(&amp;eta);','printf("%d", &amp;eta);'], a:1, hint:'Ricordati della &amp;.', sol:'<code>scanf("%d", &amp;eta);</code>' },
-    { id:'e4', type:'text', q:'Quante volte gira <code>for (i = 0; i &lt; 10; i = i + 3)</code> ?', a:['4'], hint:'i vale 0, 3, …', sol:'i = 0, 3, 6, 9: <b>4</b> giri. Con 12 si ferma.' },
+    { id:'e4', type:'text', q:'Quante volte gira <code>for (i = 0; i &lt; 10; i = i + 3)</code> ?', a:['4'], hint:'i vale 0, 3, …', sol:'<ol class="pass"><li>i = 0: 0 &lt; 10 vero → giro 1. Poi i = 0 + 3 = 3.</li><li>i = 3: 3 &lt; 10 vero → giro 2. i = 6.</li><li>i = 6: 6 &lt; 10 vero → giro 3. i = 9.</li><li>i = 9: 9 &lt; 10 vero → giro 4. i = 12.</li><li>i = 12: 12 &lt; 10 falso → esco. Totale <b>4</b> giri.</li></ol>' },
     { id:'e5', type:'code', tag:'al PC', q:'Scrivi un programma che legge numeri interi da tastiera finché l\'utente scrive 0, e alla fine stampa quanti numeri <b>positivi</b> ha scritto (lo 0 non conta).', hint:'Ti serve un contatore che parte da 0 e un ciclo while (oppure do-while) che legge con scanf e si ferma quando il numero è 0.', sol:code(String.raw`
 #include <stdio.h>
 
@@ -330,7 +330,7 @@ int main(void) {
     }
     printf("Positivi: %d\n", positivi);
     return 0;
-}`)+'<p>Schema da ricordare: <b>leggo una volta prima del ciclo, poi in fondo a ogni giro</b>. Così il controllo <code>x != 0</code> vede sempre il numero appena letto.</p>' }
+}`)+'<p>Prova a mano scrivendo 3, −2, 5, 0:</p><ol class="pass"><li>positivi = 0. Prima scanf: x = 3.</li><li>3 != 0 vero → entro. 3 &gt; 0 → positivi = 1. scanf: x = −2.</li><li>−2 != 0 vero → entro. −2 &gt; 0 falso → positivi resta 1. scanf: x = 5.</li><li>5 != 0 vero → entro. 5 &gt; 0 → positivi = 2. scanf: x = 0.</li><li>0 != 0 falso → esco. Stampa <b>Positivi: 2</b>.</li></ol><p>Schema da ricordare: <b>leggo una volta prima del ciclo, poi in fondo a ogni giro</b>. Così il controllo <code>x != 0</code> vede sempre il numero appena letto.</p>' }
   ],
   quaderno:[
     '<b>scanf</b>: <code>scanf("%d", &amp;n);</code> sempre con la &amp; (tranne le stringhe, capitolo 9).',

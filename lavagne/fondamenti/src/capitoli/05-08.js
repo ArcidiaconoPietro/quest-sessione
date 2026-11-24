@@ -69,7 +69,7 @@ int main(void) {
       { h:'Quanto restituisce massimo(4, 9)?', type:'text', ans:['9'], ok:'Sì.', bad:'Il più grande tra 4 e 9.' },
       { h:'Quindi stampa_riga riceve 9 − 4. Quanti asterischi stampa?', type:'text', ans:['5'], ok:'Giusto: 5 asterischi e poi a capo.', bad:'9 − 4 = ?' },
       { h:'Seconda riga: massimo(a * 3, b) = massimo(12, 9). Cosa stampa?', type:'text', ans:['12'], ok:'Perfetto.', bad:'a * 3 = 12. Il più grande tra 12 e 9.' }
-    ], done:'<b>Fatto!</b> Stampa <code>*****</code> e poi <code>12</code>. Nota: <code>stampa_riga</code> è <code>void</code>, non restituisce niente: la si usa da sola, non dentro un calcolo.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>a = 4, b = 9.</li><li>Riga stampa_riga(massimo(a, b) − a): prima calcolo massimo(4, 9). Dentro: x = 4, y = 9. 4 &gt; 9 falso → else → return y = 9.</li><li>9 − a = 9 − 4 = 5 → chiamo stampa_riga(5).</li><li>Dentro stampa_riga, n = 5: i = 0, 1, 2, 3, 4 (5 giri, poi 5 &lt; 5 è falso) → 5 asterischi, poi \\n → <b>*****</b>.</li><li>Riga printf: a * 3 = 4 * 3 = 12 → massimo(12, 9): 12 &gt; 9 vero → return 12.</li><li>printf("%d\\n", 12) → <b>12</b>.</li></ol>Stampa <code>*****</code> e poi <code>12</code>. Nota: <code>stampa_riga</code> è <code>void</code>, non restituisce niente: la si usa da sola, non dentro un calcolo.' },
   ex:[
     { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
 void raddoppia(int n) {
@@ -81,10 +81,10 @@ int main(void) {
     raddoppia(k);
     printf("fuori: %d\n", k);
     return 0;
-}`), a:'dentro: 14\nfuori: 7', hint:'Passaggio per valore: n è una copia di k.', sol:'<pre class="code">dentro: 14\nfuori: 7</pre>La funzione raddoppia la sua copia. k nel main resta 7.' },
+}`), a:'dentro: 14\nfuori: 7', hint:'Passaggio per valore: n è una copia di k.', sol:'<pre class="code">dentro: 14\nfuori: 7</pre><ol class="pass"><li>main: k = 7.</li><li>raddoppia(k): si copia il valore 7 nel parametro n. Ora ci sono due variabili: k = 7 (main) e n = 7 (raddoppia).</li><li>n = n * 2 = 7 * 2 = 14. Cambia solo n.</li><li>printf → <b>dentro: 14</b>.</li><li>raddoppia finisce, n sparisce. Nel main k è ancora 7 → <b>fuori: 7</b>.</li></ol>' },
     { id:'e2', type:'choice', q:'Il testo dice: "si realizzi una funzione che riceve un intero e un float e restituisce un float". Quale firma è giusta?', opts:['void f(int a, float b)','float f(int a, float b)','int f(float a, int b)'], a:1, hint:'Il tipo restituito si scrive prima del nome.', sol:'<code>float f(int a, float b)</code>' },
     { id:'e3', type:'choice', q:'Il compilatore dice <code>warning: implicit declaration of function \'media\'</code>. Cosa hai dimenticato?', opts:['Il return','Il prototipo di media prima del main (o l\'#include del suo .h)','Il punto e virgola'], a:1, hint:'"Implicit declaration" = l\'ho usata senza che fosse dichiarata prima.', sol:'Manca il prototipo, oppure l\'#include del file .h dove sta.' },
-    { id:'e4', type:'text', q:'<code>int f(int n) { return n % 10 + n / 10; }</code> Quanto restituisce f(47)?', a:['11'], hint:'47 % 10 è l\'ultima cifra, 47 / 10 è la divisione intera.', sol:'7 + 4 = <b>11</b>.' },
+    { id:'e4', type:'text', q:'<code>int f(int n) { return n % 10 + n / 10; }</code> Quanto restituisce f(47)?', a:['11'], hint:'47 % 10 è l\'ultima cifra, 47 / 10 è la divisione intera.', sol:'<ol class="pass"><li>n = 47.</li><li>47 % 10: 10 · 4 = 40, 47 − 40 = 7 → 7 (l\'ultima cifra).</li><li>47 / 10 tra interi: 4,7 → butto la parte decimale → 4.</li><li>7 + 4 = <b>11</b>.</li></ol>' },
     { id:'e5', type:'code', tag:'al PC', q:'Scrivi una funzione <code>int conta_divisori(int n)</code> che restituisce quanti divisori ha n (per esempio conta_divisori(12) = 6: 1, 2, 3, 4, 6, 12) e un main che la prova con 12 e con 7.', hint:'Ciclo da 1 a n, contatore che aumenta quando n % i == 0.', sol:code(String.raw`
 #include <stdio.h>
 
@@ -101,7 +101,7 @@ int main(void) {
     printf("%d\n", conta_divisori(12));   /* 6 */
     printf("%d\n", conta_divisori(7));    /* 2 */
     return 0;
-}`) }
+}`)+'<p>Traccia di conta_divisori(12):</p><ol class="pass"><li>i = 1: 12 % 1 = 0 → cont = 1</li><li>i = 2: 12 % 2 = 0 → cont = 2</li><li>i = 3: 12 % 3 = 0 → cont = 3</li><li>i = 4: 12 % 4 = 0 → cont = 4</li><li>i = 5: 12 % 5 = 2 → no</li><li>i = 6: 12 % 6 = 0 → cont = 5</li><li>i = 7, 8, 9, 10, 11: resti 5, 4, 3, 2, 1 → no</li><li>i = 12: 12 % 12 = 0 → cont = 6</li><li>i = 13: 13 &lt;= 12 falso → esco, return <b>6</b></li></ol><p>Per 7: solo i = 1 e i = 7 danno resto 0 → <b>2</b>.</p>' }
   ],
   quaderno:[
     '<b>Firma:</b> <code>tipo_restituito nome(tipo1 par1, tipo2 par2)</code>. <code>void</code> se non restituisce niente.',
@@ -172,13 +172,13 @@ int f(int a, int b) {
       { h:'Continua: da f(17, 4) quale chiamata segue?', type:'text', ans:['f(13,5)','13,5'], ok:'Sì.', bad:'17 − 4 e 4 + 1.' },
       { h:'Poi f(8, 6), poi f(2, 7). In f(2, 7) vale 2 &lt; 7: cosa restituisce?', type:'text', ans:['2'], ok:'Perfetto: caso base, restituisce a = 2.', bad:'Se a &lt; b la funzione restituisce a.' },
       { h:'Ogni chiamata restituisce direttamente quello che riceve. Cosa stampa il main?', type:'text', ans:['2'], ok:'Esatto.', bad:'Il valore torna indietro uguale fino al main.' }
-    ], done:'<b>Fatto!</b> All\'esame scrivi così: f(20,3) → f(17,4) → f(13,5) → f(8,6) → f(2,7) = 2. Stampa <code>2</code>.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>f(20, 3): 20 &lt; 3 falso → f(20 − 3, 3 + 1) = f(17, 4)</li><li>f(17, 4): 17 &lt; 4 falso → f(17 − 4, 4 + 1) = f(13, 5)</li><li>f(13, 5): 13 &lt; 5 falso → f(13 − 5, 5 + 1) = f(8, 6)</li><li>f(8, 6): 8 &lt; 6 falso → f(8 − 6, 6 + 1) = f(2, 7)</li><li>f(2, 7): 2 &lt; 7 vero → caso base, return a = 2</li><li>Risalgo: f(8, 6) = 2, f(13, 5) = 2, f(17, 4) = 2, f(20, 3) = 2 (ognuna restituisce quello che riceve)</li><li>main stampa <b>2</b></li></ol>All\'esame scrivi così: f(20,3) → f(17,4) → f(13,5) → f(8,6) → f(2,7) = 2.' },
   ex:[
     { id:'e1', type:'text', q:code(String.raw`
 int s(int n) {
     if (n < 10) return n;
     return n % 10 + s(n / 10);
-}`)+'Quanto restituisce s(352)?', a:['10'], hint:'352 % 10 = 2 e 352 / 10 = 35. Poi s(35) = 5 + s(3).', sol:'s(352) = 2 + s(35) = 2 + 5 + s(3) = 2 + 5 + 3 = <b>10</b>. È la somma delle cifre.' },
+}`)+'Quanto restituisce s(352)?', a:['10'], hint:'352 % 10 = 2 e 352 / 10 = 35. Poi s(35) = 5 + s(3).', sol:'Scendo:<ol class="pass"><li>s(352): 352 &lt; 10 falso → 352 % 10 + s(352 / 10) = 2 + s(35)</li><li>s(35): 35 &lt; 10 falso → 35 % 10 + s(35 / 10) = 5 + s(3)</li><li>s(3): 3 &lt; 10 vero → caso base, return 3</li></ol>Risalgo:<ol class="pass"><li>s(35) = 5 + 3 = 8</li><li>s(352) = 2 + 8 = <b>10</b></li></ol>È la somma delle cifre (3 + 5 + 2).' },
     { id:'e2', type:'out', q:'Cosa stampa? (guarda dove sta la printf)'+code(String.raw`
 int g(int n) {
     if (n == 0) return 0;
@@ -189,7 +189,7 @@ int main(void) {
     int x = g(3);
     printf("\n%d\n", x);
     return 0;
-}`), a:'3 2 1\n3', hint:'La printf è prima della chiamata: stampa mentre la pila cresce. Il valore restituito conta le chiamate.', sol:'<pre class="code">3 2 1 \n3</pre>Stampa 3, 2, 1 scendendo. Poi g(0) = 0, g(1) = 1, g(2) = 2, g(3) = 3.' },
+}`), a:'3 2 1\n3', hint:'La printf è prima della chiamata: stampa mentre la pila cresce. Il valore restituito conta le chiamate.', sol:'<pre class="code">3 2 1 \n3</pre>Scendo (la printf è prima della chiamata):<ol class="pass"><li>g(3): 3 == 0 falso → stampa "3 " → chiama g(2)</li><li>g(2): stampa "2 " → chiama g(1)</li><li>g(1): stampa "1 " → chiama g(0)</li><li>g(0): 0 == 0 → caso base, return 0</li></ol>Risalgo:<ol class="pass"><li>g(1) = g(0) + 1 = 0 + 1 = 1</li><li>g(2) = g(1) + 1 = 1 + 1 = 2</li><li>g(3) = g(2) + 1 = 2 + 1 = 3 → x = 3</li><li>printf("\\n%d\\n", x): va a capo e stampa <b>3</b></li></ol>' },
     { id:'e3', type:'choice', q:'Cosa NON contiene il record di attivazione?', opts:['I parametri della funzione','Le variabili locali','L\'indirizzo di ritorno','Le variabili allocate con malloc'], a:3, hint:'La memoria di malloc sta in un\'altra zona.', sol:'La memoria presa con malloc sta nello <b>heap</b>, non nello stack. Lo vedrai nel capitolo 13.' },
     { id:'e4', type:'choice', q:'<code>int h(int n) { return n + h(n - 1); }</code> Cosa succede chiamando h(3)?', opts:['Restituisce 6','Restituisce 3','Non finisce mai: manca il caso base'], a:2, hint:'Quando si ferma?', sol:'Non c\'è nessun caso base: h(3) → h(2) → h(1) → h(0) → h(−1) → … finché la memoria dello stack finisce.' },
     { id:'e5', type:'code', tag:'su carta', q:'Scrivi una funzione RICORSIVA <code>int potenza(int b, int e)</code> che calcola b elevato a e (e ≥ 0), senza cicli.', hint:'Caso base: b<sup>0</sup> = 1. Passo: b<sup>e</sup> = b · b<sup>e−1</sup>.', sol:code(String.raw`
@@ -197,7 +197,7 @@ int potenza(int b, int e) {
     if (e == 0)
         return 1;
     return b * potenza(b, e - 1);
-}`)+'<p>Stesso schema di fatt: caso base, poi "un pezzo" per la chiamata sul problema più piccolo.</p>' }
+}`)+'<p>Prova con potenza(2, 3). Scendo:</p><ol class="pass"><li>potenza(2, 3): e = 3 ≠ 0 → 2 * potenza(2, 2)</li><li>potenza(2, 2): 2 * potenza(2, 1)</li><li>potenza(2, 1): 2 * potenza(2, 0)</li><li>potenza(2, 0): e == 0 → caso base, return 1</li></ol><p>Risalgo:</p><ol class="pass"><li>potenza(2, 1) = 2 * 1 = 2</li><li>potenza(2, 2) = 2 * 2 = 4</li><li>potenza(2, 3) = 2 * 4 = <b>8</b> = 2³ ✓</li></ol><p>Stesso schema di fatt: caso base, poi "un pezzo" per la chiamata sul problema più piccolo.</p>' }
   ],
   quaderno:[
     '<b>Ricetta ricorsiva:</b> 1) caso base (risposta immediata); 2) chiamata su un problema più piccolo; 3) uso il risultato.',
@@ -276,7 +276,7 @@ int main(void) {
       { h:'*y = *y + x: y punta a b (che vale 10). Quanto diventa b?', type:'text', ans:['13'], ok:'Giusto: 10 + 3.', bad:'*y è b. b + x = 10 + 3.' },
       { h:'p punta a b. Cosa stampa la prima printf?', type:'text', ans:['2 13 13','2,13,13'], ok:'Perfetto: *p è b.', bad:'a è rimasta 2; b = 13; *p è il valore di b.' },
       { h:'*p = *p * 2 cambia b. Cosa stampa la seconda printf?', type:'text', ans:['26'], ok:'Esatto.', bad:'b = 13 · 2.' }
-    ], done:'<b>Fatto!</b> Stampa <code>2 13 13</code> e poi <code>26</code>. Il parametro senza * non tocca il main; quello con * sì.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>main: a = 2, b = 10, p = &amp;b (p punta a b).</li><li>f(a, &amp;b): x riceve una copia di a → x = 2; y riceve l\'indirizzo di b → y punta a b.</li><li>x = x + 1 = 2 + 1 = 3. Cambia solo la copia: a resta 2.</li><li>*y = *y + x: *y è b = 10 → b = 10 + 3 = 13.</li><li>f finisce. Prima printf: a = 2, b = 13, *p = valore di b = 13 → <b>2 13 13</b>.</li><li>*p = *p * 2: *p è b → b = 13 * 2 = 26.</li><li>Seconda printf → <b>26</b>.</li></ol>Stampa <code>2 13 13</code> e poi <code>26</code>. Il parametro senza * non tocca il main; quello con * sì.' },
   ex:[
     { id:'e1', type:'choice', q:'<code>int a = 7; int *p = &amp;a;</code> Cosa vale <code>*p</code>?', opts:['L\'indirizzo di a','7','L\'indirizzo di p'], a:1, hint:'* = vai all\'indirizzo e guarda.', sol:'*p è il valore all\'indirizzo contenuto in p, cioè a = 7.' },
     { id:'e2', type:'choice', q:'Vuoi una funzione che azzera una variabile int del chiamante. Quale firma e quale chiamata?', opts:['void azzera(int x) chiamata con azzera(n)','void azzera(int *x) chiamata con azzera(&amp;n), e dentro *x = 0','void azzera(int *x) chiamata con azzera(n)'], a:1, hint:'Deve ricevere l\'indirizzo.', sol:'<code>void azzera(int *x) { *x = 0; }</code> e <code>azzera(&amp;n);</code>' },
@@ -286,7 +286,7 @@ int *p = &a, *q = &b;
 *p = *q + 1;
 q = p;
 *q = *q * 10;
-printf("%d %d\n", a, b);`), a:'70 6', hint:'Attento a q = p: ora anche q punta ad a.', sol:'<pre class="code">70 6</pre>*p = 6 + 1 → a = 7. q = p: ora q punta ad a. *q = 7 · 10 → a = 70. b non è mai cambiata.' },
+printf("%d %d\n", a, b);`), a:'70 6', hint:'Attento a q = p: ora anche q punta ad a.', sol:'<pre class="code">70 6</pre><ol class="pass"><li>a = 4, b = 6. p punta ad a, q punta a b.</li><li>*p = *q + 1: *q è b = 6 → 6 + 1 = 7 → lo metto dove punta p, cioè in a → a = 7.</li><li>q = p: copio l\'indirizzo. Ora anche q punta ad a (non più a b).</li><li>*q = *q * 10: *q è a = 7 → 7 * 10 = 70 → a = 70.</li><li>b non è mai stata toccata: b = 6.</li><li>printf → <b>70 6</b>.</li></ol>' },
     { id:'e4', type:'code', tag:'al PC', q:'Scrivi <code>void dividi(int a, int b, int *q, int *r)</code> che mette in *q il quoziente intero e in *r il resto di a diviso b, e un main che la prova con 17 e 5 (deve stampare <code>3 2</code>).', hint:'*q = a / b; *r = a % b; nel main due variabili e la chiamata con &amp;.', sol:code(String.raw`
 #include <stdio.h>
 
@@ -300,7 +300,7 @@ int main(void) {
     dividi(17, 5, &q, &r);
     printf("%d %d\n", q, r);
     return 0;
-}`) }
+}`)+'<ol class="pass"><li>main chiama dividi(17, 5, &amp;q, &amp;r): a = 17, b = 5, il parametro q punta alla q del main, r alla r del main.</li><li>*q = a / b = 17 / 5: 5 · 3 = 15 ≤ 17, 5 · 4 = 20 &gt; 17 → 3. La q del main diventa 3.</li><li>*r = a % b = 17 − 15 = 2. La r del main diventa 2.</li><li>printf → <b>3 2</b>.</li></ol>' }
   ],
   quaderno:[
     '<b>&amp;a</b> = indirizzo di a. <b>int *p</b> = p è un puntatore a int. <b>*p</b> = il valore all\'indirizzo in p.',
@@ -349,6 +349,7 @@ int main(void) {
     printf("%d\n", massimo(quadrato(3), 5));   /* stampa 9 */
     return 0;
 }`)
+     +'<p>Come si arriva a 9: quadrato(3) = 3 * 3 = 9; massimo(9, 5): 9 &gt; 5 vero → 9; printf stampa 9.</p>'
      +'<p>Si compilano <b>tutti i .c insieme</b> (i .h no, vengono inclusi):</p>'+code(String.raw`gcc -Wall -o prog main.c matematica.c`)
      +'<p>In Code::Blocks o Visual Studio: tutti i file devono essere aggiunti al <b>progetto</b>, poi Rebuild All.</p>' },
     { type:'html', eyebrow:'Quando non compila', title:'I tre errori tipici e cosa vogliono dire', html:
