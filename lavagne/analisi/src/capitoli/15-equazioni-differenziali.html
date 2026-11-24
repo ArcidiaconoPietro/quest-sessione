@@ -1,0 +1,85 @@
+  <div class="chapter" data-ch="equazioni-differenziali">
+    <section class="board">
+      <div class="eyebrow">Capitolo 15 · blocco del 17/12 · dispensa pp. 153-155, 158-162</div>
+      <h2>Le equazioni differenziali</h2>
+      <p class="big">Finora le incognite erano numeri. Qui l'incognita è una <b>funzione</b> y(x), e l'equazione lega y alle sue derivate. Esempio: y′ = y. Chi è una funzione uguale alla sua derivata? eˣ (e anche 2eˣ, 5eˣ, C eˣ).</p>
+      <p>A cosa serve: descrivono tutto ciò che cambia nel tempo (raffreddamento, molle, circuiti, popolazioni). All'esame c'è quasi sempre un problema di Cauchy da risolvere: è l'ultima parte del programma, e usa gli integrali dei capitoli 13 e 14.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · prima guardiamo</div>
+      <h2>L'equazione ti dice la pendenza in ogni punto</h2>
+      <p>y′ = f(x, y) dice: se passi dal punto (x, y), la tua pendenza è f(x, y). Disegno un trattino con quella pendenza in tanti punti (il "campo delle direzioni"). Una soluzione è una curva che segue i trattini. Scegli il punto di partenza y(0): ottieni una sola curva. Questo è il <b>problema di Cauchy</b>.</p>
+      <canvas id="plotED" aria-label="Campo delle direzioni e soluzione"></canvas>
+      <div class="controls">
+        <label for="edS">Equazione: <select id="edS">
+          <option value="0">y′ = y</option>
+          <option value="1">y′ = −2x y</option>
+          <option value="2">y′ = x − y</option>
+          <option value="3">y′ = y (1 − y)</option>
+        </select></label>
+        <label for="edY">y(0): <input type="range" id="edY" min="-20" max="20" value="5"></label>
+      </div>
+      <div class="readout" id="edOut"></div>
+      <div class="note"><b>Esistenza e unicità</b> <span class="tag mem">enunciato a memoria</span>: se f(x, y) è "buona" (continua, con derivata rispetto a y continua), il problema di Cauchy y′ = f(x, y), y(x₀) = y₀ ha una e una sola soluzione vicino a x₀. Nel grafico: da ogni punto parte una curva sola, e due curve non si incrociano.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 1 · variabili separabili <span class="tag cap">metodo da capire</span></div>
+      <h2>y′ = a(x) · b(y)</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Soluzioni costanti</h3><p>Dove b(y) = 0, y = costante è una soluzione (y′ = 0 = a(x) · 0). Segnale prima di dividere!</p></div>
+        <div class="step"><h3>2 · Separo</h3><p>Scrivo y′ = dy/dx e porto le y a sinistra, le x a destra: dy / b(y) = a(x) dx.</p></div>
+        <div class="step"><h3>3 · Integro tutti e due i lati</h3><p>∫ dy / b(y) = ∫ a(x) dx + C. Poi, se riesco, ricavo y.</p></div>
+        <div class="step"><h3>4 · Condizione iniziale</h3><p>Metto x₀ e y₀ per trovare C.</p></div>
+      </div>
+      <div class="math left">y′ = 2xy: &nbsp; dy/y = 2x dx → ln |y| = x² + C → y = K e<sup>x²</sup> &nbsp; (K costante qualsiasi, anche 0)</div>
+      <p><b>Perché si può "separare" dy e dx (facile, è la catena):</b> se G è primitiva di 1/b, allora [G(y(x))]′ = y′/b(y) = a(x). Quindi G(y(x)) è una primitiva di a(x). Scrivere dy/b(y) = a(x) dx è solo un modo comodo per ricordarlo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 2 · lineari del primo ordine <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è corto</span></div>
+      <h2>y′ + a(x) y = f(x)</h2>
+      <div class="math"><span class="box cop">y(x) = e<sup>−A(x)</sup> [ ∫ f(x) e<sup>A(x)</sup> dx + C ] &nbsp; con A primitiva di a</span></div>
+      <p><b>Perché:</b> moltiplico l'equazione per e<sup>A(x)</sup>. A sinistra viene y′e<sup>A</sup> + a y e<sup>A</sup>, che è esattamente (y e<sup>A</sup>)′ per la regola del prodotto. Quindi (y e<sup>A</sup>)′ = f e<sup>A</sup>: integro e divido per e<sup>A</sup>.</p>
+      <div class="math left">y′ + y = 1: &nbsp; a = 1, A = x → y = e<sup>−x</sup> [∫ eˣ dx + C] = e<sup>−x</sup>(eˣ + C) = 1 + C e<sup>−x</sup></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 3 · secondo ordine a coefficienti costanti <span class="tag mem">i tre casi a memoria</span> <span class="tag cap">da dove vengono è facile</span></div>
+      <h2>y″ + a y′ + b y = 0</h2>
+      <p><b>Idea:</b> provo y = e<sup>λx</sup>. Allora y′ = λe<sup>λx</sup>, y″ = λ²e<sup>λx</sup>, e l'equazione diventa e<sup>λx</sup>(λ² + aλ + b) = 0. Quindi λ deve risolvere l'<b>equazione caratteristica</b> λ² + aλ + b = 0. Tre casi, come al liceo:</p>
+      <div class="when">
+        <div><b>Δ &gt; 0</b>, due radici λ₁, λ₂: y = c₁ e<sup>λ₁x</sup> + c₂ e<sup>λ₂x</sup></div>
+        <div><b>Δ = 0</b>, una radice λ: y = (c₁ + c₂ x) e<sup>λx</sup></div>
+        <div><b>Δ &lt; 0</b>, radici α ± iβ: y = e<sup>αx</sup> (c₁ cos βx + c₂ sin βx)</div>
+      </div>
+      <p><b>Con il termine noto</b> y″ + a y′ + b y = f(x): soluzione = (soluzione dell'omogenea) + (una soluzione particolare). La particolare si cerca "simile" a f <span class="tag mem">a memoria</span>: f polinomio → polinomio dello stesso grado; f = k e<sup>mx</sup> → A e<sup>mx</sup> (se m non è radice); f = cos/sin(ωx) → A cos ωx + B sin ωx.</p>
+      <p>Per il problema di Cauchy del secondo ordine servono <b>due</b> condizioni: y(x₀) e y′(x₀), perché ci sono due costanti c₁ e c₂.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Problema di Cauchy: y′ = 2y, y(0) = 3</h2>
+      <div class="steps" id="guided-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Cauchy: y′ = f(x, y), y(x₀) = y₀ → una sola soluzione (f buona). Secondo ordine: servono y(x₀) e y′(x₀).</li>
+        <li>Separabili y′ = a(x) b(y): soluzioni costanti b(y) = 0; poi ∫ dy/b(y) = ∫ a(x) dx + C.</li>
+        <li>Lineari y′ + a(x) y = f(x): y = e<sup>−A</sup>[∫ f e<sup>A</sup> dx + C], A′ = a.</li>
+        <li>y″ + a y′ + b y = 0: λ² + aλ + b = 0. Δ &gt; 0: c₁e<sup>λ₁x</sup> + c₂e<sup>λ₂x</sup>; Δ = 0: (c₁ + c₂x)e<sup>λx</sup>; Δ &lt; 0: e<sup>αx</sup>(c₁ cos βx + c₂ sin βx).</li>
+        <li>Con f(x): omogenea + particolare "simile" a f.</li>
+      </ul>
+      <div data-copy="equazioni-differenziali"></div>
+    </section>
+  </div>

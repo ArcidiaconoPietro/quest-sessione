@@ -155,6 +155,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <a href="#studio-funzione" data-ch="studio-funzione">12 · Studio di funzione</a>
     <a href="#integrali-indefiniti" data-ch="integrali-indefiniti">13 · Integrali indefiniti</a>
     <a href="#integrali-definiti" data-ch="integrali-definiti">14 · Integrali definiti</a>
+    <a href="#equazioni-differenziali" data-ch="equazioni-differenziali">15 · Equazioni differenziali</a>
   </nav>
 
   <!-- ================= CAPITOLO 1 ================= -->
@@ -1442,6 +1443,93 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
   </div>
 
+  <!-- ================= CAPITOLO 15 ================= -->
+  <div class="chapter" data-ch="equazioni-differenziali" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 15 · blocco del 17/12 · dispensa pp. 153-155, 158-162</div>
+      <h2>Le equazioni differenziali</h2>
+      <p class="big">Finora le incognite erano numeri. Qui l'incognita è una <b>funzione</b> y(x), e l'equazione lega y alle sue derivate. Esempio: y′ = y. Chi è una funzione uguale alla sua derivata? eˣ (e anche 2eˣ, 5eˣ, C eˣ).</p>
+      <p>A cosa serve: descrivono tutto ciò che cambia nel tempo (raffreddamento, molle, circuiti, popolazioni). All'esame c'è quasi sempre un problema di Cauchy da risolvere: è l'ultima parte del programma, e usa gli integrali dei capitoli 13 e 14.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · prima guardiamo</div>
+      <h2>L'equazione ti dice la pendenza in ogni punto</h2>
+      <p>y′ = f(x, y) dice: se passi dal punto (x, y), la tua pendenza è f(x, y). Disegno un trattino con quella pendenza in tanti punti (il "campo delle direzioni"). Una soluzione è una curva che segue i trattini. Scegli il punto di partenza y(0): ottieni una sola curva. Questo è il <b>problema di Cauchy</b>.</p>
+      <canvas id="plotED" aria-label="Campo delle direzioni e soluzione"></canvas>
+      <div class="controls">
+        <label for="edS">Equazione: <select id="edS">
+          <option value="0">y′ = y</option>
+          <option value="1">y′ = −2x y</option>
+          <option value="2">y′ = x − y</option>
+          <option value="3">y′ = y (1 − y)</option>
+        </select></label>
+        <label for="edY">y(0): <input type="range" id="edY" min="-20" max="20" value="5"></label>
+      </div>
+      <div class="readout" id="edOut"></div>
+      <div class="note"><b>Esistenza e unicità</b> <span class="tag mem">enunciato a memoria</span>: se f(x, y) è "buona" (continua, con derivata rispetto a y continua), il problema di Cauchy y′ = f(x, y), y(x₀) = y₀ ha una e una sola soluzione vicino a x₀. Nel grafico: da ogni punto parte una curva sola, e due curve non si incrociano.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 1 · variabili separabili <span class="tag cap">metodo da capire</span></div>
+      <h2>y′ = a(x) · b(y)</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Soluzioni costanti</h3><p>Dove b(y) = 0, y = costante è una soluzione (y′ = 0 = a(x) · 0). Segnale prima di dividere!</p></div>
+        <div class="step"><h3>2 · Separo</h3><p>Scrivo y′ = dy/dx e porto le y a sinistra, le x a destra: dy / b(y) = a(x) dx.</p></div>
+        <div class="step"><h3>3 · Integro tutti e due i lati</h3><p>∫ dy / b(y) = ∫ a(x) dx + C. Poi, se riesco, ricavo y.</p></div>
+        <div class="step"><h3>4 · Condizione iniziale</h3><p>Metto x₀ e y₀ per trovare C.</p></div>
+      </div>
+      <div class="math left">y′ = 2xy: &nbsp; dy/y = 2x dx → ln |y| = x² + C → y = K e<sup>x²</sup> &nbsp; (K costante qualsiasi, anche 0)</div>
+      <p><b>Perché si può "separare" dy e dx (facile, è la catena):</b> se G è primitiva di 1/b, allora [G(y(x))]′ = y′/b(y) = a(x). Quindi G(y(x)) è una primitiva di a(x). Scrivere dy/b(y) = a(x) dx è solo un modo comodo per ricordarlo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 2 · lineari del primo ordine <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è corto</span></div>
+      <h2>y′ + a(x) y = f(x)</h2>
+      <div class="math"><span class="box cop">y(x) = e<sup>−A(x)</sup> [ ∫ f(x) e<sup>A(x)</sup> dx + C ] &nbsp; con A primitiva di a</span></div>
+      <p><b>Perché:</b> moltiplico l'equazione per e<sup>A(x)</sup>. A sinistra viene y′e<sup>A</sup> + a y e<sup>A</sup>, che è esattamente (y e<sup>A</sup>)′ per la regola del prodotto. Quindi (y e<sup>A</sup>)′ = f e<sup>A</sup>: integro e divido per e<sup>A</sup>.</p>
+      <div class="math left">y′ + y = 1: &nbsp; a = 1, A = x → y = e<sup>−x</sup> [∫ eˣ dx + C] = e<sup>−x</sup>(eˣ + C) = 1 + C e<sup>−x</sup></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tipo 3 · secondo ordine a coefficienti costanti <span class="tag mem">i tre casi a memoria</span> <span class="tag cap">da dove vengono è facile</span></div>
+      <h2>y″ + a y′ + b y = 0</h2>
+      <p><b>Idea:</b> provo y = e<sup>λx</sup>. Allora y′ = λe<sup>λx</sup>, y″ = λ²e<sup>λx</sup>, e l'equazione diventa e<sup>λx</sup>(λ² + aλ + b) = 0. Quindi λ deve risolvere l'<b>equazione caratteristica</b> λ² + aλ + b = 0. Tre casi, come al liceo:</p>
+      <div class="when">
+        <div><b>Δ &gt; 0</b>, due radici λ₁, λ₂: y = c₁ e<sup>λ₁x</sup> + c₂ e<sup>λ₂x</sup></div>
+        <div><b>Δ = 0</b>, una radice λ: y = (c₁ + c₂ x) e<sup>λx</sup></div>
+        <div><b>Δ &lt; 0</b>, radici α ± iβ: y = e<sup>αx</sup> (c₁ cos βx + c₂ sin βx)</div>
+      </div>
+      <p><b>Con il termine noto</b> y″ + a y′ + b y = f(x): soluzione = (soluzione dell'omogenea) + (una soluzione particolare). La particolare si cerca "simile" a f <span class="tag mem">a memoria</span>: f polinomio → polinomio dello stesso grado; f = k e<sup>mx</sup> → A e<sup>mx</sup> (se m non è radice); f = cos/sin(ωx) → A cos ωx + B sin ωx.</p>
+      <p>Per il problema di Cauchy del secondo ordine servono <b>due</b> condizioni: y(x₀) e y′(x₀), perché ci sono due costanti c₁ e c₂.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Problema di Cauchy: y′ = 2y, y(0) = 3</h2>
+      <div class="steps" id="guided-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Cauchy: y′ = f(x, y), y(x₀) = y₀ → una sola soluzione (f buona). Secondo ordine: servono y(x₀) e y′(x₀).</li>
+        <li>Separabili y′ = a(x) b(y): soluzioni costanti b(y) = 0; poi ∫ dy/b(y) = ∫ a(x) dx + C.</li>
+        <li>Lineari y′ + a(x) y = f(x): y = e<sup>−A</sup>[∫ f e<sup>A</sup> dx + C], A′ = a.</li>
+        <li>y″ + a y′ + b y = 0: λ² + aλ + b = 0. Δ &gt; 0: c₁e<sup>λ₁x</sup> + c₂e<sup>λ₂x</sup>; Δ = 0: (c₁ + c₂x)e<sup>λx</sup>; Δ &lt; 0: e<sup>αx</sup>(c₁ cos βx + c₂ sin βx).</li>
+        <li>Con f(x): omogenea + particolare "simile" a f.</li>
+      </ul>
+      <div data-copy="equazioni-differenziali"></div>
+    </section>
+  </div>
+
   <footer>Lavagna del tutor di Analisi T-1 · fonti: lavagne di Mughetti e Albano, dispensa Unibo (Arcozzi-Galeotti) · esame 25 gennaio 2027</footer>
 </div>
 
@@ -2268,6 +2356,56 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     { id:'e7', type:'num', lbl:'F′(2)', q:'F(x) = '+INT(0,'x')+' t² dt. Quanto vale F′(2)?', a:4, hint:'Teorema fondamentale: F′(x) = f(x).', sol:'F′(x) = x², F′(2) = 4. Non serve calcolare l\'integrale.' },
     { id:'e8', type:'num', lbl:'integrale', q:INT(0,1)+' 2x (x² + 1)³ dx', a:15/4, hint:'Sostituzione t = x² + 1, dt = 2x dx. Estremi: t da 1 a 2.', sol:INT(1,2)+' t³ dt = [t⁴/4] da 1 a 2 = 4 − 1/4 = 15/4.' },
     { id:'e9', type:'num', lbl:'integrale', q:INT(1,'+∞')+' '+FR('1','x²')+' dx', a:1, hint:'Integra da 1 a M, poi fai il limite per M → +∞.', sol:'[−1/x] da 1 a M = 1 − 1/M → 1 per M → +∞.' }
+  ];
+
+  /* ===== capitolo 15: Equazioni differenziali ===== */
+  order.push('equazioni-differenziali'); NAMES['equazioni-differenziali'] = '15 Equazioni differenziali';
+  const ED = [
+    { F:(x,y)=>y, sol:(x,y0)=>y0*Math.exp(x), t:y0=>'Soluzione: y = '+it(y0,1)+' · eˣ. Con y(0) = 0 resta sempre 0 (soluzione costante).' },
+    { F:(x,y)=>-2*x*y, sol:(x,y0)=>y0*Math.exp(-x*x), t:y0=>'Separabile: y = '+it(y0,1)+' · e<sup>−x²</sup>, una "campana" che va a 0 per x → ±∞.' },
+    { F:(x,y)=>x-y, sol:(x,y0)=>x-1+(y0+1)*Math.exp(-x), t:y0=>'Lineare: y = x − 1 + ('+it(y0+1,1)+') e<sup>−x</sup>. Tutte le soluzioni si attaccano alla retta y = x − 1 per x → +∞.' },
+    { F:(x,y)=>y*(1-y), sol:(x,y0)=> y0===0 ? 0 : 1/(1+((1-y0)/y0)*Math.exp(-x)), t:y0=>'Logistica (separabile): y = 0 e y = 1 sono soluzioni costanti. Se parti tra 0 e 1, sali verso 1 per x → +∞.' }
+  ];
+  draws['equazioni-differenziali'] = () => {
+    const c = ED[+$('edS').value], y0 = (+$('edY').value)/10, cv = $('plotED');
+    const o = { xmin:-3, xmax:3, ymin:-3, ymax:3 };
+    plotF(cv, { ...o, fns:[{f:x=>c.sol(x,y0), color:'--thief', width:2.5}], points:[{x:0, y:y0, color:'--cop', label:'y(0)'}] });
+    if (!cv.offsetParent) return;
+    const g = cv.getContext('2d'), W = cv.clientWidth, H = cv.clientHeight, pad = {l:40, r:12, t:12, b:24};
+    const X = x => pad.l + (x-o.xmin)/(o.xmax-o.xmin)*(W-pad.l-pad.r), Y = y => pad.t + (o.ymax-y)/(o.ymax-o.ymin)*(H-pad.t-pad.b);
+    const sx = (W-pad.l-pad.r)/(o.xmax-o.xmin), sy = (H-pad.t-pad.b)/(o.ymax-o.ymin);
+    g.strokeStyle = css('--muted'); g.lineWidth = 1.2; g.globalAlpha = .8;
+    for (let x=-2.75; x<=2.76; x+=0.5) for (let y=-2.75; y<=2.76; y+=0.5){
+      const m = c.F(x,y), dx = 1, dy = m, L = Math.hypot(dx*sx, dy*sy), k = 9/L;
+      g.beginPath(); g.moveTo(X(x)-dx*sx*k, Y(y)+dy*sy*k); g.lineTo(X(x)+dx*sx*k, Y(y)-dy*sy*k); g.stroke(); }
+    g.globalAlpha = 1;
+    $('edOut').innerHTML = 'y(0) = <b class="cop">'+it(y0,1)+'</b><br><span style="font-size:1rem">'+c.t(y0)+'</span>';
+  };
+  $('edS').addEventListener('change', () => draws['equazioni-differenziali']());
+  $('edY').addEventListener('input', () => draws['equazioni-differenziali']());
+
+  guided('equazioni-differenziali', 'lavagna-equazioni-differenziali', [
+    { h:'Passo 1 · È separabile: dy/y = 2 dx. Integrando: ln |y| = 2x + C. Ricavo y:', type:'choice', ans:1,
+      opts:['y = 2x + C','y = K e<sup>2x</sup>','y = e<sup>2x</sup> + C'],
+      ok:'Giusto: |y| = e<sup>2x + C</sup> = e<sup>C</sup> e<sup>2x</sup>, e K = ±e<sup>C</sup> (o 0, la soluzione costante).', bad:'Fai e alla … di tutti e due i lati: e<sup>2x + C</sup> = e<sup>C</sup> · e<sup>2x</sup>.' },
+    { h:'Passo 2 · Condizione y(0) = 3: K · e⁰ = 3. Quanto vale K?', type:'nums', ans:[3],
+      html:'K = '+inp('K'),
+      ok:'Sì: e⁰ = 1, K = 3. La soluzione è y = 3e<sup>2x</sup>.', bad:'e⁰ = 1.' },
+    { h:'Passo 3 · Controllo: y′ = 6e<sup>2x</sup> e 2y = 6e<sup>2x</sup>. Torna? Calcola y(ln 2) = 3 e<sup>2 ln 2</sup>.', type:'nums', ans:[12],
+      html:'y(ln 2) = '+inp('y(ln 2)'),
+      ok:'Perfetto: e<sup>2 ln 2</sup> = (e<sup>ln 2</sup>)² = 4, quindi 3 · 4 = 12.', bad:'e<sup>2 ln 2</sup> = e<sup>ln 4</sup> = 4.' }
+  ], '<b>Fatto!</b> y′ = 2y, y(0) = 3 ha soluzione y = 3e<sup>2x</sup>. Schema: separo, integro, ricavo y, uso y(0) per la costante, controllo derivando.');
+
+  EX['equazioni-differenziali'] = [
+    { id:'e1', type:'num', lbl:'y(ln 2)', q:'y′ = 3y, y(0) = 2. Quanto vale y(ln 2)?', a:16, hint:'Soluzione y = 2e<sup>3x</sup>.', sol:'2e<sup>3 ln 2</sup> = 2 · 2³ = 16.' },
+    { id:'e2', type:'num', lbl:'y(2)', q:'y′ = x, y(0) = 1. Quanto vale y(2)?', a:3, hint:'Basta integrare: y = x²/2 + C.', sol:'y = x²/2 + 1, y(2) = 2 + 1 = 3.' },
+    { id:'e3', type:'choice', q:'Soluzione generale di y′ = 2x y', a:0, opts:['y = K e<sup>x²</sup>','y = x² + K','y = K e<sup>2x</sup>'], hint:'Separa: dy/y = 2x dx.', sol:'ln |y| = x² + C, y = K e<sup>x²</sup>.' },
+    { id:'e4', type:'num', q:'y′ + y = 1, y(0) = 0. Quanto vale '+LIMX('+∞')+' y(x)?', a:1, hint:'Dalla lavagna: y = 1 + C e<sup>−x</sup>. Trova C, poi il limite.', sol:'y(0) = 1 + C = 0, C = −1: y = 1 − e<sup>−x</sup> → 1 per x → +∞.' },
+    { id:'e5', type:'choice', q:'Soluzione generale di y″ − 3y′ + 2y = 0', a:1, opts:['y = c₁ e<sup>−x</sup> + c₂ e<sup>−2x</sup>','y = c₁ eˣ + c₂ e<sup>2x</sup>','y = (c₁ + c₂ x) eˣ'], hint:'λ² − 3λ + 2 = 0.', sol:'λ = 1 e λ = 2 (Δ &gt; 0): c₁ eˣ + c₂ e<sup>2x</sup>.' },
+    { id:'e6', type:'choice', q:'Soluzione generale di y″ + 4y = 0', a:2, opts:['y = c₁ e<sup>2x</sup> + c₂ e<sup>−2x</sup>','y = (c₁ + c₂ x) e<sup>2x</sup>','y = c₁ cos 2x + c₂ sin 2x'], hint:'λ² + 4 = 0: λ = ±2i, quindi α = 0, β = 2.', sol:'Δ &lt; 0: e⁰(c₁ cos 2x + c₂ sin 2x).' },
+    { id:'e7', type:'choice', q:'Soluzione generale di y″ − 2y′ + y = 0', a:0, opts:['y = (c₁ + c₂ x) eˣ','y = c₁ eˣ + c₂ e<sup>−x</sup>','y = c₁ cos x + c₂ sin x'], hint:'λ² − 2λ + 1 = (λ − 1)².', sol:'Radice doppia λ = 1 (Δ = 0): (c₁ + c₂ x) eˣ.' },
+    { id:'e8', type:'num', lbl:'c₁', q:'y″ − y = 0, y(0) = 2, y′(0) = 0. Con y = c₁ eˣ + c₂ e<sup>−x</sup>, quanto vale c₁?', a:1, hint:'y(0) = c₁ + c₂ = 2; y′(0) = c₁ − c₂ = 0.', sol:'c₁ = c₂ = 1: y = eˣ + e<sup>−x</sup>.' },
+    { id:'e9', type:'num', lbl:'y_p', q:'y″ + y = 3: cerca una soluzione particolare costante y_p = A. Quanto vale A?', a:3, hint:'Se y = A costante, y″ = 0.', sol:'0 + A = 3, A = 3. Soluzione generale: c₁ cos x + c₂ sin x + 3.' }
   ];
 
   Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));
