@@ -110,22 +110,22 @@
 
   guided('matrici', [
     { h:'Passo 1 · det A', type:'nums', ans:[2], html:'det A = '+inp('determinante'),
-      ok:'Sì: 3·2 − 1·4 = 2 ≠ 0, quindi A è invertibile.', bad:'a·d − b·c con a = 3, b = 1, c = 4, d = 2.' },
+      ok:'Sì: a·d − b·c = 3·2 − 1·4 = 6 − 4 = 2 ≠ 0, quindi A è invertibile.', bad:'a·d − b·c con a = 3, b = 1, c = 4, d = 2.' },
     { h:'Passo 2 · Scambia la diagonale e cambia segno agli altri due', type:'choice', ans:0, opts:[M([[2,-1],[-4,3]]), M([[2,1],[4,3]]), M([[-3,1],[4,-2]])],
       ok:'Esatto: 3 e 2 si scambiano, 1 e 4 cambiano segno.', bad:'La diagonale (3, 2) diventa (2, 3); gli altri due (1 e 4) cambiano solo il segno, restano al loro posto.' },
     { h:'Passo 3 · Dividi per 2: scrivi A⁻¹ (riga per riga, frazioni ok)', type:'nums', ans:[1,-0.5,-2,1.5], html:'A⁻¹ = ( '+inp('a11')+' , '+inp('a12')+' ; '+inp('a21')+' , '+inp('a22')+' )',
-      ok:'Perfetto: A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'.', bad:'Dividi ogni numero di '+M([[2,-1],[-4,3]])+' per 2.' },
+      ok:'Perfetto: 2/2 = 1, (−1)/2 = −1/2, (−4)/2 = −2, 3/2 = 3/2. A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'.', bad:'Dividi ogni numero di '+M([[2,-1],[-4,3]])+' per 2.' },
     { h:'Passo 4 · Controllo: prima riga di A per prima colonna di A⁻¹', type:'nums', ans:[1], html:'3·1 + 1·(−2) = '+inp('risultato'),
-      ok:'1: è l\'entrata (1,1) di I. Il controllo costa 10 secondi e salva l\'esercizio.', bad:'3 − 2.' }
+      ok:'3·1 + 1·(−2) = 3 − 2 = 1: è l\'entrata (1,1) di I. Il controllo costa 10 secondi e salva l\'esercizio.', bad:'3 − 2.' }
   ], '<b>Fatto!</b> A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'. Prova a scriverla nel calcolatore in alto per vedere il controllo completo A·A⁻¹ = I.');
 
   exercises('matrici', [
-    { id:'e1', type:'choice', q:'A ∈ M(2, 3, R), B ∈ M(3, 4, R). Che taglia ha A·B?', opts:['3 × 3','2 × 4','4 × 2','non si può fare'], a:1, hint:'(m × n)·(n × p) = m × p.', sol:'2 × 4. B·A invece non si può fare (4 ≠ 2).' },
-    { id:'e2', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), a:[5,4,1,2], hint:'Riga 1 · colonna 1 = 1·3 + 2·1.', sol:M([[5,4],[1,2]])+'.' },
-    { id:'e3', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[2,1],[5,3]]), a:[3,-1,-5,2], hint:'det = 6 − 5 = 1.', sol:M([[3,-1],[-5,2]])+' (det = 1, quindi non c\'è nulla da dividere).' },
-    { id:'e4', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[1,2],[3,4]]), a:[-2,1,1.5,-0.5], hint:'det = 4 − 6 = −2: attenzione al segno.', sol:'(1/(−2))·'+M([[4,-2],[-3,1]])+' = '+M([[-2,1],['3/2','−1/2']])+'.' },
+    { id:'e1', type:'choice', q:'A ∈ M(2, 3, R), B ∈ M(3, 4, R). Che taglia ha A·B?', opts:['3 × 3','2 × 4','4 × 2','non si può fare'], a:1, hint:'(m × n)·(n × p) = m × p.', sol:'A è 2 × 3, B è 3 × 4: colonne di A = 3 = righe di B, si può fare. Il risultato ha le righe di A (2) e le colonne di B (4): 2 × 4. B·A invece non si può fare: colonne di B = 4 ≠ 2 = righe di A.' },
+    { id:'e2', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), a:[5,4,1,2], hint:'Riga 1 · colonna 1 = 1·3 + 2·1.', sol:'(1,1) = riga 1 · colonna 1 = 1·3 + 2·1 = 5. (1,2) = riga 1 · colonna 2 = 1·0 + 2·2 = 4. (2,1) = riga 2 · colonna 1 = 0·3 + 1·1 = 1. (2,2) = riga 2 · colonna 2 = 0·0 + 1·2 = 2. Risultato '+M([[5,4],[1,2]])+'.' },
+    { id:'e3', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[2,1],[5,3]]), a:[3,-1,-5,2], hint:'det = 6 − 5 = 1.', sol:'det = 2·3 − 1·5 = 6 − 5 = 1. Scambio la diagonale: 2 e 3 → '+M([[3,1],[5,2]])+'. Cambio segno agli altri: '+M([[3,-1],[-5,2]])+'. Divido per det = 1: resta '+M([[3,-1],[-5,2]])+'.' },
+    { id:'e4', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[1,2],[3,4]]), a:[-2,1,1.5,-0.5], hint:'det = 4 − 6 = −2: attenzione al segno.', sol:'det = 1·4 − 2·3 = 4 − 6 = −2. Scambio la diagonale (1 e 4) e cambio segno agli altri (2 e 3): '+M([[4,-2],[-3,1]])+'. Divido ogni numero per −2: 4/(−2) = −2, (−2)/(−2) = 1, (−3)/(−2) = 3/2, 1/(−2) = −1/2. Quindi (1/(−2))·'+M([[4,-2],[-3,1]])+' = '+M([[-2,1],['3/2','−1/2']])+'.' },
     { id:'e5', type:'choice', q:'(A·B)⁻¹ = …', opts:['A⁻¹·B⁻¹','B⁻¹·A⁻¹','<sup>t</sup>A·<sup>t</sup>B'], a:1, hint:'Pensa a "togliersi calze e scarpe".', sol:'B⁻¹·A⁻¹: si annulla prima l\'ultima cosa fatta.' },
-    { id:'e6', type:'choice', q:M([[2,4],[1,2]])+' è invertibile?', opts:['Sì','No'], a:1, hint:'Calcola il determinante.', sol:'det = 4 − 4 = 0: no. La prima riga è 2 volte la seconda.' },
+    { id:'e6', type:'choice', q:M([[2,4],[1,2]])+' è invertibile?', opts:['Sì','No'], a:1, hint:'Calcola il determinante.', sol:'det = 2·2 − 4·1 = 4 − 4 = 0: no. La prima riga è 2 volte la seconda.' },
     { id:'e7', type:'num', label:'det(A⁻¹) =', q:'det A = 4.', a:0.25, hint:'Binet su A·A⁻¹ = I.', sol:'det A · det A⁻¹ = det I = 1 ⇒ det A⁻¹ = 1/4.' },
     { id:'e8', type:'choice', src:'trappola', q:'A·B = A·C con A ≠ 0. Allora B = C?', opts:['Sempre','Solo se A è invertibile'], a:1, hint:'Moltiplica a sinistra per A⁻¹… se esiste.', sol:'Con A invertibile sì (A⁻¹·A·B = A⁻¹·A·C). Altrimenti no: A = '+M([[1,0],[0,0]])+' dà A·'+M([[0,0],[0,1]])+' = A·0.' }
   ]);

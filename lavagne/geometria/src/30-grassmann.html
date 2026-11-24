@@ -63,9 +63,9 @@
       <h2>Calcolare U + W e U ∩ W</h2>
       <p>Esempio in R⁴: U = Span((1, 0, 1, 0), (0, 1, 0, 1)) e W = {(x, y, z, t) ∈ R⁴ : x − z = 0}.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U = 2 (i due generatori non sono multipli). W ha 1 equazione in 4 incognite: dim W = 4 − 1 = 3.</p></div>
-        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Equazione di W: x − z = a − a = 0, sempre vera. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
-        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
+        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U: a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b) = (0, 0, 0, 0) dà a = 0 (prima componente) e b = 0 (seconda): i due generatori sono indipendenti, dim U = 2.</p><p>dim W: 1 equazione in 4 incognite, dim W = 4 − 1 = 3.</p></div>
+        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Qui x = a, y = b, z = a, t = b. Equazione di W: x − z = a − a = 0, vera per ogni a e b. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
+        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 5 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
         <div class="step"><h3>Regola generale</h3><ul class="recap"><li>Entrambi con equazioni: <b>U ∩ W</b> = metti tutte le equazioni insieme.</li><li>Entrambi con generatori: <b>U + W</b> = tutti i generatori in colonna, Gauss, dim = rango.</li><li>Uno con generatori e uno con equazioni: per U ∩ W sostituisci il vettore generico nelle equazioni (come sopra).</li><li>La quarta dimensione la trovi sempre con Grassmann.</li></ul></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -148,11 +148,11 @@
 
   guided('grassmann', [
     { h:'Passo 1 · dim U e dim W', type:'nums', ans:[2,1], html:'dim U = '+inp('dimensione di U')+' &nbsp; dim W = '+inp('dimensione di W'),
-      ok:'Sì: U ha 1 equazione in 3 incognite (3 − 1 = 2), W è generato da un vettore non nullo.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
+      ok:'Sì. U: 1 equazione (x + y + z = 0) in 3 incognite, dim U = 3 − 1 = 2. W = Span((1, 1, 1)): un solo vettore, non nullo, quindi dim W = 1.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
     { h:'Passo 2 · Il vettore generico di W è (t, t, t). Mettilo nell\'equazione di U: t + t + t = 0. Quanto vale t?', type:'nums', ans:[0],
-      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: l\'unico vettore comune è (0, 0, 0).', bad:'3t = 0: dividi per 3.' },
+      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: t + t + t = 3t = 0, divido per 3: t = 0. Il vettore comune è (0, 0, 0) e basta, quindi U ∩ W = {0}.', bad:'3t = 0: dividi per 3.' },
     { h:'Passo 3 · Quindi dim(U ∩ W) = ? E con Grassmann dim(U + W) = ?', type:'nums', ans:[0,3],
-      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
+      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: dim(U ∩ W) = dim {0} = 0, e dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
     { h:'Passo 4 · R³ = U ⊕ W?', type:'choice', ans:0,
       opts:['Sì: U ∩ W = {0} e dim(U + W) = 3 = dim R³, quindi U + W = R³ e la somma è diretta','No, perché U è un piano e W una retta','Non si può dire senza una base'],
       ok:'Esatto: U e W sono supplementari in R³.', bad:'Controlla le due condizioni: intersezione nulla e dim(U + W) = 3.' }
@@ -160,16 +160,16 @@
 
   exercises('grassmann', [
     { id:'e1', type:'num', label:'almeno', q:'U e W sono sottospazi di R⁵, entrambi di dimensione 3. Quanto vale <b>come minimo</b> dim(U ∩ W)?', a:1,
-      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'dim(U ∩ W) = 6 − dim(U + W) ≥ 6 − 5 = 1. Quindi U ∩ W non è mai solo {0}.' },
-    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U è il piano z = 0, W è il piano x = 0. In comune c\'è la retta Span(e₂): dimensione 1.' },
-    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'2 + 2 − 1 = 3: U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
-    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'2 + 2 − 3 = 1: si incontrano in una retta.' },
+      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'Grassmann: dim(U ∩ W) = dim U + dim W − dim(U + W) = 3 + 3 − dim(U + W) = 6 − dim(U + W). U + W sta dentro R⁵, quindi dim(U + W) ≤ 5. Allora dim(U ∩ W) ≥ 6 − 5 = 1. U ∩ W non è mai solo {0}.' },
+    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U = Span(e₁, e₂) = {(a, b, 0)}: è il piano z = 0. W = Span(e₂, e₃) = {(0, c, d)}: è il piano x = 0. Un vettore in tutti e due ha z = 0 e x = 0, quindi è (0, y, 0) = y·e₂. U ∩ W = Span(e₂), dimensione 1.' },
+    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 2 − 1 = 3 = dim R³, quindi U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
+    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'Due piani diversi: U + W contiene strettamente U, quindi dim(U + W) > 2, e sta in R³, quindi dim(U + W) = 3. Grassmann: dim(U ∩ W) = 2 + 2 − 3 = 1: si incontrano in una retta.' },
     { id:'e5', type:'nums', labels:['λ₁ =','λ₂ ='], q:'Coordinate di v = (5, 1) rispetto alla base B = ((1, 1), (1, −1)) di R².', a:[3,2],
-      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'2λ₁ = 6 ⇒ λ₁ = 3, poi λ₂ = 2. [v]<sub>B</sub> = (3, 2).' },
+      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'λ₁·(1, 1) + λ₂·(1, −1) = (λ₁ + λ₂, λ₁ − λ₂) = (5, 1). Equazioni: λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Sommo: 2λ₁ = 6, quindi λ₁ = 3. Sostituisco nella prima: 3 + λ₂ = 5, quindi λ₂ = 2. Verifica: 3·(1, 1) + 2·(1, −1) = (3 + 2, 3 − 2) = (5, 1) ✓. [v]<sub>B</sub> = (3, 2).' },
     { id:'e6', type:'nums', labels:['a =','b =','c ='], q:'Scrivi p(x) = 3 + 2x + x² come a·1 + b·(1 + x) + c·(1 + x)². Coordinate rispetto alla base (1, 1 + x, (1 + x)²) di R₂[x].', a:[2,0,1],
-      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'x²: c = 1. x: b + 2c = 2 ⇒ b = 0. Termine noto: a + b + c = 3 ⇒ a = 2. Coordinate (2, 0, 1).' },
+      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'Sviluppo: a + b·(1 + x) + c·(1 + 2x + x²) = (a + b + c) + (b + 2c)·x + c·x². Confronto con 3 + 2x + x². Coefficiente di x²: c = 1. Coefficiente di x: b + 2c = 2, cioè b + 2 = 2, quindi b = 0. Termine noto: a + b + c = 3, cioè a + 0 + 1 = 3, quindi a = 2. Coordinate (2, 0, 1).' },
     { id:'e7', type:'choice', src:'tipo quiz', q:'Se U, W ⊆ R⁴ hanno dim U = dim W = 2 e U ∩ W = {0}, allora…', opts:['R⁴ = U ⊕ W','U + W è un piano','U = W'], a:0,
-      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'dim(U + W) = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
+      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'Grassmann: dim(U + W) = 2 + 2 − 0 = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
     { id:'e8', type:'choice', q:'U ∪ W è un sottospazio quando…', opts:['sempre','solo se uno dei due è contenuto nell\'altro','solo se U ∩ W = {0}'], a:1,
       hint:'Pensa ai due assi di R²: U ∩ W = {0} ma U ∪ W non è un sottospazio.', sol:'Se U ⊆ W allora U ∪ W = W, che è un sottospazio. Altrimenti prendi u ∈ U fuori da W e w ∈ W fuori da U: u + w non sta né in U né in W.' }
   ]);

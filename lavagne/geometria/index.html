@@ -614,9 +614,9 @@ window.Lav = (function(){
       <h2>Trovare una base di W dato con equazioni</h2>
       <p>Esempio: W = {(x, y, z, t) ∈ R⁴ : x − y + 2t = 0}.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri.</p></div>
+        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x − y + 2t = 0. Porto −y e +2t a destra cambiando segno: x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri. (z non compare nell'equazione, quindi è libera.)</p></div>
         <div class="step"><h3>Passo 2 · Scrivi il vettore generico di W</h3><p class="math">(x, y, z, t) = (y − 2t, y, z, t)</p></div>
-        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p class="math">(y − 2t, y, z, t) = y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
+        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p>Separo i pezzi con y, con z e con t (ogni pezzo ha 0 dove quel parametro non compare):</p><p class="math">(y − 2t, y, z, t) = (y, y, 0, 0) + (0, 0, z, 0) + (−2t, 0, 0, t)</p><p>Raccolgo il parametro da ogni pezzo:</p><p class="math">= y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
         <div class="step"><h3>Passo 4 · Ecco la base</h3><p>(1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) generano W (passo 3) e sono indipendenti (ognuno ha un 1 nel posto del suo parametro, dove gli altri hanno 0). Sono una base di W e <b>dim W = 3</b> = 4 incognite − 1 equazione.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -707,10 +707,10 @@ window.Lav = (function(){
       opts:['Ha un quadrato, quindi non è un sottospazio','Lineare omogenea: è un sistema omogeneo, quindi W è un sottospazio','Ha un termine noto, quindi non è un sottospazio'],
       ok:'Esatto: incognite alla prima potenza, nessun termine noto. Le soluzioni di un sistema omogeneo sono un sottospazio.', bad:'Guarda bene: ci sono potenze? C\'è un numero da solo dopo l\'uguale?' },
     { h:'Passo 3 · Ricava z in funzione di x e y', type:'choice', ans:2,
-      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: porti x e −2y dall\'altra parte cambiando segno.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
+      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: x − 2y + z = 0. Tolgo x a entrambi i membri: −2y + z = −x. Aggiungo 2y a entrambi: z = −x + 2y.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
     { h:'Passo 4 · Spezza (x, y, −x + 2y) per parametri: completa i due vettori', type:'nums', ans:[-1,2],
       html:'(x, y, −x + 2y) = x·(1, 0, '+inp('terza componente del primo','3.5em')+') + y·(0, 1, '+inp('terza componente del secondo','3.5em')+')',
-      ok:'Perfetto: (1, 0, −1) e (0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
+      ok:'Perfetto. Tutti i passaggi: (x, y, −x + 2y) = (x, 0, −x) + (0, y, 2y) = x·(1, 0, −1) + y·(0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
     { h:'Passo 5 · Quanto vale dim W?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'),
       ok:'Sì: 2 vettori nella base. Torna anche col conto 3 incognite − 1 equazione = 2.', bad:'Conta i vettori della base del passo 4.' }
   ], '<b>Fatto!</b> W è un sottospazio di R³, una base è (1, 0, −1), (0, 1, 2) e dim W = 2. Geometricamente W è un <b>piano</b> per l\'origine dentro R³.');
@@ -719,18 +719,18 @@ window.Lav = (function(){
     { id:'e1', type:'choice', src:'tipo quiz', q:'Per quali k ∈ R l\'insieme S<sub>k</sub> = {(x, y) ∈ R² : x + (k − 1)·y² = k² − 1} è un sottospazio di R²?',
       opts:['k = 1','k = −1','k = ±1','per nessun k'], a:0,
       hint:'Servono due cose insieme: niente quadrato (il coefficiente di y² deve essere 0) e niente termine noto (k² − 1 = 0).',
-      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1 il termine noto è 1 − 1 = 0, quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1 resta x − 2y² = 0, che ha un quadrato: (2, 1) ci sta (2 − 2·1 = 0), ma 2·(2, 1) = (4, 2) no (4 − 2·4 = −4 ≠ 0). Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
+      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1: x + (1 − 1)·y² = 1² − 1, cioè x + 0·y² = 0, cioè x = 0. Quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1: x + (−1 − 1)·y² = (−1)² − 1, cioè x − 2y² = 0, che ha un quadrato. (2, 1) ci sta: 2 − 2·1² = 2 − 2 = 0. Ma 2·(2, 1) = (4, 2) no: 4 − 2·2² = 4 − 8 = −4 ≠ 0. Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
     { id:'e2', type:'choice', src:'tipo quiz', q:'Quale di questi è un sottospazio di M(2, 2, R)?',
       opts:['{A : a₁₁ + a₂₂ = 0}','{A : det A = 0}','{A : a₁₂ = 1}','{A : a₁₁ ≥ 0}'], a:0,
       hint:'Cerca la condizione lineare omogenea. det A = a₁₁a₂₂ − a₁₂a₂₁ ha prodotti tra le entrate.',
       sol:'a₁₁ + a₂₂ = 0 è lineare omogenea: sottospazio. det A = 0 no: ${M([[1,0],[0,0]])}$ e ${M([[0,0],[0,1]])}$ hanno det 0 ma la somma è I con det 1. a₁₂ = 1 non contiene la matrice nulla. a₁₁ ≥ 0 non è chiuso per λ = −1.' },
     { id:'e3', type:'choice', q:'I vettori (1, 2, 3) e (2, 4, 6) di R³ sono indipendenti?',
       opts:['Sì, perché sono diversi','No, perché (2, 4, 6) = 2·(1, 2, 3)','Sì, perché nessuno dei due è il vettore nullo'], a:1,
-      hint:'Uno dei due è multiplo dell\'altro?', sol:'2·(1, 2, 3) − 1·(2, 4, 6) = 0 con coefficienti non nulli: sono dipendenti.' },
+      hint:'Uno dei due è multiplo dell\'altro?', sol:'Controllo componente per componente: 2·1 = 2, 2·2 = 4, 2·3 = 6, quindi (2, 4, 6) = 2·(1, 2, 3). Allora 2·(1, 2, 3) − 1·(2, 4, 6) = (2 − 2, 4 − 4, 6 − 6) = (0, 0, 0) con coefficienti 2 e −1, non nulli: sono dipendenti.' },
     { id:'e4', type:'num', label:'dim =', q:'dim Span((1, 0, 1), (0, 1, 1), (1, 1, 2)) ⊆ R³',
-      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'(1, 1, 2) = (1, 0, 1) + (0, 1, 1), quindi è di troppo. I primi due sono indipendenti (non sono multipli). dim = 2.' },
+      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'Passo 1: (1, 0, 1) + (0, 1, 1) = (1 + 0, 0 + 1, 1 + 1) = (1, 1, 2). Il terzo vettore è la somma dei primi due, quindi è di troppo: Span dei tre = Span dei primi due. Passo 2: a·(1, 0, 1) + b·(0, 1, 1) = (a, b, a + b). Se è (0, 0, 0), la prima componente dà a = 0 e la seconda b = 0: i primi due sono indipendenti. Passo 3: 2 vettori indipendenti che generano, quindi dim = 2.' },
     { id:'e5', type:'nums', labels:['a =','b ='], q:'Scrivi (3, 5) ∈ R² come a·(1, 1) + b·(1, 2). Quanto valgono a e b?',
-      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'Dalla differenza b = 2, poi a = 3 − 2 = 1. Infatti 1·(1, 1) + 2·(1, 2) = (3, 5). (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
+      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'a·(1, 1) + b·(1, 2) = (a, a) + (b, 2b) = (a + b, a + 2b). Uguaglio a (3, 5): a + b = 3 e a + 2b = 5. Sottraggo la prima dalla seconda: (a + 2b) − (a + b) = 5 − 3, cioè b = 2. Sostituisco nella prima: a + 2 = 3, quindi a = 3 − 2 = 1. Verifica: 1·(1, 1) + 2·(1, 2) = (1, 1) + (2, 4) = (3, 5) ✓. (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
     { id:'e6', type:'choice', src:'Foglio 4 · quiz 3', q:'Se A·B = C, allora <sup>t</sup>C è uguale a…',
       opts:['<sup>t</sup>B · <sup>t</sup>A','<sup>t</sup>A · <sup>t</sup>B','<sup>t</sup>A · B'], a:0,
       hint:'La trasposta di un prodotto inverte l\'ordine. Controlla con le misure.', sol:'<sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A.' },
@@ -806,7 +806,7 @@ window.Lav = (function(){
       <p>Esempio: W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1), (1, 3, 2)) ⊆ R³.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Metti i vettori in colonna</h3><p class="math">${M([[1,2,0,1],[2,4,1,3],[1,2,1,2]])}$</p></div>
-        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1, R3 ← R3 − R1, poi R3 ← R3 − R2:</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1: (2 − 2·1, 4 − 2·2, 1 − 2·0, 3 − 2·1) = (0, 0, 1, 1).</p><p>R3 ← R3 − R1: (1 − 1, 2 − 2, 1 − 0, 2 − 1) = (0, 0, 1, 1).</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,1,1]])}$</p><p>R3 ← R3 − R2: (0 − 0, 0 − 0, 1 − 1, 1 − 1) = (0, 0, 0, 0).</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
         <div class="step"><h3>Passo 3 · Guarda dove sono i pivot</h3><p>I pivot sono nelle colonne 1 e 3. Quindi rk = 2 e <b>dim W = 2</b>.</p></div>
         <div class="step"><h3>Passo 4 · Prendi le colonne ORIGINALI con il pivot</h3><p>Una base di W è (1, 2, 1), (0, 1, 1): la 1ª e la 3ª colonna <b>della matrice di partenza</b>, non quelle ridotte. Gauss cambia i vettori ma non cambia quali colonne sono indipendenti.</p></div>
       </div>
@@ -819,7 +819,7 @@ window.Lav = (function(){
       <p>Esempio: completa (1, 1, 0), (0, 1, 1) a base di R³.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Accoda la base canonica</h3><p>Colonne: i tuoi vettori, poi e₁, e₂, e₃.</p><p class="math">${M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]])}$</p></div>
-        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1, poi R3 ← R3 − R2: i pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1: (1 − 1, 1 − 0, 0 − 1, 1 − 0, 0 − 0) = (0, 1, −1, 1, 0).</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,1,0,0,1]])}$</p><p>R3 ← R3 − R2: (0 − 0, 1 − 1, 0 − (−1), 0 − 1, 1 − 0) = (0, 0, 1, −1, 1). I pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
         <div class="step"><h3>Passo 3 · Prendi le colonne con il pivot</h3><p>I tuoi due vettori (colonne 1, 2) più e₁ (colonna 3): <b>(1, 1, 0), (0, 1, 1), (1, 0, 0)</b> è una base di R³. Sono 3 indipendenti in uno spazio di dimensione 3: basta così.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -831,7 +831,7 @@ window.Lav = (function(){
       <p>Esempio: W = Span((1, 0, 1), (0, 1, 1)) ⊆ R³. Voglio l'equazione di W.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Scrivi il vettore generico di W</h3><p>(x, y, z) ∈ W vuol dire (x, y, z) = a·(1, 0, 1) + b·(0, 1, 1) per qualche a, b ∈ R. Cioè x = a, y = b, z = a + b.</p></div>
-        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Sostituisci a = x e b = y nell'ultima: z = x + y.</p></div>
+        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Dalle prime due: a = x e b = y. Sostituisco nella terza, z = a + b: z = x + y.</p></div>
         <div class="step"><h3>Passo 3 · Scrivila "= 0" e controlla</h3><p class="math">W = {(x, y, z) ∈ R³ : x + y − z = 0}</p><p>Controllo: (1, 0, 1) dà 1 + 0 − 1 = 0, (0, 1, 1) dà 0 + 1 − 1 = 0. Giusto. dim W = 2 e 3 − 2 = 1 equazione: torna.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -900,24 +900,24 @@ window.Lav = (function(){
 
   guided('rango', [
     { h:'Passo 1 · Metti i tre vettori in colonna e fai Gauss: quanti pivot? (puoi usare il laboratorio)', type:'nums', ans:[2],
-      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì: (2, 4, 2) = 2·(1, 2, 1) è di troppo, rk = 2.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
+      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì. Gauss: R2 ← R2 − 2·R1 = (2 − 2, 4 − 4, 1 − 0) = (0, 0, 1); R3 ← R3 − R1 = (1 − 1, 2 − 2, 1 − 0) = (0, 0, 1); poi R3 ← R3 − R2 = (0, 0, 0). Restano due pivot (colonne 1 e 3): rk = 2. Infatti (2, 4, 2) = 2·(1, 2, 1) è di troppo.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
     { h:'Passo 2 · Quindi dim W = ?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'), ok:'Giusto: dim W = rk = 2. W è un piano per l\'origine.', bad:'dim W = rk della matrice dei generatori.' },
     { h:'Passo 3 · Quale coppia è una base di W?', type:'choice', ans:1,
       opts:['(1, 2, 1), (2, 4, 2)','(1, 2, 1), (0, 1, 1)','(2, 4, 2) da solo'], ok:'Esatto: sono le colonne originali con il pivot (1ª e 3ª).', bad:'Servono 2 vettori indipendenti: (1, 2, 1) e (2, 4, 2) sono uno multiplo dell\'altro.' },
     { h:'Passo 4 · Equazione: (x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) dà x = a, y = 2a + b, z = a + b. Elimina a e b e completa', type:'nums', ans:[1],
-      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto: b = z − x, quindi y = 2x + z − x = x + z, cioè x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
+      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto. Da x = a ho a = x. Da z = a + b ho b = z − a = z − x. Sostituisco in y = 2a + b: y = 2x + (z − x) = 2x − x + z = x + z. Porto tutto a sinistra: x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
   ], '<b>Fatto!</b> dim W = 2, base (1, 2, 1), (0, 1, 1), equazione cartesiana x − y + z = 0. Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 e (0, 1, 1) → 0 − 1 + 1 = 0.');
 
   exercises('rango', [
-    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'2·3 = 6 caselle, quindi 6 matrici nella base canonica: dim = 6.' },
+    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'Una matrice 2 × 3 ha 2 righe e 3 colonne: 2·3 = 6 caselle. La base canonica ha una matrice con un 1 in ogni casella (e 0 altrove): 6 matrici, quindi dim = 6.' },
     { id:'e2', type:'num', label:'dim =', q:'dim R₃[x] (polinomi a coefficienti reali di grado ≤ 3)', a:4, hint:'Base: 1, x, x², x³.', sol:'Quattro elementi: 1, x, x², x³. dim = 3 + 1 = 4. Errore tipico: rispondere 3.' },
-    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 − 2·R1 = 0, poi R3 − R1 = (0, −2, −2): due pivot, rk A = 2.' },
-    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'5 − 2 = 3.' },
+    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 ← R2 − 2·R1 = (2 − 2, 4 − 4, 6 − 6) = (0, 0, 0). R3 ← R3 − R1 = (1 − 1, 0 − 2, 1 − 3) = (0, −2, −2). Scambio R2 e R3 per avere la riga nulla in fondo: righe (1, 2, 3), (0, −2, −2), (0, 0, 0). Due pivot (1 e −2): rk A = 2.' },
+    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'n = 5 incognite, rk A = 2. dim S = n − rk A = 5 − 2 = 3.' },
     { id:'e5', type:'choice', q:'Quattro vettori di R³…', opts:['sono sempre dipendenti','possono essere una base di R³','sono indipendenti se nessuno è nullo'], a:0, hint:'dim R³ = 3. Quanti vettori indipendenti può avere al massimo?', sol:'In uno spazio di dimensione 3 più di 3 vettori sono sempre dipendenti.' },
-    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'rk = 2, quindi dim W = 3 − 2 = 1: è la retta Span((1, 1, −2)).' },
+    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'Dalla seconda: x − y = 0, quindi y = x. Sostituisco nella prima: x + x + z = 0, cioè 2x + z = 0, quindi z = −2x. Vettore generico: (x, x, −2x) = x·(1, 1, −2). W = Span((1, 1, −2)), dim W = 1. Controllo: 3 incognite − rk 2 = 1.' },
     { id:'e7', type:'choice', q:'Con quale vettore completi (1, 1, 0), (0, 1, 1) a base di R³?', opts:['(1, 2, 1)','(1, 0, 0)','(2, 2, 0)'], a:1,
-      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 0, 0) non sta nello Span dei due (ricetta del completamento sopra). Tre indipendenti in R³: base.' },
-    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'x = a e y = a, quindi x = y, cioè x − y = 0. z = b è libero.' }
+      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 1, 0) + (0, 1, 1) = (1, 2, 1): scartato. 2·(1, 1, 0) = (2, 2, 0): scartato. Per (1, 0, 0): cerco a, b con a·(1, 1, 0) + b·(0, 1, 1) = (a, a + b, b) = (1, 0, 0). Prima componente: a = 1. Terza: b = 0. Seconda: a + b = 1 + 0 = 1 ≠ 0. Impossibile, quindi (1, 0, 0) non sta nello Span: i tre vettori sono indipendenti, e 3 indipendenti in R³ sono una base.' },
+    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, 0) + (0, 0, b) = (a, a, b). Quindi x = a, y = a, z = b. Da x = a e y = a: x = y, cioè x − y = 0. z = b può essere qualsiasi numero, quindi non dà equazioni.' }
   ]);
 })();
 </script>
@@ -986,9 +986,9 @@ window.Lav = (function(){
       <h2>Calcolare U + W e U ∩ W</h2>
       <p>Esempio in R⁴: U = Span((1, 0, 1, 0), (0, 1, 0, 1)) e W = {(x, y, z, t) ∈ R⁴ : x − z = 0}.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U = 2 (i due generatori non sono multipli). W ha 1 equazione in 4 incognite: dim W = 4 − 1 = 3.</p></div>
-        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Equazione di W: x − z = a − a = 0, sempre vera. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
-        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
+        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U: a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b) = (0, 0, 0, 0) dà a = 0 (prima componente) e b = 0 (seconda): i due generatori sono indipendenti, dim U = 2.</p><p>dim W: 1 equazione in 4 incognite, dim W = 4 − 1 = 3.</p></div>
+        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Qui x = a, y = b, z = a, t = b. Equazione di W: x − z = a − a = 0, vera per ogni a e b. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
+        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 5 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
         <div class="step"><h3>Regola generale</h3><ul class="recap"><li>Entrambi con equazioni: <b>U ∩ W</b> = metti tutte le equazioni insieme.</li><li>Entrambi con generatori: <b>U + W</b> = tutti i generatori in colonna, Gauss, dim = rango.</li><li>Uno con generatori e uno con equazioni: per U ∩ W sostituisci il vettore generico nelle equazioni (come sopra).</li><li>La quarta dimensione la trovi sempre con Grassmann.</li></ul></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -1071,11 +1071,11 @@ window.Lav = (function(){
 
   guided('grassmann', [
     { h:'Passo 1 · dim U e dim W', type:'nums', ans:[2,1], html:'dim U = '+inp('dimensione di U')+' &nbsp; dim W = '+inp('dimensione di W'),
-      ok:'Sì: U ha 1 equazione in 3 incognite (3 − 1 = 2), W è generato da un vettore non nullo.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
+      ok:'Sì. U: 1 equazione (x + y + z = 0) in 3 incognite, dim U = 3 − 1 = 2. W = Span((1, 1, 1)): un solo vettore, non nullo, quindi dim W = 1.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
     { h:'Passo 2 · Il vettore generico di W è (t, t, t). Mettilo nell\'equazione di U: t + t + t = 0. Quanto vale t?', type:'nums', ans:[0],
-      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: l\'unico vettore comune è (0, 0, 0).', bad:'3t = 0: dividi per 3.' },
+      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: t + t + t = 3t = 0, divido per 3: t = 0. Il vettore comune è (0, 0, 0) e basta, quindi U ∩ W = {0}.', bad:'3t = 0: dividi per 3.' },
     { h:'Passo 3 · Quindi dim(U ∩ W) = ? E con Grassmann dim(U + W) = ?', type:'nums', ans:[0,3],
-      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
+      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: dim(U ∩ W) = dim {0} = 0, e dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
     { h:'Passo 4 · R³ = U ⊕ W?', type:'choice', ans:0,
       opts:['Sì: U ∩ W = {0} e dim(U + W) = 3 = dim R³, quindi U + W = R³ e la somma è diretta','No, perché U è un piano e W una retta','Non si può dire senza una base'],
       ok:'Esatto: U e W sono supplementari in R³.', bad:'Controlla le due condizioni: intersezione nulla e dim(U + W) = 3.' }
@@ -1083,16 +1083,16 @@ window.Lav = (function(){
 
   exercises('grassmann', [
     { id:'e1', type:'num', label:'almeno', q:'U e W sono sottospazi di R⁵, entrambi di dimensione 3. Quanto vale <b>come minimo</b> dim(U ∩ W)?', a:1,
-      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'dim(U ∩ W) = 6 − dim(U + W) ≥ 6 − 5 = 1. Quindi U ∩ W non è mai solo {0}.' },
-    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U è il piano z = 0, W è il piano x = 0. In comune c\'è la retta Span(e₂): dimensione 1.' },
-    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'2 + 2 − 1 = 3: U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
-    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'2 + 2 − 3 = 1: si incontrano in una retta.' },
+      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'Grassmann: dim(U ∩ W) = dim U + dim W − dim(U + W) = 3 + 3 − dim(U + W) = 6 − dim(U + W). U + W sta dentro R⁵, quindi dim(U + W) ≤ 5. Allora dim(U ∩ W) ≥ 6 − 5 = 1. U ∩ W non è mai solo {0}.' },
+    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U = Span(e₁, e₂) = {(a, b, 0)}: è il piano z = 0. W = Span(e₂, e₃) = {(0, c, d)}: è il piano x = 0. Un vettore in tutti e due ha z = 0 e x = 0, quindi è (0, y, 0) = y·e₂. U ∩ W = Span(e₂), dimensione 1.' },
+    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 2 − 1 = 3 = dim R³, quindi U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
+    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'Due piani diversi: U + W contiene strettamente U, quindi dim(U + W) > 2, e sta in R³, quindi dim(U + W) = 3. Grassmann: dim(U ∩ W) = 2 + 2 − 3 = 1: si incontrano in una retta.' },
     { id:'e5', type:'nums', labels:['λ₁ =','λ₂ ='], q:'Coordinate di v = (5, 1) rispetto alla base B = ((1, 1), (1, −1)) di R².', a:[3,2],
-      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'2λ₁ = 6 ⇒ λ₁ = 3, poi λ₂ = 2. [v]<sub>B</sub> = (3, 2).' },
+      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'λ₁·(1, 1) + λ₂·(1, −1) = (λ₁ + λ₂, λ₁ − λ₂) = (5, 1). Equazioni: λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Sommo: 2λ₁ = 6, quindi λ₁ = 3. Sostituisco nella prima: 3 + λ₂ = 5, quindi λ₂ = 2. Verifica: 3·(1, 1) + 2·(1, −1) = (3 + 2, 3 − 2) = (5, 1) ✓. [v]<sub>B</sub> = (3, 2).' },
     { id:'e6', type:'nums', labels:['a =','b =','c ='], q:'Scrivi p(x) = 3 + 2x + x² come a·1 + b·(1 + x) + c·(1 + x)². Coordinate rispetto alla base (1, 1 + x, (1 + x)²) di R₂[x].', a:[2,0,1],
-      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'x²: c = 1. x: b + 2c = 2 ⇒ b = 0. Termine noto: a + b + c = 3 ⇒ a = 2. Coordinate (2, 0, 1).' },
+      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'Sviluppo: a + b·(1 + x) + c·(1 + 2x + x²) = (a + b + c) + (b + 2c)·x + c·x². Confronto con 3 + 2x + x². Coefficiente di x²: c = 1. Coefficiente di x: b + 2c = 2, cioè b + 2 = 2, quindi b = 0. Termine noto: a + b + c = 3, cioè a + 0 + 1 = 3, quindi a = 2. Coordinate (2, 0, 1).' },
     { id:'e7', type:'choice', src:'tipo quiz', q:'Se U, W ⊆ R⁴ hanno dim U = dim W = 2 e U ∩ W = {0}, allora…', opts:['R⁴ = U ⊕ W','U + W è un piano','U = W'], a:0,
-      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'dim(U + W) = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
+      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'Grassmann: dim(U + W) = 2 + 2 − 0 = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
     { id:'e8', type:'choice', q:'U ∪ W è un sottospazio quando…', opts:['sempre','solo se uno dei due è contenuto nell\'altro','solo se U ∩ W = {0}'], a:1,
       hint:'Pensa ai due assi di R²: U ∩ W = {0} ma U ∪ W non è un sottospazio.', sol:'Se U ⊆ W allora U ∪ W = W, che è un sottospazio. Altrimenti prendi u ∈ U fuori da W e w ∈ W fuori da U: u + w non sta né in U né in W.' }
   ]);
@@ -1154,9 +1154,9 @@ window.Lav = (function(){
       <h2>Nucleo e immagine di L<sub>A</sub></h2>
       <p>Esempio: A = ${M([[1,1,2],[0,1,1],[1,2,3]])}$, L<sub>A</sub>: R³ → R³.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1, poi R3 ← R3 − R2: ${M([[1,1,2],[0,1,1],[0,0,0]])}$. Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
+        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1: (1 − 1, 2 − 1, 3 − 2) = (0, 1, 1). Ora R2 e R3 sono uguali: R3 ← R3 − R2 = (0 − 0, 1 − 1, 1 − 1) = (0, 0, 0).</p><p class="math">${M([[1,1,2],[0,1,1],[0,0,0]])}$</p><p>Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
         <div class="step"><h3>Passo 2 · Immagine</h3><p>Im L<sub>A</sub> = Span(colonne originali con pivot) = Span((1, 0, 1), (1, 1, 2)). dim Im = 2. Non è suriettiva (2 &lt; 3).</p></div>
-        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>y + z = 0 ⇒ y = −z. x + y + 2z = 0 ⇒ x = −y − 2z = −z. Con z = t: (−t, −t, t). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
+        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>Riga 2: y + z = 0, quindi y = −z. Riga 1: x + y + 2z = 0, quindi x = −y − 2z. Sostituisco y = −z: x = −(−z) − 2z = z − 2z = −z. Chiamo z = t: (x, y, z) = (−t, −t, t) = t·(−1, −1, 1). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
         <div class="step"><h3>Passo 4 · Controllo col teorema della dimensione</h3><p class="math">dim ker + dim Im = 1 + 2 = 3 = dim R³ ✓</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -1167,9 +1167,9 @@ window.Lav = (function(){
       <h2>Matrice associata: la derivata</h2>
       <p>f: R₂[x] → R₂[x], f(p) = p′ (derivata). Base B = C = (1, x, x²).</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(1) = 0, f(x) = 1, f(x²) = 2x.</p></div>
-        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 → (0, 0, 0); 1 → (1, 0, 0); 2x → (0, 2, 0).</p></div>
-        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4) = (5, 8, 0), cioè 5 + 8x: è proprio p′ = 5 + 8x. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
+        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(p) = p′ (derivata). f(1) = 0 (la derivata di una costante è 0), f(x) = 1, f(x²) = 2x.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 = 0·1 + 0·x + 0·x² → (0, 0, 0); 1 = 1·1 + 0·x + 0·x² → (1, 0, 0); 2x = 0·1 + 2·x + 0·x² → (0, 2, 0).</p></div>
+        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4): riga 1 = 0·3 + 1·5 + 0·4 = 5, riga 2 = 0·3 + 0·5 + 2·4 = 8, riga 3 = 0. Risultato (5, 8, 0), cioè 5 + 8x. Derivata diretta: p′ = 5 + 2·4x = 5 + 8x ✓. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
     </section>
@@ -1233,26 +1233,26 @@ window.Lav = (function(){
 
   guided('lineari', [
     { h:'Passo 1 · Gauss: R2 ← R2 − 2·R1. Quanti pivot? (rk A)', type:'nums', ans:[2],
-      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì: pivot nella colonna 1 (riga 1) e nella colonna 3 (riga 2).', bad:'Conta le righe non nulle dopo Gauss.' },
+      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì. R2 ← R2 − 2·R1 = (2 − 2·1, 4 − 2·2, 0 − 2·1) = (0, 0, −2). Matrice ridotta con righe (1, 2, 1) e (0, 0, −2): pivot nella colonna 1 e nella colonna 3, rk A = 2.', bad:'Conta le righe non nulle dopo Gauss.' },
     { h:'Passo 2 · dim Im L<sub>A</sub> e dim ker L<sub>A</sub>', type:'nums', ans:[2,1],
-      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2, dim ker = 3 − 2 = 1.', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
+      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2. dim ker = n − rk A = 3 − 2 = 1 (n = 3 perché L<sub>A</sub> parte da R³).', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
     { h:'Passo 3 · Base del nucleo: dalla riga 2, −2z = 0. Dalla riga 1, x + 2y + z = 0. Metti y = 1: quanto valgono x e z?', type:'nums', ans:[-2,0],
-      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto: ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
+      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto. Riga 2: −2z = 0, divido per −2: z = 0. Riga 1 con y = 1, z = 0: x + 2·1 + 0 = 0, quindi x = −2. Vettore (−2, 1, 0): ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
     { h:'Passo 4 · Allora L<sub>A</sub> è…', type:'choice', ans:2,
       opts:['iniettiva e suriettiva','iniettiva ma non suriettiva','suriettiva ma non iniettiva','né iniettiva né suriettiva'],
       ok:'Esatto: Im ha dimensione 2 = dim R², quindi Im = R² (suriettiva); ker ≠ {0} (non iniettiva).', bad:'Iniettiva ⇔ ker = {0}. Suriettiva ⇔ dim Im = dim R² = 2.' }
   ], '<b>Fatto!</b> rk A = 2, Im L<sub>A</sub> = R², ker L<sub>A</sub> = Span((−2, 1, 0)). Controllo: 1 + 2 = 3 = dim R³.');
 
   exercises('lineari', [
-    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (1, 0): non è lineare.' },
+    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (0 + 1, 0) = (1, 0) ≠ (0, 0): non è lineare.' },
     { id:'e2', type:'choice', q:'Quale di queste è lineare da R² a R²?', opts:['f(x, y) = (x·y, x)','f(x, y) = (2x − y, 3y)','f(x, y) = (x², y)'], a:1, hint:'Cerca quella senza prodotti tra variabili e senza potenze.', sol:'(2x − y, 3y) = A·(x, y) con A = '+M([[2,-1],[0,3]])+'. Le altre hanno x·y o x².' },
     { id:'e3', type:'choice', src:'Foglio 4 · quiz 6', q:'A = '+M([[1,2,0],[0,1,3],[1,3,3]])+'. Quale b ∈ R³ NON sta in Im L<sub>A</sub>?', opts:['(0, 1, 1)','(2, 0, 2)','(1, 0, 2)','(1, 1, 2)'], a:2,
-      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Im L<sub>A</sub> = {b : b₃ = b₁ + b₂}. (1, 0, 2): 1 + 0 = 1 ≠ 2. Gli altri rispettano la condizione.' },
-    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'4 − 3 = 1.' },
-    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'dim ker f ≥ 3 − 2 = 1, quindi ker f ≠ {0}: mai iniettiva.' },
-    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'(−1, 7).' },
-    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'dim Im f = 3 = dim R³, quindi Im f = R³: f è un isomorfismo.' },
-    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = costanti, dim 1. dim Im f = 3 − 1 = 2 (Im f = R₁[x]).' }
+      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Colonne di A: (1, 0, 1), (2, 1, 3), (0, 3, 3). In ognuna la terza componente è la somma delle prime due: 1 = 1 + 0, 3 = 2 + 1, 3 = 0 + 3. Quindi ogni combinazione delle colonne, cioè ogni b ∈ Im L<sub>A</sub>, ha b₃ = b₁ + b₂ (e rk A = 2, quindi Im è proprio questo piano). Controllo le risposte: (0, 1, 1): 0 + 1 = 1 ✓. (2, 0, 2): 2 + 0 = 2 ✓. (1, 1, 2): 1 + 1 = 2 ✓. (1, 0, 2): 1 + 0 = 1 ≠ 2 ✗. Risposta: (1, 0, 2).' },
+    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'Teorema della dimensione: dim ker + dim Im = dim R⁴ = 4. dim Im = rk A = 3. Quindi dim ker = 4 − 3 = 1.' },
+    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'Im f sta in R², quindi dim Im f ≤ 2. Teorema della dimensione: dim ker f = 3 − dim Im f ≥ 3 − 2 = 1. Quindi ker f ≠ {0}: mai iniettiva.' },
+    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'A·e₂ = A·(0, 1): riga 1 = 3·0 + (−1)·1 = −1, riga 2 = 4·0 + 7·1 = 7. Risultato (−1, 7), cioè la seconda colonna di A.' },
+    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'ker f = {0}, quindi dim ker f = 0. Teorema della dimensione: dim Im f = 3 − 0 = 3 = dim R³, quindi Im f = R³: f è suriettiva, quindi è un isomorfismo.' },
+    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = {p : p′ = 0} = costanti = Span(1), dim ker f = 1. dim R₂[x] = 3. Teorema della dimensione: dim Im f = 3 − 1 = 2. Infatti Im f = Span(f(1), f(x), f(x²)) = Span(0, 1, 2x) = R₁[x].' }
   ]);
 })();
 </script>
@@ -1321,10 +1321,10 @@ window.Lav = (function(){
       <h2>Laplace su una 3 × 3</h2>
       <p>A = ${M([[2,0,1],[1,3,2],[1,1,2]])}$. La prima riga ha uno zero: sviluppo lungo la riga 1.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Primo termine (segno +)</h3><p>a₁₁ = 2, tolgo riga 1 e colonna 1: det ${M([[3,2],[1,2]])}$ = 6 − 2 = 4. Contributo: +2·4 = 8.</p></div>
+        <div class="step"><h3>Passo 1 · Primo termine (segno +)</h3><p>a₁₁ = 2, tolgo riga 1 e colonna 1: det ${M([[3,2],[1,2]])}$ = 3·2 − 2·1 = 6 − 2 = 4. Contributo: +2·4 = 8.</p></div>
         <div class="step"><h3>Passo 2 · Secondo termine (segno −)</h3><p>a₁₂ = 0: contributo 0, non serve calcolare il minore.</p></div>
-        <div class="step"><h3>Passo 3 · Terzo termine (segno +)</h3><p>a₁₃ = 1, tolgo riga 1 e colonna 3: det ${M([[1,3],[1,1]])}$ = 1 − 3 = −2. Contributo: +1·(−2) = −2.</p></div>
-        <div class="step"><h3>Passo 4 · Somma</h3><p class="math">det A = 8 + 0 − 2 = 6</p><p>Controllo col laboratorio qui sotto (esempio "Laplace"): con Gauss i pivot sono 2, 3, 1 e 2·3·1 = 6.</p></div>
+        <div class="step"><h3>Passo 3 · Terzo termine (segno +)</h3><p>a₁₃ = 1, tolgo riga 1 e colonna 3: det ${M([[1,3],[1,1]])}$ = 1·1 − 3·1 = 1 − 3 = −2. Contributo: +1·(−2) = −2.</p></div>
+        <div class="step"><h3>Passo 4 · Somma</h3><p class="math">det A = (+2)·4 + (−0)·(…) + (+1)·(−2) = 8 + 0 − 2 = 6</p><p>Controllo col laboratorio qui sotto (esempio "Laplace"): con Gauss i pivot sono 2, 3, 1 e 2·3·1 = 6.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
     </section>
@@ -1387,26 +1387,26 @@ window.Lav = (function(){
 
   guided('determinante', [
     { h:'Passo 1 · Minore di a₁₁ = 1: togli riga 1 e colonna 1. Quanto vale det '+M([[1,2],[1,1]])+'?', type:'nums', ans:[-1],
-      html:'1·1 − 2·1 = '+inp('determinante'), ok:'Giusto: −1.', bad:'a·d − b·c con a = 1, b = 2, c = 1, d = 1.' },
+      html:'1·1 − 2·1 = '+inp('determinante'), ok:'Giusto: 1·1 − 2·1 = 1 − 2 = −1.', bad:'a·d − b·c con a = 1, b = 2, c = 1, d = 1.' },
     { h:'Passo 2 · Minore di a₁₂ = 2: togli riga 1 e colonna 2. Quanto vale det '+M([[3,2],[0,1]])+'?', type:'nums', ans:[3],
-      html:'3·1 − 2·0 = '+inp('determinante'), ok:'Sì: 3.', bad:'a·d − b·c con a = 3, b = 2, c = 0, d = 1.' },
+      html:'3·1 − 2·0 = '+inp('determinante'), ok:'Sì: 3·1 − 2·0 = 3 − 0 = 3.', bad:'a·d − b·c con a = 3, b = 2, c = 0, d = 1.' },
     { h:'Passo 3 · Il segno di a₁₂ nella scacchiera è −. Il terzo termine ha a₁₃ = 0. Quanto fa det A = +1·(−1) − 2·3 + 0?', type:'nums', ans:[-7],
-      html:'det A = '+inp('determinante'), ok:'Perfetto: −1 − 6 = −7.', bad:'Calcola 1·(−1) − 2·3.' },
+      html:'det A = '+inp('determinante'), ok:'Perfetto: +1·(−1) − 2·3 + 0 = −1 − 6 + 0 = −7.', bad:'Calcola 1·(−1) − 2·3.' },
     { h:'Passo 4 · A è invertibile?', type:'choice', ans:0, opts:['Sì, perché det A = −7 ≠ 0','No, perché det A è negativo'],
       ok:'Esatto: conta solo che sia diverso da 0, il segno non importa.', bad:'Invertibile ⇔ det ≠ 0. Il segno non c\'entra.' }
   ], '<b>Fatto!</b> det A = −7, A è invertibile e rk A = 3. Puoi controllare con il laboratorio (esempio "Esercizio guidato").');
 
   exercises('determinante', [
-    { id:'e1', type:'num', label:'det =', q:'det '+M([[3,1],[4,2]]), a:2, hint:'a·d − b·c.', sol:'3·2 − 1·4 = 2.' },
-    { id:'e2', type:'num', label:'det =', q:'det '+M([[2,5,7],[0,3,1],[0,0,-1]]), a:-6, hint:'È triangolare superiore.', sol:'Prodotto della diagonale: 2·3·(−1) = −6.' },
-    { id:'e3', type:'num', label:'det(3A) =', src:'trappola', q:'A ∈ M(3, 3, R) con det A = 2. Quanto vale det(3·A)?', a:54, hint:'det(λ·A) = λⁿ·det A con n = 3.', sol:'3³·2 = 27·2 = 54. Non 6!' },
-    { id:'e4', type:'num', label:'det(A·B) =', q:'det A = 2, det B = 5 (A, B quadrate della stessa taglia).', a:10, hint:'Binet.', sol:'2·5 = 10.' },
-    { id:'e5', type:'num', label:'det(A⁻¹) =', q:'det A = 4. (Scrivi la frazione come 1/4.)', a:0.25, hint:'det(A⁻¹) = 1 / det A.', sol:'1/4.' },
-    { id:'e6', type:'choice', q:'Per quali k ∈ R la matrice '+M([[1,'k'],['k',4]])+' NON è invertibile?', opts:['k = 2','k = ±2','k = 4','nessun k'], a:1, hint:'det = 4 − k². Quando fa 0?', sol:'4 − k² = 0 ⇔ k² = 4 ⇔ k = 2 oppure k = −2.' },
-    { id:'e7', type:'num', label:'det =', q:'det A = 5. Scambio la prima e la terza riga di A. Quanto vale il nuovo determinante?', a:-5, hint:'Uno scambio cambia il segno.', sol:'−5.' },
+    { id:'e1', type:'num', label:'det =', q:'det '+M([[3,1],[4,2]]), a:2, hint:'a·d − b·c.', sol:'a = 3, b = 1, c = 4, d = 2. det = a·d − b·c = 3·2 − 1·4 = 6 − 4 = 2.' },
+    { id:'e2', type:'num', label:'det =', q:'det '+M([[2,5,7],[0,3,1],[0,0,-1]]), a:-6, hint:'È triangolare superiore.', sol:'Sotto la diagonale ci sono solo zeri (triangolare superiore), quindi det = prodotto della diagonale = 2·3·(−1) = 6·(−1) = −6.' },
+    { id:'e3', type:'num', label:'det(3A) =', src:'trappola', q:'A ∈ M(3, 3, R) con det A = 2. Quanto vale det(3·A)?', a:54, hint:'det(λ·A) = λⁿ·det A con n = 3.', sol:'3·A moltiplica per 3 tutte e 3 le righe, e ogni riga moltiplicata per 3 moltiplica il det per 3. Quindi det(3·A) = 3·3·3·det A = 3³·2 = 27·2 = 54. Non 6!' },
+    { id:'e4', type:'num', label:'det(A·B) =', q:'det A = 2, det B = 5 (A, B quadrate della stessa taglia).', a:10, hint:'Binet.', sol:'Binet: det(A·B) = det A · det B = 2·5 = 10.' },
+    { id:'e5', type:'num', label:'det(A⁻¹) =', q:'det A = 4. (Scrivi la frazione come 1/4.)', a:0.25, hint:'det(A⁻¹) = 1 / det A.', sol:'A·A⁻¹ = I. Binet: det A · det(A⁻¹) = det I = 1. Quindi det(A⁻¹) = 1 / det A = 1/4.' },
+    { id:'e6', type:'choice', q:'Per quali k ∈ R la matrice '+M([[1,'k'],['k',4]])+' NON è invertibile?', opts:['k = 2','k = ±2','k = 4','nessun k'], a:1, hint:'det = 4 − k². Quando fa 0?', sol:'det = 1·4 − k·k = 4 − k². Non invertibile ⇔ det = 0: 4 − k² = 0 ⇔ k² = 4 ⇔ k = 2 oppure k = −2 (entrambi al quadrato fanno 4).' },
+    { id:'e7', type:'num', label:'det =', q:'det A = 5. Scambio la prima e la terza riga di A. Quanto vale il nuovo determinante?', a:-5, hint:'Uno scambio cambia il segno.', sol:'Uno scambio di due righe cambia il segno del determinante: 5 diventa −5.' },
     { id:'e8', type:'choice', src:'Foglio 4 · quiz 1', q:'A, B ∈ M(n, n, R). Quale affermazione è vera?', opts:['Se A² = 0 allora A = 0','Se A e B sono invertibili allora A·B è invertibile','Se A·B = 0 allora A = 0 oppure B = 0'], a:1,
       hint:'Binet: det(A·B) = det A · det B. Per le altre cerca un controesempio 2 × 2.', sol:'det A ≠ 0 e det B ≠ 0 ⇒ det(A·B) ≠ 0. Per le altre: A = '+M([[0,1],[0,0]])+' ha A² = 0 ma A ≠ 0.' },
-    { id:'e9', type:'nums', labels:['entrata (1,1)','entrata (1,2)'], q:'Prima riga dell\'inversa di '+M([[2,1],[5,3]]), a:[3,-1], hint:'det = 2·3 − 1·5 = 1. Scambia a e d, cambia segno a b e c.', sol:'A⁻¹ = '+M([[3,-1],[-5,2]])+'. Controllo: '+M([[2,1],[5,3]])+'·'+M([[3,-1],[-5,2]])+' = I.' }
+    { id:'e9', type:'nums', labels:['entrata (1,1)','entrata (1,2)'], q:'Prima riga dell\'inversa di '+M([[2,1],[5,3]]), a:[3,-1], hint:'det = 2·3 − 1·5 = 1. Scambia a e d, cambia segno a b e c.', sol:'det = 2·3 − 1·5 = 6 − 5 = 1. Scambio la diagonale (2 e 3): '+M([[3,1],[5,2]])+'. Cambio segno agli altri due: '+M([[3,-1],[-5,2]])+'. Divido per det = 1: resta uguale. A⁻¹ = '+M([[3,-1],[-5,2]])+'. Controllo: '+M([[2,1],[5,3]])+'·'+M([[3,-1],[-5,2]])+' = I.' }
   ]);
 })();
 </script>
@@ -1470,7 +1470,7 @@ window.Lav = (function(){
       <h2>Cambiare base a un endomorfismo</h2>
       <p>f = L<sub>A</sub>: R² → R² con A = ${M([[2,1],[1,2]])}$ (base canonica). Nuova base B = ((1, 1), (1, −1)).</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Calcola f sui vettori della nuova base</h3><p>A·(1, 1) = (3, 3). A·(1, −1) = (1, −1).</p></div>
+        <div class="step"><h3>Passo 1 · Calcola f sui vettori della nuova base</h3><p>A·(1, 1) = (2·1 + 1·1, 1·1 + 2·1) = (3, 3). A·(1, −1) = (2·1 + 1·(−1), 1·1 + 2·(−1)) = (1, −1).</p></div>
         <div class="step"><h3>Passo 2 · Scrivi i risultati in coordinate B</h3><p>(3, 3) = 3·(1, 1) + 0·(1, −1) → (3, 0). (1, −1) = 0·(1, 1) + 1·(1, −1) → (0, 1).</p></div>
         <div class="step"><h3>Passo 3 · Mettili in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[3,0],[0,1]])}$</p><p>Diagonale! Nella base B, f allunga (1, 1) di 3 e lascia fermo (1, −1). È la stessa cosa di M⁻¹·A·M con M = ${M([[1,1],[1,-1]])}$.</p></div>
         <div class="step"><h3>Passo 4 · Controllo con gli invarianti</h3><p>tr A = 4 = 3 + 1. det A = 3 = 3·1. Torna: sono simili.</p></div>
@@ -1526,22 +1526,22 @@ window.Lav = (function(){
 
   guided('caratteristico', [
     { h:'Passo 1 · Traccia e determinante', type:'nums', ans:[7,10], html:'tr A = '+inp('traccia')+' &nbsp; det A = '+inp('determinante'),
-      ok:'Sì: tr A = 4 + 3 = 7, det A = 4·3 − 1·2 = 10.', bad:'Traccia = somma della diagonale. det = a·d − b·c.' },
+      ok:'Sì: tr A = 4 + 3 = 7, det A = 4·3 − 1·2 = 12 − 2 = 10.', bad:'Traccia = somma della diagonale. det = a·d − b·c.' },
     { h:'Passo 2 · Quale è p<sub>A</sub>(λ)?', type:'choice', ans:1, opts:['λ² + 7λ + 10','λ² − 7λ + 10','λ² − 10λ + 7'],
       ok:'Esatto: λ² − (tr A)·λ + det A.', bad:'La formula è λ² − (tr A)·λ + det A: il segno davanti alla traccia è meno.' },
     { h:'Passo 3 · Radici di λ² − 7λ + 10 (scrivi prima la più piccola)', type:'nums', ans:[2,5], html:'λ₁ = '+inp('radice minore')+' &nbsp; λ₂ = '+inp('radice maggiore'),
-      ok:'Perfetto: (λ − 2)(λ − 5). Due numeri con somma 7 e prodotto 10.', bad:'Cerca due numeri con somma 7 e prodotto 10, oppure usa Δ = 49 − 40 = 9.' }
+      ok:'Perfetto. Δ = (−7)² − 4·1·10 = 49 − 40 = 9, √Δ = 3. λ = (7 ± 3)/2: λ₁ = (7 − 3)/2 = 4/2 = 2, λ₂ = (7 + 3)/2 = 10/2 = 5. Infatti (λ − 2)(λ − 5) = λ² − 5λ − 2λ + 10 = λ² − 7λ + 10.', bad:'Cerca due numeri con somma 7 e prodotto 10, oppure usa Δ = 49 − 40 = 9.' }
   ], '<b>Fatto!</b> p<sub>A</sub>(λ) = λ² − 7λ + 10 = (λ − 2)(λ − 5). Le radici 2 e 5 saranno gli autovalori di A (capitolo 7). Controllo: 2 + 5 = 7 = tr A e 2·5 = 10 = det A.');
 
   exercises('caratteristico', [
     { id:'e1', type:'num', label:'tr =', q:'tr '+M([[1,2,3],[4,5,6],[7,8,9]]), a:15, hint:'Solo la diagonale.', sol:'1 + 5 + 9 = 15.' },
-    { id:'e2', type:'choice', q:M([[1,0],[0,2]])+' e '+M([[1,0],[0,3]])+' sono simili?', opts:['Sì, sono entrambe diagonali','No: hanno traccia diversa (3 e 4)'], a:1, hint:'Le simili hanno la stessa traccia.', sol:'tr = 3 contro tr = 4: non possono essere simili.' },
+    { id:'e2', type:'choice', q:M([[1,0],[0,2]])+' e '+M([[1,0],[0,3]])+' sono simili?', opts:['Sì, sono entrambe diagonali','No: hanno traccia diversa (3 e 4)'], a:1, hint:'Le simili hanno la stessa traccia.', sol:'tr della prima = 1 + 2 = 3, tr della seconda = 1 + 3 = 4. Matrici simili hanno la stessa traccia, 3 ≠ 4: non possono essere simili.' },
     { id:'e3', type:'num', label:'det B =', q:'A ∼ B e det A = 6.', a:6, hint:'Il determinante non cambia per similitudine.', sol:'det B = det(M⁻¹·A·M) = det A = 6 (Binet).' },
     { id:'e4', type:'choice', src:'trappola', q:'A = '+M([[1,1],[0,1]])+' e I = '+M([[1,0],[0,1]])+' hanno stesso det, stessa traccia e stesso p(λ) = (1 − λ)². Sono simili?', opts:['Sì, gli invarianti sono uguali','No: l\'unica matrice simile a I è I stessa'], a:1,
       hint:'Calcola M⁻¹·I·M.', sol:'M⁻¹·I·M = M⁻¹·M = I per ogni M. Quindi nessuna matrice diversa da I è simile a I. Gli invarianti uguali non bastano.' },
     { id:'e5', type:'nums', labels:['prima componente','seconda componente'], q:'B = ((1, 2), (0, 1)) base di R². Se [v]<sub>B</sub> = (1, 1), chi è v (in coordinate canoniche)?', a:[1,3], hint:'v = 1·(1, 2) + 1·(0, 1). Oppure M·(1, 1) con M = '+M([[1,0],[2,1]])+'.', sol:'v = (1, 2) + (0, 1) = (1, 3).' },
-    { id:'e6', type:'choice', q:'Radici di p<sub>A</sub>(λ) per A = '+M([[1,4,5],[0,2,6],[0,0,2]]), opts:['1, 2, 2','1, 4, 5','1, 2, 6'], a:0, hint:'È triangolare.', sol:'p<sub>A</sub>(λ) = (1 − λ)(2 − λ)²: radici 1 (semplice) e 2 (doppia).' },
-    { id:'e7', type:'nums', labels:['tr A =','det A ='], q:'A ∈ M(2, 2, R) ha p<sub>A</sub>(λ) = λ² − 5λ + 6.', a:[5,6], hint:'Confronta con λ² − tr A·λ + det A.', sol:'tr A = 5, det A = 6 (e gli autovalori sono 2 e 3).' },
+    { id:'e6', type:'choice', q:'Radici di p<sub>A</sub>(λ) per A = '+M([[1,4,5],[0,2,6],[0,0,2]]), opts:['1, 2, 2','1, 4, 5','1, 2, 6'], a:0, hint:'È triangolare.', sol:'A − λI è ancora triangolare, con diagonale 1 − λ, 2 − λ, 2 − λ. Il det di una triangolare è il prodotto della diagonale: p<sub>A</sub>(λ) = (1 − λ)(2 − λ)(2 − λ) = (1 − λ)(2 − λ)². Radici: 1 − λ = 0 ⇒ λ = 1 (semplice); 2 − λ = 0 ⇒ λ = 2 (doppia).' },
+    { id:'e7', type:'nums', labels:['tr A =','det A ='], q:'A ∈ M(2, 2, R) ha p<sub>A</sub>(λ) = λ² − 5λ + 6.', a:[5,6], hint:'Confronta con λ² − tr A·λ + det A.', sol:'Per una 2 × 2: p<sub>A</sub>(λ) = λ² − (tr A)·λ + det A. Confronto con λ² − 5λ + 6: −tr A = −5, quindi tr A = 5; det A = 6. (Radici: λ² − 5λ + 6 = (λ − 2)(λ − 3), autovalori 2 e 3.)' },
     { id:'e8', type:'choice', q:'tr(A·B) − tr(B·A) vale…', opts:['0 sempre','dipende da A e B','det A − det B'], a:0, hint:'Prop. 4.4.11.', sol:'tr(A·B) = tr(B·A) sempre, anche se A·B ≠ B·A.' }
   ]);
 })();
@@ -1608,10 +1608,10 @@ window.Lav = (function(){
       <div class="eyebrow">La ricetta, un passo alla volta</div>
       <h2>Diagonalizzare A = ${M([[2,1],[1,2]])}$</h2>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Polinomio caratteristico</h3><p>p<sub>A</sub>(λ) = det ${M([["2 − λ",1],[1,"2 − λ"]])}$ = (2 − λ)² − 1 = λ² − 4λ + 3 = (λ − 1)(λ − 3).</p></div>
+        <div class="step"><h3>Passo 1 · Polinomio caratteristico</h3><p>p<sub>A</sub>(λ) = det ${M([["2 − λ",1],[1,"2 − λ"]])}$ = (2 − λ)·(2 − λ) − 1·1 = (4 − 4λ + λ²) − 1 = λ² − 4λ + 3.</p><p>Radici: Δ = 16 − 12 = 4, √Δ = 2, λ = (4 ± 2)/2, cioè λ = 1 e λ = 3. Quindi λ² − 4λ + 3 = (λ − 1)(λ − 3).</p></div>
         <div class="step"><h3>Passo 2 · Autovalori e ma</h3><p>λ₁ = 1 con ma = 1, λ₂ = 3 con ma = 1. Tutte reali, distinte: già so che A è diagonalizzabile.</p></div>
-        <div class="step"><h3>Passo 3 · Autospazio di λ = 1</h3><p>A − 1·I = ${M([[1,1],[1,1]])}$. Sistema x + y = 0 in R²: V<sub>1</sub> = Span((1, −1)).</p></div>
-        <div class="step"><h3>Passo 4 · Autospazio di λ = 3</h3><p>A − 3·I = ${M([[-1,1],[1,-1]])}$. Sistema −x + y = 0 in R²: V<sub>3</sub> = Span((1, 1)).</p></div>
+        <div class="step"><h3>Passo 3 · Autospazio di λ = 1</h3><p>A − 1·I = ${M([[1,1],[1,1]])}$. Sistema (A − I)·(x, y) = 0: riga 1 dà x + y = 0 (la riga 2 è uguale). Quindi y = −x: (x, −x) = x·(1, −1). V<sub>1</sub> = Span((1, −1)).</p></div>
+        <div class="step"><h3>Passo 4 · Autospazio di λ = 3</h3><p>A − 3·I = ${M([[-1,1],[1,-1]])}$. Sistema: riga 1 dà −x + y = 0 (la riga 2 è −1 volte la riga 1). Quindi y = x: (x, x) = x·(1, 1). V<sub>3</sub> = Span((1, 1)).</p></div>
         <div class="step"><h3>Passo 5 · Scrivi M e D</h3><p>M = ${M([[1,1],[-1,1]])}$ (colonne: autovettori), D = ${M([[1,0],[0,3]])}$. Prima colonna di M ↔ primo numero di D.</p><p>Controllo veloce: tr D = 4 = tr A, det D = 3 = det A.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -1680,20 +1680,20 @@ window.Lav = (function(){
     { h:'Passo 2 · Quale autovalore devo controllare?', type:'choice', ans:0, opts:['Solo λ = 1, perché ha ma = 2','Solo λ = 2','Tutti e due allo stesso modo'],
       ok:'Esatto: per ma = 1 vale sempre mg = 1. Il rischio è solo dove ma ≥ 2.', bad:'Se ma = 1, allora 1 ≤ mg ≤ 1, quindi mg = 1 in automatico.' },
     { h:'Passo 3 · rk(A − 1·I) e mg(1)', type:'nums', ans:[2,1], html:'A − 1·I = '+M([[0,1,0],[0,0,0],[0,0,1]])+'<br>rk(A − 1·I) = '+inp('rango')+' &nbsp; mg(1) = 3 − rk = '+inp('mg'),
-      ok:'Sì: due righe non nulle e indipendenti, rk = 2, mg(1) = 3 − 2 = 1.', bad:'Conta le righe non nulle (sono già a scala). Poi mg = n − rk con n = 3.' },
+      ok:'Sì. A − 1·I: tolgo 1 dalla diagonale, (1 − 1, 1 − 1, 2 − 1) = (0, 0, 1). Righe (0, 1, 0), (0, 0, 0), (0, 0, 1): due righe non nulle e indipendenti, rk = 2. mg(1) = n − rk = 3 − 2 = 1.', bad:'Conta le righe non nulle (sono già a scala). Poi mg = n − rk con n = 3.' },
     { h:'Passo 4 · Conclusione', type:'choice', ans:1, opts:['Diagonalizzabile','Non diagonalizzabile: mg(1) = 1 ≠ 2 = ma(1)'],
       ok:'Giusto. Le radici sono tutte reali, ma per λ = 1 manca un autovettore: non c\'è una base di autovettori.', bad:'Il criterio chiede mg = ma per ogni λ. Per λ = 1: mg = 1, ma = 2.' }
   ], '<b>Fatto!</b> A non è diagonalizzabile: per λ = 1 si ha ma(1) = 2 ma mg(1) = 1. È lo stesso fenomeno del "taglio" nel disegno: un solo autospazio dove ne servirebbero due.');
 
   exercises('autovalori', [
     { id:'e1', type:'choice', q:'Per A = '+M([[3,0],[0,3]])+', il vettore v = 0 è un autovettore?', opts:['Sì, A·0 = 3·0','No: per definizione v ≠ 0'], a:1, hint:'Rileggi la definizione.', sol:'Gli autovettori sono non nulli per definizione. A·0 = λ·0 per ogni λ, quindi 0 non direbbe niente.' },
-    { id:'e2', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[5,4],[1,2]]), a:[1,6], hint:'tr A = 7, det A = 6: λ² − 7λ + 6.', sol:'λ² − 7λ + 6 = (λ − 1)(λ − 6): autovalori 1 e 6.' },
-    { id:'e3', type:'choice', q:'A = '+M([[5,4],[1,2]])+': un autovettore di λ = 6 è…', opts:['(4, 1)','(1, −1)','(1, 4)'], a:0, hint:'Prova A·v e guarda se è 6·v.', sol:'A·(4, 1) = (24, 6) = 6·(4, 1). (1, −1) è autovettore di λ = 1.' },
-    { id:'e4', type:'choice', q:'A = '+M([[0,-1],[1,0]])+' (rotazione di 90°) in M(2, 2, R) è diagonalizzabile?', opts:['Sì','No: p<sub>A</sub>(λ) = λ² + 1 non ha radici reali'], a:1, hint:'Calcola p<sub>A</sub>(λ).', sol:'λ² + 1 = 0 non ha soluzioni in R: manca la condizione 1). In M(2, 2, C) invece sì (autovalori i e −i).' },
+    { id:'e2', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[5,4],[1,2]]), a:[1,6], hint:'tr A = 7, det A = 6: λ² − 7λ + 6.', sol:'tr A = 5 + 2 = 7, det A = 5·2 − 4·1 = 10 − 4 = 6. p<sub>A</sub>(λ) = λ² − 7λ + 6. Δ = 49 − 24 = 25, √Δ = 5, λ = (7 ± 5)/2: λ = 2/2 = 1 e λ = 12/2 = 6.' },
+    { id:'e3', type:'choice', q:'A = '+M([[5,4],[1,2]])+': un autovettore di λ = 6 è…', opts:['(4, 1)','(1, −1)','(1, 4)'], a:0, hint:'Prova A·v e guarda se è 6·v.', sol:'A·(4, 1) = (5·4 + 4·1, 1·4 + 2·1) = (20 + 4, 4 + 2) = (24, 6) = 6·(4, 1) ✓. Invece A·(1, −1) = (5 − 4, 1 − 2) = (1, −1) = 1·(1, −1): autovettore di λ = 1. A·(1, 4) = (5 + 16, 1 + 8) = (21, 9), non è multiplo di (1, 4).' },
+    { id:'e4', type:'choice', q:'A = '+M([[0,-1],[1,0]])+' (rotazione di 90°) in M(2, 2, R) è diagonalizzabile?', opts:['Sì','No: p<sub>A</sub>(λ) = λ² + 1 non ha radici reali'], a:1, hint:'Calcola p<sub>A</sub>(λ).', sol:'tr A = 0 + 0 = 0, det A = 0·0 − (−1)·1 = 1. p<sub>A</sub>(λ) = λ² − 0·λ + 1 = λ² + 1. λ² + 1 = 0 ⇒ λ² = −1, nessuna soluzione in R: manca la condizione 1). In M(2, 2, C) invece sì (autovalori i e −i).' },
     { id:'e5', type:'choice', q:'A ∈ M(3, 3, R) ha autovalori 1, 2, 7. È diagonalizzabile?', opts:['Sì, sempre','Dipende dagli autospazi','No'], a:0, hint:'Cor. 5.2.3.', sol:'Tre autovalori distinti per una 3 × 3: ognuno ha ma = mg = 1, quindi sì.' },
-    { id:'e6', type:'num', label:'mg(2) =', src:'esame', q:'A = '+M([[1,0,1],[0,2,0],[1,0,1]])+' ha p<sub>A</sub>(λ) = −λ·(λ − 2)², quindi ma(2) = 2. Calcola mg(2) = 3 − rk(A − 2·I).', a:2, hint:'A − 2I = '+M([[-1,0,1],[0,0,0],[1,0,-1]])+': la terza riga è −1 volte la prima.', sol:'rk(A − 2I) = 1, quindi mg(2) = 3 − 1 = 2 = ma(2). Con λ = 0 (ma = 1) tutto torna: A è diagonalizzabile.' },
-    { id:'e7', type:'choice', q:'Se λ = 0 è autovalore di A, allora…', opts:['det A = 0','A = 0','tr A = 0'], a:0, hint:'det(A − 0·I) = ?', sol:'p<sub>A</sub>(0) = det A = 0. A non è invertibile.' },
-    { id:'e8', type:'choice', src:'esame', q:'A = '+M([[2,0,0],[0,2,0],[0,0,5]])+' e B = '+M([[2,1,0],[0,2,0],[0,0,5]])+'. Quale è diagonalizzabile?', opts:['Tutte e due','Solo A','Solo B','Nessuna'], a:1, hint:'Stessi autovalori (2 doppio, 5). Calcola mg(2) per entrambe.', sol:'A è già diagonale. Per B: B − 2I = '+M([[0,1,0],[0,0,0],[0,0,3]])+' ha rango 2, mg(2) = 1 ≠ 2 = ma(2): B non è diagonalizzabile.' }
+    { id:'e6', type:'num', label:'mg(2) =', src:'esame', q:'A = '+M([[1,0,1],[0,2,0],[1,0,1]])+' ha p<sub>A</sub>(λ) = −λ·(λ − 2)², quindi ma(2) = 2. Calcola mg(2) = 3 − rk(A − 2·I).', a:2, hint:'A − 2I = '+M([[-1,0,1],[0,0,0],[1,0,-1]])+': la terza riga è −1 volte la prima.', sol:'A − 2I: tolgo 2 dalla diagonale: (1 − 2, 2 − 2, 1 − 2) = (−1, 0, −1). Righe (−1, 0, 1), (0, 0, 0), (1, 0, −1). R3 ← R3 + R1 = (0, 0, 0). Resta una riga non nulla: rk(A − 2I) = 1, quindi mg(2) = 3 − 1 = 2 = ma(2). Con λ = 0 (ma = 1) tutto torna: A è diagonalizzabile.' },
+    { id:'e7', type:'choice', q:'Se λ = 0 è autovalore di A, allora…', opts:['det A = 0','A = 0','tr A = 0'], a:0, hint:'det(A − 0·I) = ?', sol:'λ = 0 autovalore ⇔ p<sub>A</sub>(0) = 0. Ma p<sub>A</sub>(0) = det(A − 0·I) = det A. Quindi det A = 0: A non è invertibile.' },
+    { id:'e8', type:'choice', src:'esame', q:'A = '+M([[2,0,0],[0,2,0],[0,0,5]])+' e B = '+M([[2,1,0],[0,2,0],[0,0,5]])+'. Quale è diagonalizzabile?', opts:['Tutte e due','Solo A','Solo B','Nessuna'], a:1, hint:'Stessi autovalori (2 doppio, 5). Calcola mg(2) per entrambe.', sol:'A è già diagonale. Per B: B − 2I = (togli 2 dalla diagonale) '+M([[0,1,0],[0,0,0],[0,0,3]])+': righe non nulle (0, 1, 0) e (0, 0, 3), indipendenti, rango 2. mg(2) = 3 − 2 = 1, mg(2) = 1 ≠ 2 = ma(2): B non è diagonalizzabile.' }
   ]);
 })();
 </script>
@@ -1830,24 +1830,24 @@ window.Lav = (function(){
 
   guided('scalare', [
     { h:'Passo 1 · w₁ = v₁. Calcola ⟨w₁, w₁⟩ e ⟨v₂, w₁⟩', type:'nums', ans:[2,1], html:'⟨w₁, w₁⟩ = '+inp('w1 per w1')+' &nbsp; ⟨v₂, w₁⟩ = '+inp('v2 per w1'),
-      ok:'Sì: ⟨(1,1,0), (1,1,0)⟩ = 2 e ⟨(1,0,1), (1,1,0)⟩ = 1 + 0 + 0 = 1.', bad:'Moltiplica componente per componente e somma.' },
+      ok:'Sì: ⟨(1, 1, 0), (1, 1, 0)⟩ = 1·1 + 1·1 + 0·0 = 1 + 1 + 0 = 2 e ⟨(1, 0, 1), (1, 1, 0)⟩ = 1·1 + 0·1 + 1·0 = 1 + 0 + 0 = 1.', bad:'Moltiplica componente per componente e somma.' },
     { h:'Passo 2 · w₂ = v₂ − (1/2)·w₁ (puoi scrivere 1/2)', type:'nums', ans:[0.5,-0.5,1], html:'w₂ = ( '+inp('prima')+' , '+inp('seconda')+' , '+inp('terza')+' )',
-      ok:'Perfetto: (1, 0, 1) − (1/2, 1/2, 0) = (1/2, −1/2, 1).', bad:'(1/2)·w₁ = (1/2, 1/2, 0). Sottrailo da (1, 0, 1) componente per componente.' },
+      ok:'Perfetto: il coefficiente è ⟨v₂, w₁⟩/⟨w₁, w₁⟩ = 1/2. (1/2)·(1, 1, 0) = (1/2, 1/2, 0). w₂ = (1, 0, 1) − (1/2, 1/2, 0) = (1 − 1/2, 0 − 1/2, 1 − 0) = (1/2, −1/2, 1).', bad:'(1/2)·w₁ = (1/2, 1/2, 0). Sottrailo da (1, 0, 1) componente per componente.' },
     { h:'Passo 3 · Controllo: ⟨w₂, w₁⟩ = ?', type:'nums', ans:[0], html:'⟨w₂, w₁⟩ = '+inp('prodotto'),
-      ok:'Sì, 1/2 − 1/2 + 0 = 0: sono ortogonali.', bad:'(1/2)·1 + (−1/2)·1 + 1·0.' },
+      ok:'Sì: (1/2)·1 + (−1/2)·1 + 1·0 = 1/2 − 1/2 + 0 = 0: sono ortogonali.', bad:'(1/2)·1 + (−1/2)·1 + 1·0.' },
     { h:'Passo 4 · ‖w₁‖ = ?', type:'choice', ans:1, opts:['2','√2','1'],
       ok:'Esatto: ‖w₁‖ = √⟨w₁, w₁⟩ = √2. Per normalizzare: w₁/√2.', bad:'La norma è la radice di ⟨w₁, w₁⟩.' }
   ], '<b>Fatto!</b> Base ortogonale di U: w₁ = (1, 1, 0), w₂ = (1/2, −1/2, 1) (o, più pulito, (1, −1, 2)). Ortonormale: (1/√2)·(1, 1, 0) e (1/√6)·(1, −1, 2).');
 
   exercises('scalare', [
-    { id:'e1', type:'num', label:'⟨x, y⟩ =', q:'x = (1, 2, 3), y = (4, −1, 0) in R³', a:2, hint:'1·4 + 2·(−1) + 3·0.', sol:'4 − 2 + 0 = 2.' },
-    { id:'e2', type:'num', label:'‖x‖ =', q:'x = (3, 4) in R²', a:5, hint:'√(9 + 16).', sol:'√25 = 5.' },
-    { id:'e3', type:'num', label:'k =', q:'Per quale k ∈ R i vettori (1, k, 2) e (3, 1, −1) sono ortogonali?', a:-1, hint:'Imponi ⟨·,·⟩ = 0.', sol:'3 + k − 2 = 0 ⇒ k = −1.' },
-    { id:'e4', type:'nums', labels:['prima','seconda'], q:'Proiezione di v = (2, 3) sulla retta Span(w), w = (1, 1)', a:[2.5,2.5], hint:'⟨v, w⟩ = 5, ⟨w, w⟩ = 2.', sol:'(5/2)·(1, 1) = (5/2, 5/2).' },
-    { id:'e5', type:'choice', q:'Angolo tra (1, 0) e (1, 1)?', opts:['π/6','π/4','π/3','π/2'], a:1, hint:'cos θ = 1/(1·√2).', sol:'cos θ = 1/√2 = √2/2 ⇒ θ = π/4.' },
-    { id:'e6', type:'num', label:'dim W<sup>⊥</sup> =', q:'W = Span((1, 1, 1)) ⊆ R³', a:2, hint:'n − dim W.', sol:'3 − 1 = 2. W<sup>⊥</sup> = { x + y + z = 0 }, un piano.' },
+    { id:'e1', type:'num', label:'⟨x, y⟩ =', q:'x = (1, 2, 3), y = (4, −1, 0) in R³', a:2, hint:'1·4 + 2·(−1) + 3·0.', sol:'1·4 + 2·(−1) + 3·0 = 4 − 2 + 0 = 2.' },
+    { id:'e2', type:'num', label:'‖x‖ =', q:'x = (3, 4) in R²', a:5, hint:'√(9 + 16).', sol:'‖x‖ = √(3² + 4²) = √(9 + 16) = √25 = 5.' },
+    { id:'e3', type:'num', label:'k =', q:'Per quale k ∈ R i vettori (1, k, 2) e (3, 1, −1) sono ortogonali?', a:-1, hint:'Imponi ⟨·,·⟩ = 0.', sol:'⟨(1, k, 2), (3, 1, −1)⟩ = 1·3 + k·1 + 2·(−1) = 3 + k − 2 = 1 + k. Ortogonali ⇔ 1 + k = 0 ⇔ k = −1.' },
+    { id:'e4', type:'nums', labels:['prima','seconda'], q:'Proiezione di v = (2, 3) sulla retta Span(w), w = (1, 1)', a:[2.5,2.5], hint:'⟨v, w⟩ = 5, ⟨w, w⟩ = 2.', sol:'⟨v, w⟩ = 2·1 + 3·1 = 5. ⟨w, w⟩ = 1·1 + 1·1 = 2. proj = (⟨v, w⟩/⟨w, w⟩)·w = (5/2)·(1, 1) = (5/2, 5/2).' },
+    { id:'e5', type:'choice', q:'Angolo tra (1, 0) e (1, 1)?', opts:['π/6','π/4','π/3','π/2'], a:1, hint:'cos θ = 1/(1·√2).', sol:'⟨(1, 0), (1, 1)⟩ = 1·1 + 0·1 = 1. ‖(1, 0)‖ = √(1 + 0) = 1, ‖(1, 1)‖ = √(1 + 1) = √2. cos θ = 1/(1·√2) = 1/√2 = √2/2. L\'angolo in [0, π] con coseno √2/2 è θ = π/4.' },
+    { id:'e6', type:'num', label:'dim W<sup>⊥</sup> =', q:'W = Span((1, 1, 1)) ⊆ R³', a:2, hint:'n − dim W.', sol:'dim W = 1 (un vettore non nullo). dim W<sup>⊥</sup> = n − dim W = 3 − 1 = 2. Infatti v = (x, y, z) ∈ W<sup>⊥</sup> ⇔ ⟨v, (1, 1, 1)⟩ = x + y + z = 0: un piano.' },
     { id:'e7', type:'choice', q:'Quale matrice è ortogonale?', opts:[M([[1,1],[0,1]]), M([[0,1],[1,0]]), M([[2,0],[0,1/2]])], a:1, hint:'Le colonne devono avere norma 1 ed essere ortogonali tra loro.', sol:'Le colonne (0, 1) e (1, 0) sono unitarie e ortogonali. La prima ha una colonna di norma √2; la terza ha colonne di norma 2 e 1/2.' },
-    { id:'e8', type:'nums', labels:['prima','seconda'], q:'Normalizza x = (3, 4)', a:[0.6,0.8], hint:'Dividi per ‖x‖ = 5.', sol:'(3/5, 4/5).' },
+    { id:'e8', type:'nums', labels:['prima','seconda'], q:'Normalizza x = (3, 4)', a:[0.6,0.8], hint:'Dividi per ‖x‖ = 5.', sol:'‖x‖ = √(9 + 16) = √25 = 5. x/‖x‖ = (3/5, 4/5). Controllo: (3/5)² + (4/5)² = 9/25 + 16/25 = 25/25 = 1 ✓.' },
     { id:'e9', type:'choice', src:'trappola', q:'⟨x, y⟩ = 0 con x, y ∈ Rⁿ. Allora…', opts:['x = 0 oppure y = 0','x e y sono ortogonali (possono essere entrambi non nulli)','x = y'], a:1, hint:'Pensa a (1, 0) e (0, 1).', sol:'Non è come il prodotto di numeri: ⟨(1,0), (0,1)⟩ = 0 con entrambi non nulli.' }
   ]);
 })();
@@ -1948,11 +1948,11 @@ window.Lav = (function(){
 
   guided('spettrale', [
     { h:'Passo 1 · Autovalori (prima il minore)', type:'nums', ans:[1,3], html:'λ₁ = '+inp('autovalore minore')+' &nbsp; λ₂ = '+inp('autovalore maggiore'),
-      ok:'Sì: λ² − 4λ + 3 = (λ − 1)(λ − 3).', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
+      ok:'Sì: tr A = 2 + 2 = 4, det A = 2·2 − 1·1 = 3, p<sub>A</sub>(λ) = λ² − 4λ + 3. Δ = 16 − 12 = 4, λ = (4 ± 2)/2: λ = 1 e λ = 3.', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
     { h:'Passo 2 · Autovettori: V<sub>1</sub> = Span((1, −1)), V<sub>3</sub> = Span((1, 1)). Quanto vale ⟨(1, −1), (1, 1)⟩?', type:'nums', ans:[0], html:'⟨(1, −1), (1, 1)⟩ = '+inp('prodotto scalare'),
-      ok:'Zero: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
+      ok:'1·1 + (−1)·1 = 1 − 1 = 0: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
     { h:'Passo 3 · Per normalizzare divido ognuno per…', type:'choice', ans:1, opts:['2','√2','1/2'],
-      ok:'Giusto: ‖(1, −1)‖ = ‖(1, 1)‖ = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
+      ok:'Giusto: ‖(1, −1)‖ = √(1² + (−1)²) = √(1 + 1) = √2 e ‖(1, 1)‖ = √(1 + 1) = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
     { h:'Passo 4 · Quale M dà <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'?', type:'choice', ans:0, opts:['(1/√2)·'+M([[1,1],[-1,1]]), '(1/√2)·'+M([[1,1],[1,-1]]), M([[1,1],[-1,1]])],
       ok:'Esatto: prima colonna = autovettore di 1, seconda = autovettore di 3, entrambe di norma 1.', bad:'L\'ordine delle colonne deve seguire D (prima λ = 1, poi λ = 3) e le colonne devono avere norma 1.' }
   ], '<b>Fatto!</b> M = (1/√2)·'+M([[1,1],[-1,1]])+' è ortogonale (M⁻¹ = <sup>t</sup>M) e <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'.');
@@ -1960,12 +1960,12 @@ window.Lav = (function(){
   exercises('spettrale', [
     { id:'e1', type:'choice', q:'A ∈ M(4, 4, R) simmetrica. Allora A è diagonalizzabile?', opts:['Sempre','Solo se ha 4 autovalori distinti','Dipende'], a:0, hint:'Teorema spettrale.', sol:'Sempre, e addirittura con M ortogonale.' },
     { id:'e2', type:'choice', q:'Quale matrice è diagonalizzabile con una M ortogonale?', opts:[M([[1,2],[0,3]]), M([[1,2],[2,3]]), M([[0,-1],[1,0]])], a:1, hint:'Serve la simmetria.', sol:M([[1,2],[2,3]])+' è simmetrica. La prima è diagonalizzabile (autovalori 1 e 3) ma non con M ortogonale; la terza non ha autovalori reali.' },
-    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'λ² − 25 = 0 ⇒ λ = −5 e λ = 5.' },
-    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'x = 2y: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
+    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'tr A = 3 + (−3) = 0. det A = 3·(−3) − 4·4 = −9 − 16 = −25. p<sub>A</sub>(λ) = λ² − 0·λ − 25 = λ² − 25. λ² = 25 ⇒ λ = −5 e λ = 5.' },
+    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'A − 5I = (togli 5 dalla diagonale) '+M([[-2,4],[4,-8]])+'. Riga 1: −2x + 4y = 0, cioè 2x = 4y, cioè x = 2y (riga 2 = −2 volte riga 1). Con y = 1: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
     { id:'e5', type:'choice', q:'M ortogonale. Allora M⁻¹ = …', opts:['M','<sup>t</sup>M','−M'], a:1, hint:'Definizione di ortogonale.', sol:'<sup>t</sup>M·M = I ⇒ M⁻¹ = <sup>t</sup>M.' },
     { id:'e6', type:'num', label:'mg(2) =', q:'A ∈ M(3, 3, R) simmetrica con p<sub>A</sub>(λ) = −(λ − 2)²·(λ − 7).', a:2, hint:'Per le simmetriche mg = ma sempre.', sol:'mg(2) = ma(2) = 2.' },
     { id:'e7', type:'choice', src:'trappola', q:'Autovettori (1, 1, 0) di λ = 1 e (1, 0, k) di λ = 4 di una A simmetrica. Allora k…', opts:['può essere qualsiasi','deve essere tale che (1, 0, k) ⊥ (1, 1, 0), ma questo è impossibile: allora non può succedere','k = 0'], a:1, hint:'⟨(1, 1, 0), (1, 0, k)⟩ = 1 per ogni k.', sol:'Autovettori di autovalori diversi devono essere ortogonali, ma il prodotto vale sempre 1 ≠ 0: una A simmetrica così non esiste.' },
-    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'(1/3, 2/3, 2/3).' }
+    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'‖(1, 2, 2)‖ = √(1 + 4 + 4) = √9 = 3. Divido ogni componente per 3: (1/3, 2/3, 2/3).' }
   ]);
 })();
 </script>
@@ -2073,22 +2073,22 @@ window.Lav = (function(){
 
   guided('sistemi', [
     { h:'Passo 1 · Gauss: R2 ← R2 − R1 e R3 ← R3 − R1. Che riga diventa la terza?', type:'choice', ans:1, opts:['(0, 0, k | 2)','(0, 0, k − 1 | 2)','(0, 1, k − 1 | 2)'],
-      ok:'Sì: (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). La seconda riga diventa (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
+      ok:'Sì: R3 − R1 = (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). E R2 − R1 = (1 − 1, 2 − 1, 1 − 1 | 2 − 1) = (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
     { h:'Passo 2 · Vorrei dividere per k − 1. Prima cosa?', type:'choice', ans:2, opts:['Divido subito, tanto è un numero','Pongo k − 1 = 1','Studio a parte il caso k = 1, dove k − 1 = 0'],
       ok:'Bravo, è la regola d\'oro. Con k = 1 la terza riga è (0, 0, 0 | 2), cioè 0 = 2.', bad:'k − 1 vale 0 quando k = 1: dividere per 0 non si può. Quel caso va studiato da solo.' },
     { h:'Passo 3 · Caso k = 1: rk A e rk(A | b)', type:'nums', ans:[2,3], html:'rk A = '+inp('rango di A')+' &nbsp; rk(A | b) = '+inp('rango della completa'),
       ok:'Esatto: 2 ≠ 3, quindi per k = 1 <b>nessuna soluzione</b>.', bad:'A ha due righe non nulle a scala; la completa ha anche la riga (0, 0, 0 | 2).' },
     { h:'Passo 4 · Caso k ≠ 1, per esempio k = 3: trova (x, y, z)', type:'nums', ans:[-1,1,1], html:'x = '+inp('x')+' &nbsp; y = '+inp('y')+' &nbsp; z = '+inp('z'),
-      ok:'Perfetto: z = 2/(k − 1) = 1, y = 1, x = 1 − y − z = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
+      ok:'Perfetto. Terza riga con k = 3: (3 − 1)·z = 2, cioè 2z = 2, quindi z = 1. Seconda riga: y = 1. Prima riga: x + y + z = 1, cioè x + 1 + 1 = 1, quindi x = 1 − 2 = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
   ], '<b>Fatto!</b> Per k = 1 nessuna soluzione; per k ≠ 1 una sola soluzione: (x, y, z) = (−2/(k − 1), 1, 2/(k − 1)). Controllo veloce: det A = k − 1, che è ≠ 0 proprio per k ≠ 1.');
 
   exercises('sistemi', [
     { id:'e1', type:'choice', q:'Dopo Gauss: rk A = 2 e rk(A | b) = 3.', opts:['Una soluzione','Infinite soluzioni','Nessuna soluzione'], a:2, hint:'Rouché-Capelli.', sol:'Ranghi diversi: nessuna soluzione.' },
-    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'5 − 3 = 2.' },
-    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'2x = 4 ⇒ x = 2, y = 1.' },
+    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'Parametri liberi = n − rk A = 5 − 3 = 2.' },
+    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'Sommo le due equazioni: (x + y) + (x − y) = 3 + 1, cioè 2x = 4, quindi x = 2. Dalla prima: 2 + y = 3, quindi y = 1. Verifica: 2 − 1 = 1 ✓.' },
     { id:'e4', type:'choice', q:'Un sistema omogeneo A·x = 0…', opts:['può non avere soluzioni','ha sempre almeno la soluzione x = 0','ha sempre infinite soluzioni'], a:1, hint:'Prova x = 0.', sol:'A·0 = 0 sempre. Infinite solo se rk A &lt; n.' },
-    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1 − k² ≠ 0 ⇔ k ≠ ±1.' },
-    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Sommando: 0 = 2. Impossibile.' },
+    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1·1 − k·k = 1 − k². Una sola soluzione ⇔ det A ≠ 0 ⇔ 1 − k² ≠ 0 ⇔ k² ≠ 1 ⇔ k ≠ 1 e k ≠ −1.' },
+    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Con k = −1: x + (−1)·y = 1 e (−1)·x + y = 1, cioè x − y = 1 e −x + y = 1. Sommo: (x − y) + (−x + y) = 1 + 1, cioè 0 = 2. Impossibile: nessuna soluzione.' },
     { id:'e7', type:'choice', q:'Stesso sistema con k = 1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:1, hint:'Le due equazioni diventano uguali.', sol:'x + y = 1 due volte: rk A = rk(A | b) = 1, infinite soluzioni con 1 parametro.' },
     { id:'e8', type:'choice', src:'trappola', q:'Da (k − 2)·z = k − 2 scrivo z = 1. Va bene?', opts:['Sì, sempre','Solo per k ≠ 2; per k = 2 l\'equazione è 0 = 0 e z è libero'], a:1, hint:'Cosa succede con k = 2?', sol:'Per k = 2 non si può dividere: 0·z = 0 vale per ogni z, quindi z diventa un parametro libero.' }
   ]);
@@ -2206,22 +2206,22 @@ window.Lav = (function(){
 
   guided('matrici', [
     { h:'Passo 1 · det A', type:'nums', ans:[2], html:'det A = '+inp('determinante'),
-      ok:'Sì: 3·2 − 1·4 = 2 ≠ 0, quindi A è invertibile.', bad:'a·d − b·c con a = 3, b = 1, c = 4, d = 2.' },
+      ok:'Sì: a·d − b·c = 3·2 − 1·4 = 6 − 4 = 2 ≠ 0, quindi A è invertibile.', bad:'a·d − b·c con a = 3, b = 1, c = 4, d = 2.' },
     { h:'Passo 2 · Scambia la diagonale e cambia segno agli altri due', type:'choice', ans:0, opts:[M([[2,-1],[-4,3]]), M([[2,1],[4,3]]), M([[-3,1],[4,-2]])],
       ok:'Esatto: 3 e 2 si scambiano, 1 e 4 cambiano segno.', bad:'La diagonale (3, 2) diventa (2, 3); gli altri due (1 e 4) cambiano solo il segno, restano al loro posto.' },
     { h:'Passo 3 · Dividi per 2: scrivi A⁻¹ (riga per riga, frazioni ok)', type:'nums', ans:[1,-0.5,-2,1.5], html:'A⁻¹ = ( '+inp('a11')+' , '+inp('a12')+' ; '+inp('a21')+' , '+inp('a22')+' )',
-      ok:'Perfetto: A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'.', bad:'Dividi ogni numero di '+M([[2,-1],[-4,3]])+' per 2.' },
+      ok:'Perfetto: 2/2 = 1, (−1)/2 = −1/2, (−4)/2 = −2, 3/2 = 3/2. A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'.', bad:'Dividi ogni numero di '+M([[2,-1],[-4,3]])+' per 2.' },
     { h:'Passo 4 · Controllo: prima riga di A per prima colonna di A⁻¹', type:'nums', ans:[1], html:'3·1 + 1·(−2) = '+inp('risultato'),
-      ok:'1: è l\'entrata (1,1) di I. Il controllo costa 10 secondi e salva l\'esercizio.', bad:'3 − 2.' }
+      ok:'3·1 + 1·(−2) = 3 − 2 = 1: è l\'entrata (1,1) di I. Il controllo costa 10 secondi e salva l\'esercizio.', bad:'3 − 2.' }
   ], '<b>Fatto!</b> A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'. Prova a scriverla nel calcolatore in alto per vedere il controllo completo A·A⁻¹ = I.');
 
   exercises('matrici', [
-    { id:'e1', type:'choice', q:'A ∈ M(2, 3, R), B ∈ M(3, 4, R). Che taglia ha A·B?', opts:['3 × 3','2 × 4','4 × 2','non si può fare'], a:1, hint:'(m × n)·(n × p) = m × p.', sol:'2 × 4. B·A invece non si può fare (4 ≠ 2).' },
-    { id:'e2', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), a:[5,4,1,2], hint:'Riga 1 · colonna 1 = 1·3 + 2·1.', sol:M([[5,4],[1,2]])+'.' },
-    { id:'e3', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[2,1],[5,3]]), a:[3,-1,-5,2], hint:'det = 6 − 5 = 1.', sol:M([[3,-1],[-5,2]])+' (det = 1, quindi non c\'è nulla da dividere).' },
-    { id:'e4', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[1,2],[3,4]]), a:[-2,1,1.5,-0.5], hint:'det = 4 − 6 = −2: attenzione al segno.', sol:'(1/(−2))·'+M([[4,-2],[-3,1]])+' = '+M([[-2,1],['3/2','−1/2']])+'.' },
+    { id:'e1', type:'choice', q:'A ∈ M(2, 3, R), B ∈ M(3, 4, R). Che taglia ha A·B?', opts:['3 × 3','2 × 4','4 × 2','non si può fare'], a:1, hint:'(m × n)·(n × p) = m × p.', sol:'A è 2 × 3, B è 3 × 4: colonne di A = 3 = righe di B, si può fare. Il risultato ha le righe di A (2) e le colonne di B (4): 2 × 4. B·A invece non si può fare: colonne di B = 4 ≠ 2 = righe di A.' },
+    { id:'e2', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), a:[5,4,1,2], hint:'Riga 1 · colonna 1 = 1·3 + 2·1.', sol:'(1,1) = riga 1 · colonna 1 = 1·3 + 2·1 = 5. (1,2) = riga 1 · colonna 2 = 1·0 + 2·2 = 4. (2,1) = riga 2 · colonna 1 = 0·3 + 1·1 = 1. (2,2) = riga 2 · colonna 2 = 0·0 + 1·2 = 2. Risultato '+M([[5,4],[1,2]])+'.' },
+    { id:'e3', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[2,1],[5,3]]), a:[3,-1,-5,2], hint:'det = 6 − 5 = 1.', sol:'det = 2·3 − 1·5 = 6 − 5 = 1. Scambio la diagonale: 2 e 3 → '+M([[3,1],[5,2]])+'. Cambio segno agli altri: '+M([[3,-1],[-5,2]])+'. Divido per det = 1: resta '+M([[3,-1],[-5,2]])+'.' },
+    { id:'e4', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[1,2],[3,4]]), a:[-2,1,1.5,-0.5], hint:'det = 4 − 6 = −2: attenzione al segno.', sol:'det = 1·4 − 2·3 = 4 − 6 = −2. Scambio la diagonale (1 e 4) e cambio segno agli altri (2 e 3): '+M([[4,-2],[-3,1]])+'. Divido ogni numero per −2: 4/(−2) = −2, (−2)/(−2) = 1, (−3)/(−2) = 3/2, 1/(−2) = −1/2. Quindi (1/(−2))·'+M([[4,-2],[-3,1]])+' = '+M([[-2,1],['3/2','−1/2']])+'.' },
     { id:'e5', type:'choice', q:'(A·B)⁻¹ = …', opts:['A⁻¹·B⁻¹','B⁻¹·A⁻¹','<sup>t</sup>A·<sup>t</sup>B'], a:1, hint:'Pensa a "togliersi calze e scarpe".', sol:'B⁻¹·A⁻¹: si annulla prima l\'ultima cosa fatta.' },
-    { id:'e6', type:'choice', q:M([[2,4],[1,2]])+' è invertibile?', opts:['Sì','No'], a:1, hint:'Calcola il determinante.', sol:'det = 4 − 4 = 0: no. La prima riga è 2 volte la seconda.' },
+    { id:'e6', type:'choice', q:M([[2,4],[1,2]])+' è invertibile?', opts:['Sì','No'], a:1, hint:'Calcola il determinante.', sol:'det = 2·2 − 4·1 = 4 − 4 = 0: no. La prima riga è 2 volte la seconda.' },
     { id:'e7', type:'num', label:'det(A⁻¹) =', q:'det A = 4.', a:0.25, hint:'Binet su A·A⁻¹ = I.', sol:'det A · det A⁻¹ = det I = 1 ⇒ det A⁻¹ = 1/4.' },
     { id:'e8', type:'choice', src:'trappola', q:'A·B = A·C con A ≠ 0. Allora B = C?', opts:['Sempre','Solo se A è invertibile'], a:1, hint:'Moltiplica a sinistra per A⁻¹… se esiste.', sol:'Con A invertibile sì (A⁻¹·A·B = A⁻¹·A·C). Altrimenti no: A = '+M([[1,0],[0,0]])+' dà A·'+M([[0,0],[0,1]])+' = A·0.' }
   ]);
@@ -2343,23 +2343,23 @@ window.Lav = (function(){
 
   guided('complessi', [
     { h:'Passo 1 · |z|² e |z|', type:'choice', ans:1, opts:['|z|² = 0, |z| = 0','|z|² = 2, |z| = √2','|z|² = −2'],
-      ok:'Sì: (−1)² + (−1)² = 2, |z| = √2. I quadrati sono sempre positivi.', bad:'|z|² = a² + b² con a = −1 e b = −1: (−1)² = 1.' },
+      ok:'Sì: |z|² = (−1)² + (−1)² = 1 + 1 = 2, |z| = √2. I quadrati sono sempre positivi.', bad:'|z|² = a² + b² con a = −1 e b = −1: (−1)² = 1.' },
     { h:'Passo 2 · Quadrante', type:'choice', ans:2, opts:['I','II','III','IV'],
       ok:'Esatto: a &lt; 0 e b &lt; 0, terzo quadrante, θ tra π e 3π/2.', bad:'Guarda i segni: a = −1 &lt; 0, b = −1 &lt; 0.' },
     { h:'Passo 3 · Argomento θ', type:'choice', ans:2, opts:['π/4','3π/4','5π/4','7π/4'],
       ok:'Giusto: cos θ = −1/√2, sin θ = −1/√2 e siamo nel III quadrante: θ = π + π/4 = 5π/4.', bad:'π/4 è nel I quadrante: la "bussola" del passo 2 dice che serve un angolo tra π e 3π/2.' },
     { h:'Passo 4 · z⁴ in forma algebrica', type:'nums', ans:[-4,0], html:'z⁴ = (√2)⁴·e<sup>i·5π</sup> = '+inp('parte reale')+' + '+inp('parte immaginaria')+'·i',
-      ok:'Perfetto: (√2)⁴ = 4 ed e<sup>i5π</sup> = e<sup>iπ</sup> = −1, quindi z⁴ = −4.', bad:'(√2)⁴ = 4. 5π = π + 2·2π, quindi e<sup>i5π</sup> = e<sup>iπ</sup> = −1.' }
+      ok:'Perfetto. De Moivre: z⁴ = (√2)⁴·e<sup>i·4·5π/4</sup> = (√2)⁴·e<sup>i5π</sup>. (√2)⁴ = (√2)²·(√2)² = 2·2 = 4. 5π = π + 4π e 4π sono due giri, quindi e<sup>i5π</sup> = e<sup>iπ</sup> = −1. z⁴ = 4·(−1) = −4 + 0·i.', bad:'(√2)⁴ = 4. 5π = π + 2·2π, quindi e<sup>i5π</sup> = e<sup>iπ</sup> = −1.' }
   ], '<b>Fatto!</b> z = √2·e<sup>i5π/4</sup> e z⁴ = −4. Controllo con la forma algebrica: z² = (−1 − i)² = 1 + 2i + i² = 2i, e z⁴ = (2i)² = −4 ✓.');
 
   exercises('complessi', [
-    { id:'e1', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'(3 + 2i)·(1 − i)', a:[5,-1], hint:'4 pezzi: 3 − 3i + 2i − 2i².', sol:'3 − 3i + 2i − 2·(−1) = 5 − i.' },
-    { id:'e2', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'Inverso di 2 − i (frazioni ok)', a:[0.4,0.2], hint:'|z|² = 4 + 1 = 5.', sol:'(2 + i)/5 = 2/5 + (1/5)·i.' },
-    { id:'e3', type:'choice', src:'errore 18/11', q:'Argomento di −√3 + i', opts:['π/6','5π/6','7π/6','11π/6'], a:1, hint:'a &lt; 0, b &gt; 0: quale quadrante?', sol:'II quadrante, cos θ = −√3/2, sin θ = 1/2: θ = 5π/6.' },
-    { id:'e4', type:'choice', src:'errore 18/11', q:'e<sup>iπ/2</sup>·e<sup>iπ</sup> = …', opts:['i','−1','−i','1'], a:2, hint:'Somma gli esponenti.', sol:'e<sup>i3π/2</sup> = −i.' },
-    { id:'e5', type:'nums', labels:['parte reale','parte immaginaria'], q:'(1 + i)⁴', a:[-4,0], hint:'1 + i = √2·e<sup>iπ/4</sup>.', sol:'(√2)⁴·e<sup>iπ</sup> = 4·(−1) = −4.' },
-    { id:'e6', type:'num', label:'|z| =', q:'z = 3 − 4i', a:5, hint:'√(9 + 16).', sol:'5.' },
-    { id:'e7', type:'choice', q:'Soluzioni di z² + 2z + 2 = 0 in C', opts:['nessuna','−1 + i e −1 − i','1 + i e 1 − i'], a:1, hint:'Δ = 4 − 8 = −4, radici quadrate ±2i.', sol:'z = (−2 ± 2i)/2 = −1 ± i.' },
+    { id:'e1', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'(3 + 2i)·(1 − i)', a:[5,-1], hint:'4 pezzi: 3 − 3i + 2i − 2i².', sol:'4 pezzi: 3·1 + 3·(−i) + 2i·1 + 2i·(−i) = 3 − 3i + 2i − 2i². Sostituisco i² = −1: 3 − 3i + 2i − 2·(−1) = 3 − 3i + 2i + 2. Raccolgo: (3 + 2) + (−3 + 2)·i = 5 − i.' },
+    { id:'e2', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'Inverso di 2 − i (frazioni ok)', a:[0.4,0.2], hint:'|z|² = 4 + 1 = 5.', sol:'z = 2 − i, z̄ = 2 + i, |z|² = 2² + (−1)² = 4 + 1 = 5 (senza radice). z⁻¹ = z̄/|z|² = (2 + i)/5 = 2/5 + (1/5)·i. Verifica: (2 − i)(2 + i) = 4 + 2i − 2i − i² = 4 + 1 = 5, e 5/5 = 1 ✓.' },
+    { id:'e3', type:'choice', src:'errore 18/11', q:'Argomento di −√3 + i', opts:['π/6','5π/6','7π/6','11π/6'], a:1, hint:'a &lt; 0, b &gt; 0: quale quadrante?', sol:'a = −√3 &lt; 0, b = 1 &gt; 0: II quadrante. r = √((−√3)² + 1²) = √(3 + 1) = √4 = 2. cos θ = a/r = −√3/2, sin θ = b/r = 1/2. L\'angolo con sin = 1/2 nel II quadrante è θ = π − π/6 = 5π/6.' },
+    { id:'e4', type:'choice', src:'errore 18/11', q:'e<sup>iπ/2</sup>·e<sup>iπ</sup> = …', opts:['i','−1','−i','1'], a:2, hint:'Somma gli esponenti.', sol:'e<sup>iπ/2</sup>·e<sup>iπ</sup> = e<sup>i(π/2 + π)</sup> = e<sup>i3π/2</sup> = cos(3π/2) + i·sin(3π/2) = 0 + i·(−1) = −i.' },
+    { id:'e5', type:'nums', labels:['parte reale','parte immaginaria'], q:'(1 + i)⁴', a:[-4,0], hint:'1 + i = √2·e<sup>iπ/4</sup>.', sol:'1 + i: r = √(1 + 1) = √2, I quadrante, θ = π/4. (1 + i)⁴ = (√2)⁴·e<sup>i·4·π/4</sup> = 4·e<sup>iπ</sup> = 4·(−1) = −4.' },
+    { id:'e6', type:'num', label:'|z| =', q:'z = 3 − 4i', a:5, hint:'√(9 + 16).', sol:'|3 − 4i| = √(3² + (−4)²) = √(9 + 16) = √25 = 5.' },
+    { id:'e7', type:'choice', q:'Soluzioni di z² + 2z + 2 = 0 in C', opts:['nessuna','−1 + i e −1 − i','1 + i e 1 − i'], a:1, hint:'Δ = 4 − 8 = −4, radici quadrate ±2i.', sol:'a = 1, b = 2, c = 2. Δ = b² − 4ac = 4 − 8 = −4. Radici quadrate di −4: (2i)² = 4i² = −4, quindi ±2i. z = (−b ± 2i)/(2a) = (−2 ± 2i)/2 = −1 ± i.' },
     { id:'e8', type:'choice', src:'lacuna', q:'Soluzioni di z² − 2i·z − 1 = 0', opts:['z = i (doppia)','z = 1 e z = −1','z = ±i'], a:0, hint:'Δ = (−2i)² + 4 = −4 + 4.', sol:'Δ = 0, z = 2i/2 = i. Infatti z² − 2iz − 1 = (z − i)².' },
     { id:'e9', type:'choice', q:'Quante soluzioni ha z⁵ = 1 in C?', opts:['1','2','5'], a:2, hint:'Radici n-esime.', sol:'5: i vertici di un pentagono regolare sul cerchio di raggio 1.' }
   ]);

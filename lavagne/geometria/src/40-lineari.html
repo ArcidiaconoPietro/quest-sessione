@@ -54,9 +54,9 @@
       <h2>Nucleo e immagine di L<sub>A</sub></h2>
       <p>Esempio: A = ${M([[1,1,2],[0,1,1],[1,2,3]])}$, L<sub>A</sub>: R³ → R³.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1, poi R3 ← R3 − R2: ${M([[1,1,2],[0,1,1],[0,0,0]])}$. Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
+        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1: (1 − 1, 2 − 1, 3 − 2) = (0, 1, 1). Ora R2 e R3 sono uguali: R3 ← R3 − R2 = (0 − 0, 1 − 1, 1 − 1) = (0, 0, 0).</p><p class="math">${M([[1,1,2],[0,1,1],[0,0,0]])}$</p><p>Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
         <div class="step"><h3>Passo 2 · Immagine</h3><p>Im L<sub>A</sub> = Span(colonne originali con pivot) = Span((1, 0, 1), (1, 1, 2)). dim Im = 2. Non è suriettiva (2 &lt; 3).</p></div>
-        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>y + z = 0 ⇒ y = −z. x + y + 2z = 0 ⇒ x = −y − 2z = −z. Con z = t: (−t, −t, t). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
+        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>Riga 2: y + z = 0, quindi y = −z. Riga 1: x + y + 2z = 0, quindi x = −y − 2z. Sostituisco y = −z: x = −(−z) − 2z = z − 2z = −z. Chiamo z = t: (x, y, z) = (−t, −t, t) = t·(−1, −1, 1). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
         <div class="step"><h3>Passo 4 · Controllo col teorema della dimensione</h3><p class="math">dim ker + dim Im = 1 + 2 = 3 = dim R³ ✓</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -67,9 +67,9 @@
       <h2>Matrice associata: la derivata</h2>
       <p>f: R₂[x] → R₂[x], f(p) = p′ (derivata). Base B = C = (1, x, x²).</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(1) = 0, f(x) = 1, f(x²) = 2x.</p></div>
-        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 → (0, 0, 0); 1 → (1, 0, 0); 2x → (0, 2, 0).</p></div>
-        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4) = (5, 8, 0), cioè 5 + 8x: è proprio p′ = 5 + 8x. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
+        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(p) = p′ (derivata). f(1) = 0 (la derivata di una costante è 0), f(x) = 1, f(x²) = 2x.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 = 0·1 + 0·x + 0·x² → (0, 0, 0); 1 = 1·1 + 0·x + 0·x² → (1, 0, 0); 2x = 0·1 + 2·x + 0·x² → (0, 2, 0).</p></div>
+        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4): riga 1 = 0·3 + 1·5 + 0·4 = 5, riga 2 = 0·3 + 0·5 + 2·4 = 8, riga 3 = 0. Risultato (5, 8, 0), cioè 5 + 8x. Derivata diretta: p′ = 5 + 2·4x = 5 + 8x ✓. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
     </section>
@@ -133,26 +133,26 @@
 
   guided('lineari', [
     { h:'Passo 1 · Gauss: R2 ← R2 − 2·R1. Quanti pivot? (rk A)', type:'nums', ans:[2],
-      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì: pivot nella colonna 1 (riga 1) e nella colonna 3 (riga 2).', bad:'Conta le righe non nulle dopo Gauss.' },
+      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì. R2 ← R2 − 2·R1 = (2 − 2·1, 4 − 2·2, 0 − 2·1) = (0, 0, −2). Matrice ridotta con righe (1, 2, 1) e (0, 0, −2): pivot nella colonna 1 e nella colonna 3, rk A = 2.', bad:'Conta le righe non nulle dopo Gauss.' },
     { h:'Passo 2 · dim Im L<sub>A</sub> e dim ker L<sub>A</sub>', type:'nums', ans:[2,1],
-      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2, dim ker = 3 − 2 = 1.', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
+      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2. dim ker = n − rk A = 3 − 2 = 1 (n = 3 perché L<sub>A</sub> parte da R³).', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
     { h:'Passo 3 · Base del nucleo: dalla riga 2, −2z = 0. Dalla riga 1, x + 2y + z = 0. Metti y = 1: quanto valgono x e z?', type:'nums', ans:[-2,0],
-      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto: ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
+      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto. Riga 2: −2z = 0, divido per −2: z = 0. Riga 1 con y = 1, z = 0: x + 2·1 + 0 = 0, quindi x = −2. Vettore (−2, 1, 0): ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
     { h:'Passo 4 · Allora L<sub>A</sub> è…', type:'choice', ans:2,
       opts:['iniettiva e suriettiva','iniettiva ma non suriettiva','suriettiva ma non iniettiva','né iniettiva né suriettiva'],
       ok:'Esatto: Im ha dimensione 2 = dim R², quindi Im = R² (suriettiva); ker ≠ {0} (non iniettiva).', bad:'Iniettiva ⇔ ker = {0}. Suriettiva ⇔ dim Im = dim R² = 2.' }
   ], '<b>Fatto!</b> rk A = 2, Im L<sub>A</sub> = R², ker L<sub>A</sub> = Span((−2, 1, 0)). Controllo: 1 + 2 = 3 = dim R³.');
 
   exercises('lineari', [
-    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (1, 0): non è lineare.' },
+    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (0 + 1, 0) = (1, 0) ≠ (0, 0): non è lineare.' },
     { id:'e2', type:'choice', q:'Quale di queste è lineare da R² a R²?', opts:['f(x, y) = (x·y, x)','f(x, y) = (2x − y, 3y)','f(x, y) = (x², y)'], a:1, hint:'Cerca quella senza prodotti tra variabili e senza potenze.', sol:'(2x − y, 3y) = A·(x, y) con A = '+M([[2,-1],[0,3]])+'. Le altre hanno x·y o x².' },
     { id:'e3', type:'choice', src:'Foglio 4 · quiz 6', q:'A = '+M([[1,2,0],[0,1,3],[1,3,3]])+'. Quale b ∈ R³ NON sta in Im L<sub>A</sub>?', opts:['(0, 1, 1)','(2, 0, 2)','(1, 0, 2)','(1, 1, 2)'], a:2,
-      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Im L<sub>A</sub> = {b : b₃ = b₁ + b₂}. (1, 0, 2): 1 + 0 = 1 ≠ 2. Gli altri rispettano la condizione.' },
-    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'4 − 3 = 1.' },
-    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'dim ker f ≥ 3 − 2 = 1, quindi ker f ≠ {0}: mai iniettiva.' },
-    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'(−1, 7).' },
-    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'dim Im f = 3 = dim R³, quindi Im f = R³: f è un isomorfismo.' },
-    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = costanti, dim 1. dim Im f = 3 − 1 = 2 (Im f = R₁[x]).' }
+      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Colonne di A: (1, 0, 1), (2, 1, 3), (0, 3, 3). In ognuna la terza componente è la somma delle prime due: 1 = 1 + 0, 3 = 2 + 1, 3 = 0 + 3. Quindi ogni combinazione delle colonne, cioè ogni b ∈ Im L<sub>A</sub>, ha b₃ = b₁ + b₂ (e rk A = 2, quindi Im è proprio questo piano). Controllo le risposte: (0, 1, 1): 0 + 1 = 1 ✓. (2, 0, 2): 2 + 0 = 2 ✓. (1, 1, 2): 1 + 1 = 2 ✓. (1, 0, 2): 1 + 0 = 1 ≠ 2 ✗. Risposta: (1, 0, 2).' },
+    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'Teorema della dimensione: dim ker + dim Im = dim R⁴ = 4. dim Im = rk A = 3. Quindi dim ker = 4 − 3 = 1.' },
+    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'Im f sta in R², quindi dim Im f ≤ 2. Teorema della dimensione: dim ker f = 3 − dim Im f ≥ 3 − 2 = 1. Quindi ker f ≠ {0}: mai iniettiva.' },
+    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'A·e₂ = A·(0, 1): riga 1 = 3·0 + (−1)·1 = −1, riga 2 = 4·0 + 7·1 = 7. Risultato (−1, 7), cioè la seconda colonna di A.' },
+    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'ker f = {0}, quindi dim ker f = 0. Teorema della dimensione: dim Im f = 3 − 0 = 3 = dim R³, quindi Im f = R³: f è suriettiva, quindi è un isomorfismo.' },
+    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = {p : p′ = 0} = costanti = Span(1), dim ker f = 1. dim R₂[x] = 3. Teorema della dimensione: dim Im f = 3 − 1 = 2. Infatti Im f = Span(f(1), f(x), f(x²)) = Span(0, 1, 2x) = R₁[x].' }
   ]);
 })();
 </script>

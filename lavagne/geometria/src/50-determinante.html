@@ -63,10 +63,10 @@
       <h2>Laplace su una 3 × 3</h2>
       <p>A = ${M([[2,0,1],[1,3,2],[1,1,2]])}$. La prima riga ha uno zero: sviluppo lungo la riga 1.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Primo termine (segno +)</h3><p>a₁₁ = 2, tolgo riga 1 e colonna 1: det ${M([[3,2],[1,2]])}$ = 6 − 2 = 4. Contributo: +2·4 = 8.</p></div>
+        <div class="step"><h3>Passo 1 · Primo termine (segno +)</h3><p>a₁₁ = 2, tolgo riga 1 e colonna 1: det ${M([[3,2],[1,2]])}$ = 3·2 − 2·1 = 6 − 2 = 4. Contributo: +2·4 = 8.</p></div>
         <div class="step"><h3>Passo 2 · Secondo termine (segno −)</h3><p>a₁₂ = 0: contributo 0, non serve calcolare il minore.</p></div>
-        <div class="step"><h3>Passo 3 · Terzo termine (segno +)</h3><p>a₁₃ = 1, tolgo riga 1 e colonna 3: det ${M([[1,3],[1,1]])}$ = 1 − 3 = −2. Contributo: +1·(−2) = −2.</p></div>
-        <div class="step"><h3>Passo 4 · Somma</h3><p class="math">det A = 8 + 0 − 2 = 6</p><p>Controllo col laboratorio qui sotto (esempio "Laplace"): con Gauss i pivot sono 2, 3, 1 e 2·3·1 = 6.</p></div>
+        <div class="step"><h3>Passo 3 · Terzo termine (segno +)</h3><p>a₁₃ = 1, tolgo riga 1 e colonna 3: det ${M([[1,3],[1,1]])}$ = 1·1 − 3·1 = 1 − 3 = −2. Contributo: +1·(−2) = −2.</p></div>
+        <div class="step"><h3>Passo 4 · Somma</h3><p class="math">det A = (+2)·4 + (−0)·(…) + (+1)·(−2) = 8 + 0 − 2 = 6</p><p>Controllo col laboratorio qui sotto (esempio "Laplace"): con Gauss i pivot sono 2, 3, 1 e 2·3·1 = 6.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
     </section>
@@ -129,26 +129,26 @@
 
   guided('determinante', [
     { h:'Passo 1 · Minore di a₁₁ = 1: togli riga 1 e colonna 1. Quanto vale det '+M([[1,2],[1,1]])+'?', type:'nums', ans:[-1],
-      html:'1·1 − 2·1 = '+inp('determinante'), ok:'Giusto: −1.', bad:'a·d − b·c con a = 1, b = 2, c = 1, d = 1.' },
+      html:'1·1 − 2·1 = '+inp('determinante'), ok:'Giusto: 1·1 − 2·1 = 1 − 2 = −1.', bad:'a·d − b·c con a = 1, b = 2, c = 1, d = 1.' },
     { h:'Passo 2 · Minore di a₁₂ = 2: togli riga 1 e colonna 2. Quanto vale det '+M([[3,2],[0,1]])+'?', type:'nums', ans:[3],
-      html:'3·1 − 2·0 = '+inp('determinante'), ok:'Sì: 3.', bad:'a·d − b·c con a = 3, b = 2, c = 0, d = 1.' },
+      html:'3·1 − 2·0 = '+inp('determinante'), ok:'Sì: 3·1 − 2·0 = 3 − 0 = 3.', bad:'a·d − b·c con a = 3, b = 2, c = 0, d = 1.' },
     { h:'Passo 3 · Il segno di a₁₂ nella scacchiera è −. Il terzo termine ha a₁₃ = 0. Quanto fa det A = +1·(−1) − 2·3 + 0?', type:'nums', ans:[-7],
-      html:'det A = '+inp('determinante'), ok:'Perfetto: −1 − 6 = −7.', bad:'Calcola 1·(−1) − 2·3.' },
+      html:'det A = '+inp('determinante'), ok:'Perfetto: +1·(−1) − 2·3 + 0 = −1 − 6 + 0 = −7.', bad:'Calcola 1·(−1) − 2·3.' },
     { h:'Passo 4 · A è invertibile?', type:'choice', ans:0, opts:['Sì, perché det A = −7 ≠ 0','No, perché det A è negativo'],
       ok:'Esatto: conta solo che sia diverso da 0, il segno non importa.', bad:'Invertibile ⇔ det ≠ 0. Il segno non c\'entra.' }
   ], '<b>Fatto!</b> det A = −7, A è invertibile e rk A = 3. Puoi controllare con il laboratorio (esempio "Esercizio guidato").');
 
   exercises('determinante', [
-    { id:'e1', type:'num', label:'det =', q:'det '+M([[3,1],[4,2]]), a:2, hint:'a·d − b·c.', sol:'3·2 − 1·4 = 2.' },
-    { id:'e2', type:'num', label:'det =', q:'det '+M([[2,5,7],[0,3,1],[0,0,-1]]), a:-6, hint:'È triangolare superiore.', sol:'Prodotto della diagonale: 2·3·(−1) = −6.' },
-    { id:'e3', type:'num', label:'det(3A) =', src:'trappola', q:'A ∈ M(3, 3, R) con det A = 2. Quanto vale det(3·A)?', a:54, hint:'det(λ·A) = λⁿ·det A con n = 3.', sol:'3³·2 = 27·2 = 54. Non 6!' },
-    { id:'e4', type:'num', label:'det(A·B) =', q:'det A = 2, det B = 5 (A, B quadrate della stessa taglia).', a:10, hint:'Binet.', sol:'2·5 = 10.' },
-    { id:'e5', type:'num', label:'det(A⁻¹) =', q:'det A = 4. (Scrivi la frazione come 1/4.)', a:0.25, hint:'det(A⁻¹) = 1 / det A.', sol:'1/4.' },
-    { id:'e6', type:'choice', q:'Per quali k ∈ R la matrice '+M([[1,'k'],['k',4]])+' NON è invertibile?', opts:['k = 2','k = ±2','k = 4','nessun k'], a:1, hint:'det = 4 − k². Quando fa 0?', sol:'4 − k² = 0 ⇔ k² = 4 ⇔ k = 2 oppure k = −2.' },
-    { id:'e7', type:'num', label:'det =', q:'det A = 5. Scambio la prima e la terza riga di A. Quanto vale il nuovo determinante?', a:-5, hint:'Uno scambio cambia il segno.', sol:'−5.' },
+    { id:'e1', type:'num', label:'det =', q:'det '+M([[3,1],[4,2]]), a:2, hint:'a·d − b·c.', sol:'a = 3, b = 1, c = 4, d = 2. det = a·d − b·c = 3·2 − 1·4 = 6 − 4 = 2.' },
+    { id:'e2', type:'num', label:'det =', q:'det '+M([[2,5,7],[0,3,1],[0,0,-1]]), a:-6, hint:'È triangolare superiore.', sol:'Sotto la diagonale ci sono solo zeri (triangolare superiore), quindi det = prodotto della diagonale = 2·3·(−1) = 6·(−1) = −6.' },
+    { id:'e3', type:'num', label:'det(3A) =', src:'trappola', q:'A ∈ M(3, 3, R) con det A = 2. Quanto vale det(3·A)?', a:54, hint:'det(λ·A) = λⁿ·det A con n = 3.', sol:'3·A moltiplica per 3 tutte e 3 le righe, e ogni riga moltiplicata per 3 moltiplica il det per 3. Quindi det(3·A) = 3·3·3·det A = 3³·2 = 27·2 = 54. Non 6!' },
+    { id:'e4', type:'num', label:'det(A·B) =', q:'det A = 2, det B = 5 (A, B quadrate della stessa taglia).', a:10, hint:'Binet.', sol:'Binet: det(A·B) = det A · det B = 2·5 = 10.' },
+    { id:'e5', type:'num', label:'det(A⁻¹) =', q:'det A = 4. (Scrivi la frazione come 1/4.)', a:0.25, hint:'det(A⁻¹) = 1 / det A.', sol:'A·A⁻¹ = I. Binet: det A · det(A⁻¹) = det I = 1. Quindi det(A⁻¹) = 1 / det A = 1/4.' },
+    { id:'e6', type:'choice', q:'Per quali k ∈ R la matrice '+M([[1,'k'],['k',4]])+' NON è invertibile?', opts:['k = 2','k = ±2','k = 4','nessun k'], a:1, hint:'det = 4 − k². Quando fa 0?', sol:'det = 1·4 − k·k = 4 − k². Non invertibile ⇔ det = 0: 4 − k² = 0 ⇔ k² = 4 ⇔ k = 2 oppure k = −2 (entrambi al quadrato fanno 4).' },
+    { id:'e7', type:'num', label:'det =', q:'det A = 5. Scambio la prima e la terza riga di A. Quanto vale il nuovo determinante?', a:-5, hint:'Uno scambio cambia il segno.', sol:'Uno scambio di due righe cambia il segno del determinante: 5 diventa −5.' },
     { id:'e8', type:'choice', src:'Foglio 4 · quiz 1', q:'A, B ∈ M(n, n, R). Quale affermazione è vera?', opts:['Se A² = 0 allora A = 0','Se A e B sono invertibili allora A·B è invertibile','Se A·B = 0 allora A = 0 oppure B = 0'], a:1,
       hint:'Binet: det(A·B) = det A · det B. Per le altre cerca un controesempio 2 × 2.', sol:'det A ≠ 0 e det B ≠ 0 ⇒ det(A·B) ≠ 0. Per le altre: A = '+M([[0,1],[0,0]])+' ha A² = 0 ma A ≠ 0.' },
-    { id:'e9', type:'nums', labels:['entrata (1,1)','entrata (1,2)'], q:'Prima riga dell\'inversa di '+M([[2,1],[5,3]]), a:[3,-1], hint:'det = 2·3 − 1·5 = 1. Scambia a e d, cambia segno a b e c.', sol:'A⁻¹ = '+M([[3,-1],[-5,2]])+'. Controllo: '+M([[2,1],[5,3]])+'·'+M([[3,-1],[-5,2]])+' = I.' }
+    { id:'e9', type:'nums', labels:['entrata (1,1)','entrata (1,2)'], q:'Prima riga dell\'inversa di '+M([[2,1],[5,3]]), a:[3,-1], hint:'det = 2·3 − 1·5 = 1. Scambia a e d, cambia segno a b e c.', sol:'det = 2·3 − 1·5 = 6 − 5 = 1. Scambio la diagonale (2 e 3): '+M([[3,1],[5,2]])+'. Cambio segno agli altri due: '+M([[3,-1],[-5,2]])+'. Divido per det = 1: resta uguale. A⁻¹ = '+M([[3,-1],[-5,2]])+'. Controllo: '+M([[2,1],[5,3]])+'·'+M([[3,-1],[-5,2]])+' = I.' }
   ]);
 })();
 </script>

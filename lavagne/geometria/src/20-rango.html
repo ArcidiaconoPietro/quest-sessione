@@ -61,7 +61,7 @@
       <p>Esempio: W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1), (1, 3, 2)) ⊆ R³.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Metti i vettori in colonna</h3><p class="math">${M([[1,2,0,1],[2,4,1,3],[1,2,1,2]])}$</p></div>
-        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1, R3 ← R3 − R1, poi R3 ← R3 − R2:</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1: (2 − 2·1, 4 − 2·2, 1 − 2·0, 3 − 2·1) = (0, 0, 1, 1).</p><p>R3 ← R3 − R1: (1 − 1, 2 − 2, 1 − 0, 2 − 1) = (0, 0, 1, 1).</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,1,1]])}$</p><p>R3 ← R3 − R2: (0 − 0, 0 − 0, 1 − 1, 1 − 1) = (0, 0, 0, 0).</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
         <div class="step"><h3>Passo 3 · Guarda dove sono i pivot</h3><p>I pivot sono nelle colonne 1 e 3. Quindi rk = 2 e <b>dim W = 2</b>.</p></div>
         <div class="step"><h3>Passo 4 · Prendi le colonne ORIGINALI con il pivot</h3><p>Una base di W è (1, 2, 1), (0, 1, 1): la 1ª e la 3ª colonna <b>della matrice di partenza</b>, non quelle ridotte. Gauss cambia i vettori ma non cambia quali colonne sono indipendenti.</p></div>
       </div>
@@ -74,7 +74,7 @@
       <p>Esempio: completa (1, 1, 0), (0, 1, 1) a base di R³.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Accoda la base canonica</h3><p>Colonne: i tuoi vettori, poi e₁, e₂, e₃.</p><p class="math">${M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]])}$</p></div>
-        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1, poi R3 ← R3 − R2: i pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1: (1 − 1, 1 − 0, 0 − 1, 1 − 0, 0 − 0) = (0, 1, −1, 1, 0).</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,1,0,0,1]])}$</p><p>R3 ← R3 − R2: (0 − 0, 1 − 1, 0 − (−1), 0 − 1, 1 − 0) = (0, 0, 1, −1, 1). I pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
         <div class="step"><h3>Passo 3 · Prendi le colonne con il pivot</h3><p>I tuoi due vettori (colonne 1, 2) più e₁ (colonna 3): <b>(1, 1, 0), (0, 1, 1), (1, 0, 0)</b> è una base di R³. Sono 3 indipendenti in uno spazio di dimensione 3: basta così.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -86,7 +86,7 @@
       <p>Esempio: W = Span((1, 0, 1), (0, 1, 1)) ⊆ R³. Voglio l'equazione di W.</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Scrivi il vettore generico di W</h3><p>(x, y, z) ∈ W vuol dire (x, y, z) = a·(1, 0, 1) + b·(0, 1, 1) per qualche a, b ∈ R. Cioè x = a, y = b, z = a + b.</p></div>
-        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Sostituisci a = x e b = y nell'ultima: z = x + y.</p></div>
+        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Dalle prime due: a = x e b = y. Sostituisco nella terza, z = a + b: z = x + y.</p></div>
         <div class="step"><h3>Passo 3 · Scrivila "= 0" e controlla</h3><p class="math">W = {(x, y, z) ∈ R³ : x + y − z = 0}</p><p>Controllo: (1, 0, 1) dà 1 + 0 − 1 = 0, (0, 1, 1) dà 0 + 1 − 1 = 0. Giusto. dim W = 2 e 3 − 2 = 1 equazione: torna.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -155,24 +155,24 @@
 
   guided('rango', [
     { h:'Passo 1 · Metti i tre vettori in colonna e fai Gauss: quanti pivot? (puoi usare il laboratorio)', type:'nums', ans:[2],
-      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì: (2, 4, 2) = 2·(1, 2, 1) è di troppo, rk = 2.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
+      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì. Gauss: R2 ← R2 − 2·R1 = (2 − 2, 4 − 4, 1 − 0) = (0, 0, 1); R3 ← R3 − R1 = (1 − 1, 2 − 2, 1 − 0) = (0, 0, 1); poi R3 ← R3 − R2 = (0, 0, 0). Restano due pivot (colonne 1 e 3): rk = 2. Infatti (2, 4, 2) = 2·(1, 2, 1) è di troppo.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
     { h:'Passo 2 · Quindi dim W = ?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'), ok:'Giusto: dim W = rk = 2. W è un piano per l\'origine.', bad:'dim W = rk della matrice dei generatori.' },
     { h:'Passo 3 · Quale coppia è una base di W?', type:'choice', ans:1,
       opts:['(1, 2, 1), (2, 4, 2)','(1, 2, 1), (0, 1, 1)','(2, 4, 2) da solo'], ok:'Esatto: sono le colonne originali con il pivot (1ª e 3ª).', bad:'Servono 2 vettori indipendenti: (1, 2, 1) e (2, 4, 2) sono uno multiplo dell\'altro.' },
     { h:'Passo 4 · Equazione: (x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) dà x = a, y = 2a + b, z = a + b. Elimina a e b e completa', type:'nums', ans:[1],
-      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto: b = z − x, quindi y = 2x + z − x = x + z, cioè x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
+      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto. Da x = a ho a = x. Da z = a + b ho b = z − a = z − x. Sostituisco in y = 2a + b: y = 2x + (z − x) = 2x − x + z = x + z. Porto tutto a sinistra: x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
   ], '<b>Fatto!</b> dim W = 2, base (1, 2, 1), (0, 1, 1), equazione cartesiana x − y + z = 0. Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 e (0, 1, 1) → 0 − 1 + 1 = 0.');
 
   exercises('rango', [
-    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'2·3 = 6 caselle, quindi 6 matrici nella base canonica: dim = 6.' },
+    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'Una matrice 2 × 3 ha 2 righe e 3 colonne: 2·3 = 6 caselle. La base canonica ha una matrice con un 1 in ogni casella (e 0 altrove): 6 matrici, quindi dim = 6.' },
     { id:'e2', type:'num', label:'dim =', q:'dim R₃[x] (polinomi a coefficienti reali di grado ≤ 3)', a:4, hint:'Base: 1, x, x², x³.', sol:'Quattro elementi: 1, x, x², x³. dim = 3 + 1 = 4. Errore tipico: rispondere 3.' },
-    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 − 2·R1 = 0, poi R3 − R1 = (0, −2, −2): due pivot, rk A = 2.' },
-    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'5 − 2 = 3.' },
+    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 ← R2 − 2·R1 = (2 − 2, 4 − 4, 6 − 6) = (0, 0, 0). R3 ← R3 − R1 = (1 − 1, 0 − 2, 1 − 3) = (0, −2, −2). Scambio R2 e R3 per avere la riga nulla in fondo: righe (1, 2, 3), (0, −2, −2), (0, 0, 0). Due pivot (1 e −2): rk A = 2.' },
+    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'n = 5 incognite, rk A = 2. dim S = n − rk A = 5 − 2 = 3.' },
     { id:'e5', type:'choice', q:'Quattro vettori di R³…', opts:['sono sempre dipendenti','possono essere una base di R³','sono indipendenti se nessuno è nullo'], a:0, hint:'dim R³ = 3. Quanti vettori indipendenti può avere al massimo?', sol:'In uno spazio di dimensione 3 più di 3 vettori sono sempre dipendenti.' },
-    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'rk = 2, quindi dim W = 3 − 2 = 1: è la retta Span((1, 1, −2)).' },
+    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'Dalla seconda: x − y = 0, quindi y = x. Sostituisco nella prima: x + x + z = 0, cioè 2x + z = 0, quindi z = −2x. Vettore generico: (x, x, −2x) = x·(1, 1, −2). W = Span((1, 1, −2)), dim W = 1. Controllo: 3 incognite − rk 2 = 1.' },
     { id:'e7', type:'choice', q:'Con quale vettore completi (1, 1, 0), (0, 1, 1) a base di R³?', opts:['(1, 2, 1)','(1, 0, 0)','(2, 2, 0)'], a:1,
-      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 0, 0) non sta nello Span dei due (ricetta del completamento sopra). Tre indipendenti in R³: base.' },
-    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'x = a e y = a, quindi x = y, cioè x − y = 0. z = b è libero.' }
+      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 1, 0) + (0, 1, 1) = (1, 2, 1): scartato. 2·(1, 1, 0) = (2, 2, 0): scartato. Per (1, 0, 0): cerco a, b con a·(1, 1, 0) + b·(0, 1, 1) = (a, a + b, b) = (1, 0, 0). Prima componente: a = 1. Terza: b = 0. Seconda: a + b = 1 + 0 = 1 ≠ 0. Impossibile, quindi (1, 0, 0) non sta nello Span: i tre vettori sono indipendenti, e 3 indipendenti in R³ sono una base.' },
+    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, 0) + (0, 0, b) = (a, a, b). Quindi x = a, y = a, z = b. Da x = a e y = a: x = y, cioè x − y = 0. z = b può essere qualsiasi numero, quindi non dà equazioni.' }
   ]);
 })();
 </script>

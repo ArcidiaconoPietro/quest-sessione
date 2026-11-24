@@ -58,7 +58,7 @@
       <h2>Cambiare base a un endomorfismo</h2>
       <p>f = L<sub>A</sub>: R² → R² con A = ${M([[2,1],[1,2]])}$ (base canonica). Nuova base B = ((1, 1), (1, −1)).</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Calcola f sui vettori della nuova base</h3><p>A·(1, 1) = (3, 3). A·(1, −1) = (1, −1).</p></div>
+        <div class="step"><h3>Passo 1 · Calcola f sui vettori della nuova base</h3><p>A·(1, 1) = (2·1 + 1·1, 1·1 + 2·1) = (3, 3). A·(1, −1) = (2·1 + 1·(−1), 1·1 + 2·(−1)) = (1, −1).</p></div>
         <div class="step"><h3>Passo 2 · Scrivi i risultati in coordinate B</h3><p>(3, 3) = 3·(1, 1) + 0·(1, −1) → (3, 0). (1, −1) = 0·(1, 1) + 1·(1, −1) → (0, 1).</p></div>
         <div class="step"><h3>Passo 3 · Mettili in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[3,0],[0,1]])}$</p><p>Diagonale! Nella base B, f allunga (1, 1) di 3 e lascia fermo (1, −1). È la stessa cosa di M⁻¹·A·M con M = ${M([[1,1],[1,-1]])}$.</p></div>
         <div class="step"><h3>Passo 4 · Controllo con gli invarianti</h3><p>tr A = 4 = 3 + 1. det A = 3 = 3·1. Torna: sono simili.</p></div>
@@ -114,22 +114,22 @@
 
   guided('caratteristico', [
     { h:'Passo 1 · Traccia e determinante', type:'nums', ans:[7,10], html:'tr A = '+inp('traccia')+' &nbsp; det A = '+inp('determinante'),
-      ok:'Sì: tr A = 4 + 3 = 7, det A = 4·3 − 1·2 = 10.', bad:'Traccia = somma della diagonale. det = a·d − b·c.' },
+      ok:'Sì: tr A = 4 + 3 = 7, det A = 4·3 − 1·2 = 12 − 2 = 10.', bad:'Traccia = somma della diagonale. det = a·d − b·c.' },
     { h:'Passo 2 · Quale è p<sub>A</sub>(λ)?', type:'choice', ans:1, opts:['λ² + 7λ + 10','λ² − 7λ + 10','λ² − 10λ + 7'],
       ok:'Esatto: λ² − (tr A)·λ + det A.', bad:'La formula è λ² − (tr A)·λ + det A: il segno davanti alla traccia è meno.' },
     { h:'Passo 3 · Radici di λ² − 7λ + 10 (scrivi prima la più piccola)', type:'nums', ans:[2,5], html:'λ₁ = '+inp('radice minore')+' &nbsp; λ₂ = '+inp('radice maggiore'),
-      ok:'Perfetto: (λ − 2)(λ − 5). Due numeri con somma 7 e prodotto 10.', bad:'Cerca due numeri con somma 7 e prodotto 10, oppure usa Δ = 49 − 40 = 9.' }
+      ok:'Perfetto. Δ = (−7)² − 4·1·10 = 49 − 40 = 9, √Δ = 3. λ = (7 ± 3)/2: λ₁ = (7 − 3)/2 = 4/2 = 2, λ₂ = (7 + 3)/2 = 10/2 = 5. Infatti (λ − 2)(λ − 5) = λ² − 5λ − 2λ + 10 = λ² − 7λ + 10.', bad:'Cerca due numeri con somma 7 e prodotto 10, oppure usa Δ = 49 − 40 = 9.' }
   ], '<b>Fatto!</b> p<sub>A</sub>(λ) = λ² − 7λ + 10 = (λ − 2)(λ − 5). Le radici 2 e 5 saranno gli autovalori di A (capitolo 7). Controllo: 2 + 5 = 7 = tr A e 2·5 = 10 = det A.');
 
   exercises('caratteristico', [
     { id:'e1', type:'num', label:'tr =', q:'tr '+M([[1,2,3],[4,5,6],[7,8,9]]), a:15, hint:'Solo la diagonale.', sol:'1 + 5 + 9 = 15.' },
-    { id:'e2', type:'choice', q:M([[1,0],[0,2]])+' e '+M([[1,0],[0,3]])+' sono simili?', opts:['Sì, sono entrambe diagonali','No: hanno traccia diversa (3 e 4)'], a:1, hint:'Le simili hanno la stessa traccia.', sol:'tr = 3 contro tr = 4: non possono essere simili.' },
+    { id:'e2', type:'choice', q:M([[1,0],[0,2]])+' e '+M([[1,0],[0,3]])+' sono simili?', opts:['Sì, sono entrambe diagonali','No: hanno traccia diversa (3 e 4)'], a:1, hint:'Le simili hanno la stessa traccia.', sol:'tr della prima = 1 + 2 = 3, tr della seconda = 1 + 3 = 4. Matrici simili hanno la stessa traccia, 3 ≠ 4: non possono essere simili.' },
     { id:'e3', type:'num', label:'det B =', q:'A ∼ B e det A = 6.', a:6, hint:'Il determinante non cambia per similitudine.', sol:'det B = det(M⁻¹·A·M) = det A = 6 (Binet).' },
     { id:'e4', type:'choice', src:'trappola', q:'A = '+M([[1,1],[0,1]])+' e I = '+M([[1,0],[0,1]])+' hanno stesso det, stessa traccia e stesso p(λ) = (1 − λ)². Sono simili?', opts:['Sì, gli invarianti sono uguali','No: l\'unica matrice simile a I è I stessa'], a:1,
       hint:'Calcola M⁻¹·I·M.', sol:'M⁻¹·I·M = M⁻¹·M = I per ogni M. Quindi nessuna matrice diversa da I è simile a I. Gli invarianti uguali non bastano.' },
     { id:'e5', type:'nums', labels:['prima componente','seconda componente'], q:'B = ((1, 2), (0, 1)) base di R². Se [v]<sub>B</sub> = (1, 1), chi è v (in coordinate canoniche)?', a:[1,3], hint:'v = 1·(1, 2) + 1·(0, 1). Oppure M·(1, 1) con M = '+M([[1,0],[2,1]])+'.', sol:'v = (1, 2) + (0, 1) = (1, 3).' },
-    { id:'e6', type:'choice', q:'Radici di p<sub>A</sub>(λ) per A = '+M([[1,4,5],[0,2,6],[0,0,2]]), opts:['1, 2, 2','1, 4, 5','1, 2, 6'], a:0, hint:'È triangolare.', sol:'p<sub>A</sub>(λ) = (1 − λ)(2 − λ)²: radici 1 (semplice) e 2 (doppia).' },
-    { id:'e7', type:'nums', labels:['tr A =','det A ='], q:'A ∈ M(2, 2, R) ha p<sub>A</sub>(λ) = λ² − 5λ + 6.', a:[5,6], hint:'Confronta con λ² − tr A·λ + det A.', sol:'tr A = 5, det A = 6 (e gli autovalori sono 2 e 3).' },
+    { id:'e6', type:'choice', q:'Radici di p<sub>A</sub>(λ) per A = '+M([[1,4,5],[0,2,6],[0,0,2]]), opts:['1, 2, 2','1, 4, 5','1, 2, 6'], a:0, hint:'È triangolare.', sol:'A − λI è ancora triangolare, con diagonale 1 − λ, 2 − λ, 2 − λ. Il det di una triangolare è il prodotto della diagonale: p<sub>A</sub>(λ) = (1 − λ)(2 − λ)(2 − λ) = (1 − λ)(2 − λ)². Radici: 1 − λ = 0 ⇒ λ = 1 (semplice); 2 − λ = 0 ⇒ λ = 2 (doppia).' },
+    { id:'e7', type:'nums', labels:['tr A =','det A ='], q:'A ∈ M(2, 2, R) ha p<sub>A</sub>(λ) = λ² − 5λ + 6.', a:[5,6], hint:'Confronta con λ² − tr A·λ + det A.', sol:'Per una 2 × 2: p<sub>A</sub>(λ) = λ² − (tr A)·λ + det A. Confronto con λ² − 5λ + 6: −tr A = −5, quindi tr A = 5; det A = 6. (Radici: λ² − 5λ + 6 = (λ − 2)(λ − 3), autovalori 2 e 3.)' },
     { id:'e8', type:'choice', q:'tr(A·B) − tr(B·A) vale…', opts:['0 sempre','dipende da A e B','det A − det B'], a:0, hint:'Prop. 4.4.11.', sol:'tr(A·B) = tr(B·A) sempre, anche se A·B ≠ B·A.' }
   ]);
 })();

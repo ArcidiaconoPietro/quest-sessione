@@ -131,24 +131,24 @@
 
   guided('scalare', [
     { h:'Passo 1 · w₁ = v₁. Calcola ⟨w₁, w₁⟩ e ⟨v₂, w₁⟩', type:'nums', ans:[2,1], html:'⟨w₁, w₁⟩ = '+inp('w1 per w1')+' &nbsp; ⟨v₂, w₁⟩ = '+inp('v2 per w1'),
-      ok:'Sì: ⟨(1,1,0), (1,1,0)⟩ = 2 e ⟨(1,0,1), (1,1,0)⟩ = 1 + 0 + 0 = 1.', bad:'Moltiplica componente per componente e somma.' },
+      ok:'Sì: ⟨(1, 1, 0), (1, 1, 0)⟩ = 1·1 + 1·1 + 0·0 = 1 + 1 + 0 = 2 e ⟨(1, 0, 1), (1, 1, 0)⟩ = 1·1 + 0·1 + 1·0 = 1 + 0 + 0 = 1.', bad:'Moltiplica componente per componente e somma.' },
     { h:'Passo 2 · w₂ = v₂ − (1/2)·w₁ (puoi scrivere 1/2)', type:'nums', ans:[0.5,-0.5,1], html:'w₂ = ( '+inp('prima')+' , '+inp('seconda')+' , '+inp('terza')+' )',
-      ok:'Perfetto: (1, 0, 1) − (1/2, 1/2, 0) = (1/2, −1/2, 1).', bad:'(1/2)·w₁ = (1/2, 1/2, 0). Sottrailo da (1, 0, 1) componente per componente.' },
+      ok:'Perfetto: il coefficiente è ⟨v₂, w₁⟩/⟨w₁, w₁⟩ = 1/2. (1/2)·(1, 1, 0) = (1/2, 1/2, 0). w₂ = (1, 0, 1) − (1/2, 1/2, 0) = (1 − 1/2, 0 − 1/2, 1 − 0) = (1/2, −1/2, 1).', bad:'(1/2)·w₁ = (1/2, 1/2, 0). Sottrailo da (1, 0, 1) componente per componente.' },
     { h:'Passo 3 · Controllo: ⟨w₂, w₁⟩ = ?', type:'nums', ans:[0], html:'⟨w₂, w₁⟩ = '+inp('prodotto'),
-      ok:'Sì, 1/2 − 1/2 + 0 = 0: sono ortogonali.', bad:'(1/2)·1 + (−1/2)·1 + 1·0.' },
+      ok:'Sì: (1/2)·1 + (−1/2)·1 + 1·0 = 1/2 − 1/2 + 0 = 0: sono ortogonali.', bad:'(1/2)·1 + (−1/2)·1 + 1·0.' },
     { h:'Passo 4 · ‖w₁‖ = ?', type:'choice', ans:1, opts:['2','√2','1'],
       ok:'Esatto: ‖w₁‖ = √⟨w₁, w₁⟩ = √2. Per normalizzare: w₁/√2.', bad:'La norma è la radice di ⟨w₁, w₁⟩.' }
   ], '<b>Fatto!</b> Base ortogonale di U: w₁ = (1, 1, 0), w₂ = (1/2, −1/2, 1) (o, più pulito, (1, −1, 2)). Ortonormale: (1/√2)·(1, 1, 0) e (1/√6)·(1, −1, 2).');
 
   exercises('scalare', [
-    { id:'e1', type:'num', label:'⟨x, y⟩ =', q:'x = (1, 2, 3), y = (4, −1, 0) in R³', a:2, hint:'1·4 + 2·(−1) + 3·0.', sol:'4 − 2 + 0 = 2.' },
-    { id:'e2', type:'num', label:'‖x‖ =', q:'x = (3, 4) in R²', a:5, hint:'√(9 + 16).', sol:'√25 = 5.' },
-    { id:'e3', type:'num', label:'k =', q:'Per quale k ∈ R i vettori (1, k, 2) e (3, 1, −1) sono ortogonali?', a:-1, hint:'Imponi ⟨·,·⟩ = 0.', sol:'3 + k − 2 = 0 ⇒ k = −1.' },
-    { id:'e4', type:'nums', labels:['prima','seconda'], q:'Proiezione di v = (2, 3) sulla retta Span(w), w = (1, 1)', a:[2.5,2.5], hint:'⟨v, w⟩ = 5, ⟨w, w⟩ = 2.', sol:'(5/2)·(1, 1) = (5/2, 5/2).' },
-    { id:'e5', type:'choice', q:'Angolo tra (1, 0) e (1, 1)?', opts:['π/6','π/4','π/3','π/2'], a:1, hint:'cos θ = 1/(1·√2).', sol:'cos θ = 1/√2 = √2/2 ⇒ θ = π/4.' },
-    { id:'e6', type:'num', label:'dim W<sup>⊥</sup> =', q:'W = Span((1, 1, 1)) ⊆ R³', a:2, hint:'n − dim W.', sol:'3 − 1 = 2. W<sup>⊥</sup> = { x + y + z = 0 }, un piano.' },
+    { id:'e1', type:'num', label:'⟨x, y⟩ =', q:'x = (1, 2, 3), y = (4, −1, 0) in R³', a:2, hint:'1·4 + 2·(−1) + 3·0.', sol:'1·4 + 2·(−1) + 3·0 = 4 − 2 + 0 = 2.' },
+    { id:'e2', type:'num', label:'‖x‖ =', q:'x = (3, 4) in R²', a:5, hint:'√(9 + 16).', sol:'‖x‖ = √(3² + 4²) = √(9 + 16) = √25 = 5.' },
+    { id:'e3', type:'num', label:'k =', q:'Per quale k ∈ R i vettori (1, k, 2) e (3, 1, −1) sono ortogonali?', a:-1, hint:'Imponi ⟨·,·⟩ = 0.', sol:'⟨(1, k, 2), (3, 1, −1)⟩ = 1·3 + k·1 + 2·(−1) = 3 + k − 2 = 1 + k. Ortogonali ⇔ 1 + k = 0 ⇔ k = −1.' },
+    { id:'e4', type:'nums', labels:['prima','seconda'], q:'Proiezione di v = (2, 3) sulla retta Span(w), w = (1, 1)', a:[2.5,2.5], hint:'⟨v, w⟩ = 5, ⟨w, w⟩ = 2.', sol:'⟨v, w⟩ = 2·1 + 3·1 = 5. ⟨w, w⟩ = 1·1 + 1·1 = 2. proj = (⟨v, w⟩/⟨w, w⟩)·w = (5/2)·(1, 1) = (5/2, 5/2).' },
+    { id:'e5', type:'choice', q:'Angolo tra (1, 0) e (1, 1)?', opts:['π/6','π/4','π/3','π/2'], a:1, hint:'cos θ = 1/(1·√2).', sol:'⟨(1, 0), (1, 1)⟩ = 1·1 + 0·1 = 1. ‖(1, 0)‖ = √(1 + 0) = 1, ‖(1, 1)‖ = √(1 + 1) = √2. cos θ = 1/(1·√2) = 1/√2 = √2/2. L\'angolo in [0, π] con coseno √2/2 è θ = π/4.' },
+    { id:'e6', type:'num', label:'dim W<sup>⊥</sup> =', q:'W = Span((1, 1, 1)) ⊆ R³', a:2, hint:'n − dim W.', sol:'dim W = 1 (un vettore non nullo). dim W<sup>⊥</sup> = n − dim W = 3 − 1 = 2. Infatti v = (x, y, z) ∈ W<sup>⊥</sup> ⇔ ⟨v, (1, 1, 1)⟩ = x + y + z = 0: un piano.' },
     { id:'e7', type:'choice', q:'Quale matrice è ortogonale?', opts:[M([[1,1],[0,1]]), M([[0,1],[1,0]]), M([[2,0],[0,1/2]])], a:1, hint:'Le colonne devono avere norma 1 ed essere ortogonali tra loro.', sol:'Le colonne (0, 1) e (1, 0) sono unitarie e ortogonali. La prima ha una colonna di norma √2; la terza ha colonne di norma 2 e 1/2.' },
-    { id:'e8', type:'nums', labels:['prima','seconda'], q:'Normalizza x = (3, 4)', a:[0.6,0.8], hint:'Dividi per ‖x‖ = 5.', sol:'(3/5, 4/5).' },
+    { id:'e8', type:'nums', labels:['prima','seconda'], q:'Normalizza x = (3, 4)', a:[0.6,0.8], hint:'Dividi per ‖x‖ = 5.', sol:'‖x‖ = √(9 + 16) = √25 = 5. x/‖x‖ = (3/5, 4/5). Controllo: (3/5)² + (4/5)² = 9/25 + 16/25 = 25/25 = 1 ✓.' },
     { id:'e9', type:'choice', src:'trappola', q:'⟨x, y⟩ = 0 con x, y ∈ Rⁿ. Allora…', opts:['x = 0 oppure y = 0','x e y sono ortogonali (possono essere entrambi non nulli)','x = y'], a:1, hint:'Pensa a (1, 0) e (0, 1).', sol:'Non è come il prodotto di numeri: ⟨(1,0), (0,1)⟩ = 0 con entrambi non nulli.' }
   ]);
 })();
