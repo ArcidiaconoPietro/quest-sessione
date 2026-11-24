@@ -20,8 +20,30 @@
   ], '<b>Fatto!</b> '+LIM+' 2/n = 0 e '+LIM+' 4/n = 0, stesso limite, quindi '+LIM+' (3 + cos n)/n = 0. Il ladro giallo è schiacciato tra 2/n e 4/n.<canvas id="plot3" style="margin-top:10px" aria-label="Grafico: 3 più cos n su n tra 2 su n e 4 su n"></canvas>');
 
   EX['carabinieri'] = [
-      { id:'e1', type:'num', q:LIM+' (2 + sin n) / n²', a:0, hint:'Parti da −1 ≤ sin n ≤ 1, aggiungi 2, poi dividi per n².', sol:'1 ≤ 2 + sin n ≤ 3, quindi 1/n² ≤ (2 + sin n)/n² ≤ 3/n². Per n → +∞ entrambi tendono a 0: limite 0.' },
-      { id:'e2', type:'num', q:LIM+' (−1)ⁿ / n', a:0, hint:'(−1)ⁿ vale −1 oppure 1: quindi −1 ≤ (−1)ⁿ ≤ 1. Poi dividi per n.', sol:'−1/n ≤ (−1)ⁿ/n ≤ 1/n, e per n → +∞ entrambi tendono a 0: limite 0.' },
-      { id:'e3', type:'num', q:LIM+' (n + sin n) / n', a:1, hint:'Aggiungi n: n − 1 ≤ n + sin n ≤ n + 1. Poi dividi per n. Per n → +∞, dove vanno (n−1)/n e (n+1)/n?', sol:'Per n → +∞: (n−1)/n = 1 − 1/n tende a 1 e (n+1)/n = 1 + 1/n tende a 1. Stesso limite: 1. Non sempre fa 0!' },
-      { id:'e4', type:'num', q:LIM+' (5 cos n) / n', a:0, hint:'Moltiplica −1 ≤ cos n ≤ 1 per 5 (positivo, i segni restano), poi dividi per n.', sol:'−5/n ≤ 5 cos n / n ≤ 5/n, e per n → +∞ entrambi tendono a 0: limite 0.' }
+      { id:'e1', type:'num', q:LIM+' (2 + sin n) / n²', a:0, hint:'Parti da −1 ≤ sin n ≤ 1, aggiungi 2, poi dividi per n².', sol:SV(
+        '<i>Parto da quello che so sul seno:</i> −1 ≤ sin n ≤ 1',
+        '<i>Aggiungo 2 a tutti e tre i pezzi:</i> −1 + 2 ≤ 2 + sin n ≤ 1 + 2, cioè 1 ≤ 2 + sin n ≤ 3',
+        '<i>Divido tutto per n² (positivo, i ≤ restano):</i> '+FR('1','n²')+' ≤ '+FR('2 + sin n','n²')+' ≤ '+FR('3','n²'),
+        '<i>Carabiniere sotto:</i> '+LIM+' '+FR('1','n²')+' = 0',
+        '<i>Carabiniere sopra:</i> '+LIM+' '+FR('3','n²')+' = 0',
+        '<i>Stesso limite, applico i carabinieri:</i> '+LIM+' '+FR('2 + sin n','n²')+' = <b>0</b>') },
+      { id:'e2', type:'num', q:LIM+' (−1)ⁿ / n', a:0, hint:'(−1)ⁿ vale −1 oppure 1: quindi −1 ≤ (−1)ⁿ ≤ 1. Poi dividi per n.', sol:SV(
+        '<i>(−1)ⁿ vale −1 o 1, quindi:</i> −1 ≤ (−1)ⁿ ≤ 1',
+        '<i>Divido per n (positivo):</i> '+FR('−1','n')+' ≤ '+FR('(−1)ⁿ','n')+' ≤ '+FR('1','n'),
+        '<i>Carabiniere sotto:</i> '+LIM+' (−1/n) = 0',
+        '<i>Carabiniere sopra:</i> '+LIM+' 1/n = 0',
+        '<i>Stesso limite:</i> '+LIM+' (−1)ⁿ/n = <b>0</b>') },
+      { id:'e3', type:'num', q:LIM+' (n + sin n) / n', a:1, hint:'Aggiungi n: n − 1 ≤ n + sin n ≤ n + 1. Poi dividi per n. Per n → +∞, dove vanno (n−1)/n e (n+1)/n?', sol:SV(
+        '<i>Parto da:</i> −1 ≤ sin n ≤ 1',
+        '<i>Aggiungo n a tutti e tre:</i> n − 1 ≤ n + sin n ≤ n + 1',
+        '<i>Divido per n:</i> '+FR('n − 1','n')+' ≤ '+FR('n + sin n','n')+' ≤ '+FR('n + 1','n'),
+        '<i>Spezzo le frazioni dei carabinieri:</i> '+FR('n − 1','n')+' = 1 − '+FR('1','n')+' e '+FR('n + 1','n')+' = 1 + '+FR('1','n'),
+        '<i>Limiti:</i> 1/n tende a 0, quindi 1 − 1/n tende a 1 e 1 + 1/n tende a 1',
+        '<i>Stesso limite:</i> '+LIM+' (n + sin n)/n = <b>1</b> (non sempre viene 0!)') },
+      { id:'e4', type:'num', q:LIM+' (5 cos n) / n', a:0, hint:'Moltiplica −1 ≤ cos n ≤ 1 per 5 (positivo, i segni restano), poi dividi per n.', sol:SV(
+        '<i>Parto da:</i> −1 ≤ cos n ≤ 1',
+        '<i>Moltiplico per 5 (positivo, i ≤ restano):</i> −5 ≤ 5 cos n ≤ 5',
+        '<i>Divido per n:</i> '+FR('−5','n')+' ≤ '+FR('5 cos n','n')+' ≤ '+FR('5','n'),
+        '<i>Limiti dei carabinieri:</i> −5/n tende a 0 e 5/n tende a 0',
+        '<i>Stesso limite:</i> '+LIM+' 5 cos n / n = <b>0</b>') }
     ];

@@ -36,10 +36,38 @@
   ], '<b>Fatto!</b> 3 ≤ '+R('n','2ⁿ+3ⁿ')+' ≤ '+R('n','2')+' · 3, e per n → +∞ tutti e due gli estremi tendono a 3. Quindi '+LIM+' '+R('n','2ⁿ+3ⁿ')+' = 3: vince il più grande.');
 
   EX['radici'] = [
-      { id:'e1', type:'num', q:LIM+' '+R('n','5ⁿ + 4ⁿ'), a:5, hint:'Comanda il più grande: 5ⁿ ≤ 5ⁿ + 4ⁿ ≤ 2 · 5ⁿ.', sol:'5 ≤ '+R('n','5ⁿ+4ⁿ')+' ≤ '+R('n','2')+' · 5, che per n → +∞ tende a 5. Limite 5.' },
-      { id:'e2', type:'num', q:LIM+' '+R('n','n³'), a:1, hint:R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n')+'. Per n → +∞ ognuno tende a…', sol:'Ogni pezzo ha limite 1, quindi 1 · 1 · 1 = 1. Limite 1.' },
-      { id:'e3', type:'num', q:LIM+' '+R('n','3n'), a:1, hint:'Spezza: '+R('n','3')+' · '+R('n','n')+'.', sol:'Per n → +∞ entrambi i pezzi hanno limite 1 (fatto 1 e fatto 2): limite 1.' },
-      { id:'e4', type:'num', q:LIM+' '+R('n','7ⁿ + n'), a:7, hint:'n è piccolissimo rispetto a 7ⁿ: da un certo n in poi 7ⁿ ≤ 7ⁿ + n ≤ 2 · 7ⁿ.', sol:'Carabinieri 7 e '+R('n','2')+' · 7, che per n → +∞ tendono entrambi a 7. Limite 7.' },
+      { id:'e1', type:'num', q:LIM+' '+R('n','5ⁿ + 4ⁿ'), a:5, hint:'Comanda il più grande: 5ⁿ ≤ 5ⁿ + 4ⁿ ≤ 2 · 5ⁿ.', sol:SV(
+        '<i>Chi comanda sotto la radice?</i> 5ⁿ, perché 5 &gt; 4',
+        '<i>Carabiniere sotto (tolgo un pezzo positivo, la somma diventa più piccola):</i> 5ⁿ ≤ 5ⁿ + 4ⁿ',
+        '<i>Carabiniere sopra (4ⁿ ≤ 5ⁿ, quindi lo sostituisco con 5ⁿ):</i> 5ⁿ + 4ⁿ ≤ 5ⁿ + 5ⁿ = 2 · 5ⁿ',
+        '<i>Faccio la radice n-esima di tutti e tre:</i> '+R('n','5ⁿ')+' ≤ '+R('n','5ⁿ + 4ⁿ')+' ≤ '+R('n','2 · 5ⁿ'),
+        '<i>Semplifico:</i> '+R('n','5ⁿ')+' = 5 e '+R('n','2 · 5ⁿ')+' = '+R('n','2')+' · 5',
+        '<i>Limiti:</i> 5 resta 5; '+R('n','2')+' tende a 1 (fatto 1), quindi '+R('n','2')+' · 5 tende a 5',
+        '<i>Carabinieri:</i> il limite è <b>5</b>') },
+      { id:'e2', type:'num', q:LIM+' '+R('n','n³'), a:1, hint:R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n')+'. Per n → +∞ ognuno tende a…', sol:SV(
+        '<i>Spezzo n³ = n · n · n:</i> '+R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n'),
+        '<i>Uso il fatto 2:</i> '+LIM+' '+R('n','n')+' = 1',
+        '<i>Prodotto dei limiti:</i> 1 · 1 · 1 = <b>1</b>') },
+      { id:'e3', type:'num', q:LIM+' '+R('n','3n'), a:1, hint:'Spezza: '+R('n','3')+' · '+R('n','n')+'.', sol:SV(
+        '<i>La radice di un prodotto è il prodotto delle radici:</i> '+R('n','3n')+' = '+R('n','3')+' · '+R('n','n'),
+        '<i>Primo pezzo (fatto 1, numero fisso):</i> '+LIM+' '+R('n','3')+' = 1',
+        '<i>Secondo pezzo (fatto 2):</i> '+LIM+' '+R('n','n')+' = 1',
+        '<i>Prodotto:</i> 1 · 1 = <b>1</b>. Attenzione: qui 3n vuol dire 3 per n, non 3ⁿ') },
+      { id:'e4', type:'num', q:LIM+' '+R('n','7ⁿ + n'), a:7, hint:'n è piccolissimo rispetto a 7ⁿ: da un certo n in poi 7ⁿ ≤ 7ⁿ + n ≤ 2 · 7ⁿ.', sol:SV(
+        '<i>Chi comanda sotto la radice?</i> 7ⁿ: con n = 3 è 343 contro 3, e la differenza cresce',
+        '<i>Carabiniere sotto: tolgo il pezzo n (positivo), la somma diventa più piccola:</i> 7ⁿ ≤ 7ⁿ + n',
+        '<i>Carabiniere sopra: n ≤ 7ⁿ per ogni n ≥ 1, quindi sostituisco n con 7ⁿ:</i> 7ⁿ + n ≤ 7ⁿ + 7ⁿ = 2 · 7ⁿ',
+        '<i>Il carabiniere sotto NON è il pezzo più piccolo (n): è una cosa ≤ della somma che ha un limite facile.</i> Per questo uso 7ⁿ',
+        '<i>Radice n-esima di tutti e tre:</i> 7 ≤ '+R('n','7ⁿ + n')+' ≤ '+R('n','2')+' · 7',
+        '<i>Limiti:</i> 7 resta 7; '+R('n','2')+' · 7 tende a 1 · 7 = 7',
+        '<i>Carabinieri:</i> il limite è <b>7</b>') },
       { id:'e5', type:'num', q:LIM+' <span class="fr"><span>3<sup>n+1</sup> + 5<sup>n+1</sup></span><span>3ⁿ + 5ⁿ</span></span> <span style="font-size:1rem">(esercizio per casa del prof)</span>', a:5,
-        hint:'Qui non c\'è radice. Raccogli 5ⁿ sopra e sotto. Ricorda 5<sup>n+1</sup> = 5 · 5ⁿ e '+LIM+' (3/5)ⁿ = 0.', sol:'Sopra: 5ⁿ (3·(3/5)ⁿ + 5). Sotto: 5ⁿ ((3/5)ⁿ + 1). Si semplifica 5ⁿ: (0 + 5)/(0 + 1) = 5.' }
+        hint:'Qui non c\'è radice. Raccogli 5ⁿ sopra e sotto. Ricorda 5<sup>n+1</sup> = 5 · 5ⁿ e '+LIM+' (3/5)ⁿ = 0.', sol:SV(
+        '<i>Spezzo gli esponenti n + 1:</i> 3<sup>n+1</sup> = 3 · 3ⁿ e 5<sup>n+1</sup> = 5 · 5ⁿ',
+        '<i>Riscrivo:</i> '+FR('3 · 3ⁿ + 5 · 5ⁿ','3ⁿ + 5ⁿ'),
+        '<i>Raccolgo chi comanda (5ⁿ) sopra:</i> 3 · 3ⁿ + 5 · 5ⁿ = 5ⁿ (3 · '+FR('3ⁿ','5ⁿ')+' + 5) = 5ⁿ (3 · (3/5)ⁿ + 5)',
+        '<i>Raccolgo 5ⁿ sotto:</i> 3ⁿ + 5ⁿ = 5ⁿ ((3/5)ⁿ + 1)',
+        '<i>Semplifico 5ⁿ:</i> '+FR('3 · (3/5)ⁿ + 5','(3/5)ⁿ + 1'),
+        '<i>Limite: 3/5 &lt; 1, quindi</i> '+LIM+' (3/5)ⁿ = 0',
+        '<i>Sostituisco:</i> '+FR('3 · 0 + 5','0 + 1')+' = <b>5</b>') }
     ];

@@ -44,13 +44,60 @@
 
   const DISC = ['continua','salto (prima specie)','seconda specie','eliminabile'];
   EX['continuita-derivata'] = [
-    { id:'e1', type:'num', lbl:'a', q:'f(x) = x² + 1 se x ≤ 1, f(x) = a · x se x &gt; 1. Per quale a è continua in x = 1?', a:2, hint:'Limite sinistro per x → 1⁻: 1² + 1. Limite destro per x → 1⁺: a · 1. Devono essere uguali.', sol:'Sinistro 2, destro a: serve a = 2.' },
-    { id:'e2', type:'choice', q:'f(x) = '+FR('x² − 4','x − 2')+' in x = 2', a:3, opts:DISC, hint:'In x = 2 non esiste (0/0). Il limite per x → 2 esiste? Lo hai calcolato nel capitolo 8.', sol:'Il limite per x → 2 vale 4 (finito), ma f(2) non esiste: eliminabile.' },
-    { id:'e3', type:'choice', q:'f(x) = 1 se x ≥ 0, f(x) = −1 se x &lt; 0, in x = 0', a:1, opts:DISC, hint:'Limite destro e sinistro per x → 0: sono finiti? Uguali?', sol:'Destro 1, sinistro −1: finiti e diversi, salto.' },
-    { id:'e4', type:'choice', q:'f(x) = '+FR('1','x²')+' in x = 0', a:2, opts:DISC, hint:'Cosa fa 1/x² per x → 0, da destra e da sinistra?', sol:'Va a +∞ da tutte e due le parti: limite infinito, seconda specie.' },
-    { id:'e5', type:'num', lbl:'f′(5)', q:'f(x) = x². Calcola f′(5) con la definizione.', a:10, hint:'Come nel guidato: f(5 + h) − f(5) = 10h + h². Dividi per h.', sol:'(10h + h²)/h = 10 + h, '+LIMH+' (10 + h) = 10.' },
-    { id:'e6', type:'num', lbl:'f′(x₀)', q:'f(x) = 3x + 2. Quanto vale f′(x₀) in un punto qualsiasi?', a:3, hint:'f(x₀ + h) − f(x₀) = 3h. Il grafico è una retta: quale pendenza?', sol:'3h/h = 3 per ogni h: f′(x₀) = 3. La tangente a una retta è la retta stessa.' },
-    { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:'y = 1 + 2x − 2 = 2x − 1: q = −1.' },
-    { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:'Destra 1, sinistra −1: punto angoloso. È continua, ma non derivabile.' },
-    { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:'f(0) = −1 &lt; 0, f(1) = 1 &gt; 0, f continua: per il teorema degli zeri esiste c in (0, 1) con f(c) = 0.' }
+    { id:'e1', type:'num', lbl:'a', q:'f(x) = x² + 1 se x ≤ 1, f(x) = a · x se x &gt; 1. Per quale a è continua in x = 1?', a:2, hint:'Limite sinistro per x → 1⁻: 1² + 1. Limite destro per x → 1⁺: a · 1. Devono essere uguali.', sol:SV(
+      '<i>Continuità in x = 1 vuol dire:</i> limite sinistro = limite destro = f(1)',
+      '<i>Limite sinistro (x &lt; 1, uso x² + 1):</i> '+LIMX('1⁻')+' (x² + 1) = 1 + 1 = 2',
+      '<i>f(1) (x ≤ 1 comprende 1, uso x² + 1):</i> f(1) = 2',
+      '<i>Limite destro (x &gt; 1, uso a · x):</i> '+LIMX('1⁺')+' a · x = a · 1 = a',
+      '<i>Impongo che siano uguali:</i> a = 2',
+      '<i>Risultato:</i> <b>a = 2</b>') },
+    { id:'e2', type:'choice', q:'f(x) = '+FR('x² − 4','x − 2')+' in x = 2', a:3, opts:DISC, hint:'In x = 2 non esiste (0/0). Il limite per x → 2 esiste? Lo hai calcolato nel capitolo 8.', sol:SV(
+      '<i>Guardo f(2):</i> sotto 2 − 2 = 0, quindi f(2) non esiste',
+      '<i>Calcolo il limite per x → 2:</i> sopra 4 − 4 = 0, sotto 0: forma 0/0',
+      '<i>Scompongo sopra:</i> x² − 4 = (x − 2)(x + 2)',
+      '<i>Semplifico (x − 2):</i> '+FR('(x − 2)(x + 2)','x − 2')+' = x + 2',
+      '<i>Risostituisco:</i> '+LIMX('2')+' (x + 2) = 4, finito',
+      '<i>Classifico:</i> limite finito ma f(2) non esiste: <b>eliminabile</b> (basta definire f(2) = 4)') },
+    { id:'e3', type:'choice', q:'f(x) = 1 se x ≥ 0, f(x) = −1 se x &lt; 0, in x = 0', a:1, opts:DISC, hint:'Limite destro e sinistro per x → 0: sono finiti? Uguali?', sol:SV(
+      '<i>Limite sinistro (x &lt; 0, f = −1):</i> '+LIMX('0⁻')+' f(x) = −1',
+      '<i>Limite destro (x &gt; 0, f = 1):</i> '+LIMX('0⁺')+' f(x) = 1',
+      '<i>Sono finiti?</i> Sì, −1 e 1',
+      '<i>Sono uguali?</i> No, −1 ≠ 1',
+      '<i>Classifico:</i> finiti e diversi = <b>salto (prima specie)</b>') },
+    { id:'e4', type:'choice', q:'f(x) = '+FR('1','x²')+' in x = 0', a:2, opts:DISC, hint:'Cosa fa 1/x² per x → 0, da destra e da sinistra?', sol:SV(
+      '<i>f(0):</i> 1/0, non esiste',
+      '<i>Limite destro, provo con i numeri:</i> x = 0,1 → 1/0,01 = 100; x = 0,01 → 10000: va a +∞',
+      '<i>Limite sinistro:</i> x = −0,1 → (−0,1)² = 0,01 → 100: anche qui +∞ (il quadrato è sempre positivo)',
+      '<i>Classifico:</i> limite infinito = <b>seconda specie</b>') },
+    { id:'e5', type:'num', lbl:'f′(5)', q:'f(x) = x². Calcola f′(5) con la definizione.', a:10, hint:'Come nel guidato: f(5 + h) − f(5) = 10h + h². Dividi per h.', sol:SV(
+      '<i>Scrivo la definizione:</i> f′(5) = '+LIMH+' '+FR('f(5 + h) − f(5)','h'),
+      '<i>Calcolo f(5 + h):</i> (5 + h)² = 25 + 10h + h²',
+      '<i>Calcolo f(5):</i> 5² = 25',
+      '<i>Sottraggo:</i> 25 + 10h + h² − 25 = 10h + h²',
+      '<i>Divido per h (raccolgo h sopra):</i> '+FR('h(10 + h)','h')+' = 10 + h',
+      '<i>Limite per h → 0:</i> 10 + 0 = <b>10</b>') },
+    { id:'e6', type:'num', lbl:'f′(x₀)', q:'f(x) = 3x + 2. Quanto vale f′(x₀) in un punto qualsiasi?', a:3, hint:'f(x₀ + h) − f(x₀) = 3h. Il grafico è una retta: quale pendenza?', sol:SV(
+      '<i>Calcolo f(x₀ + h):</i> 3(x₀ + h) + 2 = 3x₀ + 3h + 2',
+      '<i>Sottraggo f(x₀) = 3x₀ + 2:</i> 3x₀ + 3h + 2 − 3x₀ − 2 = 3h',
+      '<i>Divido per h:</i> '+FR('3h','h')+' = 3',
+      '<i>Limite per h → 0:</i> resta <b>3</b>, per ogni x₀ (la pendenza della retta)') },
+    { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:SV(
+      '<i>Scrivo la formula della tangente:</i> y = f(x₀) + f′(x₀)(x − x₀) con x₀ = 1',
+      '<i>Calcolo f(1):</i> 1² = 1',
+      '<i>Calcolo f′(1) (come nell\'esercizio 5: f′(x) = 2x):</i> f′(1) = 2',
+      '<i>Sostituisco:</i> y = 1 + 2(x − 1)',
+      '<i>Sviluppo la parentesi:</i> y = 1 + 2x − 2',
+      '<i>Sommo i numeri:</i> y = 2x − 1, quindi <b>q = −1</b>') },
+    { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:SV(
+      '<i>Rapporto incrementale in 0:</i> '+FR('|0 + h| − |0|','h')+' = '+FR('|h|','h'),
+      '<i>Con h &gt; 0:</i> |h| = h, quindi '+FR('h','h')+' = 1: limite destro 1',
+      '<i>Con h &lt; 0:</i> |h| = −h, quindi '+FR('−h','h')+' = −1: limite sinistro −1',
+      '<i>Confronto:</i> 1 ≠ −1, il limite per h → 0 non esiste',
+      '<i>Conclusione:</i> non derivabile, derivate destra e sinistra finite e diverse = <b>punto angoloso</b> (è continua: |h| → 0)') },
+    { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:SV(
+      '<i>Pongo:</i> f(x) = x³ + x − 1, è un polinomio quindi continua su [0, 1]',
+      '<i>Calcolo f(0):</i> 0 + 0 − 1 = −1 &lt; 0',
+      '<i>Calcolo f(1):</i> 1 + 1 − 1 = 1 &gt; 0',
+      '<i>Segni opposti agli estremi + continua:</i> ipotesi del teorema degli zeri ✓',
+      '<i>Conclusione:</i> <b>sì</b>, esiste c in (0, 1) con f(c) = 0') }
   ];

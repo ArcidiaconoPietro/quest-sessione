@@ -42,13 +42,57 @@
   ], '<b>Fatto!</b> '+LIMX('0')+' (eˣ − 1 − x)/x² = '+LIMX('0')+' (x²/2 + o(x²))/x² = 1/2. Regola d\'oro: sviluppa fino alla potenza che c\'è sotto.');
 
   EX['teoremi-taylor'] = [
-    { id:'e1', type:'num', lbl:'c', q:'Lagrange per f(x) = x² su [0, 2]: per quale c vale f′(c) = [f(2) − f(0)]/(2 − 0)?', a:1, hint:'La pendenza media è (4 − 0)/2 = 2. Risolvi f′(c) = 2c = 2.', sol:'2c = 2, c = 1.' },
-    { id:'e2', type:'num', lbl:'c', q:'Rolle per f(x) = x² − 2x su [0, 2] (f(0) = f(2) = 0): dove f′(c) = 0?', a:1, hint:'f′(x) = 2x − 2.', sol:'2c − 2 = 0, c = 1.' },
-    { id:'e3', type:'num', q:LIMX('1')+' '+FR('ln x','x − 1'), a:1, hint:'0/0: De L\'Hôpital, derivi sopra (1/x) e sotto (1).', sol:LIMX('1')+' (1/x)/1 = 1.' },
-    { id:'e4', type:'num', q:LIMX('+∞')+' '+FR('x','eˣ'), a:0, hint:'∞/∞: De L\'Hôpital una volta.', sol:LIMX('+∞')+' 1/eˣ = 0. (L\'esponenziale batte ogni potenza.)' },
-    { id:'e5', type:'num', q:LIMX('0')+' '+FR('x − sin x','x³'), a:1/6, hint:'sin x = x − x³/6 + o(x³).', sol:'Sopra x³/6 + o(x³): risultato 1/6.' },
-    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + x) − x','x²'), a:-0.5, hint:'ln(1 + x) = x − x²/2 + o(x²).', sol:'Sopra −x²/2 + o(x²): risultato −1/2.' },
-    { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:'−1/2. (Infatti f″(0) = −cos 0 = −1, diviso 2!.)' },
-    { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:'(1/x)/(−1/x²) = −x → 0.' },
-    { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:'Esce 1/0, non è una forma indeterminata: De L\'Hôpital non si può usare (e darebbe 1, sbagliato). Il limite destro è +∞, il sinistro −∞.' }
+    { id:'e1', type:'num', lbl:'c', q:'Lagrange per f(x) = x² su [0, 2]: per quale c vale f′(c) = [f(2) − f(0)]/(2 − 0)?', a:1, hint:'La pendenza media è (4 − 0)/2 = 2. Risolvi f′(c) = 2c = 2.', sol:SV(
+      '<i>Pendenza media (secante):</i> '+FR('f(2) − f(0)','2 − 0')+' = '+FR('4 − 0','2')+' = 2',
+      '<i>Derivata:</i> f′(x) = 2x, quindi f′(c) = 2c',
+      '<i>Lagrange dice f′(c) = pendenza media:</i> 2c = 2',
+      '<i>Divido per 2:</i> <b>c = 1</b>, che sta in (0, 2) ✓') },
+    { id:'e2', type:'num', lbl:'c', q:'Rolle per f(x) = x² − 2x su [0, 2] (f(0) = f(2) = 0): dove f′(c) = 0?', a:1, hint:'f′(x) = 2x − 2.', sol:SV(
+      '<i>Controllo le ipotesi:</i> polinomio (continuo e derivabile), f(0) = 0 e f(2) = 4 − 4 = 0 ✓',
+      '<i>Derivo:</i> f′(x) = 2x − 2',
+      '<i>Pongo f′(c) = 0:</i> 2c − 2 = 0',
+      '<i>Risolvo:</i> 2c = 2, <b>c = 1</b>') },
+    { id:'e3', type:'num', q:LIMX('1')+' '+FR('ln x','x − 1'), a:1, hint:'0/0: De L\'Hôpital, derivi sopra (1/x) e sotto (1).', sol:SV(
+      '<i>Sostituisco x = 1:</i> ln 1 = 0 sopra, 0 sotto: forma 0/0 ✓',
+      '<i>De L\'Hôpital, derivo sopra:</i> (ln x)′ = 1/x',
+      '<i>Derivo sotto (separatamente!):</i> (x − 1)′ = 1',
+      '<i>Nuovo limite:</i> '+LIMX('1')+' '+FR('1/x','1')+' = '+LIMX('1')+' '+FR('1','x'),
+      '<i>Sostituisco x = 1:</i> 1/1 = <b>1</b>') },
+    { id:'e4', type:'num', q:LIMX('+∞')+' '+FR('x','eˣ'), a:0, hint:'∞/∞: De L\'Hôpital una volta.', sol:SV(
+      '<i>Forma per x → +∞:</i> ∞/∞ ✓',
+      '<i>Derivo sopra:</i> (x)′ = 1',
+      '<i>Derivo sotto:</i> (eˣ)′ = eˣ',
+      '<i>Nuovo limite:</i> '+LIMX('+∞')+' '+FR('1','eˣ'),
+      '<i>eˣ → +∞, quindi 1/eˣ → 0:</i> risultato <b>0</b>') },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('x − sin x','x³'), a:1/6, hint:'sin x = x − x³/6 + o(x³).', sol:SV(
+      '<i>Forma per x → 0:</i> (0 − 0)/0 = 0/0',
+      '<i>Sotto c\'è x³: sviluppo sin x fino a x³:</i> sin x = x − '+FR('x³','6')+' + o(x³)',
+      '<i>Sostituisco sopra:</i> x − (x − x³/6 + o(x³))',
+      '<i>Tolgo la parentesi (cambio i segni):</i> x − x + x³/6 − o(x³) = '+FR('x³','6')+' + o(x³)',
+      '<i>Divido per x³:</i> '+FR('1','6')+' + '+FR('o(x³)','x³'),
+      '<i>Limite (o(x³)/x³ → 0):</i> <b>1/6</b>') },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + x) − x','x²'), a:-0.5, hint:'ln(1 + x) = x − x²/2 + o(x²).', sol:SV(
+      '<i>Forma:</i> (0 − 0)/0 = 0/0',
+      '<i>Sotto x²: sviluppo ln(1 + x) fino a x²:</i> x − '+FR('x²','2')+' + o(x²)',
+      '<i>Sopra:</i> x − x²/2 + o(x²) − x = −'+FR('x²','2')+' + o(x²)',
+      '<i>Divido per x²:</i> −'+FR('1','2')+' + '+FR('o(x²)','x²'),
+      '<i>Limite:</i> <b>−1/2</b>') },
+    { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:SV(
+      '<i>Formula:</i> coefficiente di x² = '+FR('f″(0)','2!'),
+      '<i>Derivo cos x due volte:</i> f′ = −sin x, f″ = −cos x',
+      '<i>Calcolo in 0:</i> f″(0) = −cos 0 = −1',
+      '<i>Divido per 2! = 2:</i> −1/2',
+      '<i>Risultato:</i> <b>−1/2</b> (infatti cos x = 1 − x²/2 + …)') },
+    { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:SV(
+      '<i>Forma per x → 0⁺:</i> x → 0 e ln x → −∞: 0 · ∞, prima va riscritta',
+      '<i>Riscrivo come frazione:</i> x · ln x = '+FR('ln x','1/x'),
+      '<i>Nuova forma:</i> (−∞)/(+∞), va bene per De L\'Hôpital',
+      '<i>Derivo sopra e sotto:</i> (ln x)′ = 1/x, (1/x)′ = −1/x²',
+      '<i>Nuovo rapporto:</i> '+FR('1/x','−1/x²')+' = '+FR('1','x')+' · (−x²) = −x',
+      '<i>Limite per x → 0⁺:</i> −x → <b>0</b>') },
+    { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:SV(
+      '<i>Sostituisco x = 0:</i> sopra 0 + 1 = 1, sotto 0',
+      '<i>Forma 1/0:</i> NON è 0/0 né ∞/∞',
+      '<i>Quindi:</i> De L\'Hôpital <b>non si può usare</b>',
+      '<i>Cosa succede davvero:</i> da destra 1/(piccolo positivo) → +∞, da sinistra → −∞: il limite non esiste') }
   ];

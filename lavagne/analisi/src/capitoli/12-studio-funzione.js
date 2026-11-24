@@ -60,13 +60,58 @@
   ], '<b>Fatto!</b> f(x) = x³ − 12x: massimo in (−2, 16), minimo in (2, −16), flesso in (0, 0). È la stessa forma della prima funzione del grafico, solo più "stirata".');
 
   EX['studio-funzione'] = [
-    { id:'e1', type:'choice', q:'Dominio di f(x) = ln(x − 3)', a:1, opts:['x ≠ 3','x &gt; 3','x ≥ 3'], hint:'L\'argomento del logaritmo deve essere strettamente positivo.', sol:'x − 3 &gt; 0, cioè x &gt; 3.' },
-    { id:'e2', type:'num', lbl:'x', q:'Asintoto verticale di f(x) = '+FR('x + 1','x − 4')+': x = ?', a:4, hint:'Dove si annulla il denominatore (e il numeratore no)?', sol:'x = 4: lì il limite da destra è +∞ e da sinistra −∞.' },
-    { id:'e3', type:'num', lbl:'y', q:'Asintoto orizzontale di f(x) = '+FR('2x² + 1','x² − 3')+' per x → ±∞: y = ?', a:2, hint:'Termine dominante sopra e sotto.', sol:'2x²/x² = 2: y = 2.' },
-    { id:'e4', type:'num', lbl:'q', q:'f(x) = '+FR('2x² + 3x','x + 1')+' ha asintoto obliquo y = 2x + q per x → +∞. Quanto vale q?', a:1, hint:'q = '+LIMX('+∞')+' [f(x) − 2x]. Fai il denominatore comune.', sol:'(2x² + 3x − 2x² − 2x)/(x + 1) = x/(x + 1) → 1 per x → +∞. q = 1.' },
-    { id:'e5', type:'num', lbl:'x', q:'f(x) = x² − 4x + 1: in quale x c\'è il minimo?', a:2, hint:'f′(x) = 2x − 4.', sol:'2x − 4 = 0, x = 2. f′ passa da − a +: minimo.' },
-    { id:'e6', type:'num', lbl:'x', q:'f(x) = x · e<sup>−x</sup>: in quale x c\'è il massimo?', a:1, hint:'f′(x) = (1 − x) e<sup>−x</sup>. Il fattore e<sup>−x</sup> è sempre positivo.', sol:'1 − x = 0, x = 1.' },
-    { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:'6x − 12 = 0, x = 2, e f″ cambia segno lì.' },
-    { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:'12x² ≥ 0 da tutte e due le parti: sempre ∪, niente flesso. In 0 c\'è un minimo.' },
-    { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:'Crescente (conseguenza di Lagrange). Positiva e concava sono altre cose: segno di f e di f″.' }
+    { id:'e1', type:'choice', q:'Dominio di f(x) = ln(x − 3)', a:1, opts:['x ≠ 3','x &gt; 3','x ≥ 3'], hint:'L\'argomento del logaritmo deve essere strettamente positivo.', sol:SV(
+      '<i>Regola del logaritmo:</i> l\'argomento deve essere strettamente positivo',
+      '<i>Scrivo la condizione:</i> x − 3 &gt; 0',
+      '<i>Porto 3 dall\'altra parte:</i> x &gt; 3',
+      '<i>Dominio:</i> <b>x &gt; 3</b> (3 escluso: ln 0 non esiste)') },
+    { id:'e2', type:'num', lbl:'x', q:'Asintoto verticale di f(x) = '+FR('x + 1','x − 4')+': x = ?', a:4, hint:'Dove si annulla il denominatore (e il numeratore no)?', sol:SV(
+      '<i>Dove si annulla il denominatore?</i> x − 4 = 0, x = 4',
+      '<i>Il numeratore lì vale</i> 4 + 1 = 5 ≠ 0, quindi è 5/0: infinito',
+      '<i>Da destra (x = 4,01):</i> 5,01/0,01 ≈ 501 → +∞',
+      '<i>Da sinistra (x = 3,99):</i> 4,99/(−0,01) ≈ −499 → −∞',
+      '<i>Conclusione:</i> asintoto verticale <b>x = 4</b>') },
+    { id:'e3', type:'num', lbl:'y', q:'Asintoto orizzontale di f(x) = '+FR('2x² + 1','x² − 3')+' per x → ±∞: y = ?', a:2, hint:'Termine dominante sopra e sotto.', sol:SV(
+      '<i>Calcolo il limite per x → +∞:</i> forma ∞/∞',
+      '<i>Raccolgo x² sopra e sotto:</i> '+FR('x²(2 + 1/x²)','x²(1 − 3/x²)'),
+      '<i>Semplifico x²:</i> '+FR('2 + 1/x²','1 − 3/x²'),
+      '<i>Limite:</i> 1/x² → 0 e 3/x² → 0, quindi '+FR('2','1')+' = 2',
+      '<i>Per x → −∞ è uguale (x² è positivo):</i> asintoto orizzontale <b>y = 2</b>') },
+    { id:'e4', type:'num', lbl:'q', q:'f(x) = '+FR('2x² + 3x','x + 1')+' ha asintoto obliquo y = 2x + q per x → +∞. Quanto vale q?', a:1, hint:'q = '+LIMX('+∞')+' [f(x) − 2x]. Fai il denominatore comune.', sol:SV(
+      '<i>Formula:</i> q = '+LIMX('+∞')+' [f(x) − 2x]',
+      '<i>Scrivo la differenza:</i> '+FR('2x² + 3x','x + 1')+' − 2x',
+      '<i>Denominatore comune (x + 1):</i> '+FR('2x² + 3x − 2x(x + 1)','x + 1'),
+      '<i>Sviluppo 2x(x + 1) = 2x² + 2x:</i> '+FR('2x² + 3x − 2x² − 2x','x + 1'),
+      '<i>Semplifico sopra:</i> 2x² − 2x² = 0 e 3x − 2x = x, quindi '+FR('x','x + 1'),
+      '<i>Limite (divido per x):</i> '+FR('1','1 + 1/x')+' → 1',
+      '<i>Risultato:</i> <b>q = 1</b>, asintoto y = 2x + 1') },
+    { id:'e5', type:'num', lbl:'x', q:'f(x) = x² − 4x + 1: in quale x c\'è il minimo?', a:2, hint:'f′(x) = 2x − 4.', sol:SV(
+      '<i>Derivo:</i> f′(x) = 2x − 4',
+      '<i>Pongo f′(x) = 0:</i> 2x − 4 = 0, x = 2',
+      '<i>Segno di f′ prima di 2 (x = 0):</i> −4 &lt; 0, f scende',
+      '<i>Segno di f′ dopo 2 (x = 3):</i> 2 &gt; 0, f sale',
+      '<i>Scende e poi sale:</i> minimo in <b>x = 2</b>') },
+    { id:'e6', type:'num', lbl:'x', q:'f(x) = x · e<sup>−x</sup>: in quale x c\'è il massimo?', a:1, hint:'f′(x) = (1 − x) e<sup>−x</sup>. Il fattore e<sup>−x</sup> è sempre positivo.', sol:SV(
+      '<i>Derivo il prodotto x · e<sup>−x</sup>:</i> 1 · e<sup>−x</sup> + x · (−e<sup>−x</sup>)',
+      '<i>Raccolgo e<sup>−x</sup>:</i> f′(x) = (1 − x) e<sup>−x</sup>',
+      '<i>e<sup>−x</sup> &gt; 0 sempre:</i> il segno di f′ è il segno di 1 − x',
+      '<i>1 − x &gt; 0 per x &lt; 1</i> (sale), <i>&lt; 0 per x &gt; 1</i> (scende)',
+      '<i>Sale e poi scende:</i> massimo in <b>x = 1</b>') },
+    { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:SV(
+      '<i>Derivata prima:</i> f′(x) = 3x² − 12x',
+      '<i>Derivata seconda:</i> f″(x) = 6x − 12',
+      '<i>Pongo f″ = 0:</i> 6x = 12, x = 2',
+      '<i>Controllo il cambio di segno:</i> x = 0 → −12 &lt; 0; x = 3 → 6 &gt; 0 ✓',
+      '<i>Conclusione:</i> flesso in <b>x = 2</b>') },
+    { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:SV(
+      '<i>Derivate:</i> f′(x) = 4x³, f″(x) = 12x²',
+      '<i>In 0:</i> f″(0) = 0, ma non basta',
+      '<i>Segno di f″ prima di 0 (x = −1):</i> 12 &gt; 0',
+      '<i>Segno di f″ dopo 0 (x = 1):</i> 12 &gt; 0',
+      '<i>Non cambia segno:</i> <b>nessun flesso</b>. In 0 c\'è un minimo (f′ passa da − a +)') },
+    { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:SV(
+      '<i>f′ è la pendenza della tangente</i>',
+      '<i>f′ &gt; 0 vuol dire:</i> pendenza positiva in ogni punto, il grafico sale',
+      '<i>Conseguenza di Lagrange:</i> f′ &gt; 0 su un intervallo ⇒ f crescente',
+      '<i>Risposta:</i> <b>crescente</b> (positiva riguarda il segno di f, concava quello di f″)') }
   ];

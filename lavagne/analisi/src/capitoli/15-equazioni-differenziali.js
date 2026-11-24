@@ -37,13 +37,58 @@
   ], '<b>Fatto!</b> y′ = 2y, y(0) = 3 ha soluzione y = 3e<sup>2x</sup>. Schema: separo, integro, ricavo y, uso y(0) per la costante, controllo derivando.');
 
   EX['equazioni-differenziali'] = [
-    { id:'e1', type:'num', lbl:'y(ln 2)', q:'y′ = 3y, y(0) = 2. Quanto vale y(ln 2)?', a:16, hint:'Soluzione y = 2e<sup>3x</sup>.', sol:'2e<sup>3 ln 2</sup> = 2 · 2³ = 16.' },
-    { id:'e2', type:'num', lbl:'y(2)', q:'y′ = x, y(0) = 1. Quanto vale y(2)?', a:3, hint:'Basta integrare: y = x²/2 + C.', sol:'y = x²/2 + 1, y(2) = 2 + 1 = 3.' },
-    { id:'e3', type:'choice', q:'Soluzione generale di y′ = 2x y', a:0, opts:['y = K e<sup>x²</sup>','y = x² + K','y = K e<sup>2x</sup>'], hint:'Separa: dy/y = 2x dx.', sol:'ln |y| = x² + C, y = K e<sup>x²</sup>.' },
-    { id:'e4', type:'num', q:'y′ + y = 1, y(0) = 0. Quanto vale '+LIMX('+∞')+' y(x)?', a:1, hint:'Dalla lavagna: y = 1 + C e<sup>−x</sup>. Trova C, poi il limite.', sol:'y(0) = 1 + C = 0, C = −1: y = 1 − e<sup>−x</sup> → 1 per x → +∞.' },
-    { id:'e5', type:'choice', q:'Soluzione generale di y″ − 3y′ + 2y = 0', a:1, opts:['y = c₁ e<sup>−x</sup> + c₂ e<sup>−2x</sup>','y = c₁ eˣ + c₂ e<sup>2x</sup>','y = (c₁ + c₂ x) eˣ'], hint:'λ² − 3λ + 2 = 0.', sol:'λ = 1 e λ = 2 (Δ &gt; 0): c₁ eˣ + c₂ e<sup>2x</sup>.' },
-    { id:'e6', type:'choice', q:'Soluzione generale di y″ + 4y = 0', a:2, opts:['y = c₁ e<sup>2x</sup> + c₂ e<sup>−2x</sup>','y = (c₁ + c₂ x) e<sup>2x</sup>','y = c₁ cos 2x + c₂ sin 2x'], hint:'λ² + 4 = 0: λ = ±2i, quindi α = 0, β = 2.', sol:'Δ &lt; 0: e⁰(c₁ cos 2x + c₂ sin 2x).' },
-    { id:'e7', type:'choice', q:'Soluzione generale di y″ − 2y′ + y = 0', a:0, opts:['y = (c₁ + c₂ x) eˣ','y = c₁ eˣ + c₂ e<sup>−x</sup>','y = c₁ cos x + c₂ sin x'], hint:'λ² − 2λ + 1 = (λ − 1)².', sol:'Radice doppia λ = 1 (Δ = 0): (c₁ + c₂ x) eˣ.' },
-    { id:'e8', type:'num', lbl:'c₁', q:'y″ − y = 0, y(0) = 2, y′(0) = 0. Con y = c₁ eˣ + c₂ e<sup>−x</sup>, quanto vale c₁?', a:1, hint:'y(0) = c₁ + c₂ = 2; y′(0) = c₁ − c₂ = 0.', sol:'c₁ = c₂ = 1: y = eˣ + e<sup>−x</sup>.' },
-    { id:'e9', type:'num', lbl:'y_p', q:'y″ + y = 3: cerca una soluzione particolare costante y_p = A. Quanto vale A?', a:3, hint:'Se y = A costante, y″ = 0.', sol:'0 + A = 3, A = 3. Soluzione generale: c₁ cos x + c₂ sin x + 3.' }
+    { id:'e1', type:'num', lbl:'y(ln 2)', q:'y′ = 3y, y(0) = 2. Quanto vale y(ln 2)?', a:16, hint:'Soluzione y = 2e<sup>3x</sup>.', sol:SV(
+      '<i>Separo:</i> dy/y = 3 dx',
+      '<i>Integro:</i> ln |y| = 3x + C',
+      '<i>Ricavo y:</i> y = K e<sup>3x</sup>',
+      '<i>Uso y(0) = 2:</i> K e⁰ = K = 2, quindi y = 2e<sup>3x</sup>',
+      '<i>Calcolo y(ln 2):</i> 2 e<sup>3 ln 2</sup> = 2 (e<sup>ln 2</sup>)³ = 2 · 2³ = 2 · 8 = <b>16</b>') },
+    { id:'e2', type:'num', lbl:'y(2)', q:'y′ = x, y(0) = 1. Quanto vale y(2)?', a:3, hint:'Basta integrare: y = x²/2 + C.', sol:SV(
+      '<i>y′ = x: y è una primitiva di x</i>',
+      '<i>Integro:</i> y = '+FR('x²','2')+' + C',
+      '<i>Uso y(0) = 1:</i> 0 + C = 1, C = 1',
+      '<i>Soluzione:</i> y = x²/2 + 1',
+      '<i>y(2):</i> 4/2 + 1 = 2 + 1 = <b>3</b>') },
+    { id:'e3', type:'choice', q:'Soluzione generale di y′ = 2x y', a:0, opts:['y = K e<sup>x²</sup>','y = x² + K','y = K e<sup>2x</sup>'], hint:'Separa: dy/y = 2x dx.', sol:SV(
+      '<i>Soluzione costante:</i> y = 0 funziona (0 = 2x · 0)',
+      '<i>Separo (y ≠ 0):</i> '+FR('dy','y')+' = 2x dx',
+      '<i>Integro a sinistra e a destra:</i> ln |y| = x² + C',
+      '<i>Faccio e alla:</i> |y| = e<sup>x² + C</sup> = e<sup>C</sup> e<sup>x²</sup>',
+      '<i>Chiamo K = ±e<sup>C</sup> (o 0):</i> <b>y = K e<sup>x²</sup></b>') },
+    { id:'e4', type:'num', q:'y′ + y = 1, y(0) = 0. Quanto vale '+LIMX('+∞')+' y(x)?', a:1, hint:'Dalla lavagna: y = 1 + C e<sup>−x</sup>. Trova C, poi il limite.', sol:SV(
+      '<i>Lineare con a = 1, f = 1:</i> A(x) = x',
+      '<i>Formula:</i> y = e<sup>−x</sup> [∫ 1 · eˣ dx + C] = e<sup>−x</sup> (eˣ + C) = 1 + C e<sup>−x</sup>',
+      '<i>Uso y(0) = 0:</i> 1 + C · 1 = 0, C = −1',
+      '<i>Soluzione:</i> y = 1 − e<sup>−x</sup>',
+      '<i>Limite per x → +∞:</i> e<sup>−x</sup> → 0, quindi y → 1 − 0 = <b>1</b>') },
+    { id:'e5', type:'choice', q:'Soluzione generale di y″ − 3y′ + 2y = 0', a:1, opts:['y = c₁ e<sup>−x</sup> + c₂ e<sup>−2x</sup>','y = c₁ eˣ + c₂ e<sup>2x</sup>','y = (c₁ + c₂ x) eˣ'], hint:'λ² − 3λ + 2 = 0.', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² − 3λ + 2 = 0',
+      '<i>Δ:</i> 9 − 8 = 1 &gt; 0',
+      '<i>Radici:</i> λ = '+FR('3 ± 1','2')+', cioè λ₁ = 1 e λ₂ = 2',
+      '<i>Caso Δ &gt; 0:</i> y = c₁ e<sup>λ₁x</sup> + c₂ e<sup>λ₂x</sup>',
+      '<i>Risultato:</i> <b>y = c₁ eˣ + c₂ e<sup>2x</sup></b>') },
+    { id:'e6', type:'choice', q:'Soluzione generale di y″ + 4y = 0', a:2, opts:['y = c₁ e<sup>2x</sup> + c₂ e<sup>−2x</sup>','y = (c₁ + c₂ x) e<sup>2x</sup>','y = c₁ cos 2x + c₂ sin 2x'], hint:'λ² + 4 = 0: λ = ±2i, quindi α = 0, β = 2.', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² + 4 = 0',
+      '<i>Risolvo:</i> λ² = −4, λ = ±2i',
+      '<i>Leggo α e β (λ = α ± iβ):</i> α = 0, β = 2',
+      '<i>Caso Δ &lt; 0:</i> y = e<sup>αx</sup>(c₁ cos βx + c₂ sin βx) = e⁰(c₁ cos 2x + c₂ sin 2x)',
+      '<i>Risultato:</i> <b>y = c₁ cos 2x + c₂ sin 2x</b>') },
+    { id:'e7', type:'choice', q:'Soluzione generale di y″ − 2y′ + y = 0', a:0, opts:['y = (c₁ + c₂ x) eˣ','y = c₁ eˣ + c₂ e<sup>−x</sup>','y = c₁ cos x + c₂ sin x'], hint:'λ² − 2λ + 1 = (λ − 1)².', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² − 2λ + 1 = 0',
+      '<i>Riconosco il quadrato:</i> (λ − 1)² = 0, Δ = 4 − 4 = 0',
+      '<i>Radice doppia:</i> λ = 1',
+      '<i>Caso Δ = 0:</i> y = (c₁ + c₂ x) e<sup>λx</sup>',
+      '<i>Risultato:</i> <b>y = (c₁ + c₂ x) eˣ</b>') },
+    { id:'e8', type:'num', lbl:'c₁', q:'y″ − y = 0, y(0) = 2, y′(0) = 0. Con y = c₁ eˣ + c₂ e<sup>−x</sup>, quanto vale c₁?', a:1, hint:'y(0) = c₁ + c₂ = 2; y′(0) = c₁ − c₂ = 0.', sol:SV(
+      '<i>Caratteristica:</i> λ² − 1 = 0, λ = ±1, quindi y = c₁ eˣ + c₂ e<sup>−x</sup>',
+      '<i>Derivo:</i> y′ = c₁ eˣ − c₂ e<sup>−x</sup>',
+      '<i>y(0) = 2:</i> c₁ + c₂ = 2',
+      '<i>y′(0) = 0:</i> c₁ − c₂ = 0, quindi c₁ = c₂',
+      '<i>Sostituisco nella prima:</i> c₁ + c₁ = 2, 2c₁ = 2',
+      '<i>Risultato:</i> <b>c₁ = 1</b> (e c₂ = 1)') },
+    { id:'e9', type:'num', lbl:'y_p', q:'y″ + y = 3: cerca una soluzione particolare costante y_p = A. Quanto vale A?', a:3, hint:'Se y = A costante, y″ = 0.', sol:SV(
+      '<i>Provo y = A costante:</i> allora y′ = 0 e y″ = 0',
+      '<i>Sostituisco nell\'equazione:</i> 0 + A = 3',
+      '<i>Quindi:</i> <b>A = 3</b>',
+      '<i>Soluzione generale:</i> omogenea (λ² + 1 = 0, λ = ±i) + particolare = c₁ cos x + c₂ sin x + 3') }
   ];

@@ -32,13 +32,52 @@
   ], '<b>Fatto!</b> ∫ x eˣ dx = x eˣ − eˣ + C = (x − 1) eˣ + C. Controllo: (x eˣ − eˣ)′ = x eˣ ✓.');
 
   EX['integrali-indefiniti'] = [
-    { id:'e1', type:'choice', q:'∫ (3x² + 2x) dx', a:0, opts:['x³ + x² + C','6x + 2 + C','x³ + 2x² + C'], hint:'xᵃ → x<sup>a+1</sup>/(a + 1), pezzo per pezzo.', sol:'3 · x³/3 + 2 · x²/2 = x³ + x² + C.' },
-    { id:'e2', type:'choice', q:'∫ cos(2x) dx', a:1, opts:['sin(2x) + C','sin(2x)/2 + C','2 sin(2x) + C'], hint:'f(ax + b) → F(ax + b)/a.', sol:'sin(2x)/2 + C. Controllo: derivata = cos(2x) · 2 / 2 ✓.' },
-    { id:'e3', type:'choice', q:'∫ '+FR('2x','x² + 1')+' dx', a:2, opts:['2x · arctan x + C','arctan(x²) + C','ln(x² + 1) + C'], hint:'Sopra c\'è la derivata di quello che sta sotto.', sol:'g′/g con g = x² + 1: ln(x² + 1) + C.' },
-    { id:'e4', type:'choice', q:'∫ x cos x dx', a:0, opts:['x sin x + cos x + C','x sin x − cos x + C','(x²/2) sin x + C'], hint:'Per parti: f = x, g′ = cos x, quindi g = sin x.', sol:'x sin x − ∫ sin x dx = x sin x + cos x + C.' },
-    { id:'e5', type:'choice', q:'∫ ln x dx', a:1, opts:['1/x + C','x ln x − x + C','x ln x + C'], hint:'Per parti con ln x · 1: f = ln x, g′ = 1.', sol:'x ln x − ∫ x · (1/x) dx = x ln x − x + C.' },
-    { id:'e6', type:'num', lbl:'F(1)', q:'F(x) = ∫ 6x² dx, scelta con F(0) = 0. Quanto vale F(1)?', a:2, hint:'Primitiva: 2x³ + C. F(0) = 0 dice C = 0.', sol:'F(x) = 2x³, F(1) = 2.' },
-    { id:'e7', type:'num', lbl:'A', q:FR('1','(x − 1)(x + 1)')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+'. Quanto vale A?', a:0.5, hint:'Denominatore comune: A(x + 1) + B(x − 1) = 1. Metti x = 1.', sol:'x = 1: 2A = 1, A = 1/2. (Con x = −1: B = −1/2.)' },
-    { id:'e8', type:'choice', q:'∫ '+FR('eˣ','1 + eˣ')+' dx', a:0, opts:['ln(1 + eˣ) + C','eˣ · ln(1 + eˣ) + C','arctan(eˣ) + C'], hint:'La derivata di 1 + eˣ è eˣ.', sol:'g′/g: ln(1 + eˣ) + C.' },
-    { id:'e9', type:'choice', q:'∫ '+FR('1','1 + x²')+' dx', a:2, opts:['ln(1 + x²) + C','tan x + C','arctan x + C'], hint:'Tabellina.', sol:'arctan x + C.' }
+    { id:'e1', type:'choice', q:'∫ (3x² + 2x) dx', a:0, opts:['x³ + x² + C','6x + 2 + C','x³ + 2x² + C'], hint:'xᵃ → x<sup>a+1</sup>/(a + 1), pezzo per pezzo.', sol:SV(
+      '<i>Spezzo (linearità):</i> ∫ 3x² dx + ∫ 2x dx',
+      '<i>Primo pezzo, regola xᵃ → x<sup>a+1</sup>/(a + 1):</i> 3 · '+FR('x³','3')+' = x³',
+      '<i>Secondo pezzo:</i> 2 · '+FR('x²','2')+' = x²',
+      '<i>Metto insieme:</i> <b>x³ + x² + C</b>',
+      '<i>Controllo derivando:</i> (x³ + x²)′ = 3x² + 2x ✓') },
+    { id:'e2', type:'choice', q:'∫ cos(2x) dx', a:1, opts:['sin(2x) + C','sin(2x)/2 + C','2 sin(2x) + C'], hint:'f(ax + b) → F(ax + b)/a.', sol:SV(
+      '<i>Sostituzione:</i> t = 2x, dt = 2 dx, quindi dx = dt/2',
+      '<i>Riscrivo:</i> ∫ cos t · '+FR('dt','2')+' = '+FR('1','2')+' ∫ cos t dt',
+      '<i>Integro:</i> '+FR('1','2')+' sin t + C',
+      '<i>Rimetto t = 2x:</i> <b>'+FR('sin(2x)','2')+' + C</b>',
+      '<i>Controllo:</i> (sin(2x)/2)′ = cos(2x) · 2 / 2 = cos(2x) ✓') },
+    { id:'e3', type:'choice', q:'∫ '+FR('2x','x² + 1')+' dx', a:2, opts:['2x · arctan x + C','arctan(x²) + C','ln(x² + 1) + C'], hint:'Sopra c\'è la derivata di quello che sta sotto.', sol:SV(
+      '<i>Guardo sotto:</i> g(x) = x² + 1, la sua derivata è g′(x) = 2x',
+      '<i>Sopra c\'è proprio 2x = g′:</i> è della forma ∫ g′/g dx',
+      '<i>Regola:</i> ∫ g′/g dx = ln |g| + C',
+      '<i>Applico:</i> ln |x² + 1| + C = <b>ln(x² + 1) + C</b> (x² + 1 è sempre positivo)') },
+    { id:'e4', type:'choice', q:'∫ x cos x dx', a:0, opts:['x sin x + cos x + C','x sin x − cos x + C','(x²/2) sin x + C'], hint:'Per parti: f = x, g′ = cos x, quindi g = sin x.', sol:SV(
+      '<i>Per parti:</i> f = x (da derivare), g′ = cos x (da integrare)',
+      '<i>Calcolo:</i> f′ = 1, g = sin x',
+      '<i>Formula f g − ∫ f′ g:</i> x sin x − ∫ 1 · sin x dx',
+      '<i>Integro sin x:</i> ∫ sin x dx = −cos x',
+      '<i>Sostituisco (meno per meno fa più):</i> x sin x − (−cos x) = <b>x sin x + cos x + C</b>') },
+    { id:'e5', type:'choice', q:'∫ ln x dx', a:1, opts:['1/x + C','x ln x − x + C','x ln x + C'], hint:'Per parti con ln x · 1: f = ln x, g′ = 1.', sol:SV(
+      '<i>Scrivo ln x come ln x · 1 e uso le parti:</i> f = ln x, g′ = 1',
+      '<i>Calcolo:</i> f′ = 1/x, g = x',
+      '<i>Formula:</i> x ln x − ∫ '+FR('1','x')+' · x dx',
+      '<i>Semplifico (1/x) · x = 1:</i> x ln x − ∫ 1 dx',
+      '<i>Integro 1:</i> ∫ 1 dx = x',
+      '<i>Risultato:</i> <b>x ln x − x + C</b>') },
+    { id:'e6', type:'num', lbl:'F(1)', q:'F(x) = ∫ 6x² dx, scelta con F(0) = 0. Quanto vale F(1)?', a:2, hint:'Primitiva: 2x³ + C. F(0) = 0 dice C = 0.', sol:SV(
+      '<i>Integro 6x²:</i> 6 · '+FR('x³','3')+' = 2x³, quindi F(x) = 2x³ + C',
+      '<i>Uso F(0) = 0:</i> 2 · 0 + C = 0, quindi C = 0',
+      '<i>Ora F(x) = 2x³:</i> F(1) = 2 · 1 = <b>2</b>') },
+    { id:'e7', type:'num', lbl:'A', q:FR('1','(x − 1)(x + 1)')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+'. Quanto vale A?', a:0.5, hint:'Denominatore comune: A(x + 1) + B(x − 1) = 1. Metti x = 1.', sol:SV(
+      '<i>Faccio il denominatore comune a destra:</i> '+FR('A(x + 1) + B(x − 1)','(x − 1)(x + 1)'),
+      '<i>Uguaglio i numeratori:</i> A(x + 1) + B(x − 1) = 1 per ogni x',
+      '<i>Scelgo x = 1 (così sparisce B):</i> A · 2 + B · 0 = 1',
+      '<i>Risolvo:</i> 2A = 1, <b>A = 1/2</b>',
+      '<i>(Per B, x = −1:</i> −2B = 1, B = −1/2)') },
+    { id:'e8', type:'choice', q:'∫ '+FR('eˣ','1 + eˣ')+' dx', a:0, opts:['ln(1 + eˣ) + C','eˣ · ln(1 + eˣ) + C','arctan(eˣ) + C'], hint:'La derivata di 1 + eˣ è eˣ.', sol:SV(
+      '<i>Guardo sotto:</i> g = 1 + eˣ, g′ = eˣ',
+      '<i>Sopra c\'è eˣ = g′:</i> forma ∫ g′/g dx',
+      '<i>Regola:</i> ln |g| + C',
+      '<i>Risultato:</i> <b>ln(1 + eˣ) + C</b> (1 + eˣ è sempre positivo)') },
+    { id:'e9', type:'choice', q:'∫ '+FR('1','1 + x²')+' dx', a:2, opts:['ln(1 + x²) + C','tan x + C','arctan x + C'], hint:'Tabellina.', sol:SV(
+      '<i>Tabellina:</i> (arctan x)′ = '+FR('1','1 + x²'),
+      '<i>Lette al contrario:</i> ∫ '+FR('1','1 + x²')+' dx = <b>arctan x + C</b>') }
   ];

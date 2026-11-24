@@ -1770,10 +1770,32 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> '+LIM+' 2/n = 0 e '+LIM+' 4/n = 0, stesso limite, quindi '+LIM+' (3 + cos n)/n = 0. Il ladro giallo è schiacciato tra 2/n e 4/n.<canvas id="plot3" style="margin-top:10px" aria-label="Grafico: 3 più cos n su n tra 2 su n e 4 su n"></canvas>');
 
   EX['carabinieri'] = [
-      { id:'e1', type:'num', q:LIM+' (2 + sin n) / n²', a:0, hint:'Parti da −1 ≤ sin n ≤ 1, aggiungi 2, poi dividi per n².', sol:'1 ≤ 2 + sin n ≤ 3, quindi 1/n² ≤ (2 + sin n)/n² ≤ 3/n². Per n → +∞ entrambi tendono a 0: limite 0.' },
-      { id:'e2', type:'num', q:LIM+' (−1)ⁿ / n', a:0, hint:'(−1)ⁿ vale −1 oppure 1: quindi −1 ≤ (−1)ⁿ ≤ 1. Poi dividi per n.', sol:'−1/n ≤ (−1)ⁿ/n ≤ 1/n, e per n → +∞ entrambi tendono a 0: limite 0.' },
-      { id:'e3', type:'num', q:LIM+' (n + sin n) / n', a:1, hint:'Aggiungi n: n − 1 ≤ n + sin n ≤ n + 1. Poi dividi per n. Per n → +∞, dove vanno (n−1)/n e (n+1)/n?', sol:'Per n → +∞: (n−1)/n = 1 − 1/n tende a 1 e (n+1)/n = 1 + 1/n tende a 1. Stesso limite: 1. Non sempre fa 0!' },
-      { id:'e4', type:'num', q:LIM+' (5 cos n) / n', a:0, hint:'Moltiplica −1 ≤ cos n ≤ 1 per 5 (positivo, i segni restano), poi dividi per n.', sol:'−5/n ≤ 5 cos n / n ≤ 5/n, e per n → +∞ entrambi tendono a 0: limite 0.' }
+      { id:'e1', type:'num', q:LIM+' (2 + sin n) / n²', a:0, hint:'Parti da −1 ≤ sin n ≤ 1, aggiungi 2, poi dividi per n².', sol:SV(
+        '<i>Parto da quello che so sul seno:</i> −1 ≤ sin n ≤ 1',
+        '<i>Aggiungo 2 a tutti e tre i pezzi:</i> −1 + 2 ≤ 2 + sin n ≤ 1 + 2, cioè 1 ≤ 2 + sin n ≤ 3',
+        '<i>Divido tutto per n² (positivo, i ≤ restano):</i> '+FR('1','n²')+' ≤ '+FR('2 + sin n','n²')+' ≤ '+FR('3','n²'),
+        '<i>Carabiniere sotto:</i> '+LIM+' '+FR('1','n²')+' = 0',
+        '<i>Carabiniere sopra:</i> '+LIM+' '+FR('3','n²')+' = 0',
+        '<i>Stesso limite, applico i carabinieri:</i> '+LIM+' '+FR('2 + sin n','n²')+' = <b>0</b>') },
+      { id:'e2', type:'num', q:LIM+' (−1)ⁿ / n', a:0, hint:'(−1)ⁿ vale −1 oppure 1: quindi −1 ≤ (−1)ⁿ ≤ 1. Poi dividi per n.', sol:SV(
+        '<i>(−1)ⁿ vale −1 o 1, quindi:</i> −1 ≤ (−1)ⁿ ≤ 1',
+        '<i>Divido per n (positivo):</i> '+FR('−1','n')+' ≤ '+FR('(−1)ⁿ','n')+' ≤ '+FR('1','n'),
+        '<i>Carabiniere sotto:</i> '+LIM+' (−1/n) = 0',
+        '<i>Carabiniere sopra:</i> '+LIM+' 1/n = 0',
+        '<i>Stesso limite:</i> '+LIM+' (−1)ⁿ/n = <b>0</b>') },
+      { id:'e3', type:'num', q:LIM+' (n + sin n) / n', a:1, hint:'Aggiungi n: n − 1 ≤ n + sin n ≤ n + 1. Poi dividi per n. Per n → +∞, dove vanno (n−1)/n e (n+1)/n?', sol:SV(
+        '<i>Parto da:</i> −1 ≤ sin n ≤ 1',
+        '<i>Aggiungo n a tutti e tre:</i> n − 1 ≤ n + sin n ≤ n + 1',
+        '<i>Divido per n:</i> '+FR('n − 1','n')+' ≤ '+FR('n + sin n','n')+' ≤ '+FR('n + 1','n'),
+        '<i>Spezzo le frazioni dei carabinieri:</i> '+FR('n − 1','n')+' = 1 − '+FR('1','n')+' e '+FR('n + 1','n')+' = 1 + '+FR('1','n'),
+        '<i>Limiti:</i> 1/n tende a 0, quindi 1 − 1/n tende a 1 e 1 + 1/n tende a 1',
+        '<i>Stesso limite:</i> '+LIM+' (n + sin n)/n = <b>1</b> (non sempre viene 0!)') },
+      { id:'e4', type:'num', q:LIM+' (5 cos n) / n', a:0, hint:'Moltiplica −1 ≤ cos n ≤ 1 per 5 (positivo, i segni restano), poi dividi per n.', sol:SV(
+        '<i>Parto da:</i> −1 ≤ cos n ≤ 1',
+        '<i>Moltiplico per 5 (positivo, i ≤ restano):</i> −5 ≤ 5 cos n ≤ 5',
+        '<i>Divido per n:</i> '+FR('−5','n')+' ≤ '+FR('5 cos n','n')+' ≤ '+FR('5','n'),
+        '<i>Limiti dei carabinieri:</i> −5/n tende a 0 e 5/n tende a 0',
+        '<i>Stesso limite:</i> '+LIM+' 5 cos n / n = <b>0</b>') }
     ];
 
   /* ===== capitolo 2: Radici n-esime ===== */
@@ -1814,12 +1836,40 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> 3 ≤ '+R('n','2ⁿ+3ⁿ')+' ≤ '+R('n','2')+' · 3, e per n → +∞ tutti e due gli estremi tendono a 3. Quindi '+LIM+' '+R('n','2ⁿ+3ⁿ')+' = 3: vince il più grande.');
 
   EX['radici'] = [
-      { id:'e1', type:'num', q:LIM+' '+R('n','5ⁿ + 4ⁿ'), a:5, hint:'Comanda il più grande: 5ⁿ ≤ 5ⁿ + 4ⁿ ≤ 2 · 5ⁿ.', sol:'5 ≤ '+R('n','5ⁿ+4ⁿ')+' ≤ '+R('n','2')+' · 5, che per n → +∞ tende a 5. Limite 5.' },
-      { id:'e2', type:'num', q:LIM+' '+R('n','n³'), a:1, hint:R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n')+'. Per n → +∞ ognuno tende a…', sol:'Ogni pezzo ha limite 1, quindi 1 · 1 · 1 = 1. Limite 1.' },
-      { id:'e3', type:'num', q:LIM+' '+R('n','3n'), a:1, hint:'Spezza: '+R('n','3')+' · '+R('n','n')+'.', sol:'Per n → +∞ entrambi i pezzi hanno limite 1 (fatto 1 e fatto 2): limite 1.' },
-      { id:'e4', type:'num', q:LIM+' '+R('n','7ⁿ + n'), a:7, hint:'n è piccolissimo rispetto a 7ⁿ: da un certo n in poi 7ⁿ ≤ 7ⁿ + n ≤ 2 · 7ⁿ.', sol:'Carabinieri 7 e '+R('n','2')+' · 7, che per n → +∞ tendono entrambi a 7. Limite 7.' },
+      { id:'e1', type:'num', q:LIM+' '+R('n','5ⁿ + 4ⁿ'), a:5, hint:'Comanda il più grande: 5ⁿ ≤ 5ⁿ + 4ⁿ ≤ 2 · 5ⁿ.', sol:SV(
+        '<i>Chi comanda sotto la radice?</i> 5ⁿ, perché 5 &gt; 4',
+        '<i>Carabiniere sotto (tolgo un pezzo positivo, la somma diventa più piccola):</i> 5ⁿ ≤ 5ⁿ + 4ⁿ',
+        '<i>Carabiniere sopra (4ⁿ ≤ 5ⁿ, quindi lo sostituisco con 5ⁿ):</i> 5ⁿ + 4ⁿ ≤ 5ⁿ + 5ⁿ = 2 · 5ⁿ',
+        '<i>Faccio la radice n-esima di tutti e tre:</i> '+R('n','5ⁿ')+' ≤ '+R('n','5ⁿ + 4ⁿ')+' ≤ '+R('n','2 · 5ⁿ'),
+        '<i>Semplifico:</i> '+R('n','5ⁿ')+' = 5 e '+R('n','2 · 5ⁿ')+' = '+R('n','2')+' · 5',
+        '<i>Limiti:</i> 5 resta 5; '+R('n','2')+' tende a 1 (fatto 1), quindi '+R('n','2')+' · 5 tende a 5',
+        '<i>Carabinieri:</i> il limite è <b>5</b>') },
+      { id:'e2', type:'num', q:LIM+' '+R('n','n³'), a:1, hint:R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n')+'. Per n → +∞ ognuno tende a…', sol:SV(
+        '<i>Spezzo n³ = n · n · n:</i> '+R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n'),
+        '<i>Uso il fatto 2:</i> '+LIM+' '+R('n','n')+' = 1',
+        '<i>Prodotto dei limiti:</i> 1 · 1 · 1 = <b>1</b>') },
+      { id:'e3', type:'num', q:LIM+' '+R('n','3n'), a:1, hint:'Spezza: '+R('n','3')+' · '+R('n','n')+'.', sol:SV(
+        '<i>La radice di un prodotto è il prodotto delle radici:</i> '+R('n','3n')+' = '+R('n','3')+' · '+R('n','n'),
+        '<i>Primo pezzo (fatto 1, numero fisso):</i> '+LIM+' '+R('n','3')+' = 1',
+        '<i>Secondo pezzo (fatto 2):</i> '+LIM+' '+R('n','n')+' = 1',
+        '<i>Prodotto:</i> 1 · 1 = <b>1</b>. Attenzione: qui 3n vuol dire 3 per n, non 3ⁿ') },
+      { id:'e4', type:'num', q:LIM+' '+R('n','7ⁿ + n'), a:7, hint:'n è piccolissimo rispetto a 7ⁿ: da un certo n in poi 7ⁿ ≤ 7ⁿ + n ≤ 2 · 7ⁿ.', sol:SV(
+        '<i>Chi comanda sotto la radice?</i> 7ⁿ: con n = 3 è 343 contro 3, e la differenza cresce',
+        '<i>Carabiniere sotto: tolgo il pezzo n (positivo), la somma diventa più piccola:</i> 7ⁿ ≤ 7ⁿ + n',
+        '<i>Carabiniere sopra: n ≤ 7ⁿ per ogni n ≥ 1, quindi sostituisco n con 7ⁿ:</i> 7ⁿ + n ≤ 7ⁿ + 7ⁿ = 2 · 7ⁿ',
+        '<i>Il carabiniere sotto NON è il pezzo più piccolo (n): è una cosa ≤ della somma che ha un limite facile.</i> Per questo uso 7ⁿ',
+        '<i>Radice n-esima di tutti e tre:</i> 7 ≤ '+R('n','7ⁿ + n')+' ≤ '+R('n','2')+' · 7',
+        '<i>Limiti:</i> 7 resta 7; '+R('n','2')+' · 7 tende a 1 · 7 = 7',
+        '<i>Carabinieri:</i> il limite è <b>7</b>') },
       { id:'e5', type:'num', q:LIM+' <span class="fr"><span>3<sup>n+1</sup> + 5<sup>n+1</sup></span><span>3ⁿ + 5ⁿ</span></span> <span style="font-size:1rem">(esercizio per casa del prof)</span>', a:5,
-        hint:'Qui non c\'è radice. Raccogli 5ⁿ sopra e sotto. Ricorda 5<sup>n+1</sup> = 5 · 5ⁿ e '+LIM+' (3/5)ⁿ = 0.', sol:'Sopra: 5ⁿ (3·(3/5)ⁿ + 5). Sotto: 5ⁿ ((3/5)ⁿ + 1). Si semplifica 5ⁿ: (0 + 5)/(0 + 1) = 5.' }
+        hint:'Qui non c\'è radice. Raccogli 5ⁿ sopra e sotto. Ricorda 5<sup>n+1</sup> = 5 · 5ⁿ e '+LIM+' (3/5)ⁿ = 0.', sol:SV(
+        '<i>Spezzo gli esponenti n + 1:</i> 3<sup>n+1</sup> = 3 · 3ⁿ e 5<sup>n+1</sup> = 5 · 5ⁿ',
+        '<i>Riscrivo:</i> '+FR('3 · 3ⁿ + 5 · 5ⁿ','3ⁿ + 5ⁿ'),
+        '<i>Raccolgo chi comanda (5ⁿ) sopra:</i> 3 · 3ⁿ + 5 · 5ⁿ = 5ⁿ (3 · '+FR('3ⁿ','5ⁿ')+' + 5) = 5ⁿ (3 · (3/5)ⁿ + 5)',
+        '<i>Raccolgo 5ⁿ sotto:</i> 3ⁿ + 5ⁿ = 5ⁿ ((3/5)ⁿ + 1)',
+        '<i>Semplifico 5ⁿ:</i> '+FR('3 · (3/5)ⁿ + 5','(3/5)ⁿ + 1'),
+        '<i>Limite: 3/5 &lt; 1, quindi</i> '+LIM+' (3/5)ⁿ = 0',
+        '<i>Sostituisco:</i> '+FR('3 · 0 + 5','0 + 1')+' = <b>5</b>') }
     ];
 
   /* ===== capitolo 3: Il numero e ===== */
@@ -1841,11 +1891,37 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> '+LIM+' (1 + 5/n)<sup>2n</sup> = e<sup>10</sup>. Ricetta: pezzo piccolo × esponente, poi e elevato a quello.');
 
   EX['nepero'] = [
-      { id:'e1', type:'exp', q:LIM+' (1 + 2/n)<sup>n</sup>', a:2, hint:'Regola rapida: '+LIM+' (1 + a/n)<sup>n</sup> = e<sup>a</sup>.', sol:'u = 2/n, esponente n, prodotto 2: e².' },
-      { id:'e2', type:'exp', q:LIM+' (1 + 1/n)<sup>5n</sup>', a:5, hint:'u = 1/n, esponente 5n. Moltiplica.', sol:'1/n · 5n = 5: e⁵.' },
-      { id:'e3', type:'exp', q:LIM+' (1 − 1/n)<sup>n</sup>', a:-1, hint:'Il pezzo piccolo è −1/n, col segno meno.', sol:'−1/n · n = −1: e<sup>−1</sup> = 1/e.' },
-      { id:'e4', type:'exp', q:LIM+' <span class="fr"><span>n + 3</span><span>n + 1</span></span><sup>n</sup>', a:2, hint:'Riscrivi la base: (n+3)/(n+1) = 1 + 2/(n+1). Poi u · esponente = 2n/(n+1).', sol:LIM+' 2n/(n+1) = 2, quindi il limite è e².' },
-      { id:'e5', type:'num', q:LIM+' (1 + 1/n)<sup>7</sup> <span style="font-size:1rem">(attento!)</span>', a:1, hint:'Per n → +∞ l\'esponente tende a +∞?', sol:'No, l\'esponente è 7 fisso. Non è 1^∞: la base tende a 1, e 1<sup>7</sup> = 1.' }
+      { id:'e1', type:'exp', q:LIM+' (1 + 2/n)<sup>n</sup>', a:2, hint:'Regola rapida: '+LIM+' (1 + a/n)<sup>n</sup> = e<sup>a</sup>.', sol:SV(
+        '<i>Controllo la forma:</i> la base 1 + 2/n tende a 1, l\'esponente n tende a +∞: forma 1<sup>∞</sup>',
+        '<i>Trovo il pezzo piccolo u (quello aggiunto a 1):</i> u = 2/n',
+        '<i>Moltiplico u per l\'esponente:</i> '+FR('2','n')+' · n = 2',
+        '<i>Faccio il limite del prodotto:</i> '+LIM+' 2 = 2',
+        '<i>Ricetta: il limite è e elevato a quel numero:</i> <b>e²</b>') },
+      { id:'e2', type:'exp', q:LIM+' (1 + 1/n)<sup>5n</sup>', a:5, hint:'u = 1/n, esponente 5n. Moltiplica.', sol:SV(
+        '<i>Forma:</i> base → 1, esponente 5n → +∞: 1<sup>∞</sup>',
+        '<i>Pezzo piccolo:</i> u = 1/n',
+        '<i>u per l\'esponente:</i> '+FR('1','n')+' · 5n = 5',
+        '<i>Limite:</i> 5',
+        '<i>Risultato:</i> <b>e⁵</b>') },
+      { id:'e3', type:'exp', q:LIM+' (1 − 1/n)<sup>n</sup>', a:-1, hint:'Il pezzo piccolo è −1/n, col segno meno.', sol:SV(
+        '<i>Forma:</i> base 1 − 1/n → 1, esponente → +∞: 1<sup>∞</sup>',
+        '<i>Pezzo piccolo, col suo segno:</i> u = −1/n',
+        '<i>u per l\'esponente:</i> (−'+FR('1','n')+') · n = −1',
+        '<i>Limite:</i> −1',
+        '<i>Risultato:</i> <b>e<sup>−1</sup></b> = 1/e') },
+      { id:'e4', type:'exp', q:LIM+' <span class="fr"><span>n + 3</span><span>n + 1</span></span><sup>n</sup>', a:2, hint:'Riscrivi la base: (n+3)/(n+1) = 1 + 2/(n+1). Poi u · esponente = 2n/(n+1).', sol:SV(
+        '<i>Forma:</i> la base (n + 3)/(n + 1) tende a 1, l\'esponente n a +∞: 1<sup>∞</sup>',
+        '<i>Devo scrivere la base come 1 + qualcosa. Spezzo il numeratore: n + 3 = (n + 1) + 2</i>',
+        '<i>Divido:</i> '+FR('(n + 1) + 2','n + 1')+' = '+FR('n + 1','n + 1')+' + '+FR('2','n + 1')+' = 1 + '+FR('2','n + 1'),
+        '<i>Pezzo piccolo:</i> u = '+FR('2','n + 1'),
+        '<i>u per l\'esponente:</i> '+FR('2','n + 1')+' · n = '+FR('2n','n + 1'),
+        '<i>Limite (divido sopra e sotto per n):</i> '+FR('2n','n + 1')+' = '+FR('2','1 + 1/n')+' → 2',
+        '<i>Risultato:</i> <b>e²</b>') },
+      { id:'e5', type:'num', q:LIM+' (1 + 1/n)<sup>7</sup> <span style="font-size:1rem">(attento!)</span>', a:1, hint:'Per n → +∞ l\'esponente tende a +∞?', sol:SV(
+        '<i>Controllo la forma:</i> la base 1 + 1/n tende a 1',
+        '<i>L\'esponente:</i> è 7, un numero fisso, NON tende a +∞',
+        '<i>Quindi non è 1<sup>∞</sup>:</i> la ricetta del numero e non serve',
+        '<i>Calcolo direttamente:</i> (1 + 0)<sup>7</sup> = 1<sup>7</sup> = <b>1</b>') }
     ];
 
   /* ===== capitolo 4: Criterio del rapporto ===== */
@@ -2301,15 +2377,62 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 
   const DISC = ['continua','salto (prima specie)','seconda specie','eliminabile'];
   EX['continuita-derivata'] = [
-    { id:'e1', type:'num', lbl:'a', q:'f(x) = x² + 1 se x ≤ 1, f(x) = a · x se x &gt; 1. Per quale a è continua in x = 1?', a:2, hint:'Limite sinistro per x → 1⁻: 1² + 1. Limite destro per x → 1⁺: a · 1. Devono essere uguali.', sol:'Sinistro 2, destro a: serve a = 2.' },
-    { id:'e2', type:'choice', q:'f(x) = '+FR('x² − 4','x − 2')+' in x = 2', a:3, opts:DISC, hint:'In x = 2 non esiste (0/0). Il limite per x → 2 esiste? Lo hai calcolato nel capitolo 8.', sol:'Il limite per x → 2 vale 4 (finito), ma f(2) non esiste: eliminabile.' },
-    { id:'e3', type:'choice', q:'f(x) = 1 se x ≥ 0, f(x) = −1 se x &lt; 0, in x = 0', a:1, opts:DISC, hint:'Limite destro e sinistro per x → 0: sono finiti? Uguali?', sol:'Destro 1, sinistro −1: finiti e diversi, salto.' },
-    { id:'e4', type:'choice', q:'f(x) = '+FR('1','x²')+' in x = 0', a:2, opts:DISC, hint:'Cosa fa 1/x² per x → 0, da destra e da sinistra?', sol:'Va a +∞ da tutte e due le parti: limite infinito, seconda specie.' },
-    { id:'e5', type:'num', lbl:'f′(5)', q:'f(x) = x². Calcola f′(5) con la definizione.', a:10, hint:'Come nel guidato: f(5 + h) − f(5) = 10h + h². Dividi per h.', sol:'(10h + h²)/h = 10 + h, '+LIMH+' (10 + h) = 10.' },
-    { id:'e6', type:'num', lbl:'f′(x₀)', q:'f(x) = 3x + 2. Quanto vale f′(x₀) in un punto qualsiasi?', a:3, hint:'f(x₀ + h) − f(x₀) = 3h. Il grafico è una retta: quale pendenza?', sol:'3h/h = 3 per ogni h: f′(x₀) = 3. La tangente a una retta è la retta stessa.' },
-    { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:'y = 1 + 2x − 2 = 2x − 1: q = −1.' },
-    { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:'Destra 1, sinistra −1: punto angoloso. È continua, ma non derivabile.' },
-    { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:'f(0) = −1 &lt; 0, f(1) = 1 &gt; 0, f continua: per il teorema degli zeri esiste c in (0, 1) con f(c) = 0.' }
+    { id:'e1', type:'num', lbl:'a', q:'f(x) = x² + 1 se x ≤ 1, f(x) = a · x se x &gt; 1. Per quale a è continua in x = 1?', a:2, hint:'Limite sinistro per x → 1⁻: 1² + 1. Limite destro per x → 1⁺: a · 1. Devono essere uguali.', sol:SV(
+      '<i>Continuità in x = 1 vuol dire:</i> limite sinistro = limite destro = f(1)',
+      '<i>Limite sinistro (x &lt; 1, uso x² + 1):</i> '+LIMX('1⁻')+' (x² + 1) = 1 + 1 = 2',
+      '<i>f(1) (x ≤ 1 comprende 1, uso x² + 1):</i> f(1) = 2',
+      '<i>Limite destro (x &gt; 1, uso a · x):</i> '+LIMX('1⁺')+' a · x = a · 1 = a',
+      '<i>Impongo che siano uguali:</i> a = 2',
+      '<i>Risultato:</i> <b>a = 2</b>') },
+    { id:'e2', type:'choice', q:'f(x) = '+FR('x² − 4','x − 2')+' in x = 2', a:3, opts:DISC, hint:'In x = 2 non esiste (0/0). Il limite per x → 2 esiste? Lo hai calcolato nel capitolo 8.', sol:SV(
+      '<i>Guardo f(2):</i> sotto 2 − 2 = 0, quindi f(2) non esiste',
+      '<i>Calcolo il limite per x → 2:</i> sopra 4 − 4 = 0, sotto 0: forma 0/0',
+      '<i>Scompongo sopra:</i> x² − 4 = (x − 2)(x + 2)',
+      '<i>Semplifico (x − 2):</i> '+FR('(x − 2)(x + 2)','x − 2')+' = x + 2',
+      '<i>Risostituisco:</i> '+LIMX('2')+' (x + 2) = 4, finito',
+      '<i>Classifico:</i> limite finito ma f(2) non esiste: <b>eliminabile</b> (basta definire f(2) = 4)') },
+    { id:'e3', type:'choice', q:'f(x) = 1 se x ≥ 0, f(x) = −1 se x &lt; 0, in x = 0', a:1, opts:DISC, hint:'Limite destro e sinistro per x → 0: sono finiti? Uguali?', sol:SV(
+      '<i>Limite sinistro (x &lt; 0, f = −1):</i> '+LIMX('0⁻')+' f(x) = −1',
+      '<i>Limite destro (x &gt; 0, f = 1):</i> '+LIMX('0⁺')+' f(x) = 1',
+      '<i>Sono finiti?</i> Sì, −1 e 1',
+      '<i>Sono uguali?</i> No, −1 ≠ 1',
+      '<i>Classifico:</i> finiti e diversi = <b>salto (prima specie)</b>') },
+    { id:'e4', type:'choice', q:'f(x) = '+FR('1','x²')+' in x = 0', a:2, opts:DISC, hint:'Cosa fa 1/x² per x → 0, da destra e da sinistra?', sol:SV(
+      '<i>f(0):</i> 1/0, non esiste',
+      '<i>Limite destro, provo con i numeri:</i> x = 0,1 → 1/0,01 = 100; x = 0,01 → 10000: va a +∞',
+      '<i>Limite sinistro:</i> x = −0,1 → (−0,1)² = 0,01 → 100: anche qui +∞ (il quadrato è sempre positivo)',
+      '<i>Classifico:</i> limite infinito = <b>seconda specie</b>') },
+    { id:'e5', type:'num', lbl:'f′(5)', q:'f(x) = x². Calcola f′(5) con la definizione.', a:10, hint:'Come nel guidato: f(5 + h) − f(5) = 10h + h². Dividi per h.', sol:SV(
+      '<i>Scrivo la definizione:</i> f′(5) = '+LIMH+' '+FR('f(5 + h) − f(5)','h'),
+      '<i>Calcolo f(5 + h):</i> (5 + h)² = 25 + 10h + h²',
+      '<i>Calcolo f(5):</i> 5² = 25',
+      '<i>Sottraggo:</i> 25 + 10h + h² − 25 = 10h + h²',
+      '<i>Divido per h (raccolgo h sopra):</i> '+FR('h(10 + h)','h')+' = 10 + h',
+      '<i>Limite per h → 0:</i> 10 + 0 = <b>10</b>') },
+    { id:'e6', type:'num', lbl:'f′(x₀)', q:'f(x) = 3x + 2. Quanto vale f′(x₀) in un punto qualsiasi?', a:3, hint:'f(x₀ + h) − f(x₀) = 3h. Il grafico è una retta: quale pendenza?', sol:SV(
+      '<i>Calcolo f(x₀ + h):</i> 3(x₀ + h) + 2 = 3x₀ + 3h + 2',
+      '<i>Sottraggo f(x₀) = 3x₀ + 2:</i> 3x₀ + 3h + 2 − 3x₀ − 2 = 3h',
+      '<i>Divido per h:</i> '+FR('3h','h')+' = 3',
+      '<i>Limite per h → 0:</i> resta <b>3</b>, per ogni x₀ (la pendenza della retta)') },
+    { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:SV(
+      '<i>Scrivo la formula della tangente:</i> y = f(x₀) + f′(x₀)(x − x₀) con x₀ = 1',
+      '<i>Calcolo f(1):</i> 1² = 1',
+      '<i>Calcolo f′(1) (come nell\'esercizio 5: f′(x) = 2x):</i> f′(1) = 2',
+      '<i>Sostituisco:</i> y = 1 + 2(x − 1)',
+      '<i>Sviluppo la parentesi:</i> y = 1 + 2x − 2',
+      '<i>Sommo i numeri:</i> y = 2x − 1, quindi <b>q = −1</b>') },
+    { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:SV(
+      '<i>Rapporto incrementale in 0:</i> '+FR('|0 + h| − |0|','h')+' = '+FR('|h|','h'),
+      '<i>Con h &gt; 0:</i> |h| = h, quindi '+FR('h','h')+' = 1: limite destro 1',
+      '<i>Con h &lt; 0:</i> |h| = −h, quindi '+FR('−h','h')+' = −1: limite sinistro −1',
+      '<i>Confronto:</i> 1 ≠ −1, il limite per h → 0 non esiste',
+      '<i>Conclusione:</i> non derivabile, derivate destra e sinistra finite e diverse = <b>punto angoloso</b> (è continua: |h| → 0)') },
+    { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:SV(
+      '<i>Pongo:</i> f(x) = x³ + x − 1, è un polinomio quindi continua su [0, 1]',
+      '<i>Calcolo f(0):</i> 0 + 0 − 1 = −1 &lt; 0',
+      '<i>Calcolo f(1):</i> 1 + 1 − 1 = 1 &gt; 0',
+      '<i>Segni opposti agli estremi + continua:</i> ipotesi del teorema degli zeri ✓',
+      '<i>Conclusione:</i> <b>sì</b>, esiste c in (0, 1) con f(c) = 0') }
   ];
 
   /* ===== capitolo 10: Regole di derivazione ===== */
@@ -2349,15 +2472,55 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> f′(x) = 5(3x + 1)⁴ · 3 = 15(3x + 1)⁴, quindi f′(0) = 15. Schema della catena: trovo fuori e dentro, derivo il fuori lasciando dentro uguale, moltiplico per la derivata del dentro.');
 
   EX['regole-derivazione'] = [
-    { id:'e1', type:'num', lbl:'f′(2)', q:'f(x) = x³', a:12, hint:'(xᵃ)′ = a x<sup>a−1</sup>.', sol:'f′(x) = 3x², f′(2) = 12.' },
-    { id:'e2', type:'num', lbl:'f′(1)', q:'f(x) = 5x² − 3x + 7', a:7, hint:'Somma: derivi pezzo per pezzo. La costante 7 ha derivata 0.', sol:'f′(x) = 10x − 3, f′(1) = 7.' },
-    { id:'e3', type:'num', lbl:'f′(0)', q:'f(x) = x · eˣ', a:1, hint:'Prodotto: f′g + f g′.', sol:'f′(x) = eˣ + x eˣ, f′(0) = 1 + 0 = 1.' },
-    { id:'e4', type:'num', lbl:'f′(e)', q:'f(x) = x · ln x', a:2, hint:'Prodotto: 1 · ln x + x · (1/x).', sol:'f′(x) = ln x + 1, f′(e) = 1 + 1 = 2.' },
-    { id:'e5', type:'num', lbl:'f′(1)', q:'f(x) = '+FR('x','x + 1'), a:0.25, hint:'Quoziente: (f′g − f g′)/g², con f = x e g = x + 1.', sol:'[1 · (x + 1) − x · 1]/(x + 1)² = 1/(x + 1)². In x = 1: 1/4.' },
-    { id:'e6', type:'num', lbl:'f′(0)', q:'f(x) = sin(3x)', a:3, hint:'Catena: fuori sin, dentro 3x.', sol:'f′(x) = cos(3x) · 3, f′(0) = 3.' },
-    { id:'e7', type:'num', lbl:'f′(1)', q:'f(x) = ln(x² + 1)', a:1, hint:'Catena: (ln u)′ = 1/u, poi per u′ = 2x.', sol:'f′(x) = 2x/(x² + 1), f′(1) = 2/2 = 1.' },
-    { id:'e8', type:'num', lbl:'f′(4)', q:'f(x) = √x', a:0.25, hint:'√x = x<sup>1/2</sup>: usa (xᵃ)′ con a = 1/2.', sol:'f′(x) = (1/2) x<sup>−1/2</sup> = 1/(2√x), f′(4) = 1/4.' },
-    { id:'e9', type:'choice', q:'(arctan x)′ = ?', a:2, opts:['1/cos² x','1/√(1 − x²)','1/(1 + x²)'], hint:'È nella tabellina. La prima è di tan x, la seconda di arcsin x.', sol:'1/(1 + x²).' }
+    { id:'e1', type:'num', lbl:'f′(2)', q:'f(x) = x³', a:12, hint:'(xᵃ)′ = a x<sup>a−1</sup>.', sol:SV(
+      '<i>Regola:</i> (xᵃ)′ = a · x<sup>a−1</sup>, qui a = 3',
+      '<i>Derivo:</i> f′(x) = 3 · x<sup>3−1</sup> = 3x²',
+      '<i>Sostituisco x = 2:</i> 3 · 2² = 3 · 4 = <b>12</b>') },
+    { id:'e2', type:'num', lbl:'f′(1)', q:'f(x) = 5x² − 3x + 7', a:7, hint:'Somma: derivi pezzo per pezzo. La costante 7 ha derivata 0.', sol:SV(
+      '<i>Derivo pezzo per pezzo (somma):</i> (5x²)′ − (3x)′ + (7)′',
+      '<i>Primo pezzo:</i> (5x²)′ = 5 · 2x = 10x',
+      '<i>Secondo pezzo:</i> (3x)′ = 3',
+      '<i>Terzo pezzo:</i> (7)′ = 0 (costante)',
+      '<i>Metto insieme:</i> f′(x) = 10x − 3',
+      '<i>Sostituisco x = 1:</i> 10 − 3 = <b>7</b>') },
+    { id:'e3', type:'num', lbl:'f′(0)', q:'f(x) = x · eˣ', a:1, hint:'Prodotto: f′g + f g′.', sol:SV(
+      '<i>È un prodotto f · g con</i> f = x, g = eˣ',
+      '<i>Derivate dei pezzi:</i> f′ = 1, g′ = eˣ',
+      '<i>Regola del prodotto f′g + fg′:</i> 1 · eˣ + x · eˣ',
+      '<i>Sostituisco x = 0:</i> e⁰ + 0 · e⁰ = 1 + 0 = <b>1</b>') },
+    { id:'e4', type:'num', lbl:'f′(e)', q:'f(x) = x · ln x', a:2, hint:'Prodotto: 1 · ln x + x · (1/x).', sol:SV(
+      '<i>Prodotto con</i> f = x, g = ln x',
+      '<i>Derivate:</i> f′ = 1, g′ = 1/x',
+      '<i>Regola del prodotto:</i> 1 · ln x + x · '+FR('1','x'),
+      '<i>Semplifico x · 1/x = 1:</i> f′(x) = ln x + 1',
+      '<i>Sostituisco x = e:</i> ln e + 1 = 1 + 1 = <b>2</b>') },
+    { id:'e5', type:'num', lbl:'f′(1)', q:'f(x) = '+FR('x','x + 1'), a:0.25, hint:'Quoziente: (f′g − f g′)/g², con f = x e g = x + 1.', sol:SV(
+      '<i>Quoziente f/g con</i> f = x, g = x + 1',
+      '<i>Derivate:</i> f′ = 1, g′ = 1',
+      '<i>Regola (f′g − fg′)/g²:</i> '+FR('1 · (x + 1) − x · 1','(x + 1)²'),
+      '<i>Semplifico sopra:</i> x + 1 − x = 1, quindi f′(x) = '+FR('1','(x + 1)²'),
+      '<i>Sostituisco x = 1:</i> '+FR('1','(1 + 1)²')+' = '+FR('1','4'),
+      '<i>Risultato:</i> <b>1/4</b>') },
+    { id:'e6', type:'num', lbl:'f′(0)', q:'f(x) = sin(3x)', a:3, hint:'Catena: fuori sin, dentro 3x.', sol:SV(
+      '<i>Composta: fuori sin, dentro 3x</i>',
+      '<i>Derivo il fuori lasciando dentro uguale:</i> cos(3x)',
+      '<i>Moltiplico per la derivata del dentro:</i> (3x)′ = 3, quindi f′(x) = 3 cos(3x)',
+      '<i>Sostituisco x = 0:</i> 3 · cos 0 = 3 · 1 = <b>3</b>') },
+    { id:'e7', type:'num', lbl:'f′(1)', q:'f(x) = ln(x² + 1)', a:1, hint:'Catena: (ln u)′ = 1/u, poi per u′ = 2x.', sol:SV(
+      '<i>Composta: fuori ln, dentro u = x² + 1</i>',
+      '<i>Derivo il fuori:</i> (ln u)′ = 1/u = '+FR('1','x² + 1'),
+      '<i>Derivata del dentro:</i> (x² + 1)′ = 2x',
+      '<i>Moltiplico:</i> f′(x) = '+FR('2x','x² + 1'),
+      '<i>Sostituisco x = 1:</i> '+FR('2','1 + 1')+' = <b>1</b>') },
+    { id:'e8', type:'num', lbl:'f′(4)', q:'f(x) = √x', a:0.25, hint:'√x = x<sup>1/2</sup>: usa (xᵃ)′ con a = 1/2.', sol:SV(
+      '<i>Riscrivo la radice come potenza:</i> √x = x<sup>1/2</sup>',
+      '<i>Regola (xᵃ)′ con a = 1/2:</i> '+FR('1','2')+' · x<sup>1/2 − 1</sup> = '+FR('1','2')+' · x<sup>−1/2</sup>',
+      '<i>Esponente negativo = va sotto:</i> x<sup>−1/2</sup> = '+FR('1','√x')+', quindi f′(x) = '+FR('1','2√x'),
+      '<i>Sostituisco x = 4:</i> '+FR('1','2 · √4')+' = '+FR('1','2 · 2')+' = <b>1/4</b>') },
+    { id:'e9', type:'choice', q:'(arctan x)′ = ?', a:2, opts:['1/cos² x','1/√(1 − x²)','1/(1 + x²)'], hint:'È nella tabellina. La prima è di tan x, la seconda di arcsin x.', sol:SV(
+      '<i>Cerco nella tabellina:</i> (arctan x)′ = '+FR('1','1 + x²'),
+      '<i>Le altre due:</i> 1/cos² x è (tan x)′, 1/√(1 − x²) è (arcsin x)′',
+      '<i>Risultato:</i> <b>1/(1 + x²)</b>') }
   ];
 
   /* ===== capitolo 11: Rolle, Lagrange, De L'Hôpital, Taylor ===== */
@@ -2404,15 +2567,59 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> '+LIMX('0')+' (eˣ − 1 − x)/x² = '+LIMX('0')+' (x²/2 + o(x²))/x² = 1/2. Regola d\'oro: sviluppa fino alla potenza che c\'è sotto.');
 
   EX['teoremi-taylor'] = [
-    { id:'e1', type:'num', lbl:'c', q:'Lagrange per f(x) = x² su [0, 2]: per quale c vale f′(c) = [f(2) − f(0)]/(2 − 0)?', a:1, hint:'La pendenza media è (4 − 0)/2 = 2. Risolvi f′(c) = 2c = 2.', sol:'2c = 2, c = 1.' },
-    { id:'e2', type:'num', lbl:'c', q:'Rolle per f(x) = x² − 2x su [0, 2] (f(0) = f(2) = 0): dove f′(c) = 0?', a:1, hint:'f′(x) = 2x − 2.', sol:'2c − 2 = 0, c = 1.' },
-    { id:'e3', type:'num', q:LIMX('1')+' '+FR('ln x','x − 1'), a:1, hint:'0/0: De L\'Hôpital, derivi sopra (1/x) e sotto (1).', sol:LIMX('1')+' (1/x)/1 = 1.' },
-    { id:'e4', type:'num', q:LIMX('+∞')+' '+FR('x','eˣ'), a:0, hint:'∞/∞: De L\'Hôpital una volta.', sol:LIMX('+∞')+' 1/eˣ = 0. (L\'esponenziale batte ogni potenza.)' },
-    { id:'e5', type:'num', q:LIMX('0')+' '+FR('x − sin x','x³'), a:1/6, hint:'sin x = x − x³/6 + o(x³).', sol:'Sopra x³/6 + o(x³): risultato 1/6.' },
-    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + x) − x','x²'), a:-0.5, hint:'ln(1 + x) = x − x²/2 + o(x²).', sol:'Sopra −x²/2 + o(x²): risultato −1/2.' },
-    { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:'−1/2. (Infatti f″(0) = −cos 0 = −1, diviso 2!.)' },
-    { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:'(1/x)/(−1/x²) = −x → 0.' },
-    { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:'Esce 1/0, non è una forma indeterminata: De L\'Hôpital non si può usare (e darebbe 1, sbagliato). Il limite destro è +∞, il sinistro −∞.' }
+    { id:'e1', type:'num', lbl:'c', q:'Lagrange per f(x) = x² su [0, 2]: per quale c vale f′(c) = [f(2) − f(0)]/(2 − 0)?', a:1, hint:'La pendenza media è (4 − 0)/2 = 2. Risolvi f′(c) = 2c = 2.', sol:SV(
+      '<i>Pendenza media (secante):</i> '+FR('f(2) − f(0)','2 − 0')+' = '+FR('4 − 0','2')+' = 2',
+      '<i>Derivata:</i> f′(x) = 2x, quindi f′(c) = 2c',
+      '<i>Lagrange dice f′(c) = pendenza media:</i> 2c = 2',
+      '<i>Divido per 2:</i> <b>c = 1</b>, che sta in (0, 2) ✓') },
+    { id:'e2', type:'num', lbl:'c', q:'Rolle per f(x) = x² − 2x su [0, 2] (f(0) = f(2) = 0): dove f′(c) = 0?', a:1, hint:'f′(x) = 2x − 2.', sol:SV(
+      '<i>Controllo le ipotesi:</i> polinomio (continuo e derivabile), f(0) = 0 e f(2) = 4 − 4 = 0 ✓',
+      '<i>Derivo:</i> f′(x) = 2x − 2',
+      '<i>Pongo f′(c) = 0:</i> 2c − 2 = 0',
+      '<i>Risolvo:</i> 2c = 2, <b>c = 1</b>') },
+    { id:'e3', type:'num', q:LIMX('1')+' '+FR('ln x','x − 1'), a:1, hint:'0/0: De L\'Hôpital, derivi sopra (1/x) e sotto (1).', sol:SV(
+      '<i>Sostituisco x = 1:</i> ln 1 = 0 sopra, 0 sotto: forma 0/0 ✓',
+      '<i>De L\'Hôpital, derivo sopra:</i> (ln x)′ = 1/x',
+      '<i>Derivo sotto (separatamente!):</i> (x − 1)′ = 1',
+      '<i>Nuovo limite:</i> '+LIMX('1')+' '+FR('1/x','1')+' = '+LIMX('1')+' '+FR('1','x'),
+      '<i>Sostituisco x = 1:</i> 1/1 = <b>1</b>') },
+    { id:'e4', type:'num', q:LIMX('+∞')+' '+FR('x','eˣ'), a:0, hint:'∞/∞: De L\'Hôpital una volta.', sol:SV(
+      '<i>Forma per x → +∞:</i> ∞/∞ ✓',
+      '<i>Derivo sopra:</i> (x)′ = 1',
+      '<i>Derivo sotto:</i> (eˣ)′ = eˣ',
+      '<i>Nuovo limite:</i> '+LIMX('+∞')+' '+FR('1','eˣ'),
+      '<i>eˣ → +∞, quindi 1/eˣ → 0:</i> risultato <b>0</b>') },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('x − sin x','x³'), a:1/6, hint:'sin x = x − x³/6 + o(x³).', sol:SV(
+      '<i>Forma per x → 0:</i> (0 − 0)/0 = 0/0',
+      '<i>Sotto c\'è x³: sviluppo sin x fino a x³:</i> sin x = x − '+FR('x³','6')+' + o(x³)',
+      '<i>Sostituisco sopra:</i> x − (x − x³/6 + o(x³))',
+      '<i>Tolgo la parentesi (cambio i segni):</i> x − x + x³/6 − o(x³) = '+FR('x³','6')+' + o(x³)',
+      '<i>Divido per x³:</i> '+FR('1','6')+' + '+FR('o(x³)','x³'),
+      '<i>Limite (o(x³)/x³ → 0):</i> <b>1/6</b>') },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + x) − x','x²'), a:-0.5, hint:'ln(1 + x) = x − x²/2 + o(x²).', sol:SV(
+      '<i>Forma:</i> (0 − 0)/0 = 0/0',
+      '<i>Sotto x²: sviluppo ln(1 + x) fino a x²:</i> x − '+FR('x²','2')+' + o(x²)',
+      '<i>Sopra:</i> x − x²/2 + o(x²) − x = −'+FR('x²','2')+' + o(x²)',
+      '<i>Divido per x²:</i> −'+FR('1','2')+' + '+FR('o(x²)','x²'),
+      '<i>Limite:</i> <b>−1/2</b>') },
+    { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:SV(
+      '<i>Formula:</i> coefficiente di x² = '+FR('f″(0)','2!'),
+      '<i>Derivo cos x due volte:</i> f′ = −sin x, f″ = −cos x',
+      '<i>Calcolo in 0:</i> f″(0) = −cos 0 = −1',
+      '<i>Divido per 2! = 2:</i> −1/2',
+      '<i>Risultato:</i> <b>−1/2</b> (infatti cos x = 1 − x²/2 + …)') },
+    { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:SV(
+      '<i>Forma per x → 0⁺:</i> x → 0 e ln x → −∞: 0 · ∞, prima va riscritta',
+      '<i>Riscrivo come frazione:</i> x · ln x = '+FR('ln x','1/x'),
+      '<i>Nuova forma:</i> (−∞)/(+∞), va bene per De L\'Hôpital',
+      '<i>Derivo sopra e sotto:</i> (ln x)′ = 1/x, (1/x)′ = −1/x²',
+      '<i>Nuovo rapporto:</i> '+FR('1/x','−1/x²')+' = '+FR('1','x')+' · (−x²) = −x',
+      '<i>Limite per x → 0⁺:</i> −x → <b>0</b>') },
+    { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:SV(
+      '<i>Sostituisco x = 0:</i> sopra 0 + 1 = 1, sotto 0',
+      '<i>Forma 1/0:</i> NON è 0/0 né ∞/∞',
+      '<i>Quindi:</i> De L\'Hôpital <b>non si può usare</b>',
+      '<i>Cosa succede davvero:</i> da destra 1/(piccolo positivo) → +∞, da sinistra → −∞: il limite non esiste') }
   ];
 
   /* ===== capitolo 12: Studio di funzione ===== */
@@ -2477,15 +2684,60 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> f(x) = x³ − 12x: massimo in (−2, 16), minimo in (2, −16), flesso in (0, 0). È la stessa forma della prima funzione del grafico, solo più "stirata".');
 
   EX['studio-funzione'] = [
-    { id:'e1', type:'choice', q:'Dominio di f(x) = ln(x − 3)', a:1, opts:['x ≠ 3','x &gt; 3','x ≥ 3'], hint:'L\'argomento del logaritmo deve essere strettamente positivo.', sol:'x − 3 &gt; 0, cioè x &gt; 3.' },
-    { id:'e2', type:'num', lbl:'x', q:'Asintoto verticale di f(x) = '+FR('x + 1','x − 4')+': x = ?', a:4, hint:'Dove si annulla il denominatore (e il numeratore no)?', sol:'x = 4: lì il limite da destra è +∞ e da sinistra −∞.' },
-    { id:'e3', type:'num', lbl:'y', q:'Asintoto orizzontale di f(x) = '+FR('2x² + 1','x² − 3')+' per x → ±∞: y = ?', a:2, hint:'Termine dominante sopra e sotto.', sol:'2x²/x² = 2: y = 2.' },
-    { id:'e4', type:'num', lbl:'q', q:'f(x) = '+FR('2x² + 3x','x + 1')+' ha asintoto obliquo y = 2x + q per x → +∞. Quanto vale q?', a:1, hint:'q = '+LIMX('+∞')+' [f(x) − 2x]. Fai il denominatore comune.', sol:'(2x² + 3x − 2x² − 2x)/(x + 1) = x/(x + 1) → 1 per x → +∞. q = 1.' },
-    { id:'e5', type:'num', lbl:'x', q:'f(x) = x² − 4x + 1: in quale x c\'è il minimo?', a:2, hint:'f′(x) = 2x − 4.', sol:'2x − 4 = 0, x = 2. f′ passa da − a +: minimo.' },
-    { id:'e6', type:'num', lbl:'x', q:'f(x) = x · e<sup>−x</sup>: in quale x c\'è il massimo?', a:1, hint:'f′(x) = (1 − x) e<sup>−x</sup>. Il fattore e<sup>−x</sup> è sempre positivo.', sol:'1 − x = 0, x = 1.' },
-    { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:'6x − 12 = 0, x = 2, e f″ cambia segno lì.' },
-    { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:'12x² ≥ 0 da tutte e due le parti: sempre ∪, niente flesso. In 0 c\'è un minimo.' },
-    { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:'Crescente (conseguenza di Lagrange). Positiva e concava sono altre cose: segno di f e di f″.' }
+    { id:'e1', type:'choice', q:'Dominio di f(x) = ln(x − 3)', a:1, opts:['x ≠ 3','x &gt; 3','x ≥ 3'], hint:'L\'argomento del logaritmo deve essere strettamente positivo.', sol:SV(
+      '<i>Regola del logaritmo:</i> l\'argomento deve essere strettamente positivo',
+      '<i>Scrivo la condizione:</i> x − 3 &gt; 0',
+      '<i>Porto 3 dall\'altra parte:</i> x &gt; 3',
+      '<i>Dominio:</i> <b>x &gt; 3</b> (3 escluso: ln 0 non esiste)') },
+    { id:'e2', type:'num', lbl:'x', q:'Asintoto verticale di f(x) = '+FR('x + 1','x − 4')+': x = ?', a:4, hint:'Dove si annulla il denominatore (e il numeratore no)?', sol:SV(
+      '<i>Dove si annulla il denominatore?</i> x − 4 = 0, x = 4',
+      '<i>Il numeratore lì vale</i> 4 + 1 = 5 ≠ 0, quindi è 5/0: infinito',
+      '<i>Da destra (x = 4,01):</i> 5,01/0,01 ≈ 501 → +∞',
+      '<i>Da sinistra (x = 3,99):</i> 4,99/(−0,01) ≈ −499 → −∞',
+      '<i>Conclusione:</i> asintoto verticale <b>x = 4</b>') },
+    { id:'e3', type:'num', lbl:'y', q:'Asintoto orizzontale di f(x) = '+FR('2x² + 1','x² − 3')+' per x → ±∞: y = ?', a:2, hint:'Termine dominante sopra e sotto.', sol:SV(
+      '<i>Calcolo il limite per x → +∞:</i> forma ∞/∞',
+      '<i>Raccolgo x² sopra e sotto:</i> '+FR('x²(2 + 1/x²)','x²(1 − 3/x²)'),
+      '<i>Semplifico x²:</i> '+FR('2 + 1/x²','1 − 3/x²'),
+      '<i>Limite:</i> 1/x² → 0 e 3/x² → 0, quindi '+FR('2','1')+' = 2',
+      '<i>Per x → −∞ è uguale (x² è positivo):</i> asintoto orizzontale <b>y = 2</b>') },
+    { id:'e4', type:'num', lbl:'q', q:'f(x) = '+FR('2x² + 3x','x + 1')+' ha asintoto obliquo y = 2x + q per x → +∞. Quanto vale q?', a:1, hint:'q = '+LIMX('+∞')+' [f(x) − 2x]. Fai il denominatore comune.', sol:SV(
+      '<i>Formula:</i> q = '+LIMX('+∞')+' [f(x) − 2x]',
+      '<i>Scrivo la differenza:</i> '+FR('2x² + 3x','x + 1')+' − 2x',
+      '<i>Denominatore comune (x + 1):</i> '+FR('2x² + 3x − 2x(x + 1)','x + 1'),
+      '<i>Sviluppo 2x(x + 1) = 2x² + 2x:</i> '+FR('2x² + 3x − 2x² − 2x','x + 1'),
+      '<i>Semplifico sopra:</i> 2x² − 2x² = 0 e 3x − 2x = x, quindi '+FR('x','x + 1'),
+      '<i>Limite (divido per x):</i> '+FR('1','1 + 1/x')+' → 1',
+      '<i>Risultato:</i> <b>q = 1</b>, asintoto y = 2x + 1') },
+    { id:'e5', type:'num', lbl:'x', q:'f(x) = x² − 4x + 1: in quale x c\'è il minimo?', a:2, hint:'f′(x) = 2x − 4.', sol:SV(
+      '<i>Derivo:</i> f′(x) = 2x − 4',
+      '<i>Pongo f′(x) = 0:</i> 2x − 4 = 0, x = 2',
+      '<i>Segno di f′ prima di 2 (x = 0):</i> −4 &lt; 0, f scende',
+      '<i>Segno di f′ dopo 2 (x = 3):</i> 2 &gt; 0, f sale',
+      '<i>Scende e poi sale:</i> minimo in <b>x = 2</b>') },
+    { id:'e6', type:'num', lbl:'x', q:'f(x) = x · e<sup>−x</sup>: in quale x c\'è il massimo?', a:1, hint:'f′(x) = (1 − x) e<sup>−x</sup>. Il fattore e<sup>−x</sup> è sempre positivo.', sol:SV(
+      '<i>Derivo il prodotto x · e<sup>−x</sup>:</i> 1 · e<sup>−x</sup> + x · (−e<sup>−x</sup>)',
+      '<i>Raccolgo e<sup>−x</sup>:</i> f′(x) = (1 − x) e<sup>−x</sup>',
+      '<i>e<sup>−x</sup> &gt; 0 sempre:</i> il segno di f′ è il segno di 1 − x',
+      '<i>1 − x &gt; 0 per x &lt; 1</i> (sale), <i>&lt; 0 per x &gt; 1</i> (scende)',
+      '<i>Sale e poi scende:</i> massimo in <b>x = 1</b>') },
+    { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:SV(
+      '<i>Derivata prima:</i> f′(x) = 3x² − 12x',
+      '<i>Derivata seconda:</i> f″(x) = 6x − 12',
+      '<i>Pongo f″ = 0:</i> 6x = 12, x = 2',
+      '<i>Controllo il cambio di segno:</i> x = 0 → −12 &lt; 0; x = 3 → 6 &gt; 0 ✓',
+      '<i>Conclusione:</i> flesso in <b>x = 2</b>') },
+    { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:SV(
+      '<i>Derivate:</i> f′(x) = 4x³, f″(x) = 12x²',
+      '<i>In 0:</i> f″(0) = 0, ma non basta',
+      '<i>Segno di f″ prima di 0 (x = −1):</i> 12 &gt; 0',
+      '<i>Segno di f″ dopo 0 (x = 1):</i> 12 &gt; 0',
+      '<i>Non cambia segno:</i> <b>nessun flesso</b>. In 0 c\'è un minimo (f′ passa da − a +)') },
+    { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:SV(
+      '<i>f′ è la pendenza della tangente</i>',
+      '<i>f′ &gt; 0 vuol dire:</i> pendenza positiva in ogni punto, il grafico sale',
+      '<i>Conseguenza di Lagrange:</i> f′ &gt; 0 su un intervallo ⇒ f crescente',
+      '<i>Risposta:</i> <b>crescente</b> (positiva riguarda il segno di f, concava quello di f″)') }
   ];
 
   /* ===== capitolo 13: Integrali indefiniti ===== */
@@ -2522,15 +2774,54 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> ∫ x eˣ dx = x eˣ − eˣ + C = (x − 1) eˣ + C. Controllo: (x eˣ − eˣ)′ = x eˣ ✓.');
 
   EX['integrali-indefiniti'] = [
-    { id:'e1', type:'choice', q:'∫ (3x² + 2x) dx', a:0, opts:['x³ + x² + C','6x + 2 + C','x³ + 2x² + C'], hint:'xᵃ → x<sup>a+1</sup>/(a + 1), pezzo per pezzo.', sol:'3 · x³/3 + 2 · x²/2 = x³ + x² + C.' },
-    { id:'e2', type:'choice', q:'∫ cos(2x) dx', a:1, opts:['sin(2x) + C','sin(2x)/2 + C','2 sin(2x) + C'], hint:'f(ax + b) → F(ax + b)/a.', sol:'sin(2x)/2 + C. Controllo: derivata = cos(2x) · 2 / 2 ✓.' },
-    { id:'e3', type:'choice', q:'∫ '+FR('2x','x² + 1')+' dx', a:2, opts:['2x · arctan x + C','arctan(x²) + C','ln(x² + 1) + C'], hint:'Sopra c\'è la derivata di quello che sta sotto.', sol:'g′/g con g = x² + 1: ln(x² + 1) + C.' },
-    { id:'e4', type:'choice', q:'∫ x cos x dx', a:0, opts:['x sin x + cos x + C','x sin x − cos x + C','(x²/2) sin x + C'], hint:'Per parti: f = x, g′ = cos x, quindi g = sin x.', sol:'x sin x − ∫ sin x dx = x sin x + cos x + C.' },
-    { id:'e5', type:'choice', q:'∫ ln x dx', a:1, opts:['1/x + C','x ln x − x + C','x ln x + C'], hint:'Per parti con ln x · 1: f = ln x, g′ = 1.', sol:'x ln x − ∫ x · (1/x) dx = x ln x − x + C.' },
-    { id:'e6', type:'num', lbl:'F(1)', q:'F(x) = ∫ 6x² dx, scelta con F(0) = 0. Quanto vale F(1)?', a:2, hint:'Primitiva: 2x³ + C. F(0) = 0 dice C = 0.', sol:'F(x) = 2x³, F(1) = 2.' },
-    { id:'e7', type:'num', lbl:'A', q:FR('1','(x − 1)(x + 1)')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+'. Quanto vale A?', a:0.5, hint:'Denominatore comune: A(x + 1) + B(x − 1) = 1. Metti x = 1.', sol:'x = 1: 2A = 1, A = 1/2. (Con x = −1: B = −1/2.)' },
-    { id:'e8', type:'choice', q:'∫ '+FR('eˣ','1 + eˣ')+' dx', a:0, opts:['ln(1 + eˣ) + C','eˣ · ln(1 + eˣ) + C','arctan(eˣ) + C'], hint:'La derivata di 1 + eˣ è eˣ.', sol:'g′/g: ln(1 + eˣ) + C.' },
-    { id:'e9', type:'choice', q:'∫ '+FR('1','1 + x²')+' dx', a:2, opts:['ln(1 + x²) + C','tan x + C','arctan x + C'], hint:'Tabellina.', sol:'arctan x + C.' }
+    { id:'e1', type:'choice', q:'∫ (3x² + 2x) dx', a:0, opts:['x³ + x² + C','6x + 2 + C','x³ + 2x² + C'], hint:'xᵃ → x<sup>a+1</sup>/(a + 1), pezzo per pezzo.', sol:SV(
+      '<i>Spezzo (linearità):</i> ∫ 3x² dx + ∫ 2x dx',
+      '<i>Primo pezzo, regola xᵃ → x<sup>a+1</sup>/(a + 1):</i> 3 · '+FR('x³','3')+' = x³',
+      '<i>Secondo pezzo:</i> 2 · '+FR('x²','2')+' = x²',
+      '<i>Metto insieme:</i> <b>x³ + x² + C</b>',
+      '<i>Controllo derivando:</i> (x³ + x²)′ = 3x² + 2x ✓') },
+    { id:'e2', type:'choice', q:'∫ cos(2x) dx', a:1, opts:['sin(2x) + C','sin(2x)/2 + C','2 sin(2x) + C'], hint:'f(ax + b) → F(ax + b)/a.', sol:SV(
+      '<i>Sostituzione:</i> t = 2x, dt = 2 dx, quindi dx = dt/2',
+      '<i>Riscrivo:</i> ∫ cos t · '+FR('dt','2')+' = '+FR('1','2')+' ∫ cos t dt',
+      '<i>Integro:</i> '+FR('1','2')+' sin t + C',
+      '<i>Rimetto t = 2x:</i> <b>'+FR('sin(2x)','2')+' + C</b>',
+      '<i>Controllo:</i> (sin(2x)/2)′ = cos(2x) · 2 / 2 = cos(2x) ✓') },
+    { id:'e3', type:'choice', q:'∫ '+FR('2x','x² + 1')+' dx', a:2, opts:['2x · arctan x + C','arctan(x²) + C','ln(x² + 1) + C'], hint:'Sopra c\'è la derivata di quello che sta sotto.', sol:SV(
+      '<i>Guardo sotto:</i> g(x) = x² + 1, la sua derivata è g′(x) = 2x',
+      '<i>Sopra c\'è proprio 2x = g′:</i> è della forma ∫ g′/g dx',
+      '<i>Regola:</i> ∫ g′/g dx = ln |g| + C',
+      '<i>Applico:</i> ln |x² + 1| + C = <b>ln(x² + 1) + C</b> (x² + 1 è sempre positivo)') },
+    { id:'e4', type:'choice', q:'∫ x cos x dx', a:0, opts:['x sin x + cos x + C','x sin x − cos x + C','(x²/2) sin x + C'], hint:'Per parti: f = x, g′ = cos x, quindi g = sin x.', sol:SV(
+      '<i>Per parti:</i> f = x (da derivare), g′ = cos x (da integrare)',
+      '<i>Calcolo:</i> f′ = 1, g = sin x',
+      '<i>Formula f g − ∫ f′ g:</i> x sin x − ∫ 1 · sin x dx',
+      '<i>Integro sin x:</i> ∫ sin x dx = −cos x',
+      '<i>Sostituisco (meno per meno fa più):</i> x sin x − (−cos x) = <b>x sin x + cos x + C</b>') },
+    { id:'e5', type:'choice', q:'∫ ln x dx', a:1, opts:['1/x + C','x ln x − x + C','x ln x + C'], hint:'Per parti con ln x · 1: f = ln x, g′ = 1.', sol:SV(
+      '<i>Scrivo ln x come ln x · 1 e uso le parti:</i> f = ln x, g′ = 1',
+      '<i>Calcolo:</i> f′ = 1/x, g = x',
+      '<i>Formula:</i> x ln x − ∫ '+FR('1','x')+' · x dx',
+      '<i>Semplifico (1/x) · x = 1:</i> x ln x − ∫ 1 dx',
+      '<i>Integro 1:</i> ∫ 1 dx = x',
+      '<i>Risultato:</i> <b>x ln x − x + C</b>') },
+    { id:'e6', type:'num', lbl:'F(1)', q:'F(x) = ∫ 6x² dx, scelta con F(0) = 0. Quanto vale F(1)?', a:2, hint:'Primitiva: 2x³ + C. F(0) = 0 dice C = 0.', sol:SV(
+      '<i>Integro 6x²:</i> 6 · '+FR('x³','3')+' = 2x³, quindi F(x) = 2x³ + C',
+      '<i>Uso F(0) = 0:</i> 2 · 0 + C = 0, quindi C = 0',
+      '<i>Ora F(x) = 2x³:</i> F(1) = 2 · 1 = <b>2</b>') },
+    { id:'e7', type:'num', lbl:'A', q:FR('1','(x − 1)(x + 1)')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+'. Quanto vale A?', a:0.5, hint:'Denominatore comune: A(x + 1) + B(x − 1) = 1. Metti x = 1.', sol:SV(
+      '<i>Faccio il denominatore comune a destra:</i> '+FR('A(x + 1) + B(x − 1)','(x − 1)(x + 1)'),
+      '<i>Uguaglio i numeratori:</i> A(x + 1) + B(x − 1) = 1 per ogni x',
+      '<i>Scelgo x = 1 (così sparisce B):</i> A · 2 + B · 0 = 1',
+      '<i>Risolvo:</i> 2A = 1, <b>A = 1/2</b>',
+      '<i>(Per B, x = −1:</i> −2B = 1, B = −1/2)') },
+    { id:'e8', type:'choice', q:'∫ '+FR('eˣ','1 + eˣ')+' dx', a:0, opts:['ln(1 + eˣ) + C','eˣ · ln(1 + eˣ) + C','arctan(eˣ) + C'], hint:'La derivata di 1 + eˣ è eˣ.', sol:SV(
+      '<i>Guardo sotto:</i> g = 1 + eˣ, g′ = eˣ',
+      '<i>Sopra c\'è eˣ = g′:</i> forma ∫ g′/g dx',
+      '<i>Regola:</i> ln |g| + C',
+      '<i>Risultato:</i> <b>ln(1 + eˣ) + C</b> (1 + eˣ è sempre positivo)') },
+    { id:'e9', type:'choice', q:'∫ '+FR('1','1 + x²')+' dx', a:2, opts:['ln(1 + x²) + C','tan x + C','arctan x + C'], hint:'Tabellina.', sol:SV(
+      '<i>Tabellina:</i> (arctan x)′ = '+FR('1','1 + x²'),
+      '<i>Lette al contrario:</i> ∫ '+FR('1','1 + x²')+' dx = <b>arctan x + C</b>') }
   ];
 
   /* ===== capitolo 14: Integrali definiti ===== */
@@ -2568,15 +2859,57 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> '+INT(0,2)+' (x² + 1) dx = [x³/3 + x]<sub>0</sub><sup>2</sup> = 14/3 − 0 = 14/3. Schema: primitiva → F(b) → F(a) → sottrai.');
 
   EX['integrali-definiti'] = [
-    { id:'e1', type:'num', lbl:'integrale', q:INT(0,1)+' x² dx', a:1/3, hint:'Primitiva x³/3.', sol:'1/3 − 0 = 1/3.' },
-    { id:'e2', type:'num', lbl:'integrale', q:INT(0,'π')+' sin x dx', a:2, hint:'Primitiva −cos x. cos π = −1.', sol:'[−cos x] da 0 a π = −(−1) − (−1) = 2.' },
-    { id:'e3', type:'num', lbl:'integrale', q:INT(1,'e')+' '+FR('1','x')+' dx', a:1, hint:'Primitiva ln x.', sol:'ln e − ln 1 = 1 − 0 = 1.' },
-    { id:'e4', type:'num', lbl:'integrale', q:INT('−1',1)+' x³ dx', a:0, hint:'x³ è dispari.', sol:'Dispari su [−1, 1]: 0. Anche col conto: 1/4 − 1/4 = 0.' },
-    { id:'e5', type:'num', lbl:'integrale', q:INT(0,'ln 2')+' eˣ dx', a:1, hint:'Primitiva eˣ. e<sup>ln 2</sup> = 2.', sol:'2 − 1 = 1.' },
-    { id:'e6', type:'num', lbl:'area', q:'Area tra y = x e y = x² per x tra 0 e 1', a:1/6, hint:'Tra 0 e 1, x sta sopra x². Area = '+INT(0,1)+' (x − x²) dx.', sol:'1/2 − 1/3 = 1/6.' },
-    { id:'e7', type:'num', lbl:'F′(2)', q:'F(x) = '+INT(0,'x')+' t² dt. Quanto vale F′(2)?', a:4, hint:'Teorema fondamentale: F′(x) = f(x).', sol:'F′(x) = x², F′(2) = 4. Non serve calcolare l\'integrale.' },
-    { id:'e8', type:'num', lbl:'integrale', q:INT(0,1)+' 2x (x² + 1)³ dx', a:15/4, hint:'Sostituzione t = x² + 1, dt = 2x dx. Estremi: t da 1 a 2.', sol:INT(1,2)+' t³ dt = [t⁴/4] da 1 a 2 = 4 − 1/4 = 15/4.' },
-    { id:'e9', type:'num', lbl:'integrale', q:INT(1,'+∞')+' '+FR('1','x²')+' dx', a:1, hint:'Integra da 1 a M, poi fai il limite per M → +∞.', sol:'[−1/x] da 1 a M = 1 − 1/M → 1 per M → +∞.' }
+    { id:'e1', type:'num', lbl:'integrale', q:INT(0,1)+' x² dx', a:1/3, hint:'Primitiva x³/3.', sol:SV(
+      '<i>Primitiva:</i> ∫ x² dx = '+FR('x³','3'),
+      '<i>F(1):</i> 1/3',
+      '<i>F(0):</i> 0',
+      '<i>F(1) − F(0):</i> <b>1/3</b>') },
+    { id:'e2', type:'num', lbl:'integrale', q:INT(0,'π')+' sin x dx', a:2, hint:'Primitiva −cos x. cos π = −1.', sol:SV(
+      '<i>Primitiva:</i> ∫ sin x dx = −cos x',
+      '<i>F(π):</i> −cos π = −(−1) = 1',
+      '<i>F(0):</i> −cos 0 = −1',
+      '<i>F(π) − F(0):</i> 1 − (−1) = <b>2</b>') },
+    { id:'e3', type:'num', lbl:'integrale', q:INT(1,'e')+' '+FR('1','x')+' dx', a:1, hint:'Primitiva ln x.', sol:SV(
+      '<i>Primitiva:</i> ln x (x &gt; 0 tra 1 ed e)',
+      '<i>F(e):</i> ln e = 1',
+      '<i>F(1):</i> ln 1 = 0',
+      '<i>Differenza:</i> 1 − 0 = <b>1</b>') },
+    { id:'e4', type:'num', lbl:'integrale', q:INT('−1',1)+' x³ dx', a:0, hint:'x³ è dispari.', sol:SV(
+      '<i>Primitiva:</i> ∫ x³ dx = '+FR('x⁴','4'),
+      '<i>F(1):</i> 1/4',
+      '<i>F(−1):</i> (−1)⁴/4 = 1/4',
+      '<i>Differenza:</i> 1/4 − 1/4 = <b>0</b>',
+      '<i>Lo potevo dire subito:</i> x³ è dispari e l\'intervallo [−1, 1] è simmetrico') },
+    { id:'e5', type:'num', lbl:'integrale', q:INT(0,'ln 2')+' eˣ dx', a:1, hint:'Primitiva eˣ. e<sup>ln 2</sup> = 2.', sol:SV(
+      '<i>Primitiva:</i> eˣ',
+      '<i>F(ln 2):</i> e<sup>ln 2</sup> = 2 (e e ln si annullano)',
+      '<i>F(0):</i> e⁰ = 1',
+      '<i>Differenza:</i> 2 − 1 = <b>1</b>') },
+    { id:'e6', type:'num', lbl:'area', q:'Area tra y = x e y = x² per x tra 0 e 1', a:1/6, hint:'Tra 0 e 1, x sta sopra x². Area = '+INT(0,1)+' (x − x²) dx.', sol:SV(
+      '<i>Chi sta sopra tra 0 e 1?</i> Con x = 0,5: x = 0,5 e x² = 0,25, quindi y = x sta sopra',
+      '<i>Area = ∫ (sopra − sotto):</i> '+INT(0,1)+' (x − x²) dx',
+      '<i>Primitiva:</i> '+FR('x²','2')+' − '+FR('x³','3'),
+      '<i>In 1:</i> '+FR('1','2')+' − '+FR('1','3')+' = '+FR('3','6')+' − '+FR('2','6')+' = '+FR('1','6'),
+      '<i>In 0:</i> 0',
+      '<i>Area:</i> <b>1/6</b>') },
+    { id:'e7', type:'num', lbl:'F′(2)', q:'F(x) = '+INT(0,'x')+' t² dt. Quanto vale F′(2)?', a:4, hint:'Teorema fondamentale: F′(x) = f(x).', sol:SV(
+      '<i>Teorema fondamentale:</i> se F(x) = '+INT(0,'x')+' f(t) dt, allora F′(x) = f(x)',
+      '<i>Qui f(t) = t², quindi:</i> F′(x) = x²',
+      '<i>Sostituisco x = 2:</i> F′(2) = 4',
+      '<i>Risultato:</i> <b>4</b>, senza calcolare l\'integrale') },
+    { id:'e8', type:'num', lbl:'integrale', q:INT(0,1)+' 2x (x² + 1)³ dx', a:15/4, hint:'Sostituzione t = x² + 1, dt = 2x dx. Estremi: t da 1 a 2.', sol:SV(
+      '<i>Sostituzione:</i> t = x² + 1, quindi dt = 2x dx',
+      '<i>Cambio gli estremi:</i> x = 0 → t = 1; x = 1 → t = 2',
+      '<i>Riscrivo (2x dx diventa dt):</i> '+INT(1,2)+' t³ dt',
+      '<i>Primitiva:</i> '+FR('t⁴','4'),
+      '<i>In 2:</i> 16/4 = 4; <i>in 1:</i> 1/4',
+      '<i>Differenza:</i> 4 − '+FR('1','4')+' = '+FR('16','4')+' − '+FR('1','4')+' = <b>15/4</b>') },
+    { id:'e9', type:'num', lbl:'integrale', q:INT(1,'+∞')+' '+FR('1','x²')+' dx', a:1, hint:'Integra da 1 a M, poi fai il limite per M → +∞.', sol:SV(
+      '<i>Integrale improprio: integro fino a M e poi M → +∞</i>',
+      '<i>Primitiva di 1/x² = x<sup>−2</sup>:</i> '+FR('x<sup>−1</sup>','−1')+' = −'+FR('1','x'),
+      '<i>Da 1 a M:</i> (−'+FR('1','M')+') − (−'+FR('1','1')+') = 1 − '+FR('1','M'),
+      '<i>Limite per M → +∞:</i> 1/M → 0',
+      '<i>Risultato:</i> <b>1</b> (converge: p = 2 &gt; 1)') }
   ];
 
   /* ===== capitolo 15: Equazioni differenziali ===== */
@@ -2618,15 +2951,60 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> y′ = 2y, y(0) = 3 ha soluzione y = 3e<sup>2x</sup>. Schema: separo, integro, ricavo y, uso y(0) per la costante, controllo derivando.');
 
   EX['equazioni-differenziali'] = [
-    { id:'e1', type:'num', lbl:'y(ln 2)', q:'y′ = 3y, y(0) = 2. Quanto vale y(ln 2)?', a:16, hint:'Soluzione y = 2e<sup>3x</sup>.', sol:'2e<sup>3 ln 2</sup> = 2 · 2³ = 16.' },
-    { id:'e2', type:'num', lbl:'y(2)', q:'y′ = x, y(0) = 1. Quanto vale y(2)?', a:3, hint:'Basta integrare: y = x²/2 + C.', sol:'y = x²/2 + 1, y(2) = 2 + 1 = 3.' },
-    { id:'e3', type:'choice', q:'Soluzione generale di y′ = 2x y', a:0, opts:['y = K e<sup>x²</sup>','y = x² + K','y = K e<sup>2x</sup>'], hint:'Separa: dy/y = 2x dx.', sol:'ln |y| = x² + C, y = K e<sup>x²</sup>.' },
-    { id:'e4', type:'num', q:'y′ + y = 1, y(0) = 0. Quanto vale '+LIMX('+∞')+' y(x)?', a:1, hint:'Dalla lavagna: y = 1 + C e<sup>−x</sup>. Trova C, poi il limite.', sol:'y(0) = 1 + C = 0, C = −1: y = 1 − e<sup>−x</sup> → 1 per x → +∞.' },
-    { id:'e5', type:'choice', q:'Soluzione generale di y″ − 3y′ + 2y = 0', a:1, opts:['y = c₁ e<sup>−x</sup> + c₂ e<sup>−2x</sup>','y = c₁ eˣ + c₂ e<sup>2x</sup>','y = (c₁ + c₂ x) eˣ'], hint:'λ² − 3λ + 2 = 0.', sol:'λ = 1 e λ = 2 (Δ &gt; 0): c₁ eˣ + c₂ e<sup>2x</sup>.' },
-    { id:'e6', type:'choice', q:'Soluzione generale di y″ + 4y = 0', a:2, opts:['y = c₁ e<sup>2x</sup> + c₂ e<sup>−2x</sup>','y = (c₁ + c₂ x) e<sup>2x</sup>','y = c₁ cos 2x + c₂ sin 2x'], hint:'λ² + 4 = 0: λ = ±2i, quindi α = 0, β = 2.', sol:'Δ &lt; 0: e⁰(c₁ cos 2x + c₂ sin 2x).' },
-    { id:'e7', type:'choice', q:'Soluzione generale di y″ − 2y′ + y = 0', a:0, opts:['y = (c₁ + c₂ x) eˣ','y = c₁ eˣ + c₂ e<sup>−x</sup>','y = c₁ cos x + c₂ sin x'], hint:'λ² − 2λ + 1 = (λ − 1)².', sol:'Radice doppia λ = 1 (Δ = 0): (c₁ + c₂ x) eˣ.' },
-    { id:'e8', type:'num', lbl:'c₁', q:'y″ − y = 0, y(0) = 2, y′(0) = 0. Con y = c₁ eˣ + c₂ e<sup>−x</sup>, quanto vale c₁?', a:1, hint:'y(0) = c₁ + c₂ = 2; y′(0) = c₁ − c₂ = 0.', sol:'c₁ = c₂ = 1: y = eˣ + e<sup>−x</sup>.' },
-    { id:'e9', type:'num', lbl:'y_p', q:'y″ + y = 3: cerca una soluzione particolare costante y_p = A. Quanto vale A?', a:3, hint:'Se y = A costante, y″ = 0.', sol:'0 + A = 3, A = 3. Soluzione generale: c₁ cos x + c₂ sin x + 3.' }
+    { id:'e1', type:'num', lbl:'y(ln 2)', q:'y′ = 3y, y(0) = 2. Quanto vale y(ln 2)?', a:16, hint:'Soluzione y = 2e<sup>3x</sup>.', sol:SV(
+      '<i>Separo:</i> dy/y = 3 dx',
+      '<i>Integro:</i> ln |y| = 3x + C',
+      '<i>Ricavo y:</i> y = K e<sup>3x</sup>',
+      '<i>Uso y(0) = 2:</i> K e⁰ = K = 2, quindi y = 2e<sup>3x</sup>',
+      '<i>Calcolo y(ln 2):</i> 2 e<sup>3 ln 2</sup> = 2 (e<sup>ln 2</sup>)³ = 2 · 2³ = 2 · 8 = <b>16</b>') },
+    { id:'e2', type:'num', lbl:'y(2)', q:'y′ = x, y(0) = 1. Quanto vale y(2)?', a:3, hint:'Basta integrare: y = x²/2 + C.', sol:SV(
+      '<i>y′ = x: y è una primitiva di x</i>',
+      '<i>Integro:</i> y = '+FR('x²','2')+' + C',
+      '<i>Uso y(0) = 1:</i> 0 + C = 1, C = 1',
+      '<i>Soluzione:</i> y = x²/2 + 1',
+      '<i>y(2):</i> 4/2 + 1 = 2 + 1 = <b>3</b>') },
+    { id:'e3', type:'choice', q:'Soluzione generale di y′ = 2x y', a:0, opts:['y = K e<sup>x²</sup>','y = x² + K','y = K e<sup>2x</sup>'], hint:'Separa: dy/y = 2x dx.', sol:SV(
+      '<i>Soluzione costante:</i> y = 0 funziona (0 = 2x · 0)',
+      '<i>Separo (y ≠ 0):</i> '+FR('dy','y')+' = 2x dx',
+      '<i>Integro a sinistra e a destra:</i> ln |y| = x² + C',
+      '<i>Faccio e alla:</i> |y| = e<sup>x² + C</sup> = e<sup>C</sup> e<sup>x²</sup>',
+      '<i>Chiamo K = ±e<sup>C</sup> (o 0):</i> <b>y = K e<sup>x²</sup></b>') },
+    { id:'e4', type:'num', q:'y′ + y = 1, y(0) = 0. Quanto vale '+LIMX('+∞')+' y(x)?', a:1, hint:'Dalla lavagna: y = 1 + C e<sup>−x</sup>. Trova C, poi il limite.', sol:SV(
+      '<i>Lineare con a = 1, f = 1:</i> A(x) = x',
+      '<i>Formula:</i> y = e<sup>−x</sup> [∫ 1 · eˣ dx + C] = e<sup>−x</sup> (eˣ + C) = 1 + C e<sup>−x</sup>',
+      '<i>Uso y(0) = 0:</i> 1 + C · 1 = 0, C = −1',
+      '<i>Soluzione:</i> y = 1 − e<sup>−x</sup>',
+      '<i>Limite per x → +∞:</i> e<sup>−x</sup> → 0, quindi y → 1 − 0 = <b>1</b>') },
+    { id:'e5', type:'choice', q:'Soluzione generale di y″ − 3y′ + 2y = 0', a:1, opts:['y = c₁ e<sup>−x</sup> + c₂ e<sup>−2x</sup>','y = c₁ eˣ + c₂ e<sup>2x</sup>','y = (c₁ + c₂ x) eˣ'], hint:'λ² − 3λ + 2 = 0.', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² − 3λ + 2 = 0',
+      '<i>Δ:</i> 9 − 8 = 1 &gt; 0',
+      '<i>Radici:</i> λ = '+FR('3 ± 1','2')+', cioè λ₁ = 1 e λ₂ = 2',
+      '<i>Caso Δ &gt; 0:</i> y = c₁ e<sup>λ₁x</sup> + c₂ e<sup>λ₂x</sup>',
+      '<i>Risultato:</i> <b>y = c₁ eˣ + c₂ e<sup>2x</sup></b>') },
+    { id:'e6', type:'choice', q:'Soluzione generale di y″ + 4y = 0', a:2, opts:['y = c₁ e<sup>2x</sup> + c₂ e<sup>−2x</sup>','y = (c₁ + c₂ x) e<sup>2x</sup>','y = c₁ cos 2x + c₂ sin 2x'], hint:'λ² + 4 = 0: λ = ±2i, quindi α = 0, β = 2.', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² + 4 = 0',
+      '<i>Risolvo:</i> λ² = −4, λ = ±2i',
+      '<i>Leggo α e β (λ = α ± iβ):</i> α = 0, β = 2',
+      '<i>Caso Δ &lt; 0:</i> y = e<sup>αx</sup>(c₁ cos βx + c₂ sin βx) = e⁰(c₁ cos 2x + c₂ sin 2x)',
+      '<i>Risultato:</i> <b>y = c₁ cos 2x + c₂ sin 2x</b>') },
+    { id:'e7', type:'choice', q:'Soluzione generale di y″ − 2y′ + y = 0', a:0, opts:['y = (c₁ + c₂ x) eˣ','y = c₁ eˣ + c₂ e<sup>−x</sup>','y = c₁ cos x + c₂ sin x'], hint:'λ² − 2λ + 1 = (λ − 1)².', sol:SV(
+      '<i>Equazione caratteristica:</i> λ² − 2λ + 1 = 0',
+      '<i>Riconosco il quadrato:</i> (λ − 1)² = 0, Δ = 4 − 4 = 0',
+      '<i>Radice doppia:</i> λ = 1',
+      '<i>Caso Δ = 0:</i> y = (c₁ + c₂ x) e<sup>λx</sup>',
+      '<i>Risultato:</i> <b>y = (c₁ + c₂ x) eˣ</b>') },
+    { id:'e8', type:'num', lbl:'c₁', q:'y″ − y = 0, y(0) = 2, y′(0) = 0. Con y = c₁ eˣ + c₂ e<sup>−x</sup>, quanto vale c₁?', a:1, hint:'y(0) = c₁ + c₂ = 2; y′(0) = c₁ − c₂ = 0.', sol:SV(
+      '<i>Caratteristica:</i> λ² − 1 = 0, λ = ±1, quindi y = c₁ eˣ + c₂ e<sup>−x</sup>',
+      '<i>Derivo:</i> y′ = c₁ eˣ − c₂ e<sup>−x</sup>',
+      '<i>y(0) = 2:</i> c₁ + c₂ = 2',
+      '<i>y′(0) = 0:</i> c₁ − c₂ = 0, quindi c₁ = c₂',
+      '<i>Sostituisco nella prima:</i> c₁ + c₁ = 2, 2c₁ = 2',
+      '<i>Risultato:</i> <b>c₁ = 1</b> (e c₂ = 1)') },
+    { id:'e9', type:'num', lbl:'y_p', q:'y″ + y = 3: cerca una soluzione particolare costante y_p = A. Quanto vale A?', a:3, hint:'Se y = A costante, y″ = 0.', sol:SV(
+      '<i>Provo y = A costante:</i> allora y′ = 0 e y″ = 0',
+      '<i>Sostituisco nell\'equazione:</i> 0 + A = 3',
+      '<i>Quindi:</i> <b>A = 3</b>',
+      '<i>Soluzione generale:</i> omogenea (λ² + 1 = 0, λ = ±i) + particolare = c₁ cos x + c₂ sin x + 3') }
   ];
 
   Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));
