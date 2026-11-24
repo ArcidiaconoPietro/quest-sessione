@@ -1,0 +1,179 @@
+<title>Lavagna di Geometria</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una colonna di lettura stretta che scorre come una lavagna; un capitolo alla volta, indice in alto.
+   Stessa famiglia visiva della Lavagna di Analisi, ma su carta quadrettata blu: Geometria = vettori e griglie. */
+:root {
+  --bg: #edf0f6;
+  --board: #ffffff;
+  --ink: #1b2233;
+  --muted: #5a6478;
+  --line: #d4dae6;
+  --grid: #e6eaf2;
+  --u: #2f62c9;        /* blu: primo vettore, colonna 1, e1 */
+  --v: #c46a12;        /* arancio: secondo vettore, colonna 2, e2 */
+  --w: #7a3fb8;        /* viola: risultato, combinazione */
+  --ok: #1f8a4c;
+  --bad: #c2412f;
+  --soft: #e5eaf3;
+  --chalk: "Caveat", "Comic Sans MS", cursive;
+  --text: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131826; --board: #1b2234; --ink: #e9edf6; --muted: #a2acc2; --line: #323c55; --grid: #252e44;
+    --u: #86aaff; --v: #ffb366; --w: #c79bff; --ok: #5fd08f; --bad: #ff8b78; --soft: #242d42;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131826; --board: #1b2234; --ink: #e9edf6; --muted: #a2acc2; --line: #323c55; --grid: #252e44;
+  --u: #86aaff; --v: #ffb366; --w: #c79bff; --ok: #5fd08f; --bad: #ff8b78; --soft: #242d42;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 60px;
+}
+.wrap { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.chapter { display: flex; flex-direction: column; gap: 22px; }
+header h1 { font-family: var(--chalk); font-size: 2.6rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); }
+nav.chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.chapters a {
+  font-size: .88rem; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--muted); background: var(--board);
+}
+nav.chapters a.on { background: var(--ink); color: var(--board); border-color: var(--ink); }
+nav.chapters a .tick { color: var(--ok); font-weight: 700; }
+nav.chapters a.on .tick { color: inherit; }
+section.board {
+  background: var(--board); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h2 { font-family: var(--chalk); font-size: 2rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+h3 { margin: 0; font-size: 1.02rem; }
+p { margin: 0; }
+.big { font-size: 1.15rem; }
+.cu { color: var(--u); font-weight: 700; }
+.cv { color: var(--v); font-weight: 700; }
+.cw { color: var(--w); font-weight: 700; }
+.math { font-size: 1.25rem; display: flex; align-items: center; justify-content: center; gap: .5em; flex-wrap: wrap; padding: 6px 0; text-align: center; }
+.math.left { justify-content: flex-start; text-align: left; }
+.fr { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.2; }
+.fr > span { padding: 0 .25em; }
+.fr > span + span { border-top: 2px solid currentColor; }
+/* matrici e vettori colonna */
+.mx { display: inline-grid; grid-auto-flow: row; gap: 0 .7em; padding: 2px .45em; vertical-align: middle; position: relative; font-variant-numeric: tabular-nums; text-align: center; line-height: 1.35; }
+.mx::before, .mx::after { content: ""; position: absolute; top: 0; bottom: 0; width: .35em; border: 2px solid currentColor; }
+.mx::before { left: 0; border-right: 0; border-radius: 4px 0 0 4px; }
+.mx::after { right: 0; border-left: 0; border-radius: 0 4px 4px 0; }
+.mx.c1 { grid-template-columns: auto; } .mx.c2 { grid-template-columns: repeat(2, auto); } .mx.c3 { grid-template-columns: repeat(3, auto); } .mx.c4 { grid-template-columns: repeat(4, auto); } .mx.c5 { grid-template-columns: repeat(5, auto); }
+.box { border-radius: 8px; padding: 2px 8px; }
+.box.u { background: color-mix(in srgb, var(--u) 14%, transparent); }
+.box.v { background: color-mix(in srgb, var(--v) 16%, transparent); }
+.box.w { background: color-mix(in srgb, var(--w) 14%, transparent); }
+.note { background: var(--soft); border-radius: 10px; padding: 12px 14px; }
+.warn { border: 2px dashed var(--bad); border-radius: 10px; padding: 12px 14px; }
+.def { border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.def > b:first-child { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.why { font-size: .78rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; align-self: flex-start; }
+.why.easy { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.why.mem { background: color-mix(in srgb, var(--v) 20%, transparent); color: var(--v); }
+details.whybox { border-left: 3px solid var(--ok); padding-left: 12px; }
+details.whybox summary { cursor: pointer; color: var(--ok); font-weight: 700; font-size: .95rem; }
+details.whybox > *:not(summary) { margin-top: 6px; }
+canvas { width: 100%; height: 320px; display: block; border-radius: 10px; background: var(--soft); touch-action: none; }
+canvas.tall { height: 380px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: .95rem; max-width: 100%; min-width: 0; }
+input[type=range] { width: 150px; max-width: 100%; accent-color: var(--w); }
+select { font: inherit; font-size: .95rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); max-width: 100%; min-width: 0; flex: 0 1 auto; text-overflow: ellipsis; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .9rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+button {
+  font: inherit; font-size: .95rem; cursor: pointer; border-radius: 10px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--board); color: var(--ink);
+}
+button.primary { background: var(--ink); color: var(--board); border-color: var(--ink); }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--w); outline-offset: 2px; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; }
+input[type=text] {
+  font: inherit; font-size: 1.05rem; width: 4.6em; padding: 4px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink); text-align: center;
+}
+.feedback { font-size: .95rem; min-height: 1.4em; }
+.feedback.ok { color: var(--ok); font-weight: 700; }
+.feedback.bad { color: var(--bad); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ex { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.ex:first-child { border-top: 0; padding-top: 0; }
+.ex .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.badge { font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.badge.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); font-weight: 700; }
+ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; }
+.choice button.right { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.choice button.wrong { border-color: var(--bad); color: var(--bad); }
+.scroll { overflow-x: auto; }
+.readout { font-size: 1.08rem; font-variant-numeric: tabular-nums; }
+/* laboratorio matrici */
+.lab { display: flex; flex-direction: column; gap: 12px; }
+.lab .grid { display: inline-grid; gap: 6px; }
+.lab .grid input { width: 3.4em; font-family: var(--mono); font-size: .98rem; }
+.lab .grid .sep { border-left: 2px solid var(--muted); }
+.lab .log { display: flex; flex-direction: column; gap: 10px; }
+.lab .move { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.lab .move b { font-family: var(--mono); font-size: .92rem; min-width: 10em; }
+.lab table.m { border-collapse: collapse; font-family: var(--mono); font-size: .95rem; font-variant-numeric: tabular-nums; }
+.lab table.m td { padding: 2px 9px; text-align: right; }
+.lab table.m td.piv { background: color-mix(in srgb, var(--w) 22%, transparent); border-radius: 6px; font-weight: 700; }
+.lab table.m td.sepc { border-left: 2px solid var(--muted); }
+.lab table.m { border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 4px; }
+.home-list { display: flex; flex-direction: column; gap: 0; }
+.home-list a { display: grid; grid-template-columns: 4.2em 1fr auto; gap: 10px; align-items: baseline; padding: 10px 2px; border-top: 1px solid var(--line); color: inherit; text-decoration: none; }
+.home-list a:first-child { border-top: 0; }
+.home-list a:hover b { text-decoration: underline; }
+.home-list .d { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .92rem; }
+.home-list .s { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+.home-list .s.ok { color: var(--ok); font-weight: 700; }
+.home-list small { display: block; color: var(--muted); }
+.next { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.next a { color: var(--u); }
+footer { color: var(--muted); font-size: .9rem; text-align: center; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: up .35s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lavagna di Geometria</h1>
+    <p>Geometria e Algebra T · esame lunedì 11 gennaio 2027. Un capitolo per argomento, nell'ordine del tuo calendario: a cosa serve, il disegno, la ricetta, poi tocca a te.</p>
+  </header>
+
+  <nav class="chapters" aria-label="Capitoli" id="nav"></nav>
+
+  <!-- ================= INDICE ================= -->
+  <div class="chapter" data-ch="indice" data-title="Indice">
+    <section class="board">
+      <div class="eyebrow">Come si usa</div>
+      <h2>Una lavagna per tutto il corso</h2>
+      <p>Apri il capitolo del giorno (la data è quella della cartella in STUDIO GIORNO PER GIORNO). In ogni capitolo trovi, in ordine: <b>a cosa serve</b>, un <b>disegno che puoi muovere</b>, le <b>definizioni</b> scritte per intero, la <b>ricetta</b> a passi, un <b>esercizio guidato</b>, gli <b>esercizi da solo</b> e cosa scrivere sul quaderno.</p>
+      <p>Accanto a ogni formula c'è un'etichetta: <span class="why easy">perché: facile</span> vuol dire che il motivo si capisce in due righe (aprilo e leggilo). <span class="why mem">a memoria</span> vuol dire che il motivo è lungo: segnala sul quaderno e imparala così.</p>
+      <div class="note">Alla fine di ogni capitolo premi <b>"Copia i miei risultati per il tutor"</b> e incolla il testo in chat: il tutor aggiorna il tuo registro e sa cosa ripassare.</div>
+    </section>
+    <section class="board">
+      <div class="eyebrow">Capitoli</div>
+      <div class="home-list" id="home-list"></div>
+    </section>
+  </div>

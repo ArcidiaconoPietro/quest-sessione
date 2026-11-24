@@ -1,0 +1,125 @@
+  <!-- ================= RIPASSO 1 · SISTEMI LINEARI ================= -->
+  <div class="chapter" data-ch="sistemi" data-title="R1 · Sistemi lineari" data-date="ripasso" data-full="Ripasso: sistemi lineari, Gauss, Rouché-Capelli, sistemi con parametro" data-src="Libro cap. 1-2 e Teorema di Rouché-Capelli" hidden>
+    <section class="board">
+      <div class="eyebrow">Ripasso 1 · da usare quando serve</div>
+      <h2>Sistemi lineari e Rouché-Capelli</h2>
+      <p class="big">Quasi ogni esercizio di Geometria finisce in un sistema lineare: nuclei, autospazi, intersezioni, coordinate. Qui ripassi il metodo completo e i sistemi <b>con un parametro k</b>, dove c'è la trappola che hai già incontrato: <b>dividere per un'espressione che può valere 0</b>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Due rette nel piano: 1, 0 o infinite soluzioni</h2>
+      <p>La retta blu è fissa: x + y = 2. Muovi la retta arancione a·x + b·y = c. Le soluzioni del sistema sono i punti in comune.</p>
+      <canvas id="cv-sis" aria-label="Due rette nel piano e il loro punto di intersezione"></canvas>
+      <div class="controls">
+        <label>a <input type="range" id="sis-a" min="-3" max="3" step="0.5" value="1"> <b id="sis-av"></b></label>
+        <label>b <input type="range" id="sis-b" min="-3" max="3" step="0.5" value="-1"> <b id="sis-bv"></b></label>
+        <label>c <input type="range" id="sis-c" min="-4" max="4" step="0.5" value="0"> <b id="sis-cv"></b></label>
+      </div>
+      <p class="readout" id="sis-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Forma matriciale</b>
+        <p>Un sistema di m equazioni in n incognite si scrive A·x = b con A ∈ M(m, n, K), x ∈ Kⁿ, b ∈ K<sup>m</sup>. La <b>matrice completa</b> è (A | b): A con b aggiunto come ultima colonna.</p>
+        <p>Se b = 0 il sistema è <b>omogeneo</b>: ha sempre almeno la soluzione x = 0, e le soluzioni formano il sottospazio ker A.</p>
+      </div>
+      <div class="def"><b>Teorema di Rouché-Capelli</b>
+        <p>A·x = b ha soluzione <b>se e solo se</b> rk A = rk(A | b). In quel caso le soluzioni dipendono da <b>n − rk A</b> parametri liberi.</p>
+        <p>• rk A ≠ rk(A | b) → nessuna soluzione (dopo Gauss trovi una riga 0 = numero ≠ 0).<br>• rk A = rk(A | b) = n → una sola soluzione.<br>• rk A = rk(A | b) &lt; n → infinite soluzioni, n − rk parametri.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Lettura con le colonne</summary><p>A·x = x₁·C₁ + … + x<sub>n</sub>·C<sub>n</sub>. Il sistema ha soluzione ⇔ b è combinazione delle colonne ⇔ b ∈ Span(C₁, …, C<sub>n</sub>) ⇔ aggiungere b non fa salire il rango. Il numero di parametri è dim ker A = n − rk A.</p></details>
+      </div>
+      <div class="def"><b>Sistema quadrato (n equazioni, n incognite)</b>
+        <p>det A ≠ 0 ⇔ una sola soluzione, qualunque sia b. Con det A = 0 può non esserci soluzione o essercene infinite: bisogna controllare rk(A | b).</p>
+      </div>
+      <div class="def"><b>Sistemi con parametro: la regola d'oro</b>
+        <p>Prima di dividere per un'espressione con k (per esempio k − 1), <b>separa il caso in cui vale 0</b> e studialo a parte. Nel tuo registro errori del 18/11 c'è proprio questa svista.</p>
+        <p>Metodo veloce per sistemi quadrati: calcola det A in funzione di k. I k con det A ≠ 0 danno una sola soluzione; i (pochi) k con det A = 0 si studiano uno per uno con Gauss.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Gauss sulla matrice completa</h2>
+      <p>La riga verticale separa A da b. Il laboratorio ti dice rk A, rk(A | b) e cosa dice Rouché-Capelli.</p>
+      <div id="lab-sis"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Discuti al variare di k ∈ R</h2>
+      <p class="math">x + y + z = 1 <br>x + 2y + z = 2 <br>x + y + k·z = 3</p>
+      <div class="steps" id="guided-sistemi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-sistemi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Rouché-Capelli</b>: soluzioni ⇔ rk A = rk(A | b). Parametri liberi: n − rk A.</li>
+        <li>Quadrato: det A ≠ 0 ⇔ una sola soluzione.</li>
+        <li>Omogeneo: sempre x = 0; soluzioni = ker A.</li>
+        <li><b>Parametro</b>: mai dividere per k − 1 (o simili) senza aver prima studiato a parte k = 1.</li>
+      </ul>
+      <div data-copy="sistemi"></div>
+    </section>
+    <div class="next"><a href="#spettrale">← Capitolo 9</a><a href="#matrici">Ripasso · Matrici e inversa →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, lab, guided, exercises } = Lav;
+  const B = Board($('cv-sis'), {xmin:-4,xmax:4,ymin:-3,ymax:4});
+  const draw = () => {
+    const [a,b,c] = ['a','b','c'].map(k=>+$('sis-'+k).value); ['a','b','c'].forEach(k=>$('sis-'+k+'v').textContent=it(+$('sis-'+k).value,1));
+    if (!B.fit()) return; B.grid();
+    const line = (p,q,r,col) => { if (Math.abs(q)>1e-9) B.seg(-20,(r+20*p)/q,20,(r-20*p)/q,col,3); else if (Math.abs(p)>1e-9) B.seg(r/p,-20,r/p,20,col,3); };
+    line(1,1,2,'--u'); line(a,b,c,'--v');
+    const det = 1*b - 1*a; let txt = 'Sistema: x + y = 2, &nbsp;'+it(a,1)+'·x '+(b<0?'− ':'+ ')+it(Math.abs(b),1)+'·y = '+it(c,1)+'<br>A = '+M([[1,1],[it(a,1),it(b,1)]])+' &nbsp; det A = '+it(det,2)+'<br>';
+    if (Math.abs(a)<1e-9 && Math.abs(b)<1e-9){ txt += Math.abs(c)<1e-9 ? 'La seconda equazione è 0 = 0: resta solo la retta blu, infinite soluzioni (rk A = rk(A | b) = 1 &lt; 2).' : 'La seconda equazione è 0 = '+it(c,1)+': impossibile. rk A = 1, rk(A | b) = 2: <b>nessuna soluzione</b>.'; }
+    else if (Math.abs(det)>1e-9){ const x=(2*b-c)/det, y=(c-2*a)/det; B.dot(x,y,'--ok',7); B.text(x,y,' ('+it(x,2)+'; '+it(y,2)+')','--ok',13);
+      txt += 'det A ≠ 0: rk A = rk(A | b) = 2 = n. <b>Una sola soluzione</b>: (x, y) = ('+it(x,2)+', '+it(y,2)+').'; }
+    else { const k = Math.abs(a)>1e-9 ? a : b; const same = Math.abs(c-2*k)<1e-9;
+      txt += same ? 'Le rette coincidono: rk A = rk(A | b) = 1 &lt; 2. <b>Infinite soluzioni</b>, con 2 − 1 = 1 parametro.' : 'Rette parallele distinte: rk A = 1, rk(A | b) = 2. <b>Nessuna soluzione</b> (Rouché-Capelli).'; }
+    $('sis-out').innerHTML = txt;
+  };
+  ['a','b','c'].forEach(k=>$('sis-'+k).addEventListener('input', draw)); onDraw('sistemi', draw);
+
+  lab('lab-sis', { show:[], presets:[
+    { name:'Guidato con k = 3', rows:[[1,1,1,1],[1,2,1,2],[1,1,3,3]], aug:3 },
+    { name:'Guidato con k = 1', rows:[[1,1,1,1],[1,2,1,2],[1,1,1,3]], aug:3 },
+    { name:'Infinite soluzioni', rows:[[1,2,-1,3],[2,4,-2,6],[1,0,1,1]], aug:3 },
+    { name:'2 equazioni, 4 incognite', rows:[[1,1,0,1,2],[0,1,1,1,1]], aug:4 }
+  ]});
+
+  guided('sistemi', [
+    { h:'Passo 1 · Gauss: R2 ← R2 − R1 e R3 ← R3 − R1. Che riga diventa la terza?', type:'choice', ans:1, opts:['(0, 0, k | 2)','(0, 0, k − 1 | 2)','(0, 1, k − 1 | 2)'],
+      ok:'Sì: (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). La seconda riga diventa (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
+    { h:'Passo 2 · Vorrei dividere per k − 1. Prima cosa?', type:'choice', ans:2, opts:['Divido subito, tanto è un numero','Pongo k − 1 = 1','Studio a parte il caso k = 1, dove k − 1 = 0'],
+      ok:'Bravo, è la regola d\'oro. Con k = 1 la terza riga è (0, 0, 0 | 2), cioè 0 = 2.', bad:'k − 1 vale 0 quando k = 1: dividere per 0 non si può. Quel caso va studiato da solo.' },
+    { h:'Passo 3 · Caso k = 1: rk A e rk(A | b)', type:'nums', ans:[2,3], html:'rk A = '+inp('rango di A')+' &nbsp; rk(A | b) = '+inp('rango della completa'),
+      ok:'Esatto: 2 ≠ 3, quindi per k = 1 <b>nessuna soluzione</b>.', bad:'A ha due righe non nulle a scala; la completa ha anche la riga (0, 0, 0 | 2).' },
+    { h:'Passo 4 · Caso k ≠ 1, per esempio k = 3: trova (x, y, z)', type:'nums', ans:[-1,1,1], html:'x = '+inp('x')+' &nbsp; y = '+inp('y')+' &nbsp; z = '+inp('z'),
+      ok:'Perfetto: z = 2/(k − 1) = 1, y = 1, x = 1 − y − z = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
+  ], '<b>Fatto!</b> Per k = 1 nessuna soluzione; per k ≠ 1 una sola soluzione: (x, y, z) = (−2/(k − 1), 1, 2/(k − 1)). Controllo veloce: det A = k − 1, che è ≠ 0 proprio per k ≠ 1.');
+
+  exercises('sistemi', [
+    { id:'e1', type:'choice', q:'Dopo Gauss: rk A = 2 e rk(A | b) = 3.', opts:['Una soluzione','Infinite soluzioni','Nessuna soluzione'], a:2, hint:'Rouché-Capelli.', sol:'Ranghi diversi: nessuna soluzione.' },
+    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'5 − 3 = 2.' },
+    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'2x = 4 ⇒ x = 2, y = 1.' },
+    { id:'e4', type:'choice', q:'Un sistema omogeneo A·x = 0…', opts:['può non avere soluzioni','ha sempre almeno la soluzione x = 0','ha sempre infinite soluzioni'], a:1, hint:'Prova x = 0.', sol:'A·0 = 0 sempre. Infinite solo se rk A &lt; n.' },
+    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1 − k² ≠ 0 ⇔ k ≠ ±1.' },
+    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Sommando: 0 = 2. Impossibile.' },
+    { id:'e7', type:'choice', q:'Stesso sistema con k = 1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:1, hint:'Le due equazioni diventano uguali.', sol:'x + y = 1 due volte: rk A = rk(A | b) = 1, infinite soluzioni con 1 parametro.' },
+    { id:'e8', type:'choice', src:'trappola', q:'Da (k − 2)·z = k − 2 scrivo z = 1. Va bene?', opts:['Sì, sempre','Solo per k ≠ 2; per k = 2 l\'equazione è 0 = 0 e z è libero'], a:1, hint:'Cosa succede con k = 2?', sol:'Per k = 2 non si può dividere: 0·z = 0 vale per ogni z, quindi z diventa un parametro libero.' }
+  ]);
+})();
+</script>

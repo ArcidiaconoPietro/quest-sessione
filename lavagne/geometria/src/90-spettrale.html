@@ -1,0 +1,117 @@
+  <!-- ================= CAPITOLO 9 · TEOREMA SPETTRALE ================= -->
+  <div class="chapter" data-ch="spettrale" data-title="9 · Teorema spettrale" data-date="18/12" data-full="Basi ortonormali e teorema spettrale" data-src="Libro pp. 219-221, 352-355" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 9 · giorno 18/12 · libro pp. 219-221 e 352-355</div>
+      <h2>Le matrici simmetriche sono sempre "belle"</h2>
+      <p class="big">Nel capitolo 7 hai visto che non tutte le matrici sono diagonalizzabili. Il teorema spettrale dice che le matrici reali <b>simmetriche</b> (<sup>t</sup>A = A) lo sono <b>sempre</b>, e in più gli autovettori si possono scegliere <b>perpendicolari</b> tra loro e di lunghezza 1.</p>
+      <p>Unisce i capitoli 7 (autovalori) e 8 (prodotto scalare, Gram-Schmidt). All'esame: "trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il cerchio diventa un'ellisse</h2>
+      <p>Il cerchio grigio ha raggio 1; A lo trasforma nella curva viola. Se A è simmetrica (b = c) la curva è un'<b>ellisse</b> e i suoi assi sono le rette verdi degli autovettori: <b>perpendicolari</b>. Le semi-lunghezze degli assi sono |λ₁| e |λ₂|. Prova a rendere b ≠ c: le rette verdi non sono più perpendicolari.</p>
+      <canvas id="cv-sp" class="tall" aria-label="Il cerchio unitario e la sua immagine tramite A"></canvas>
+      <div class="controls" id="ctl-sp"></div>
+      <p class="readout" id="out-sp"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Base ortonormale</b>
+        <p>(v₁, …, v<sub>n</sub>) base di Rⁿ è <b>ortonormale</b> se ⟨v<sub>i</sub>, v<sub>j</sub>⟩ = 0 per i ≠ j e ‖v<sub>i</sub>‖ = 1 per ogni i.</p>
+        <p>Vantaggio: le coordinate si trovano senza sistemi: v = ⟨v, v₁⟩·v₁ + … + ⟨v, v<sub>n</sub>⟩·v<sub>n</sub>.</p>
+        <p>La matrice M con colonne v₁, …, v<sub>n</sub> è <b>ortogonale</b>: M⁻¹ = <sup>t</sup>M (niente inversa da calcolare!).</p>
+      </div>
+      <div class="def"><b>Teorema spettrale (versione matrici reali)</b>
+        <p>Sia A ∈ M(n, n, R) <b>simmetrica</b>. Allora:</p>
+        <p>1) tutti gli autovalori di A sono <b>reali</b> (p<sub>A</sub> si scompone in R);</p>
+        <p>2) autovettori di autovalori <b>diversi</b> sono <b>ortogonali</b>;</p>
+        <p>3) esiste una base <b>ortonormale</b> di Rⁿ fatta di autovettori, cioè esiste M ortogonale con</p>
+        <p class="math"><sup>t</sup>M · A · M = M⁻¹ · A · M = D diagonale</p>
+        <p>Vale anche il viceversa: se A è diagonalizzabile con una M ortogonale, allora A è simmetrica.</p>
+        <span class="why mem">dimostrazione: a memoria / se richiesta</span>
+        <details class="whybox"><summary>Cosa si può capire facilmente</summary><p>Il punto 2) ha un conto corto: se A·v = λ·v e A·w = μ·w, allora λ·⟨v, w⟩ = ⟨A·v, w⟩ = ⟨v, A·w⟩ = μ·⟨v, w⟩ (la seconda uguaglianza usa <sup>t</sup>A = A). Con λ ≠ μ resta ⟨v, w⟩ = 0. I punti 1) e 3) hanno dimostrazioni più lunghe: imparale a memoria, salvo che il prof le chieda.</p></details>
+      </div>
+      <div class="def"><b>Conseguenza pratica</b>
+        <p>Per una simmetrica <b>non serve</b> controllare mg = ma: è sempre vero. Serve solo:</p>
+        <p>• autospazi di autovalori diversi: già ortogonali, basta normalizzare;</p>
+        <p>• dentro un autospazio con mg ≥ 2: la base che trovi col sistema di solito <b>non</b> è ortogonale, quindi usi Gram-Schmidt (capitolo 8).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>A = ${M([[1,1,1],[1,1,1],[1,1,1]])}$: trova M ortogonale</h2>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Autovalori</h3><p>rk A = 1, quindi ker A ha dimensione 3 − 1 = 2: λ = 0 con mg = 2. tr A = 3 = somma degli autovalori = 0 + 0 + λ₃ ⇒ λ₃ = 3.</p><p>p<sub>A</sub>(λ) = −λ²·(λ − 3).</p></div>
+        <div class="step"><h3>Passo 2 · Autospazio di λ = 3</h3><p>A·(1, 1, 1) = (3, 3, 3): V<sub>3</sub> = Span((1, 1, 1)). Normalizzo: (1/√3)·(1, 1, 1).</p></div>
+        <div class="step"><h3>Passo 3 · Autospazio di λ = 0</h3><p>V<sub>0</sub> = ker A = { x + y + z = 0 }. Base dal sistema: (−1, 1, 0), (−1, 0, 1). Non sono ortogonali (prodotto = 1).</p></div>
+        <div class="step"><h3>Passo 4 · Gram-Schmidt dentro V<sub>0</sub></h3><p>È proprio la ricetta del capitolo 8: (1/√2)·(−1, 1, 0) e (1/√6)·(−1, −1, 2).</p><p>Sono automaticamente ortogonali a (1, 1, 1) (teorema, punto 2).</p></div>
+        <div class="step"><h3>Passo 5 · M e D</h3><p class="math">M = ( (1/√3)(1,1,1) | (1/√2)(−1,1,0) | (1/√6)(−1,−1,2) ) &nbsp; (colonne)</p><p>D = ${M([[3,0,0],[0,0,0],[0,0,0]])}$, nello stesso ordine delle colonne. <sup>t</sup>M·A·M = D.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[2,1],[1,2]])}$: M ortogonale con <sup>t</sup>M·A·M = D</h2>
+      <div class="steps" id="guided-spettrale"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-spettrale"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>A reale simmetrica</b> ⇒ autovalori reali, autovettori di λ diversi ortogonali, esiste M ortogonale con <sup>t</sup>M·A·M = D.</li>
+        <li><b>M ortogonale</b>: colonne = base ortonormale di autovettori; M⁻¹ = <sup>t</sup>M.</li>
+        <li>Ricetta: autovalori → base di ogni V<sub>λ</sub> → Gram-Schmidt solo dentro i V<sub>λ</sub> con mg ≥ 2 → normalizza tutto → M e D nello stesso ordine.</li>
+        <li>Disegno: il cerchio unitario va in un'ellisse con assi lungo gli autovettori, semi-assi |λ<sub>i</sub>|.</li>
+      </ul>
+      <div data-copy="spettrale"></div>
+    </section>
+    <div class="next"><a href="#scalare">← Capitolo 8</a><a href="#sistemi">Ripasso · Sistemi →</a></div>
+  </div>
+<script>
+(function(){
+  const { inp, M, transform, guided, exercises } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="spettrale"] p, [data-ch="spettrale"] h2').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  transform('spettrale', 'cv-sp', 'ctl-sp', 'out-sp', { eigen:true, circle:true, area:false, presets:[
+    { name:'Simmetrica: autovalori 1 e 3', m:[2,1,1,2] },
+    { name:'Simmetrica: 2 e −1 (ribalta un asse)', m:[1,-1.5,-1.5,1] },
+    { name:'Diagonale: assi = assi cartesiani', m:[2,0,0,1] },
+    { name:'Non simmetrica (b ≠ c)', m:[2,1.5,0,1] }
+  ]});
+
+  guided('spettrale', [
+    { h:'Passo 1 · Autovalori (prima il minore)', type:'nums', ans:[1,3], html:'λ₁ = '+inp('autovalore minore')+' &nbsp; λ₂ = '+inp('autovalore maggiore'),
+      ok:'Sì: λ² − 4λ + 3 = (λ − 1)(λ − 3).', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
+    { h:'Passo 2 · Autovettori: V<sub>1</sub> = Span((1, −1)), V<sub>3</sub> = Span((1, 1)). Quanto vale ⟨(1, −1), (1, 1)⟩?', type:'nums', ans:[0], html:'⟨(1, −1), (1, 1)⟩ = '+inp('prodotto scalare'),
+      ok:'Zero: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
+    { h:'Passo 3 · Per normalizzare divido ognuno per…', type:'choice', ans:1, opts:['2','√2','1/2'],
+      ok:'Giusto: ‖(1, −1)‖ = ‖(1, 1)‖ = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
+    { h:'Passo 4 · Quale M dà <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'?', type:'choice', ans:0, opts:['(1/√2)·'+M([[1,1],[-1,1]]), '(1/√2)·'+M([[1,1],[1,-1]]), M([[1,1],[-1,1]])],
+      ok:'Esatto: prima colonna = autovettore di 1, seconda = autovettore di 3, entrambe di norma 1.', bad:'L\'ordine delle colonne deve seguire D (prima λ = 1, poi λ = 3) e le colonne devono avere norma 1.' }
+  ], '<b>Fatto!</b> M = (1/√2)·'+M([[1,1],[-1,1]])+' è ortogonale (M⁻¹ = <sup>t</sup>M) e <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'.');
+
+  exercises('spettrale', [
+    { id:'e1', type:'choice', q:'A ∈ M(4, 4, R) simmetrica. Allora A è diagonalizzabile?', opts:['Sempre','Solo se ha 4 autovalori distinti','Dipende'], a:0, hint:'Teorema spettrale.', sol:'Sempre, e addirittura con M ortogonale.' },
+    { id:'e2', type:'choice', q:'Quale matrice è diagonalizzabile con una M ortogonale?', opts:[M([[1,2],[0,3]]), M([[1,2],[2,3]]), M([[0,-1],[1,0]])], a:1, hint:'Serve la simmetria.', sol:M([[1,2],[2,3]])+' è simmetrica. La prima è diagonalizzabile (autovalori 1 e 3) ma non con M ortogonale; la terza non ha autovalori reali.' },
+    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'λ² − 25 = 0 ⇒ λ = −5 e λ = 5.' },
+    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'x = 2y: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
+    { id:'e5', type:'choice', q:'M ortogonale. Allora M⁻¹ = …', opts:['M','<sup>t</sup>M','−M'], a:1, hint:'Definizione di ortogonale.', sol:'<sup>t</sup>M·M = I ⇒ M⁻¹ = <sup>t</sup>M.' },
+    { id:'e6', type:'num', label:'mg(2) =', q:'A ∈ M(3, 3, R) simmetrica con p<sub>A</sub>(λ) = −(λ − 2)²·(λ − 7).', a:2, hint:'Per le simmetriche mg = ma sempre.', sol:'mg(2) = ma(2) = 2.' },
+    { id:'e7', type:'choice', src:'trappola', q:'Autovettori (1, 1, 0) di λ = 1 e (1, 0, k) di λ = 4 di una A simmetrica. Allora k…', opts:['può essere qualsiasi','deve essere tale che (1, 0, k) ⊥ (1, 1, 0), ma questo è impossibile: allora non può succedere','k = 0'], a:1, hint:'⟨(1, 1, 0), (1, 0, k)⟩ = 1 per ogni k.', sol:'Autovettori di autovalori diversi devono essere ortogonali, ma il prodotto vale sempre 1 ≠ 0: una A simmetrica così non esiste.' },
+    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'(1/3, 2/3, 2/3).' }
+  ]);
+})();
+</script>

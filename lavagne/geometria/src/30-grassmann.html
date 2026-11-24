@@ -1,0 +1,177 @@
+  <!-- ================= CAPITOLO 3 · SOMMA, INTERSEZIONE, GRASSMANN, COORDINATE ================= -->
+  <div class="chapter" data-ch="grassmann" data-title="3 · Somma e Grassmann" data-date="27/11" data-full="Intersezione, somma, Grassmann, coordinate" data-src="Libro pp. 57-60, 64-65, 70-73 · esercizi pp. 75-78 · Fogli 6-7" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 3 · giorno 27/11 · libro pp. 57-60, 64-65, 70-73</div>
+      <h2>Due sottospazi insieme</h2>
+      <p class="big">Hai due sottospazi U e W dello stesso spazio V. Ti chiedi: cosa hanno <b>in comune</b> (l'intersezione U ∩ W)? Cosa ottieni <b>mettendoli insieme</b> (la somma U + W)? La formula di Grassmann lega le quattro dimensioni, così spesso ne calcoli tre e la quarta viene gratis.</p>
+      <p>Nello stesso giorno ci sono le <b>coordinate</b>: come si scrive un vettore usando una base che non è quella canonica.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Due rette per l'origine in R²</h2>
+      <p>U e W sono due rette per l'origine (dimensione 1 ciascuna). Girale. Se sono <b>diverse</b>, si toccano solo in 0 e insieme generano tutto il piano. Se <b>coincidono</b>, l'intersezione è tutta la retta e la somma è ancora la retta.</p>
+      <canvas id="cv-rette" aria-label="Due rette per l'origine U e W nel piano"></canvas>
+      <div class="controls">
+        <label>angolo di U <input type="range" id="gr-a" min="0" max="175" step="5" value="20"> <b id="gr-av"></b></label>
+        <label>angolo di W <input type="range" id="gr-b" min="0" max="175" step="5" value="110"> <b id="gr-bv"></b></label>
+      </div>
+      <p class="readout" id="gr-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Intersezione (Prop. 2.2.11)</b>
+        <p>Se U, W ⊆ V sono sottospazi, <b>U ∩ W</b> = {v ∈ V : v ∈ U e v ∈ W} è un sottospazio.</p>
+        <p>Attenzione: <b>U ∪ W in generale NON è un sottospazio</b> (Foglio 4, es. 13). I due assi di R² ne sono l'esempio: (1, 0) + (0, 1) = (1, 1) non sta su nessuno dei due.</p>
+      </div>
+      <div class="def"><b>Somma (Def. 2.2.16 e Prop. 2.2.19)</b>
+        <p><b>U + W</b> = {u + w : u ∈ U, w ∈ W}. È il più piccolo sottospazio che contiene sia U sia W.</p>
+        <p>In pratica: se U = Span(u₁, …, u<sub>h</sub>) e W = Span(w₁, …, w<sub>k</sub>), allora <b>U + W = Span(u₁, …, u<sub>h</sub>, w₁, …, w<sub>k</sub>)</b>: metti insieme i generatori.</p>
+      </div>
+      <div class="def"><b>Formula di Grassmann (Teorema 2.3.27, p. 70)</b>
+        <p class="math">dim(U + W) + dim(U ∩ W) = dim U + dim W</p>
+        <span class="why mem">a memoria: la formula</span>
+        <details class="whybox"><summary>L'idea (facile), anche se la dimostrazione è lunga</summary><p>Se conti le direzioni di U e poi quelle di W, le direzioni che stanno in tutti e due (cioè in U ∩ W) le hai contate <b>due volte</b>. Per avere le direzioni di U + W le togli una volta. È come contare gli studenti di due corsi: iscritti al primo + iscritti al secondo − iscritti a entrambi.</p></details>
+      </div>
+      <div class="def"><b>Somma diretta (Prop. 2.3.28)</b>
+        <p>La somma è <b>diretta</b>, e si scrive <b>U ⊕ W</b>, se vale una di queste (sono equivalenti):</p>
+        <ul class="recap"><li>U ∩ W = {0};</li><li>dim(U + W) = dim U + dim W;</li><li>ogni vettore di U + W si scrive in <b>un solo modo</b> come u + w.</li></ul>
+        <p>Se in più U ⊕ W = V, U e W si dicono <b>supplementari</b>.</p>
+      </div>
+      <div class="def"><b>Coordinate (pp. 64-65)</b>
+        <p>Se B = (v₁, …, v<sub>n</sub>) è una base di V e v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>, il vettore (λ₁, …, λ<sub>n</sub>) ∈ Kⁿ si chiama <b>vettore delle coordinate</b> di v rispetto a B, e si scrive [v]<sub>B</sub>. L'ordine dei vettori della base conta.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il disegno delle coordinate</div>
+      <h2>La stessa freccia, con un'altra griglia</h2>
+      <p>La base canonica disegna la griglia quadrettata. Un'altra base B = (<span class="cu">b₁</span>, <span class="cv">b₂</span>) disegna una griglia "storta". Le coordinate di <span class="cw">v</span> rispetto a B dicono quanti passi fai lungo b₁ e quanti lungo b₂ per arrivare alla punta di v.</p>
+      <canvas id="cv-coord" aria-label="Griglia della base b1 b2 e coordinate del vettore v"></canvas>
+      <div class="controls">
+        <label>direzione di b₂ <input type="range" id="co-t" min="30" max="150" step="5" value="70"> <b id="co-tv"></b></label>
+        <label>v, prima componente <input type="range" id="co-x" min="-4" max="4" step="0.5" value="3"> <b id="co-xv"></b></label>
+        <label>v, seconda componente <input type="range" id="co-y" min="-3" max="3" step="0.5" value="2"> <b id="co-yv"></b></label>
+      </div>
+      <p class="readout" id="co-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Calcolare U + W e U ∩ W</h2>
+      <p>Esempio in R⁴: U = Span((1, 0, 1, 0), (0, 1, 0, 1)) e W = {(x, y, z, t) ∈ R⁴ : x − z = 0}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U = 2 (i due generatori non sono multipli). W ha 1 equazione in 4 incognite: dim W = 4 − 1 = 3.</p></div>
+        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Equazione di W: x − z = a − a = 0, sempre vera. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
+        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
+        <div class="step"><h3>Regola generale</h3><ul class="recap"><li>Entrambi con equazioni: <b>U ∩ W</b> = metti tutte le equazioni insieme.</li><li>Entrambi con generatori: <b>U + W</b> = tutti i generatori in colonna, Gauss, dim = rango.</li><li>Uno con generatori e uno con equazioni: per U ∩ W sostituisci il vettore generico nelle equazioni (come sopra).</li><li>La quarta dimensione la trovi sempre con Grassmann.</li></ul></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio · dim(U + W)</div>
+      <h2>Tutti i generatori in colonna</h2>
+      <p>Le prime colonne sono i generatori di U, le altre quelli di W. Il rango è dim(U + W).</p>
+      <div id="lab-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>U = {x + y + z = 0} e W = Span((1, 1, 1)) in R³</h2>
+      <p>U è un piano, W è una retta. Calcola le quattro dimensioni e di' se R³ = U ⊕ W.</p>
+      <div class="steps" id="guided-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>U ∩ W</b> è sempre un sottospazio; <b>U ∪ W</b> di solito no.</li>
+        <li><b>U + W</b> = Span(generatori di U e di W insieme).</li>
+        <li><b>Grassmann:</b> dim(U + W) + dim(U ∩ W) = dim U + dim W.</li>
+        <li><b>Somma diretta U ⊕ W</b> ⇔ U ∩ W = {0} ⇔ dim(U + W) = dim U + dim W.</li>
+        <li><b>Coordinate</b> [v]<sub>B</sub>: i numeri λ₁, …, λ<sub>n</sub> con v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>. Si trovano risolvendo un sistema.</li>
+        <li>Trucco: U, W ⊆ V con dim U + dim W &gt; dim V ⇒ U ∩ W ≠ {0} (perché dim(U + W) ≤ dim V).</li>
+      </ul>
+      <div data-copy="grassmann"></div>
+    </section>
+    <div class="next"><a href="#rango">← Capitolo 2</a><a href="#lineari">Capitolo 4 · Applicazioni lineari →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises, lab } = Lav;
+  const B = Board($('cv-rette'), {xmin:-4,xmax:4,ymin:-3,ymax:3});
+  const rette = () => {
+    const a=+$('gr-a').value, b=+$('gr-b').value; $('gr-av').textContent=a+'°'; $('gr-bv').textContent=b+'°';
+    if (!B.fit()) return; B.grid();
+    const same = a===b, ra=a*Math.PI/180, rb=b*Math.PI/180;
+    if (!same){ const c=B.ctx; c.save(); c.globalAlpha=.08; c.fillStyle=Lav.css('--w'); c.fillRect(0,0,B.W,B.H); c.restore(); }
+    B.through(Math.cos(ra),Math.sin(ra),'--u',3); B.through(Math.cos(rb),Math.sin(rb),'--v',3, same?[8,8]:null);
+    B.text(2.6*Math.cos(ra),2.6*Math.sin(ra),'U','--u',15); B.text(2.2*Math.cos(rb),2.2*Math.sin(rb)+(same?.5:0),'W','--v',15);
+    B.dot(0,0,'--w',6);
+    $('gr-out').innerHTML = same
+      ? 'U = W. dim(U ∩ W) = 1 e dim(U + W) = 1. Grassmann: <b>1 + 1 = 1 + 1</b>. La somma non è diretta.'
+      : 'U ≠ W. U ∩ W = {0}, quindi dim(U ∩ W) = 0; U + W = R² (sfondo viola), dim = 2. Grassmann: <b>2 + 0 = 1 + 1</b>. R² = U ⊕ W.';
+  };
+  ['gr-a','gr-b'].forEach(i=>$(i).addEventListener('input', rette)); onDraw('grassmann', rette);
+
+  const C = Board($('cv-coord'), {xmin:-5,xmax:5,ymin:-3.5,ymax:3.5});
+  const coord = () => {
+    const t=+$('co-t').value*Math.PI/180, x=+$('co-x').value, y=+$('co-y').value;
+    $('co-tv').textContent=$('co-t').value+'°'; $('co-xv').textContent=it(x,1); $('co-yv').textContent=it(y,1);
+    const b1=[1.5,0], b2=[1.2*Math.cos(t),1.2*Math.sin(t)], det=b1[0]*b2[1]-b1[1]*b2[0], l=(x*b2[1]-y*b2[0])/det, m=(b1[0]*y-b1[1]*x)/det;
+    if (!C.fit()) return;
+    const c=C.ctx; c.save(); c.globalAlpha=.7;
+    for (let k=-8;k<=8;k++){ C.seg(k*b1[0]-20*b2[0],k*b1[1]-20*b2[1],k*b1[0]+20*b2[0],k*b1[1]+20*b2[1],'--line',1.5); C.seg(k*b2[0]-20*b1[0],k*b2[1]-20*b1[1],k*b2[0]+20*b1[0],k*b2[1]+20*b1[1],'--line',1.5); }
+    c.restore(); C.seg(-20,0,20,0,'--muted',1); C.seg(0,-20,0,20,'--muted',1);
+    const p=[l*b1[0],l*b1[1]];
+    C.arrow(0,0,...p,'--u','',2); C.arrow(...p,x,y,'--v','',2);
+    C.arrow(0,0,...b1,'--u','b₁'); C.arrow(0,0,...b2,'--v','b₂'); C.arrow(0,0,x,y,'--w','v',3.5);
+    $('co-out').innerHTML = 'v = ('+it(x,1)+'; '+it(y,1)+') nella base canonica. Nella base B: v = <b>'+it(l,2)+'</b>·b₁ + <b>'+it(m,2)+'</b>·b₂, cioè [v]<sub>B</sub> = ('+it(l,2)+'; '+it(m,2)+').';
+  };
+  ['co-t','co-x','co-y'].forEach(i=>$(i).addEventListener('input', coord)); onDraw('grassmann', coord);
+
+  lab('lab-grassmann', { show:['cols'], presets:[
+    { name:'U = Span(e₁, e₂), W = Span(e₂, e₃) in R³', rows:[[1,0,0,0],[0,1,1,0],[0,0,0,1]] },
+    { name:'U = Span((1,0,1,0),(0,1,0,1)), W = Span((1,1,1,1),(1,0,0,0)) in R⁴', rows:[[1,0,1,1],[0,1,1,0],[1,0,1,0],[0,1,1,0]] },
+    { name:'U = Span((1,2,0)), W = Span((2,4,0),(0,0,1)) in R³', rows:[[1,2,0],[2,4,0],[0,0,1]] }
+  ]});
+
+  guided('grassmann', [
+    { h:'Passo 1 · dim U e dim W', type:'nums', ans:[2,1], html:'dim U = '+inp('dimensione di U')+' &nbsp; dim W = '+inp('dimensione di W'),
+      ok:'Sì: U ha 1 equazione in 3 incognite (3 − 1 = 2), W è generato da un vettore non nullo.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
+    { h:'Passo 2 · Il vettore generico di W è (t, t, t). Mettilo nell\'equazione di U: t + t + t = 0. Quanto vale t?', type:'nums', ans:[0],
+      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: l\'unico vettore comune è (0, 0, 0).', bad:'3t = 0: dividi per 3.' },
+    { h:'Passo 3 · Quindi dim(U ∩ W) = ? E con Grassmann dim(U + W) = ?', type:'nums', ans:[0,3],
+      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
+    { h:'Passo 4 · R³ = U ⊕ W?', type:'choice', ans:0,
+      opts:['Sì: U ∩ W = {0} e dim(U + W) = 3 = dim R³, quindi U + W = R³ e la somma è diretta','No, perché U è un piano e W una retta','Non si può dire senza una base'],
+      ok:'Esatto: U e W sono supplementari in R³.', bad:'Controlla le due condizioni: intersezione nulla e dim(U + W) = 3.' }
+  ], '<b>Fatto!</b> dim U = 2, dim W = 1, U ∩ W = {0}, U + W = R³: <b>R³ = U ⊕ W</b>. La retta W "buca" il piano U solo nell\'origine.');
+
+  exercises('grassmann', [
+    { id:'e1', type:'num', label:'almeno', q:'U e W sono sottospazi di R⁵, entrambi di dimensione 3. Quanto vale <b>come minimo</b> dim(U ∩ W)?', a:1,
+      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'dim(U ∩ W) = 6 − dim(U + W) ≥ 6 − 5 = 1. Quindi U ∩ W non è mai solo {0}.' },
+    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U è il piano z = 0, W è il piano x = 0. In comune c\'è la retta Span(e₂): dimensione 1.' },
+    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'2 + 2 − 1 = 3: U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
+    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'2 + 2 − 3 = 1: si incontrano in una retta.' },
+    { id:'e5', type:'nums', labels:['λ₁ =','λ₂ ='], q:'Coordinate di v = (5, 1) rispetto alla base B = ((1, 1), (1, −1)) di R².', a:[3,2],
+      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'2λ₁ = 6 ⇒ λ₁ = 3, poi λ₂ = 2. [v]<sub>B</sub> = (3, 2).' },
+    { id:'e6', type:'nums', labels:['a =','b =','c ='], q:'Scrivi p(x) = 3 + 2x + x² come a·1 + b·(1 + x) + c·(1 + x)². Coordinate rispetto alla base (1, 1 + x, (1 + x)²) di R₂[x].', a:[2,0,1],
+      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'x²: c = 1. x: b + 2c = 2 ⇒ b = 0. Termine noto: a + b + c = 3 ⇒ a = 2. Coordinate (2, 0, 1).' },
+    { id:'e7', type:'choice', src:'tipo quiz', q:'Se U, W ⊆ R⁴ hanno dim U = dim W = 2 e U ∩ W = {0}, allora…', opts:['R⁴ = U ⊕ W','U + W è un piano','U = W'], a:0,
+      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'dim(U + W) = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
+    { id:'e8', type:'choice', q:'U ∪ W è un sottospazio quando…', opts:['sempre','solo se uno dei due è contenuto nell\'altro','solo se U ∩ W = {0}'], a:1,
+      hint:'Pensa ai due assi di R²: U ∩ W = {0} ma U ∪ W non è un sottospazio.', sol:'Se U ⊆ W allora U ∪ W = W, che è un sottospazio. Altrimenti prendi u ∈ U fuori da W e w ∈ W fuori da U: u + w non sta né in U né in W.' }
+  ]);
+})();
+</script>
