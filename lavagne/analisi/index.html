@@ -152,6 +152,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <a href="#continuita-derivata" data-ch="continuita-derivata">9 · Continuità e derivata</a>
     <a href="#regole-derivazione" data-ch="regole-derivazione">10 · Regole di derivazione</a>
     <a href="#teoremi-taylor" data-ch="teoremi-taylor">11 · Rolle, Lagrange, Taylor</a>
+    <a href="#studio-funzione" data-ch="studio-funzione">12 · Studio di funzione</a>
   </nav>
 
   <!-- ================= CAPITOLO 1 ================= -->
@@ -1190,6 +1191,81 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
   </div>
 
+  <!-- ================= CAPITOLO 12 ================= -->
+  <div class="chapter" data-ch="studio-funzione" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 12 · blocco del 7/12 · dispensa pp. 103-108, 116-117</div>
+      <h2>Lo studio di funzione</h2>
+      <p class="big">Ti danno una formula, tu devi disegnarne il grafico. Non punto per punto: raccogli indizi (dove esiste, dove è positiva, cosa fa ai bordi, dove sale e scende) e alla fine il disegno viene da solo.</p>
+      <p>A cosa serve: è l'esercizio più frequente nello scritto di Analisi 1. Usa tutto quello che hai fatto finora: limiti (capitoli 8 e 11), derivate (9 e 10), Lagrange per crescenza (11).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lo schema · un indizio alla volta</div>
+      <h2>Costruisci il grafico passo passo</h2>
+      <p>Scegli una funzione e fai avanzare i passi. Ogni passo aggiunge un indizio al disegno. Il grafico vero compare solo alla fine: prova a immaginarlo prima.</p>
+      <canvas id="plotSF" aria-label="Studio di funzione passo passo"></canvas>
+      <div class="controls">
+        <label for="sfS">Funzione: <select id="sfS">
+          <option value="0">f(x) = x³ − 3x</option>
+          <option value="1">f(x) = x²/(x − 1)</option>
+          <option value="2">f(x) = x · e<sup>−x</sup></option>
+        </select></label>
+        <label for="sfN">Passo: <input type="range" id="sfN" min="1" max="6" value="1"></label>
+      </div>
+      <div class="readout" id="sfOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I sei passi <span class="tag cap">da capire, non da memorizzare</span></div>
+      <h2>Lo schema completo</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Dominio</h3><p>Dove la formula ha senso: denominatore ≠ 0, argomento del ln &gt; 0, sotto radice pari ≥ 0. Controlla anche le simmetrie: f(−x) = f(x) pari (simmetrica rispetto all'asse y), f(−x) = −f(x) dispari (simmetrica rispetto all'origine).</p></div>
+        <div class="step"><h3>2 · Segno e intersezioni con gli assi</h3><p>Risolvi f(x) &gt; 0: sai dove il grafico sta sopra o sotto l'asse x. f(0) dà l'intersezione con l'asse y (se 0 è nel dominio).</p></div>
+        <div class="step"><h3>3 · Limiti ai bordi del dominio e asintoti</h3><p>Limite per x → ±∞ e per x che tende ai punti esclusi, da destra e da sinistra. Da lì trovi gli asintoti (riquadro sotto).</p></div>
+        <div class="step"><h3>4 · Derivata prima: crescenza, massimi, minimi</h3><p>f′ &gt; 0 ⇒ sale, f′ &lt; 0 ⇒ scende (conseguenza di Lagrange). Dove f′ passa da + a − c'è un massimo, da − a + un minimo.</p></div>
+        <div class="step"><h3>5 · Derivata seconda: concavità e flessi</h3><p>f″ &gt; 0 ⇒ concava verso l'alto (a coppa ∪), f″ &lt; 0 ⇒ verso il basso (∩). Dove f″ cambia segno c'è un flesso.</p></div>
+        <div class="step"><h3>6 · Disegno</h3><p>Metti insieme tutto: prima asintoti e punti speciali, poi colleghi rispettando crescenza e concavità.</p></div>
+      </div>
+      <div class="warn"><b>Errore classico:</b> f′(x₀) = 0 non basta per avere massimo o minimo (x³ in 0 ha f′ = 0 ma sale sempre). E f″(x₀) = 0 non basta per un flesso (x⁴ in 0). Conta il <b>cambio di segno</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Gli asintoti <span class="tag mem">formule a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Le rette a cui il grafico si avvicina</h2>
+      <div class="when">
+        <div><b>Verticale</b> x = x₀: se <span class="lim">lim<span>x→x₀</span></span> f(x) = ±∞ (anche solo da destra o da sinistra).</div>
+        <div><b>Orizzontale</b> y = ℓ: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ℓ, numero finito.</div>
+        <div><b>Obliquo</b> y = mx + q: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ±∞ e esistono finiti m = <span class="lim">lim<span>x→±∞</span></span> <span class="fr"><span>f(x)</span><span>x</span></span> ≠ 0 e q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − m x].</div>
+      </div>
+      <p><b>Perché m e q si calcolano così (facile):</b> se da lontano f(x) ≈ mx + q, allora f(x)/x ≈ m + q/x → m per x → ±∞, e f(x) − mx ≈ q. Esempio: per x²/(x − 1), m = <span class="lim">lim<span>x→+∞</span></span> x²/(x² − x) = 1 e q = <span class="lim">lim<span>x→+∞</span></span> [x²/(x − 1) − x] = <span class="lim">lim<span>x→+∞</span></span> x/(x − 1) = 1: asintoto y = x + 1.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Massimi, minimi e flessi di f(x) = x³ − 12x</h2>
+      <div class="steps" id="guided-studio-funzione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-studio-funzione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Schema: dominio (e simmetrie) → segno e assi → limiti e asintoti → f′ (crescenza, max, min) → f″ (concavità, flessi) → disegno.</li>
+        <li>Verticale: <span class="lim">lim<span>x→x₀</span></span> f(x) = ±∞. Orizzontale: <span class="lim">lim<span>x→±∞</span></span> f(x) = ℓ finito.</li>
+        <li>Obliquo: m = <span class="lim">lim<span>x→±∞</span></span> f(x)/x (finito, ≠ 0), q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − mx].</li>
+        <li>Max/min: f′ cambia segno. Flesso: f″ cambia segno. f′ = 0 o f″ = 0 da soli non bastano.</li>
+      </ul>
+      <div data-copy="studio-funzione"></div>
+    </section>
+  </div>
+
   <footer>Lavagna del tutor di Analisi T-1 · fonti: lavagne di Mughetti e Albano, dispensa Unibo (Arcozzi-Galeotti) · esame 25 gennaio 2027</footer>
 </div>
 
@@ -1852,6 +1928,79 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:'−1/2. (Infatti f″(0) = −cos 0 = −1, diviso 2!.)' },
     { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:'(1/x)/(−1/x²) = −x → 0.' },
     { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:'Esce 1/0, non è una forma indeterminata: De L\'Hôpital non si può usare (e darebbe 1, sbagliato). Il limite destro è +∞, il sinistro −∞.' }
+  ];
+
+  /* ===== capitolo 12: Studio di funzione ===== */
+  order.push('studio-funzione'); NAMES['studio-funzione'] = '12 Studio di funzione';
+  const SF = [
+    { f:x=>x*x*x-3*x, xr:[-3,3], yr:[-5,5], excl:[], asy:[], ext:[{x:-1,y:2,label:'max'},{x:1,y:-2,label:'min'}], fl:[{x:0,y:0,label:'flesso'}],
+      sign:x=>x*x*x-3*x, zeros:[-Math.sqrt(3),0,Math.sqrt(3)],
+      t:['<b>Dominio:</b> tutto ℝ (è un polinomio). È dispari: f(−x) = −f(x), quindi simmetrica rispetto all\'origine.',
+         '<b>Segno:</b> x³ − 3x = x(x² − 3) &gt; 0 per −√3 &lt; x &lt; 0 e per x &gt; √3. Zone verdi: sopra l\'asse; zone rosse: sotto. Tocca l\'asse in −√3, 0, √3.',
+         '<b>Limiti:</b> '+LIMX('+∞')+' f(x) = +∞, '+LIMX('−∞')+' f(x) = −∞. Niente asintoti (un polinomio di grado 3 non ha nemmeno l\'obliquo: f(x)/x → +∞).',
+         '<b>f′(x) = 3x² − 3</b> = 0 per x = ±1. f′ &gt; 0 fuori da [−1, 1]: sale, scende, sale. Massimo in (−1, 2), minimo in (1, −2).',
+         '<b>f″(x) = 6x</b>: negativa per x &lt; 0 (∩), positiva per x &gt; 0 (∪). Cambia segno in 0: flesso in (0, 0).',
+         '<b>Disegno:</b> sale fino al massimo, scende passando per il flesso, risale dopo il minimo.'] },
+    { f:x=>x*x/(x-1), xr:[-4,5], yr:[-8,10], excl:[1], asy:[{type:'v',x:1},{type:'o',m:1,q:1}], ext:[{x:0,y:0,label:'max'},{x:2,y:4,label:'min'}], fl:[],
+      sign:x=>x*x/(x-1), zeros:[0],
+      t:['<b>Dominio:</b> x ≠ 1 (il denominatore non può fare 0). Linea tratteggiata: x = 1 è escluso.',
+         '<b>Segno:</b> x² ≥ 0 sempre, quindi il segno è quello di x − 1: positiva per x &gt; 1, negativa per x &lt; 1 (tranne x = 0, dove vale 0).',
+         '<b>Limiti:</b> '+LIMX('1⁺')+' f(x) = +∞ e '+LIMX('1⁻')+' f(x) = −∞: asintoto verticale x = 1. Per x → ±∞, f → ±∞; m = 1, q = 1: asintoto obliquo y = x + 1.',
+         '<b>f′(x) = x(x − 2)/(x − 1)²</b> = 0 per x = 0 e x = 2. Segno di f′: + − − +. Massimo in (0, 0), minimo in (2, 4).',
+         '<b>f″(x) = 2/(x − 1)³</b>: negativa per x &lt; 1 (∩), positiva per x &gt; 1 (∪). Cambia segno in x = 1, ma lì f non esiste: nessun flesso.',
+         '<b>Disegno:</b> due rami, uno a sinistra e uno a destra dell\'asintoto verticale, entrambi attaccati all\'obliqua y = x + 1 da lontano.'] },
+    { f:x=>x*Math.exp(-x), xr:[-1,6], yr:[-2,1], excl:[], asy:[{type:'h',y:0,from:0}], ext:[{x:1,y:Math.exp(-1),label:'max'}], fl:[{x:2,y:2*Math.exp(-2),label:'flesso'}],
+      sign:x=>x, zeros:[0],
+      t:['<b>Dominio:</b> tutto ℝ.',
+         '<b>Segno:</b> e<sup>−x</sup> &gt; 0 sempre, quindi il segno è quello di x: positiva per x &gt; 0, negativa per x &lt; 0. Passa per (0, 0).',
+         '<b>Limiti:</b> '+LIMX('+∞')+' x e<sup>−x</sup> = '+LIMX('+∞')+' x/eˣ = 0 (l\'esponenziale vince): asintoto orizzontale y = 0 a destra. '+LIMX('−∞')+' f(x) = −∞.',
+         '<b>f′(x) = (1 − x) e<sup>−x</sup></b>: positiva per x &lt; 1, negativa per x &gt; 1. Massimo in (1, 1/e) ≈ (1; 0,37).',
+         '<b>f″(x) = (x − 2) e<sup>−x</sup></b>: cambia segno in x = 2. Flesso in (2, 2/e²) ≈ (2; 0,27).',
+         '<b>Disegno:</b> sale da −∞, arriva al massimo in x = 1, scende piano verso 0 cambiando concavità in x = 2.'] }
+  ];
+  draws['studio-funzione'] = () => {
+    const c = SF[+$('sfS').value], n = +$('sfN').value, o = { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[], points:[], vlines:[] };
+    c.excl.forEach(x => { if (!(n>=3 && c.asy.some(a=>a.type==='v' && a.x===x))) o.vlines.push({x, color:'--bad', label:'x ≠ '+x}); });
+    if (n>=2){ o.fns.push({f:x=>{ const s=c.sign(x); return isFinite(s) && s>0 ? c.yr[1]*0.04 : NaN; }, color:'--ok', width:6});
+               o.fns.push({f:x=>{ const s=c.sign(x); return isFinite(s) && s<0 ? -c.yr[1]*0.04 : NaN; }, color:'--bad', width:6});
+               c.zeros.forEach(z => o.points.push({x:z, y:0, color:'--ink'})); }
+    if (n>=3) c.asy.forEach(a => { if (a.type==='v') o.vlines.push({x:a.x, color:'--cop', label:'asintoto x = '+a.x});
+      if (a.type==='o') o.fns.push({f:x=>a.m*x+a.q, color:'--cop', dash:true, width:1.5});
+      if (a.type==='h') o.fns.push({f:x=>x>=a.from?a.y:NaN, color:'--cop', dash:true, width:1.5}); });
+    if (n>=4) c.ext.forEach(p => o.points.push({...p, color:'--thief'}));
+    if (n>=5) c.fl.forEach(p => o.points.push({...p, color:'--cop'}));
+    if (n>=6) o.fns.push({f:c.f, color:'--ink', width:2.5});
+    plotF($('plotSF'), o);
+    $('sfOut').innerHTML = '<span style="font-size:1rem">Passo '+n+' di 6 · '+c.t[n-1]+'</span>';
+  };
+  $('sfS').addEventListener('change', () => { $('sfN').value = 1; draws['studio-funzione'](); });
+  $('sfN').addEventListener('input', () => draws['studio-funzione']());
+
+  guided('studio-funzione', 'lavagna-studio-funzione', [
+    { h:'Passo 1 · Derivata prima: f′(x) = 3x² − 12. Dove fa 0? (scrivi prima il più piccolo)', type:'nums', ans:[-2,2],
+      html:'x = '+inp('prima soluzione','3.5em')+' e x = '+inp('seconda soluzione','3.5em'),
+      ok:'Giusto: 3x² = 12, x² = 4, x = ±2.', bad:'3x² − 12 = 0 → x² = 4.' },
+    { h:'Passo 2 · Segno di f′ = 3(x² − 4): positiva fuori da [−2, 2], negativa dentro. Dove c\'è il massimo?', type:'choice', ans:0,
+      opts:['in x = −2: f′ passa da + a −','in x = 2: f′ passa da + a −','non ci sono massimi'],
+      ok:'Esatto: prima sale, poi scende. In x = 2 invece c\'è il minimo (da − a +).', bad:'Massimo = prima sale (f′ &gt; 0) poi scende (f′ &lt; 0).' },
+    { h:'Passo 3 · Quanto vale il massimo? f(−2) = (−2)³ − 12 · (−2)', type:'nums', ans:[16],
+      html:'f(−2) = '+inp('f(−2)'),
+      ok:'Perfetto: −8 + 24 = 16. Il massimo è nel punto (−2, 16).', bad:'(−2)³ = −8 e −12 · (−2) = +24.' },
+    { h:'Passo 4 · Derivata seconda f″(x) = 6x. Dove c\'è il flesso?', type:'choice', ans:1,
+      opts:['in x = 2','in x = 0: f″ cambia segno','non c\'è'],
+      ok:'Sì: 6x &lt; 0 per x &lt; 0 e &gt; 0 per x &gt; 0. Flesso in (0, 0).', bad:'Dove 6x cambia segno?' }
+  ], '<b>Fatto!</b> f(x) = x³ − 12x: massimo in (−2, 16), minimo in (2, −16), flesso in (0, 0). È la stessa forma della prima funzione del grafico, solo più "stirata".');
+
+  EX['studio-funzione'] = [
+    { id:'e1', type:'choice', q:'Dominio di f(x) = ln(x − 3)', a:1, opts:['x ≠ 3','x &gt; 3','x ≥ 3'], hint:'L\'argomento del logaritmo deve essere strettamente positivo.', sol:'x − 3 &gt; 0, cioè x &gt; 3.' },
+    { id:'e2', type:'num', lbl:'x', q:'Asintoto verticale di f(x) = '+FR('x + 1','x − 4')+': x = ?', a:4, hint:'Dove si annulla il denominatore (e il numeratore no)?', sol:'x = 4: lì il limite da destra è +∞ e da sinistra −∞.' },
+    { id:'e3', type:'num', lbl:'y', q:'Asintoto orizzontale di f(x) = '+FR('2x² + 1','x² − 3')+' per x → ±∞: y = ?', a:2, hint:'Termine dominante sopra e sotto.', sol:'2x²/x² = 2: y = 2.' },
+    { id:'e4', type:'num', lbl:'q', q:'f(x) = '+FR('2x² + 3x','x + 1')+' ha asintoto obliquo y = 2x + q per x → +∞. Quanto vale q?', a:1, hint:'q = '+LIMX('+∞')+' [f(x) − 2x]. Fai il denominatore comune.', sol:'(2x² + 3x − 2x² − 2x)/(x + 1) = x/(x + 1) → 1 per x → +∞. q = 1.' },
+    { id:'e5', type:'num', lbl:'x', q:'f(x) = x² − 4x + 1: in quale x c\'è il minimo?', a:2, hint:'f′(x) = 2x − 4.', sol:'2x − 4 = 0, x = 2. f′ passa da − a +: minimo.' },
+    { id:'e6', type:'num', lbl:'x', q:'f(x) = x · e<sup>−x</sup>: in quale x c\'è il massimo?', a:1, hint:'f′(x) = (1 − x) e<sup>−x</sup>. Il fattore e<sup>−x</sup> è sempre positivo.', sol:'1 − x = 0, x = 1.' },
+    { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:'6x − 12 = 0, x = 2, e f″ cambia segno lì.' },
+    { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:'12x² ≥ 0 da tutte e due le parti: sempre ∪, niente flesso. In 0 c\'è un minimo.' },
+    { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:'Crescente (conseguenza di Lagrange). Positiva e concava sono altre cose: segno di f e di f″.' }
   ];
 
   Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));
