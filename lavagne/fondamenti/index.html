@@ -1,0 +1,1955 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important} body{margin:0}</style>
+</head>
+<body>
+<title>Lavagna di Fondamenti</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: una colonna di lettura come la Lavagna di Analisi (stessa famiglia), un capitolo alla volta, indice in alto.
+   Verde = colore di Fondamenti nella dashboard. Il codice C sta in un "terminale" con la riga attiva evidenziata. */
+:root {
+  --bg: #eef1f4;
+  --board: #ffffff;
+  --ink: #1b2430;
+  --muted: #5a6676;
+  --line: #d4dbe3;
+  --soft: #e6ebf1;
+  --fon: #17855a;      /* verde Fondamenti: cose importanti, riga attiva */
+  --mem: #2f62c9;      /* blu: memoria, variabili */
+  --out: #a3620a;      /* arancio: ciò che il programma stampa */
+  --ok: #1f8a4c;
+  --bad: #c2412f;
+  --code-bg: #f6f8fa;
+  --code-hl: #d9f2e6;
+  --chalk: "Caveat", "Comic Sans MS", cursive;
+  --text: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141a21; --board: #1d252f; --ink: #e9eef4; --muted: #a2afbf; --line: #334050; --soft: #26303c;
+    --fon: #4fd39b; --mem: #86b2ff; --out: #ffb65c; --ok: #5fd08f; --bad: #ff8b78;
+    --code-bg: #161d26; --code-hl: #1f4434;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141a21; --board: #1d252f; --ink: #e9eef4; --muted: #a2afbf; --line: #334050; --soft: #26303c;
+  --fon: #4fd39b; --mem: #86b2ff; --out: #ffb65c; --ok: #5fd08f; --bad: #ff8b78;
+  --code-bg: #161d26; --code-hl: #1f4434;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 60px;
+}
+.wrap { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.chapter { display: flex; flex-direction: column; gap: 22px; }
+header h1 { font-family: var(--chalk); font-size: 2.6rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); }
+nav.chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.chapters a {
+  font-size: .88rem; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--muted); background: var(--board);
+}
+nav.chapters a.on { background: var(--ink); color: var(--board); border-color: var(--ink); }
+nav.chapters a .tick { color: var(--ok); font-weight: 700; }
+nav.chapters a.on .tick { color: var(--board); }
+section.board {
+  background: var(--board); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h2 { font-family: var(--chalk); font-size: 2rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+h3 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+.big { font-size: 1.12rem; }
+.fon { color: var(--fon); font-weight: 700; }
+.memc { color: var(--mem); font-weight: 700; }
+.outc { color: var(--out); font-weight: 700; }
+code, .mono, pre, .tracer .src, textarea, input[type=text] { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+code, .mono { font-family: var(--mono); font-size: .9em; }
+:not(pre) > code { background: var(--soft); padding: 1px 5px; border-radius: 5px; }
+pre.code {
+  margin: 0; font-family: var(--mono); font-size: .86rem; line-height: 1.55; background: var(--code-bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-x: auto; white-space: pre;
+}
+.note { background: var(--soft); border-radius: 10px; padding: 12px 14px; }
+.warn { border: 2px dashed var(--bad); border-radius: 10px; padding: 12px 14px; }
+.exam { border-left: 4px solid var(--fon); background: color-mix(in srgb, var(--fon) 9%, transparent); border-radius: 0 10px 10px 0; padding: 10px 14px; }
+button {
+  font: inherit; font-size: .95rem; cursor: pointer; border-radius: 10px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--board); color: var(--ink);
+}
+button.primary { background: var(--ink); color: var(--board); border-color: var(--ink); }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--fon); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+input[type=text], textarea {
+  font-family: var(--mono); font-size: 1rem; padding: 5px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+}
+input[type=text] { width: 12em; max-width: 100%; }
+textarea { width: 100%; min-height: 4.5em; resize: vertical; }
+.feedback { font-size: .95rem; min-height: 1.4em; }
+.feedback.ok { color: var(--ok); font-weight: 700; }
+.feedback.bad { color: var(--bad); }
+.ex { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ex:first-child { border-top: 0; padding-top: 0; }
+.ex .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.badge { font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.badge.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); font-weight: 700; }
+.badge.bad { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; }
+.choice button.right { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.choice button.wrong { border-color: var(--bad); color: var(--bad); }
+.why { display: flex; flex-direction: column; gap: 10px; }
+.why .item { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
+.why .item > div { min-width: 0; }
+.tag { font-size: .75rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.tag.easy { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.tag.memo { background: color-mix(in srgb, var(--out) 20%, transparent); color: var(--out); }
+.next { display: flex; justify-content: flex-end; }
+footer { color: var(--muted); font-size: .9rem; text-align: center; }
+table.t { border-collapse: collapse; width: 100%; font-size: .95rem; }
+table.t td, table.t th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.t th { color: var(--muted); font-size: .85rem; }
+.scroll { overflow-x: auto; }
+
+/* ---- tracer: codice che si esegue passo passo ---- */
+.tracer { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 640px) { .tracer { grid-template-columns: minmax(0, 1fr); } }
+.tracer .src { font-family: var(--mono); font-size: .82rem; line-height: 1.5; background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 0; overflow-x: auto; }
+.tracer .ln { display: block; white-space: pre; padding: 0 10px 0 0; }
+.tracer .ln i { display: inline-block; width: 2.6em; text-align: right; padding-right: .9em; color: var(--muted); font-style: normal; user-select: none; }
+.tracer .ln.on { background: var(--code-hl); box-shadow: inset 4px 0 0 var(--fon); }
+.tracer .side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.panel .lab { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+.frame { border: 1px dashed var(--line); border-radius: 8px; padding: 4px 8px; margin-top: 6px; }
+.frame:first-child { margin-top: 0; }
+.frame.top { border-style: solid; border-color: var(--mem); }
+.frame .fn { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.var { display: flex; gap: 8px; align-items: baseline; font-family: var(--mono); font-size: .84rem; flex-wrap: wrap; }
+.var .n { color: var(--muted); }
+.var .v { color: var(--mem); font-weight: 700; word-break: break-all; }
+.var .v.chg { background: color-mix(in srgb, var(--mem) 18%, transparent); border-radius: 4px; padding: 0 3px; }
+.var .a { color: var(--muted); font-size: .75rem; }
+.outbox { font-family: var(--mono); font-size: .84rem; white-space: pre-wrap; color: var(--out); min-height: 1.5em; word-break: break-word; }
+.say { font-size: .95rem; }
+.lst { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--mono); font-size: .84rem; margin-top: 4px; }
+.lst .cell { border: 2px solid var(--mem); border-radius: 6px; padding: 1px 8px; color: var(--mem); font-weight: 700; }
+.lst .arr { color: var(--muted); }
+.lst .nil { color: var(--muted); font-style: italic; }
+.arrv { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.arrv span { font-family: var(--mono); font-size: .8rem; border: 1px solid var(--mem); border-radius: 5px; padding: 0 6px; min-width: 2em; text-align: center; }
+.arrv span small { display: block; color: var(--muted); font-size: .65rem; border-top: 1px solid var(--line); }
+.arrv span.hl { background: color-mix(in srgb, var(--fon) 22%, transparent); border-color: var(--fon); }
+
+/* ---- complemento a 2 ---- */
+.bits { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; max-width: 520px; }
+.bits button { font-family: var(--mono); font-size: 1.3rem; font-weight: 700; padding: 8px 0; }
+.bits button.one { background: var(--fon); color: var(--board); border-color: var(--fon); }
+.bits small { display: block; text-align: center; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.bits small.neg { color: var(--bad); font-weight: 700; }
+.readout { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: up .3s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lavagna di Fondamenti</h1>
+    <p>Fondamenti di Informatica T · un capitolo per argomento, nell'ordine del piano. In ogni capitolo: a cosa serve all'esame, il codice che si esegue passo passo, la ricetta, poi tocca a te.</p>
+  </header>
+  <nav class="chapters" aria-label="Capitoli" id="nav"></nav>
+  <main id="main" class="chapter"></main>
+  <footer>Le risposte che dai restano solo in questo browser. Per farle arrivare al tutor usa "Copia i miei risultati per il tutor" in fondo a ogni capitolo.</footer>
+</div>
+
+<script>
+/* Aiuti per scrivere i capitoli. code(String.raw`...`) mostra un blocco di codice C. */
+window.CH = [];
+window.esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+window.code = s => '<pre class="code">'+esc(String(s).replace(/^\n/,'').replace(/\s+$/,''))+'</pre>';
+window.c = s => '<code>'+esc(s)+'</code>';
+
+/* Capitoli 1-4: primi passi, complemento a 2, espressioni, input-output e cicli. Programmi verificati con gcc -Wall. */
+
+/* ================= 1 · PRIMI PASSI ================= */
+CH.push({
+  id:'primi-passi', n:1, short:'Primi passi in C', when:'piano dell\'11/11 · slide Modulo 1 da 01a a 04 · esercitazioni 02, 03, 04a',
+  title:'Primi passi in C: dal file .c al programma che gira',
+  serve:'<p class="big">Serve a tutto il resto: all\'esame al PC devi consegnare file che <b>compilano senza errori e senza warning</b>, altrimenti la prova parte male. Qui impari com\'è fatto un programma C, cosa fa il compilatore e quali tipi di dato esistono.</p>',
+  exam:'alla prova al PC il testo dice "per verificare l\'assenza di warning, eseguire sempre Rebuild All". I tipi (int, float, char) e i codici di printf (%d, %f, %c, %s) servono in ogni esercizio, scritto e PC.',
+  idea:{ title:'Il compilatore è un traduttore', html:
+    '<p>Tu scrivi il programma in C, in un file di testo che finisce con <code>.c</code> (si chiama <b>sorgente</b>). Il computer però capisce solo il linguaggio macchina, fatto di 0 e 1.</p>'
+   +'<p>Il <span class="fon">compilatore</span> (per esempio <code>gcc</code>) è il traduttore: legge il tuo file .c, controlla che sia scritto bene e produce un file <b>eseguibile</b>, che è il programma vero e proprio.</p>'
+   +'<div class="note"><b>sorgente</b> <code>prog.c</code> → <b>compilatore</b> <code>gcc</code> → <b>eseguibile</b> <code>prog</code> → lo esegui e stampa sullo schermo.</div>'
+   +'<p>Se il compilatore trova un <b>errore</b> non produce niente. Se trova un <b>warning</b> (avviso) produce l\'eseguibile, ma ti dice che probabilmente c\'è qualcosa di sbagliato. All\'esame i warning vanno tolti tutti.</p>' },
+  widgets:[
+    { type:'tracer', title:'Il primo programma, riga per riga', intro:'Premi "Avanti": la riga verde è quella che il computer sta eseguendo. A destra vedi la memoria (le variabili) e cosa compare sullo schermo.',
+      code:String.raw`
+#include <stdio.h>
+
+int main(void) {
+    int a = 5;
+    int b = 2;
+    float media;
+    media = (a + b) / 2.0;
+    printf("a = %d, b = %d\n", a, b);
+    printf("media = %f\n", media);
+    return 0;
+}`,
+      steps:[
+        { l:1, say:'<code>#include &lt;stdio.h&gt;</code> dice al compilatore: "usa la libreria standard di input/output". Senza questa riga <code>printf</code> non esiste.' },
+        { l:3, f:[['main',{}]], say:'Il programma comincia <b>sempre</b> da <code>main</code>. <code>int</code> davanti vuol dire che main restituisce un numero intero al sistema operativo. <code>void</code> tra parentesi vuol dire che non riceve parametri.' },
+        { l:4, v:{'a (int)':'5'}, say:'Creo una variabile di nome <code>a</code>, di tipo <code>int</code> (numero intero), e le metto dentro 5.' },
+        { l:5, v:{'a (int)':'5','b (int)':'2'}, say:'Stessa cosa per <code>b</code>, che vale 2.' },
+        { l:6, v:{'a (int)':'5','b (int)':'2','media (float)':'???'}, say:'Creo <code>media</code> di tipo <code>float</code> (numero con la virgola) ma non le do un valore. Dentro c\'è "spazzatura": un numero a caso. Per questo si dice che una variabile <b>non inizializzata</b> ha valore indefinito.' },
+        { l:7, v:{'a (int)':'5','b (int)':'2','media (float)':'3.500000'}, say:'(a + b) = 7. Poi 7 / 2.0: siccome 2.0 ha la virgola, la divisione è "con la virgola" e fa 3.5. Il risultato va in media.' },
+        { l:8, v:{'a (int)':'5','b (int)':'2','media (float)':'3.500000'}, out:'a = 5, b = 2\n', say:'<code>printf</code> stampa il testo tra virgolette. Ogni <code>%d</code> viene sostituito, in ordine, dal valore intero dopo la virgola: il primo %d da a, il secondo da b. <code>\\n</code> vuol dire "vai a capo".' },
+        { l:9, v:{'a (int)':'5','b (int)':'2','media (float)':'3.500000'}, out:'a = 5, b = 2\nmedia = 3.500000\n', say:'<code>%f</code> stampa un float. Di base mette <b>6 cifre dopo la virgola</b>: 3.500000.' },
+        { l:10, v:{'a (int)':'5','b (int)':'2','media (float)':'3.500000'}, out:'a = 5, b = 2\nmedia = 3.500000\n', say:'<code>return 0;</code> fa finire main e dice al sistema operativo "è andato tutto bene" (0 = nessun errore).' }
+      ] },
+    { type:'html', eyebrow:'Tabella da tenere davanti', title:'I tipi di dato e i loro codici in printf', html:
+      '<div class="scroll"><table class="t"><tr><th>Tipo</th><th>Cosa contiene</th><th>Esempio</th><th>Codice in printf / scanf</th></tr>'
+     +'<tr><td><code>int</code></td><td>numero intero</td><td><code>int n = -7;</code></td><td><code>%d</code></td></tr>'
+     +'<tr><td><code>float</code></td><td>numero con la virgola (precisione normale)</td><td><code>float p = 2.5;</code></td><td><code>%f</code></td></tr>'
+     +'<tr><td><code>double</code></td><td>numero con la virgola (più preciso)</td><td><code>double d = 3.14159;</code></td><td><code>%f</code> in printf, <code>%lf</code> in scanf</td></tr>'
+     +'<tr><td><code>char</code></td><td>un carattere, che in realtà è un piccolo numero (codice ASCII)</td><td><code>char c = \'A\';</code></td><td><code>%c</code> (carattere) oppure <code>%d</code> (il suo numero)</td></tr>'
+     +'<tr><td><code>char[]</code></td><td>una stringa (testo)</td><td><code>char s[] = "ciao";</code></td><td><code>%s</code></td></tr></table></div>'
+     +'<p>Codici ASCII da sapere: <code>\'A\'</code> = 65, <code>\'a\'</code> = 97, <code>\'0\'</code> = 48. Le lettere sono in fila: <code>\'B\'</code> = 66, <code>\'C\'</code> = 67, e così via.</p>' },
+    { type:'recipe', title:'Compilare ed eseguire', intro:'Due modi: dal terminale (Mac) oppure con un ambiente come Code::Blocks o Visual Studio, quello che si usa all\'esame.', steps:[
+      { h:'Scrivi il file', html:'<p>Salva il programma in un file, per esempio <code>prog.c</code>.</p>' },
+      { h:'Compila con tutti gli avvisi accesi', html:'<p>Nel terminale, nella cartella del file:</p>'+code(String.raw`gcc -Wall -o prog prog.c`)+'<p><code>-Wall</code> vuol dire "mostrami tutti i warning". <code>-o prog</code> dà il nome all\'eseguibile.</p>' },
+      { h:'Leggi i messaggi', html:'<p>Se esce <b>error</b>: correggi la riga indicata (il numero dopo i due punti, es. <code>prog.c:7:</code> = riga 7). Se esce <b>warning</b>: il programma parte, ma correggi lo stesso.</p>' },
+      { h:'Esegui', html:code(String.raw`./prog`)+'<p>In Code::Blocks: <b>Build → Rebuild</b> e poi <b>Run</b>. "Rebuild" ricompila tutti i file da zero, così vedi tutti i warning.</p>' }
+    ] }
+  ],
+  why:[
+    { easy:true, f:'Un char è un numero', t:'Il computer conserva solo numeri. Per i caratteri c\'è una tabella (ASCII) che dà a ogni carattere un numero: \'A\' è 65. Quindi \'A\' + 2 è 67, cioè \'C\'.' },
+    { easy:true, f:'Variabile non inizializzata = valore a caso', t:'Creare una variabile vuol dire prendere un pezzo di memoria. Dentro c\'è quello che c\'era prima, nessuno lo pulisce.' },
+    { easy:false, f:'%d per int, %f per float e double, %c per char, %s per stringa, %lf per leggere un double con scanf', t:'Sono convenzioni della libreria: non c\'è un perché da capire. Tienile nella tabella qui sopra (anche nella RACCOLTA_C: all\'esame al PC gli appunti sono ammessi).' },
+    { easy:false, f:'Le grammatiche EBNF (slide 02-03)', t:'Servono a descrivere le regole di un linguaggio. Negli scritti 2025-2026 non sono mai uscite: basta saper leggere una regola, non serve scriverle.' }
+  ],
+  guided:{ title:'Cosa stampa?', intro:code(String.raw`
+char c = 'A';
+int k = c + 2;
+printf("%d %c %c\n", c, c + 2, k);`),
+    steps:[
+      { h:'Il primo valore stampato è c con il codice %d. Che numero è \'A\'?', type:'text', ans:['65'], ok:'Giusto: %d stampa il numero che c\'è dentro il char.', bad:'Guarda la tabella: il codice ASCII di \'A\'.' },
+      { h:'Il secondo è c + 2 con %c. Che carattere è 65 + 2 = 67?', type:'text', ans:['C',"'C'"], ok:'Sì, la lettera due posti dopo A.', bad:'Le lettere sono in fila: A = 65, B = 66, …' },
+      { h:'Il terzo è k (un int che vale 67) stampato con %c. Cosa compare?', type:'choice', opts:['67','C','errore di compilazione'], ans:1, ok:'Esatto: %c prende un numero e stampa il carattere con quel codice.', bad:'Il codice %c stampa sempre un carattere, anche se gli passi un int.' }
+    ],
+    done:'<b>Fatto!</b> Stampa <code>65 C C</code>. Regola: lo stesso numero si può stampare come numero (%d) o come carattere (%c).' },
+  ex:[
+    { id:'e1', type:'choice', q:'Quale codice usi in printf per stampare una variabile <code>float prezzo</code>?', opts:['%d','%f','%c','%s'], a:1, hint:'f come float.', sol:'<code>printf("%f", prezzo);</code> Con <code>%.2f</code> stampi solo 2 cifre dopo la virgola.' },
+    { id:'e2', type:'choice', q:'Il compilatore ti dà un <b>warning</b> e nessun errore. Cosa succede?', opts:['Non viene creato nessun eseguibile','L\'eseguibile viene creato, ma probabilmente c\'è un problema da correggere','Il programma è sicuramente giusto'], a:1, hint:'Warning = avviso, non blocco.', sol:'Con i soli warning l\'eseguibile esiste. All\'esame però vanno tolti tutti.' },
+    { id:'e3', type:'text', q:'Che carattere stampa <code>printf("%c", \'a\' + 3);</code> ?', a:['d',"'d'"], hint:'\'a\' = 97. Conta tre lettere dopo la a.', sol:'97 + 3 = 100, che è \'d\'.' },
+    { id:'e4', type:'out', q:'Cosa stampa?'+code(String.raw`
+int x = 4;
+float y = x / 8.0;
+printf("x=%d\ny=%f\n", x, y);`), a:'x=4\ny=0.500000', hint:'8.0 ha la virgola: la divisione è con la virgola. %f mette 6 cifre decimali. \\n va a capo.', sol:'<pre class="code">x=4\ny=0.500000</pre>4 / 8.0 = 0.5, e %f lo stampa come 0.500000.' },
+    { id:'e5', type:'code', tag:'al PC', q:'Scrivi, compila (con <code>-Wall</code>) ed esegui un programma che crea due variabili int <code>base = 6</code> e <code>altezza = 4</code>, calcola l\'area del rettangolo e stampa <code>Area: 24</code>.', hint:'Ti servono: #include &lt;stdio.h&gt;, int main(void), una variabile area, printf con %d, return 0.', sol:code(String.raw`
+#include <stdio.h>
+
+int main(void) {
+    int base = 6;
+    int altezza = 4;
+    int area;
+    area = base * altezza;
+    printf("Area: %d\n", area);
+    return 0;
+}`) }
+  ],
+  quaderno:[
+    '<b>Schema di ogni programma:</b> <code>#include &lt;stdio.h&gt;</code>, poi <code>int main(void) { ... return 0; }</code>.',
+    '<b>Tabella tipi → codici:</b> int %d · float %f · double %f (scanf %lf) · char %c · stringa %s.',
+    '<b>ASCII:</b> \'A\' = 65, \'a\' = 97, \'0\' = 48, le lettere sono consecutive.',
+    '<b>Compilare:</b> <code>gcc -Wall -o prog prog.c</code>, poi <code>./prog</code>. All\'esame: Rebuild All, zero warning.'
+  ]
+});
+
+/* ================= 2 · COMPLEMENTO A 2 ================= */
+CH.push({
+  id:'complemento-a-2', n:2, short:'Complemento a 2', when:'dentro le slide 03-04 (rappresentazione dei numeri)',
+  title:'Il complemento a 2: i numeri negativi in binario',
+  serve:'<p class="big">È l\'esercizio 2 dello scritto in 5 temi su 7 del 2025-2026: <b>2 punti</b> quasi regalati, perché è solo una ricetta meccanica. Per passare lo scritto servono 7 punti su 12: questi 2 devi prenderli sempre.</p>',
+  exam:'"Un elaboratore rappresenta i numeri interi su 8 bit tramite la notazione in complemento a 2. Indicare come viene svolta la seguente operazione (es. −37 − 7) calcolandone il risultato… e si trasli il risultato in decimale per verificare". Devi mostrare i passaggi in binario.',
+  idea:{ title:'Il contachilometri che torna indietro', html:
+    '<p>Immagina un contachilometri con 3 cifre che segna 000. Se vai indietro di 1 non può segnare −1: segna <b>999</b>. Allora conveniamo che 999 "vuol dire" −1, 998 vuol dire −2, e così via.</p>'
+   +'<p>Il complemento a 2 fa la stessa cosa in binario su 8 bit: <span class="mono">11111111</span> vuol dire −1. In pratica il <b>primo bit a sinistra pesa −128</b> invece di +128. Tutti gli altri pesano come al solito: 64, 32, 16, 8, 4, 2, 1.</p>'
+   +'<div class="note">Se il primo bit è 1 il numero è negativo, se è 0 è positivo. Con 8 bit si va da <b>−128</b> (<span class="mono">10000000</span>) a <b>+127</b> (<span class="mono">01111111</span>).</div>' },
+  widgets:[
+    { type:'bits', title:'8 interruttori: accendi i bit', intro:'Clicca sui bit per accenderli. Sotto ogni bit c\'è il suo peso: il primo pesa <b>−128</b>. Il valore è la somma dei pesi dei bit accesi. Oppure scrivi un numero e guarda la ricetta.' },
+    { type:'recipe', title:'Il tema del 9 febbraio 2026: −37 − 7', intro:'Ricetta dell\'esame. Trucco: una sottrazione si fa sempre come somma, −37 − 7 = (−37) + (−7).', steps:[
+      { h:'Trasforma la sottrazione in somma', html:'<p>−37 − 7 = (−37) + (−7). Devo scrivere in complemento a 2 sia −37 sia −7.</p>' },
+      { h:'Scrivi −37: binario di 37, inverti, aggiungi 1', html:'<p>37 = 32 + 4 + 1 → <span class="mono">00100101</span><br>inverto tutti i bit → <span class="mono">11011010</span><br>aggiungo 1 → <b class="mono">11011011</b> = −37</p>' },
+      { h:'Scrivi −7 allo stesso modo', html:'<p>7 = 4 + 2 + 1 → <span class="mono">00000111</span><br>inverto → <span class="mono">11111000</span><br>aggiungo 1 → <b class="mono">11111001</b> = −7</p>' },
+      { h:'Somma in colonna, da destra, con i riporti', html:code(String.raw`
+   11011011   (-37)
+ + 11111001   (-7)
+ ----------
+ 1 11010100`)+'<p>Il risultato ha 9 bit: il <b>riporto oltre l\'ottavo bit si butta via</b>. Resta <b class="mono">11010100</b>.</p>' },
+      { h:'Verifica in decimale', html:'<p>Il primo bit è 1, quindi è negativo. Per sapere quanto vale rifaccio la ricetta al contrario: inverto e aggiungo 1.<br><span class="mono">11010100</span> → inverto <span class="mono">00101011</span> → +1 <span class="mono">00101100</span> = 44.<br>Quindi il risultato è <b>−44</b>, e infatti −37 − 7 = −44. ✓</p>' }
+    ] }
+  ],
+  why:[
+    { easy:true, f:'Il primo bit pesa −128', t:'È la definizione del complemento a 2. Esempio: 11111111 = −128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = −128 + 127 = −1. Con gli interruttori qui sopra lo vedi subito.' },
+    { easy:false, f:'"Inverti tutti i bit e aggiungi 1" dà il numero opposto', t:'Il motivo esiste (x + inverso di x = 11111111 = −1, quindi inverso + 1 = −x), ma all\'esame non serve: impara la ricetta a memoria.' },
+    { easy:true, f:'Il riporto oltre l\'ottavo bit si butta', t:'La macchina ha solo 8 posti. Il nono bit non ha dove stare: sparisce, come il contachilometri che da 999 torna a 000.' },
+    { easy:true, f:'Overflow: due positivi danno un negativo (o due negativi un positivo)', t:'Succede quando il risultato vero esce dall\'intervallo da −128 a 127. Esempio: 100 + 50 = 150, che con 8 bit non ci sta. Lo riconosci dal segno sbagliato.' }
+  ],
+  warn:{ title:'L\'overflow', html:'<p>Se sommi due numeri dello stesso segno e il risultato ha il segno opposto, c\'è <b>overflow</b>: il risultato vero non sta in 8 bit. All\'esame scrivi "overflow" e spiega che il risultato esce dall\'intervallo da −128 a 127.</p>'
+    +'<p>Esempio: −60 − 70 = −130, ma −130 &lt; −128. In binario: <span class="mono">11000100 + 10111010 = 1|01111110</span> → <span class="mono">01111110</span> = +126. Due negativi danno un positivo: overflow.</p>' },
+  guided:{ title:'Calcola −18 + 5 su 8 bit', steps:[
+      { h:'Scrivi 18 in binario su 8 bit (18 = 16 + 2)', type:'text', ans:['00010010'], ok:'Giusto.', bad:'16 è il quarto bit da destra contando da 1, 2, 4, 8, 16. Scrivi 8 cifre.' },
+      { h:'Inverti tutti i bit di 00010010 e aggiungi 1: quanto fa −18?', type:'text', ans:['11101110'], ok:'Sì: 11101101 + 1 = 11101110.', bad:'Inverti: 11101101. Ora aggiungi 1 all\'ultima cifra.' },
+      { h:'5 = 00000101. Somma 11101110 + 00000101', type:'text', ans:['11110011'], ok:'Giusto, e qui non c\'è nessun nono bit da buttare.', bad:'Somma da destra: 0+1=1, 1+0=1, 1+1=10 (scrivo 0, riporto 1)…' },
+      { h:'11110011 inizia con 1, quindi è negativo. Inverti e aggiungi 1 per trovare il valore: quanto fa?', type:'text', ans:['-13','−13'], ok:'Perfetto: 00001100 + 1 = 00001101 = 13, quindi −13. E infatti −18 + 5 = −13.', bad:'Inverti: 00001100. Aggiungi 1: 00001101. Quanto vale? Poi metti il meno.' }
+    ], done:'<b>Fatto!</b> −18 + 5 = <span class="mono">11110011</span> = −13. All\'esame scrivi tutti questi passaggi: si danno punti anche ai passaggi.' },
+  ex:[
+    { id:'e1', type:'text', q:'Scrivi −1 in complemento a 2 su 8 bit.', a:['11111111'], hint:'1 = 00000001. Inverti e aggiungi 1.', sol:'00000001 → 11111110 → +1 = <b>11111111</b>.' },
+    { id:'e2', type:'text', q:'Quanto vale in decimale <span class="mono">10000000</span> (complemento a 2, 8 bit)?', a:['-128','−128'], hint:'Solo il primo bit è acceso. Quanto pesa il primo bit?', sol:'Solo il bit di peso −128: vale <b>−128</b>, il numero più piccolo con 8 bit.' },
+    { id:'e3', type:'text', q:'Scrivi −20 in complemento a 2 su 8 bit.', a:['11101100'], hint:'20 = 16 + 4 = 00010100.', sol:'00010100 → inverto 11101011 → +1 = <b>11101100</b>.' },
+    { id:'e4', type:'text', q:'Calcola 12 − 30 su 8 bit e scrivi il risultato in binario.', a:['11101110'], hint:'12 − 30 = 12 + (−30). 12 = 00001100, 30 = 00011110 → −30 = 11100010.', sol:'00001100 + 11100010 = <b>11101110</b> → inverto 00010001, +1 = 00010010 = 18 → −18. ✓ (12 − 30 = −18)' },
+    { id:'e5', type:'choice', q:'100 + 50 su 8 bit in complemento a 2: cosa succede?', opts:['Fa 150, nessun problema','Overflow: 01100100 + 00110010 = 10010110, che vale −106','Errore del compilatore'], a:1, hint:'Il massimo con 8 bit è 127.', sol:'150 &gt; 127. La somma dà 10010110, che inizia con 1 quindi è negativo (−106): due positivi danno un negativo, è <b>overflow</b>.' }
+  ],
+  quaderno:[
+    '<b>Intervallo con 8 bit:</b> da −128 a +127. Il primo bit pesa −128.',
+    '<b>Negativo:</b> binario del valore assoluto → inverto tutti i bit → aggiungo 1.',
+    '<b>Sottrazione:</b> a − b = a + (−b). Somma in colonna, il nono bit si butta.',
+    '<b>Verifica:</b> se il risultato inizia con 1, inverto e aggiungo 1 per leggere il valore, poi metto il meno.',
+    '<b>Overflow:</b> stesso segno in ingresso, segno opposto in uscita.'
+  ]
+});
+
+/* ================= 3 · ESPRESSIONI ================= */
+CH.push({
+  id:'espressioni', n:3, short:'Espressioni e conversioni', when:'piano del 14/11 · esercitazione Modulo 2 04b',
+  title:'Espressioni: divisione intera, resto, cast, ++ e l\'operatore ?:',
+  serve:'<p class="big">Sono le trappole preferite dell\'esercizio 3 dello scritto ("cosa stampa", <b>3 punti</b>). Se sai esattamente cosa fanno <code>/</code> tra interi, <code>%</code>, <code>++</code> e <code>? :</code>, quell\'esercizio diventa una traccia a mano.</p>',
+  exam:'nel tema del 9 febbraio 2026 c\'è <code>(i &lt; max) ? i=max : i++;</code> e <code>result[i] = source[i] - max;</code> (aritmetica dei char). Al PC servono per calcolare medie, contatori, indici.',
+  idea:{ title:'Due calcolatrici diverse', html:
+    '<p>Il C ha due calcolatrici. Se <b>tutti e due</b> i numeri sono interi usa la calcolatrice "delle elementari": <code>7 / 2</code> fa <b>3</b> e il resto lo trovi con <code>7 % 2</code> = <b>1</b>.</p>'
+   +'<p>Se <b>almeno uno</b> dei due ha la virgola usa la calcolatrice normale: <code>7 / 2.0</code> fa <b>3.5</b>.</p>'
+   +'<div class="note">La decisione si prende <b>prima</b> di guardare dove va il risultato. <code>float x = 7 / 2;</code> mette in x il valore 3.0, non 3.5: la divisione era già intera.</div>' },
+  widgets:[
+    { type:'tracer', title:'Le trappole in fila',
+      code:String.raw`
+#include <stdio.h>
+
+int main(void) {
+    int a = 7, b = 2, c;
+    float x;
+    c = a / b;
+    x = a / b;
+    x = (float) a / b;
+    c = a % b;
+    c = a++ + ++b;
+    printf("%d %d %d %.1f\n", a, b, c, x);
+    return 0;
+}`,
+      steps:[
+        { l:4, v:{'a (int)':'7','b (int)':'2','c (int)':'???'}, say:'Tre interi: a = 7, b = 2, c senza valore.' },
+        { l:5, v:{'a (int)':'7','b (int)':'2','c (int)':'???','x (float)':'???'}, say:'Un float x, senza valore.' },
+        { l:6, v:{'a (int)':'7','b (int)':'2','c (int)':'3','x (float)':'???'}, say:'7 / 2 tra due int: <b>divisione intera</b>, la parte dopo la virgola si butta. c = 3.' },
+        { l:7, v:{'a (int)':'7','b (int)':'2','c (int)':'3','x (float)':'3.0'}, say:'Trappola: a / b è ancora tra due int, fa 3. Solo dopo il 3 viene messo nel float: x = 3.0, <b>non</b> 3.5.' },
+        { l:8, v:{'a (int)':'7','b (int)':'2','c (int)':'3','x (float)':'3.5'}, say:'<code>(float) a</code> è un <b>cast</b>: trasforma a in 7.0 prima della divisione. Ora c\'è un numero con la virgola, quindi 7.0 / 2 = 3.5.' },
+        { l:9, v:{'a (int)':'7','b (int)':'2','c (int)':'1','x (float)':'3.5'}, say:'<code>%</code> è il <b>resto</b> della divisione intera: 7 = 2 · 3 + 1, quindi 7 % 2 = 1.' },
+        { l:10, v:{'a (int)':'8','b (int)':'3','c (int)':'10','x (float)':'3.5'}, say:'<code>a++</code> (dopo): nel calcolo usa il valore vecchio 7, poi a diventa 8. <code>++b</code> (prima): b diventa 3 e nel calcolo usa 3. Quindi c = 7 + 3 = 10.' },
+        { l:11, v:{'a (int)':'8','b (int)':'3','c (int)':'10','x (float)':'3.5'}, out:'8 3 10 3.5\n', say:'<code>%.1f</code> stampa il float con 1 cifra dopo la virgola.' },
+        { l:12, v:{'a (int)':'8','b (int)':'3','c (int)':'10','x (float)':'3.5'}, out:'8 3 10 3.5\n', say:'Fine.' }
+      ] }
+  ],
+  why:[
+    { easy:true, f:'int / int = divisione intera', t:'Il C guarda i tipi dei due numeri: se sono entrambi interi, anche il risultato deve essere intero, quindi la parte decimale si butta (non si arrotonda: 7/2 = 3, anche 9/5 = 1).' },
+    { easy:true, f:'a++ usa il valore vecchio, ++a usa il valore nuovo', t:'Leggi l\'ordine: in <code>a++</code> prima c\'è a (lo uso) e poi ++ (lo aumento). In <code>++a</code> prima aumento, poi uso.' },
+    { easy:true, f:'condizione ? A : B', t:'È un if in una riga: se la condizione è vera il risultato è A, altrimenti B. <code>m = (a &gt; b) ? a : b;</code> mette in m il più grande.' },
+    { easy:true, f:'In C "vero" è qualsiasi numero diverso da 0, "falso" è 0', t:'Non esiste un tipo vero/falso. Per questo <code>if (5)</code> entra sempre, e <code>(msg[0]) ? 3 : 10</code> nel tema del 9 feb 2026 vale 3, perché msg[0] = \'d\' che è diverso da 0.' },
+    { easy:false, f:'Ordine di precedenza degli operatori', t:'La tabella completa è lunga: tieni a mente solo che * / % vengono prima di + −, e che i confronti (&lt; &gt; ==) vengono prima di && e ||. Nel dubbio, all\'esame metti le parentesi.' }
+  ],
+  warn:{ title:'Mai due ++ sulla stessa variabile nella stessa riga', html:'<p><code>j = --i + i;</code> oppure <code>i = i++;</code> hanno risultato <b>indefinito</b>: compilatori diversi danno numeri diversi e gcc dà un warning. All\'esame non escono, e tu non scriverli.</p>' },
+  guided:{ title:'L\'operatore ? : come nel tema d\'esame', intro:code(String.raw`
+int a = 3, b = 8, m;
+m = (a > b) ? a : b;
+printf("%d\n", m);
+a = (b % a == 2) ? a * 10 : 0;
+printf("%d\n", a);`), steps:[
+      { h:'a &gt; b, cioè 3 &gt; 8, è vero o falso?', type:'choice', opts:['vero','falso'], ans:1, ok:'Falso, quindi si prende la parte dopo i due punti.', bad:'3 è più grande di 8?' },
+      { h:'Quindi quanto vale m e cosa stampa la prima printf?', type:'text', ans:['8'], ok:'Sì, m = b = 8.', bad:'Condizione falsa → si prende quello dopo i due punti.' },
+      { h:'Quanto fa b % a, cioè 8 % 3?', type:'text', ans:['2'], ok:'Giusto: 8 = 3 · 2 + 2.', bad:'Il resto: 8 diviso 3 fa 2 con resto…' },
+      { h:'La condizione 8 % 3 == 2 è vera. Cosa stampa la seconda printf?', type:'text', ans:['30'], ok:'Perfetto: a = a * 10 = 30.', bad:'Condizione vera → si prende quello prima dei due punti: a * 10.' }
+    ], done:'<b>Fatto!</b> Stampa <code>8</code> e poi <code>30</code>, su due righe.' },
+  ex:[
+    { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
+int x = 10, y = 4;
+float f;
+f = x / y;
+printf("%d %d %.2f\n", x / y, x % y, f);
+f = x / (float) y;
+printf("%.2f\n", f);`), a:'2 2 2.00\n2.50', hint:'x / y è tra due int. Il cast (float) y cambia tutto.', sol:'<pre class="code">2 2 2.00\n2.50</pre>10 / 4 = 2 (intera), 10 % 4 = 2, f = 2.00 perché la divisione era intera. Col cast: 10 / 4.0 = 2.50.' },
+    { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
+int i = 5, j;
+j = i++ * 2;
+printf("%d %d\n", i, j);
+j = --i * 3;
+printf("%d %d\n", i, j);`), a:'6 10\n5 15', hint:'i++ usa 5 e poi i diventa 6. --i prima diminuisce.', sol:'<pre class="code">6 10\n5 15</pre>j = 5 · 2 = 10 e i = 6. Poi --i porta i a 5 e j = 5 · 3 = 15.' },
+    { id:'e3', type:'text', q:'Quanto vale <code>17 % 5</code> ?', a:['2'], hint:'17 = 5 · 3 + ?', sol:'17 = 5 · 3 + 2, resto <b>2</b>.' },
+    { id:'e4', type:'choice', q:'Come si controlla in C se un intero n è pari?', opts:['n / 2 == 0','n % 2 == 0','n % 2 == 1'], a:1, hint:'Pari = il resto della divisione per 2 è zero.', sol:'<code>if (n % 2 == 0)</code>. Serve spessissimo al PC.' },
+    { id:'e5', type:'text', q:'<code>char c = \'g\' - 3;</code> Che carattere c\'è in c?', a:['d',"'d'"], hint:'Tre lettere prima della g.', sol:'g, f, e, <b>d</b>. È lo stesso trucco del tema del 9 feb 2026 (source[i] − max).' }
+  ],
+  quaderno:[
+    '<b>int / int</b> butta la parte decimale. Per avere la virgola: almeno un numero float, oppure cast <code>(float)</code>.',
+    '<b>%</b> = resto. Pari: <code>n % 2 == 0</code>. Ultima cifra: <code>n % 10</code>.',
+    '<b>a++</b> usa e poi aumenta; <b>++a</b> aumenta e poi usa.',
+    '<b>c ? A : B</b> = se c è vero A, altrimenti B. Vero = diverso da 0.',
+    '<b>char</b> = numero: <code>\'a\' + 1</code> è <code>\'b\'</code>.'
+  ]
+});
+
+/* ================= 4 · INPUT, IF, CICLI ================= */
+CH.push({
+  id:'cicli', n:4, short:'Input-output, if e cicli', when:'piano del 18/11 · slide 06a-07c · esercitazioni 05 e 06a',
+  title:'Leggere da tastiera, decidere con if, ripetere con i cicli',
+  serve:'<p class="big">Ogni funzione che scriverai all\'esame ha un ciclo dentro: scorrere un array, leggere un file riga per riga, contare quante volte compare un valore. Qui impari i tre cicli del C e come leggere un numero con <code>scanf</code>.</p>',
+  exam:'nel tema scritto del 9 feb 2026 la funzione iterativa <code>conta</code> è un ciclo while. Al PC tutte le letture da file sono cicli. Nello scritto le tracce "cosa stampa" hanno quasi sempre un ciclo da seguire a mano.',
+  idea:{ title:'Il giro di pista', html:
+    '<p>Un ciclo è un corridore che fa giri di pista. Prima di ogni giro controlla un cartello (la <b>condizione</b>): se c\'è scritto "continua" fa un altro giro, se c\'è scritto "stop" si ferma.</p>'
+   +'<p><code>for (i = 1; i &lt;= n; i++)</code> si legge: "parto con i = 1; <b>prima di ogni giro</b> controllo che i &lt;= n; <b>alla fine di ogni giro</b> aumento i di 1".</p>'
+   +'<div class="note"><code>while (condizione) { ... }</code> controlla <b>prima</b> del giro: può fare zero giri.<br><code>do { ... } while (condizione);</code> controlla <b>dopo</b> il giro: fa sempre almeno un giro.</div>' },
+  widgets:[
+    { type:'tracer', title:'Somma da 1 a n (scrivi 4 da tastiera)', intro:'Supponiamo che quando il programma chiede il numero tu scriva <b>4</b> e premi invio.',
+      code:String.raw`
+#include <stdio.h>
+#define MAX 100
+
+int main(void) {
+    int n, i, somma = 0;
+    printf("Quanti numeri? ");
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++) {
+        somma = somma + i;
+    }
+    if (somma > MAX)
+        printf("Troppo grande\n");
+    else
+        printf("Somma = %d\n", somma);
+    return 0;
+}`,
+      steps:[
+        { l:2, say:'<code>#define MAX 100</code> è un\'istruzione del <b>preprocessore</b>: prima di compilare, ogni MAX nel file viene sostituito con 100. Non è una variabile.' },
+        { l:5, v:{n:'???',i:'???',somma:'0'}, say:'Tre interi. Solo somma parte da 0: è un <b>accumulatore</b>, deve partire da 0 sennò la somma parte da un numero a caso.' },
+        { l:6, v:{n:'???',i:'???',somma:'0'}, out:'Quanti numeri? ', say:'Stampa la domanda (senza \\n, quindi il cursore resta sulla stessa riga).' },
+        { l:7, v:{n:'4',i:'???',somma:'0'}, out:'Quanti numeri? 4\n', say:'<code>scanf("%d", &amp;n)</code> aspetta che tu scriva un intero e lo mette in n. La <b>&amp;</b> davanti a n è obbligatoria: vuol dire "l\'indirizzo di n", cioè "mettilo lì dentro". Il 4 che vedi l\'hai scritto tu.' },
+        { l:8, v:{n:'4',i:'1',somma:'0'}, out:'Quanti numeri? 4\n', say:'Inizio del for: i = 1. Controllo 1 &lt;= 4: vero, entro.' },
+        { l:9, v:{n:'4',i:'1',somma:'1'}, out:'Quanti numeri? 4\n', say:'Giro 1: somma = 0 + 1 = 1.' },
+        { l:8, v:{n:'4',i:'2',somma:'1'}, out:'Quanti numeri? 4\n', say:'Fine giro: i++ porta i a 2. Controllo 2 &lt;= 4: vero.' },
+        { l:9, v:{n:'4',i:'2',somma:'3'}, out:'Quanti numeri? 4\n', say:'Giro 2: somma = 1 + 2 = 3.' },
+        { l:8, v:{n:'4',i:'3',somma:'3'}, out:'Quanti numeri? 4\n', say:'i = 3. 3 &lt;= 4: vero.' },
+        { l:9, v:{n:'4',i:'3',somma:'6'}, out:'Quanti numeri? 4\n', say:'Giro 3: somma = 3 + 3 = 6.' },
+        { l:8, v:{n:'4',i:'4',somma:'6'}, out:'Quanti numeri? 4\n', say:'i = 4. 4 &lt;= 4: vero (minore <b>o uguale</b>).' },
+        { l:9, v:{n:'4',i:'4',somma:'10'}, out:'Quanti numeri? 4\n', say:'Giro 4: somma = 6 + 4 = 10.' },
+        { l:8, v:{n:'4',i:'5',somma:'10'}, out:'Quanti numeri? 4\n', say:'i = 5. 5 &lt;= 4: <b>falso</b>, esco dal ciclo. Nota: dopo il ciclo i vale 5, non 4.' },
+        { l:11, v:{n:'4',i:'5',somma:'10'}, out:'Quanti numeri? 4\n', say:'10 &gt; 100? Falso, quindi salto la riga 12 e vado all\'else.' },
+        { l:14, v:{n:'4',i:'5',somma:'10'}, out:'Quanti numeri? 4\nSomma = 10\n', say:'Stampa la somma.' },
+        { l:15, v:{n:'4',i:'5',somma:'10'}, out:'Quanti numeri? 4\nSomma = 10\n', say:'Fine.' }
+      ] }
+  ],
+  why:[
+    { easy:true, f:'scanf vuole la & davanti alla variabile', t:'scanf deve <b>scrivere</b> dentro la tua variabile, quindi le serve sapere dove si trova in memoria (il suo indirizzo). printf invece deve solo leggere il valore, quindi niente &amp;. Lo capirai meglio nel capitolo dei puntatori.' },
+    { easy:true, f:'Dopo for (i = 1; i &lt;= n; i++) la variabile i vale n + 1', t:'Il ciclo si ferma proprio quando la condizione diventa falsa, cioè quando i ha superato n.' },
+    { easy:true, f:'= assegna, == confronta', t:'<code>if (x = 0)</code> mette 0 in x e poi controlla 0, che è falso: non entra mai. Il confronto si scrive <code>if (x == 0)</code>. gcc -Wall ti avvisa.' },
+    { easy:false, f:'scanf restituisce quanti valori è riuscito a leggere', t:'Serve per i file (capitolo 11): <code>while (fscanf(f, "%d", &amp;x) == 1)</code> vuol dire "finché riesco a leggere un numero". Segnatela.' }
+  ],
+  warn:{ title:'Il punto e virgola dopo il for', html:'<p><code>for (i = 0; i &lt; 10; i++);</code> con il <b>;</b> alla fine fa 10 giri <b>vuoti</b>, e il blocco tra graffe sotto viene eseguito una volta sola. Errore classico, difficile da vedere.</p>' },
+  guided:{ title:'Quante volte gira?', intro:code(String.raw`
+int i, n = 0;
+for (i = 10; i > 0; i = i - 3) {
+    if (i % 2 == 0)
+        n++;
+}
+printf("%d %d\n", i, n);`), steps:[
+      { h:'Scrivi i valori che prende i dentro il ciclo, separati da virgola', type:'text', ans:['10,7,4,1'], ok:'Giusto: dopo 1 viene −2, che non è &gt; 0.', bad:'Parti da 10 e togli 3 ogni volta, finché i &gt; 0.' },
+      { h:'Quali di questi sono pari? Quindi quanto vale n alla fine?', type:'text', ans:['2'], ok:'Sì: 10 e 4 sono pari, n = 2.', bad:'Pari: resto della divisione per 2 uguale a 0.' },
+      { h:'E quanto vale i quando esce dal ciclo?', type:'text', ans:['-2','−2'], ok:'Perfetto: 1 − 3 = −2, e −2 &gt; 0 è falso.', bad:'L\'ultimo i dentro il ciclo è 1. Poi si fa ancora i = i − 3.' }
+    ], done:'<b>Fatto!</b> Stampa <code>-2 2</code>.' },
+  ex:[
+    { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
+int i = 1, p = 1;
+while (i < 5) {
+    p = p * 2;
+    i = i + 2;
+}
+printf("%d %d\n", i, p);`), a:'5 4', hint:'Fai una tabellina con i e p a ogni giro.', sol:'<pre class="code">5 4</pre>Giro 1: p = 2, i = 3. Giro 2: p = 4, i = 5. 5 &lt; 5 è falso, esco.' },
+    { id:'e2', type:'out', q:'Cosa stampa? (attento al tipo di ciclo)'+code(String.raw`
+int k = 10;
+do {
+    printf("%d ", k);
+    k = k - 4;
+} while (k > 10);
+printf("\nfine %d\n", k);`), a:'10\nfine 6', hint:'do-while fa sempre almeno un giro, e controlla dopo.', sol:'<pre class="code">10 \nfine 6</pre>Stampa 10, k diventa 6, 6 &gt; 10 è falso: esce. Un while normale non avrebbe fatto nessun giro.' },
+    { id:'e3', type:'choice', q:'Quale riga legge correttamente un intero in <code>int eta;</code> ?', opts:['scanf("%d", eta);','scanf("%d", &amp;eta);','scanf(&amp;eta);','printf("%d", &amp;eta);'], a:1, hint:'Ricordati della &amp;.', sol:'<code>scanf("%d", &amp;eta);</code>' },
+    { id:'e4', type:'text', q:'Quante volte gira <code>for (i = 0; i &lt; 10; i = i + 3)</code> ?', a:['4'], hint:'i vale 0, 3, …', sol:'i = 0, 3, 6, 9: <b>4</b> giri. Con 12 si ferma.' },
+    { id:'e5', type:'code', tag:'al PC', q:'Scrivi un programma che legge numeri interi da tastiera finché l\'utente scrive 0, e alla fine stampa quanti numeri <b>positivi</b> ha scritto (lo 0 non conta).', hint:'Ti serve un contatore che parte da 0 e un ciclo while (oppure do-while) che legge con scanf e si ferma quando il numero è 0.', sol:code(String.raw`
+#include <stdio.h>
+
+int main(void) {
+    int x, positivi = 0;
+    printf("Scrivi numeri (0 per finire): ");
+    scanf("%d", &x);
+    while (x != 0) {
+        if (x > 0)
+            positivi++;
+        scanf("%d", &x);
+    }
+    printf("Positivi: %d\n", positivi);
+    return 0;
+}`)+'<p>Schema da ricordare: <b>leggo una volta prima del ciclo, poi in fondo a ogni giro</b>. Così il controllo <code>x != 0</code> vede sempre il numero appena letto.</p>' }
+  ],
+  quaderno:[
+    '<b>scanf</b>: <code>scanf("%d", &amp;n);</code> sempre con la &amp; (tranne le stringhe, capitolo 9).',
+    '<b>for</b>: inizio; condizione controllata prima di ogni giro; aggiornamento alla fine di ogni giro.',
+    '<b>while</b> può fare 0 giri, <b>do-while</b> almeno 1.',
+    '<b>Accumulatore</b> (somma, contatore) parte da 0; <b>prodotto</b> parte da 1.',
+    '<b>Schema "leggi finché"</b>: leggo prima del ciclo, ciclo con la condizione, rileggo in fondo al giro.',
+    '<b>= assegna, == confronta.</b> Niente ; dopo for(...) e while(...).'
+  ]
+});
+
+/* Capitoli 5-8: funzioni, ricorsione, puntatori, progetti su più file. Programmi verificati con gcc -Wall. */
+
+/* ================= 5 · FUNZIONI ================= */
+CH.push({
+  id:'funzioni', n:5, short:'Funzioni', when:'piano del 21/11 · slide Modulo 1 08',
+  title:'Funzioni: dare un nome a un pezzo di programma',
+  serve:'<p class="big">L\'esame è fatto <b>solo</b> di funzioni: lo scritto ti chiede di scrivere <code>list almenoDue(list matr, list esami)</code>, la prova al PC ti chiede <code>leggi_prodotti</code>, <code>valore_ordine</code>, ecc. Qui impari come si scrive una funzione, come riceve i dati e come restituisce il risultato.</p>',
+  exam:'il testo ti dà sempre la <b>firma</b> (es. <code>int conta(int id, list esami);</code>) e tu scrivi il corpo. Se cambi la firma perdi punti: tipo restituito, nome e parametri vanno copiati esattamente.',
+  idea:{ title:'La macchinetta del caffè', html:
+    '<p>Una funzione è una macchinetta: metti dentro qualcosa (i <b>parametri</b>), lei lavora, e ti restituisce un risultato (il <b>valore di ritorno</b>).</p>'
+   +code(String.raw`int quadrato(int x)`)
+   +'<p>Si legge: "la funzione <code>quadrato</code> riceve un int che dentro chiamerà <code>x</code>, e restituisce un <code>int</code>". Se una funzione non restituisce niente, al posto del tipo si scrive <code>void</code>.</p>'
+   +'<div class="note"><b>Regola d\'oro (passaggio per valore):</b> la funzione riceve una <b>copia</b> del valore. Se dentro la funzione cambi x, la variabile originale del main non cambia.</div>' },
+  widgets:[
+    { type:'tracer', title:'Chiamare una funzione', intro:'Guarda la memoria: quando si chiama <code>quadrato</code> compare un nuovo riquadro con le sue variabili, e quando finisce sparisce.',
+      code:String.raw`
+#include <stdio.h>
+
+int quadrato(int x);
+
+int main(void) {
+    int a = 3, r;
+    r = quadrato(a + 1);
+    printf("%d %d\n", a, r);
+    return 0;
+}
+
+int quadrato(int x) {
+    int q;
+    q = x * x;
+    x = 0;
+    return q;
+}`,
+      steps:[
+        { l:3, say:'Questo è il <b>prototipo</b>: dice al compilatore "più avanti esiste una funzione quadrato che riceve un int e restituisce un int". Serve perché main la usa prima che sia scritta.' },
+        { l:6, f:[['main',{a:'3',r:'???'}]], say:'Nel main: a = 3, r ancora senza valore.' },
+        { l:7, f:[['main',{a:'3',r:'???'}]], say:'Prima si calcola l\'argomento: a + 1 = 4. Poi si chiama quadrato passando il <b>valore</b> 4.' },
+        { l:13, f:[['main',{a:'3',r:'???'}],['quadrato',{x:'4'}]], say:'Si entra in quadrato. Nasce un riquadro nuovo con il parametro x = 4 (una copia del valore, non a).' },
+        { l:14, f:[['main',{a:'3',r:'???'}],['quadrato',{x:'4',q:'???'}]], say:'Variabile locale q: esiste solo dentro quadrato.' },
+        { l:15, f:[['main',{a:'3',r:'???'}],['quadrato',{x:'4',q:'16'}]], say:'q = 4 · 4 = 16.' },
+        { l:16, f:[['main',{a:'3',r:'???'}],['quadrato',{x:'0',q:'16'}]], say:'x = 0 cambia solo la copia. La a del main resta 3.' },
+        { l:17, f:[['main',{a:'3',r:'???'}],['quadrato',{x:'0',q:'16'}]], say:'<code>return q;</code> restituisce 16 a chi ha chiamato e chiude la funzione.' },
+        { l:7, f:[['main',{a:'3',r:'16'}]], say:'Il riquadro di quadrato è sparito (con x e q). Il 16 restituito va in r.' },
+        { l:8, f:[['main',{a:'3',r:'16'}]], out:'3 16\n', say:'Stampa 3 e 16: a non è cambiata.' }
+      ] }
+  ],
+  why:[
+    { easy:true, f:'Passaggio per valore: la funzione lavora su una copia', t:'Al momento della chiamata il valore viene copiato nel parametro. Sono due variabili diverse, in due riquadri diversi della memoria.' },
+    { easy:true, f:'Il prototipo va prima del main (o nel file .h)', t:'Il compilatore legge il file dall\'alto in basso. Se trova una chiamata a una funzione che non conosce ancora, non sa che tipi usa e dà un warning ("implicit declaration").' },
+    { easy:true, f:'return esce subito dalla funzione', t:'Le righe dopo un return eseguito non vengono più lette. Per questo <code>if (x &gt; y) return x; else return y;</code> funziona.' },
+    { easy:true, f:'Le variabili locali spariscono quando la funzione finisce', t:'Il riquadro della funzione viene buttato via al return. Per questo non si restituisce mai l\'indirizzo di una variabile locale (lo rivedrai coi puntatori).' }
+  ],
+  guided:{ title:'Due funzioni insieme', intro:code(String.raw`
+int massimo(int x, int y) {
+    if (x > y) return x;
+    else return y;
+}
+void stampa_riga(int n) {
+    int i;
+    for (i = 0; i < n; i++) printf("*");
+    printf("\n");
+}
+int main(void) {
+    int a = 4, b = 9;
+    stampa_riga(massimo(a, b) - a);
+    printf("%d\n", massimo(a * 3, b));
+    return 0;
+}`), steps:[
+      { h:'Quanto restituisce massimo(4, 9)?', type:'text', ans:['9'], ok:'Sì.', bad:'Il più grande tra 4 e 9.' },
+      { h:'Quindi stampa_riga riceve 9 − 4. Quanti asterischi stampa?', type:'text', ans:['5'], ok:'Giusto: 5 asterischi e poi a capo.', bad:'9 − 4 = ?' },
+      { h:'Seconda riga: massimo(a * 3, b) = massimo(12, 9). Cosa stampa?', type:'text', ans:['12'], ok:'Perfetto.', bad:'a * 3 = 12. Il più grande tra 12 e 9.' }
+    ], done:'<b>Fatto!</b> Stampa <code>*****</code> e poi <code>12</code>. Nota: <code>stampa_riga</code> è <code>void</code>, non restituisce niente: la si usa da sola, non dentro un calcolo.' },
+  ex:[
+    { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
+void raddoppia(int n) {
+    n = n * 2;
+    printf("dentro: %d\n", n);
+}
+int main(void) {
+    int k = 7;
+    raddoppia(k);
+    printf("fuori: %d\n", k);
+    return 0;
+}`), a:'dentro: 14\nfuori: 7', hint:'Passaggio per valore: n è una copia di k.', sol:'<pre class="code">dentro: 14\nfuori: 7</pre>La funzione raddoppia la sua copia. k nel main resta 7.' },
+    { id:'e2', type:'choice', q:'Il testo dice: "si realizzi una funzione che riceve un intero e un float e restituisce un float". Quale firma è giusta?', opts:['void f(int a, float b)','float f(int a, float b)','int f(float a, int b)'], a:1, hint:'Il tipo restituito si scrive prima del nome.', sol:'<code>float f(int a, float b)</code>' },
+    { id:'e3', type:'choice', q:'Il compilatore dice <code>warning: implicit declaration of function \'media\'</code>. Cosa hai dimenticato?', opts:['Il return','Il prototipo di media prima del main (o l\'#include del suo .h)','Il punto e virgola'], a:1, hint:'"Implicit declaration" = l\'ho usata senza che fosse dichiarata prima.', sol:'Manca il prototipo, oppure l\'#include del file .h dove sta.' },
+    { id:'e4', type:'text', q:'<code>int f(int n) { return n % 10 + n / 10; }</code> Quanto restituisce f(47)?', a:['11'], hint:'47 % 10 è l\'ultima cifra, 47 / 10 è la divisione intera.', sol:'7 + 4 = <b>11</b>.' },
+    { id:'e5', type:'code', tag:'al PC', q:'Scrivi una funzione <code>int conta_divisori(int n)</code> che restituisce quanti divisori ha n (per esempio conta_divisori(12) = 6: 1, 2, 3, 4, 6, 12) e un main che la prova con 12 e con 7.', hint:'Ciclo da 1 a n, contatore che aumenta quando n % i == 0.', sol:code(String.raw`
+#include <stdio.h>
+
+int conta_divisori(int n) {
+    int i, cont = 0;
+    for (i = 1; i <= n; i++) {
+        if (n % i == 0)
+            cont++;
+    }
+    return cont;
+}
+
+int main(void) {
+    printf("%d\n", conta_divisori(12));   /* 6 */
+    printf("%d\n", conta_divisori(7));    /* 2 */
+    return 0;
+}`) }
+  ],
+  quaderno:[
+    '<b>Firma:</b> <code>tipo_restituito nome(tipo1 par1, tipo2 par2)</code>. <code>void</code> se non restituisce niente.',
+    '<b>Prototipo</b> (la firma con il ;) prima del main, o nel .h.',
+    '<b>Passaggio per valore:</b> la funzione riceve copie; cambiarle non cambia le variabili del chiamante.',
+    '<b>All\'esame</b> copia la firma del testo esattamente com\'è.'
+  ]
+});
+
+/* ================= 6 · RICORSIONE ================= */
+CH.push({
+  id:'ricorsione', n:6, short:'Ricorsione', when:'piano del 25/11 · slide 09a-09b · esercitazione 06',
+  title:'Ricorsione e record di attivazione',
+  serve:'<p class="big">L\'esercizio 1 dello scritto (<b>6 punti</b>) chiede <b>sempre</b> una funzione RICORSIVA sulle liste. L\'esercizio 2 a volte chiede di seguire a mano una funzione ricorsiva, e la domanda di teoria del 9 feb 2026 e del 23 gen 2025 era il <b>record di attivazione</b>. Qui ci sono metà dei punti dello scritto.</p>',
+  exam:'"Si consideri la seguente funzione ricorsiva… si indichi la sequenza delle chiamate e il valore restituito" (2 punti) e "Si illustri il concetto di record di attivazione" (1 punto).',
+  idea:{ title:'La matrioska', html:
+    '<p>Una funzione ricorsiva <b>chiama se stessa</b> su un problema più piccolo. Come una matrioska: per aprire quella grande, apri quella dentro, e così via, finché trovi la più piccola che non si apre (il <b>caso base</b>).</p>'
+   +'<p>fatt(3) = 3 · fatt(2) = 3 · 2 · fatt(1) = 3 · 2 · 1 = 6.</p>'
+   +'<div class="note">Ogni funzione ricorsiva ha due parti:<br>1) il <b>caso base</b>: un caso così semplice che la risposta si sa subito, senza richiamarsi;<br>2) il <b>passo ricorsivo</b>: richiamo la funzione su un problema <b>più piccolo</b>, e uso il suo risultato.</div>' },
+  widgets:[
+    { type:'tracer', title:'fatt(3): la pila dei record di attivazione', intro:'Ogni chiamata crea un nuovo riquadro (record di attivazione) sopra gli altri. Il riquadro con il bordo blu è quello attivo. Quando una chiamata finisce, il suo riquadro sparisce e si torna a quello sotto.',
+      code:String.raw`
+#include <stdio.h>
+
+int fatt(int n) {
+    if (n <= 1)
+        return 1;
+    return n * fatt(n - 1);
+}
+
+int main(void) {
+    int r = fatt(3);
+    printf("%d\n", r);
+    return 0;
+}`,
+      steps:[
+        { l:10, f:[['main',{r:'???'}]], say:'main chiama fatt(3). r aspetta il risultato.' },
+        { l:4, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}]], say:'Nuovo record di attivazione per fatt con n = 3. Controllo: 3 &lt;= 1? No.' },
+        { l:6, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}]], say:'Deve calcolare 3 · fatt(2). Non può finire finché fatt(2) non risponde: <b>resta in attesa</b>.' },
+        { l:4, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}],['fatt(2)',{n:'2'}]], say:'Nuovo record sopra: fatt con n = 2. Ci sono due n diverse in memoria, una per chiamata. 2 &lt;= 1? No.' },
+        { l:6, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}],['fatt(2)',{n:'2'}]], say:'Deve calcolare 2 · fatt(1). In attesa.' },
+        { l:4, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}],['fatt(2)',{n:'2'}],['fatt(1)',{n:'1'}]], say:'fatt con n = 1. 1 &lt;= 1? <b>Sì: caso base.</b>' },
+        { l:5, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}],['fatt(2)',{n:'2'}],['fatt(1)',{n:'1'}]], say:'Restituisce 1 senza richiamarsi. Ora la pila si "srotola" all\'indietro.' },
+        { l:6, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}],['fatt(2)',{n:'2'}]], say:'fatt(1) è sparita. fatt(2) riceve 1 e calcola 2 · 1 = 2. Restituisce 2.' },
+        { l:6, f:[['main',{r:'???'}],['fatt(3)',{n:'3'}]], say:'fatt(3) riceve 2 e calcola 3 · 2 = 6. Restituisce 6.' },
+        { l:10, f:[['main',{r:'6'}]], say:'Si torna nel main: r = 6.' },
+        { l:11, f:[['main',{r:'6'}]], out:'6\n', say:'Stampa 6.' }
+      ] },
+    { type:'html', eyebrow:'Risposta pronta per lo scritto (1 punto)', title:'Cos\'è il record di attivazione', html:
+      '<div class="exam"><p>Il <b>record di attivazione</b> è l\'area di memoria che viene creata nello <b>stack</b> ogni volta che si chiama una funzione, e distrutta quando la funzione termina.</p>'
+     +'<p>Contiene: i <b>parametri</b> (con i valori ricevuti), le <b>variabili locali</b>, l\'<b>indirizzo di ritorno</b> (il punto del chiamante da cui riprendere) e lo spazio per il <b>valore restituito</b>.</p>'
+     +'<p>I record si impilano: l\'ultimo creato è il primo distrutto (politica LIFO). Nella ricorsione ogni chiamata ha il suo record, quindi le variabili delle varie chiamate sono indipendenti.</p></div>'
+     +'<p>Imparala quasi a parole: le 4 cose contenute e "stack, LIFO" sono quello che il prof vuole leggere.</p>' }
+  ],
+  why:[
+    { easy:true, f:'Serve un caso base, altrimenti la ricorsione non finisce', t:'Senza caso base la funzione si richiama all\'infinito, la pila dei record cresce finché la memoria finisce e il programma si blocca (stack overflow).' },
+    { easy:true, f:'La chiamata ricorsiva deve essere su un problema più piccolo', t:'Ogni chiamata deve avvicinarsi al caso base: n − 1 al posto di n, la coda della lista al posto della lista intera.' },
+    { easy:true, f:'Le stampe prima della chiamata escono in un ordine, quelle dopo in ordine inverso', t:'Ciò che sta prima della chiamata ricorsiva viene eseguito mentre la pila cresce; ciò che sta dopo, mentre la pila si srotola.' }
+  ],
+  guided:{ title:'Traccia come all\'esame', intro:code(String.raw`
+int f(int a, int b) {
+    if (a < b)
+        return a;
+    return f(a - b, b + 1);
+}
+/* nel main: printf("%d\n", f(20, 3)); */`), steps:[
+      { h:'f(20, 3): 20 &lt; 3 è falso. Con quali valori si richiama? Scrivi f(?, ?)', type:'text', ans:['f(17,4)','17,4'], ok:'Giusto: a − b = 17, b + 1 = 4.', bad:'a − b e b + 1, con a = 20 e b = 3.' },
+      { h:'Continua: da f(17, 4) quale chiamata segue?', type:'text', ans:['f(13,5)','13,5'], ok:'Sì.', bad:'17 − 4 e 4 + 1.' },
+      { h:'Poi f(8, 6), poi f(2, 7). In f(2, 7) vale 2 &lt; 7: cosa restituisce?', type:'text', ans:['2'], ok:'Perfetto: caso base, restituisce a = 2.', bad:'Se a &lt; b la funzione restituisce a.' },
+      { h:'Ogni chiamata restituisce direttamente quello che riceve. Cosa stampa il main?', type:'text', ans:['2'], ok:'Esatto.', bad:'Il valore torna indietro uguale fino al main.' }
+    ], done:'<b>Fatto!</b> All\'esame scrivi così: f(20,3) → f(17,4) → f(13,5) → f(8,6) → f(2,7) = 2. Stampa <code>2</code>.' },
+  ex:[
+    { id:'e1', type:'text', q:code(String.raw`
+int s(int n) {
+    if (n < 10) return n;
+    return n % 10 + s(n / 10);
+}`)+'Quanto restituisce s(352)?', a:['10'], hint:'352 % 10 = 2 e 352 / 10 = 35. Poi s(35) = 5 + s(3).', sol:'s(352) = 2 + s(35) = 2 + 5 + s(3) = 2 + 5 + 3 = <b>10</b>. È la somma delle cifre.' },
+    { id:'e2', type:'out', q:'Cosa stampa? (guarda dove sta la printf)'+code(String.raw`
+int g(int n) {
+    if (n == 0) return 0;
+    printf("%d ", n);
+    return g(n - 1) + 1;
+}
+int main(void) {
+    int x = g(3);
+    printf("\n%d\n", x);
+    return 0;
+}`), a:'3 2 1\n3', hint:'La printf è prima della chiamata: stampa mentre la pila cresce. Il valore restituito conta le chiamate.', sol:'<pre class="code">3 2 1 \n3</pre>Stampa 3, 2, 1 scendendo. Poi g(0) = 0, g(1) = 1, g(2) = 2, g(3) = 3.' },
+    { id:'e3', type:'choice', q:'Cosa NON contiene il record di attivazione?', opts:['I parametri della funzione','Le variabili locali','L\'indirizzo di ritorno','Le variabili allocate con malloc'], a:3, hint:'La memoria di malloc sta in un\'altra zona.', sol:'La memoria presa con malloc sta nello <b>heap</b>, non nello stack. Lo vedrai nel capitolo 13.' },
+    { id:'e4', type:'choice', q:'<code>int h(int n) { return n + h(n - 1); }</code> Cosa succede chiamando h(3)?', opts:['Restituisce 6','Restituisce 3','Non finisce mai: manca il caso base'], a:2, hint:'Quando si ferma?', sol:'Non c\'è nessun caso base: h(3) → h(2) → h(1) → h(0) → h(−1) → … finché la memoria dello stack finisce.' },
+    { id:'e5', type:'code', tag:'su carta', q:'Scrivi una funzione RICORSIVA <code>int potenza(int b, int e)</code> che calcola b elevato a e (e ≥ 0), senza cicli.', hint:'Caso base: b<sup>0</sup> = 1. Passo: b<sup>e</sup> = b · b<sup>e−1</sup>.', sol:code(String.raw`
+int potenza(int b, int e) {
+    if (e == 0)
+        return 1;
+    return b * potenza(b, e - 1);
+}`)+'<p>Stesso schema di fatt: caso base, poi "un pezzo" per la chiamata sul problema più piccolo.</p>' }
+  ],
+  quaderno:[
+    '<b>Ricetta ricorsiva:</b> 1) caso base (risposta immediata); 2) chiamata su un problema più piccolo; 3) uso il risultato.',
+    '<b>Tracciare:</b> scrivo la catena delle chiamate f(...) → f(...) → … fino al caso base, poi risalgo con i risultati.',
+    '<b>Record di attivazione:</b> nello stack, uno per chiamata; contiene parametri, variabili locali, indirizzo di ritorno, valore di ritorno; LIFO.',
+    '<b>Stampe:</b> prima della chiamata → ordine di discesa; dopo la chiamata → ordine inverso.'
+  ]
+});
+
+/* ================= 7 · PUNTATORI ================= */
+CH.push({
+  id:'puntatori', n:7, short:'Puntatori', when:'piano del 25/11 · slide 10a-10b · esercitazione 07',
+  title:'Puntatori e passaggio per riferimento',
+  serve:'<p class="big">Servono per due cose che all\'esame escono sempre: far <b>restituire più di un valore</b> a una funzione (al PC: <code>Ordine* leggi_ordini(char* fileName, int* dim)</code>, dove dim è un risultato in più) e capire il "cosa stampa" dello scritto, che è pieno di <code>*</code> e <code>&amp;</code>.</p>',
+  exam:'nel tema del 9 feb 2026: <code>shift(msg, &amp;max)</code> con <code>*q = result[i - 1] - \'a\';</code> dentro la funzione. Cambiando *q cambia max nel main. Senza questo capitolo quel punto è perso.',
+  idea:{ title:'L\'indirizzo di casa', html:
+    '<p>Ogni variabile abita in una casella della memoria, e ogni casella ha un <b>indirizzo</b> (un numero), come una casa ha un indirizzo.</p>'
+   +'<p><code>&amp;a</code> = "l\'indirizzo di a". Un <b>puntatore</b> è una variabile che contiene un indirizzo: <code>int *p = &amp;a;</code> si legge "p è un puntatore a int, e contiene l\'indirizzo di a".</p>'
+   +'<p><code>*p</code> = "vai all\'indirizzo scritto in p e guarda (o cambia) cosa c\'è". Quindi <code>*p = 5;</code> mette 5 dentro a, passando per l\'indirizzo.</p>'
+   +'<div class="note">Se do a una funzione l\'<b>indirizzo</b> di una variabile, la funzione può andare fin lì e cambiarla. È il <b>passaggio per riferimento</b> (in C si fa con i puntatori).</div>' },
+  widgets:[
+    { type:'tracer', title:'Scambiare due variabili', intro:'Gli indirizzi (1000, 1004) sono inventati, ma l\'idea è questa. Guarda come la funzione cambia a e b del main.',
+      code:String.raw`
+#include <stdio.h>
+
+void scambia(int *p, int *q) {
+    int t;
+    t = *p;
+    *p = *q;
+    *q = t;
+}
+
+int main(void) {
+    int a = 1, b = 2;
+    int *pa = &a;
+    *pa = 5;
+    scambia(&a, &b);
+    printf("%d %d\n", a, b);
+    return 0;
+}`,
+      steps:[
+        { l:11, f:[['main',{'a @1000':'1','b @1004':'2'}]], say:'a abita all\'indirizzo 1000 e vale 1; b abita al 1004 e vale 2.' },
+        { l:12, f:[['main',{'a @1000':'1','b @1004':'2','pa':'1000 (punta ad a)'}]], say:'pa è un puntatore a int. Dentro c\'è <b>1000</b>, l\'indirizzo di a.' },
+        { l:13, f:[['main',{'a @1000':'5','b @1004':'2','pa':'1000 (punta ad a)'}]], say:'<code>*pa = 5</code>: vado all\'indirizzo scritto in pa (1000) e ci metto 5. Quindi a diventa 5, senza nominarla.' },
+        { l:14, f:[['main',{'a @1000':'5','b @1004':'2','pa':'1000 (punta ad a)'}]], say:'Chiamo scambia passando gli <b>indirizzi</b> di a e b, non i valori.' },
+        { l:4, f:[['main',{'a @1000':'5','b @1004':'2','pa':'1000 (punta ad a)'}],['scambia',{'p':'1000 (punta ad a)','q':'1004 (punta a b)','t':'???'}]], say:'Dentro scambia: p contiene 1000, q contiene 1004.' },
+        { l:5, f:[['main',{'a @1000':'5','b @1004':'2','pa':'1000 (punta ad a)'}],['scambia',{'p':'1000 (punta ad a)','q':'1004 (punta a b)','t':'5'}]], say:'t = *p: il valore all\'indirizzo 1000, cioè 5.' },
+        { l:6, f:[['main',{'a @1000':'2','b @1004':'2','pa':'1000 (punta ad a)'}],['scambia',{'p':'1000 (punta ad a)','q':'1004 (punta a b)','t':'5'}]], say:'*p = *q: all\'indirizzo 1000 metto il valore che c\'è al 1004 (2). <b>a del main diventa 2.</b>' },
+        { l:7, f:[['main',{'a @1000':'2','b @1004':'5','pa':'1000 (punta ad a)'}],['scambia',{'p':'1000 (punta ad a)','q':'1004 (punta a b)','t':'5'}]], say:'*q = t: all\'indirizzo 1004 metto 5. <b>b del main diventa 5.</b>' },
+        { l:15, f:[['main',{'a @1000':'2','b @1004':'5','pa':'1000 (punta ad a)'}]], out:'2 5\n', say:'scambia è finita, ma le modifiche restano: erano fatte direttamente su a e b.' }
+      ] }
+  ],
+  why:[
+    { easy:true, f:'& prende l\'indirizzo, * va all\'indirizzo', t:'Sono uno l\'opposto dell\'altro: *&amp;a è di nuovo a. Nella dichiarazione <code>int *p</code> l\'asterisco dice solo "p è un puntatore".' },
+    { easy:true, f:'Per far cambiare una variabile a una funzione le passo &variabile', t:'La funzione riceve l\'indirizzo (sempre per valore, cioè una copia dell\'indirizzo), ma con l\'indirizzo arriva alla variabile originale.' },
+    { easy:true, f:'Per questo scanf vuole la &', t:'scanf deve scrivere dentro la tua variabile: le serve il suo indirizzo.' },
+    { easy:true, f:'Una funzione può "restituire" più valori con parametri puntatore', t:'Esempio: <code>void dividi(int a, int b, int *q, int *r)</code> scrive quoziente e resto in due variabili del chiamante. Al PC: <code>int *dim</code> per restituire la lunghezza di un vettore.' },
+    { easy:false, f:'Gli indirizzi veri sono numeri lunghi in esadecimale (es. 0x7ffd5e8c)', t:'Non serve saperli leggere: all\'esame conta solo "p punta ad a".' }
+  ],
+  warn:{ title:'Non restituire l\'indirizzo di una variabile locale', html:'<p><code>int *f(void) { int x = 3; return &amp;x; }</code> è sbagliato: quando f finisce il suo record di attivazione sparisce e x con lui. Il puntatore restituito punta a memoria non più valida. Se ti serve memoria che sopravvive alla funzione, si usa malloc (capitolo 13).</p>' },
+  guided:{ title:'Valore o indirizzo?', intro:code(String.raw`
+void f(int x, int *y) {
+    x = x + 1;
+    *y = *y + x;
+}
+int main(void) {
+    int a = 2, b = 10;
+    int *p = &b;
+    f(a, &b);
+    printf("%d %d %d\n", a, b, *p);
+    *p = *p * 2;
+    printf("%d\n", b);
+    return 0;
+}`), steps:[
+      { h:'Dentro f, x è una copia di a. Quanto vale x dopo x = x + 1?', type:'text', ans:['3'], ok:'Sì, ma a nel main resta 2.', bad:'x parte da 2.' },
+      { h:'*y = *y + x: y punta a b (che vale 10). Quanto diventa b?', type:'text', ans:['13'], ok:'Giusto: 10 + 3.', bad:'*y è b. b + x = 10 + 3.' },
+      { h:'p punta a b. Cosa stampa la prima printf?', type:'text', ans:['2 13 13','2,13,13'], ok:'Perfetto: *p è b.', bad:'a è rimasta 2; b = 13; *p è il valore di b.' },
+      { h:'*p = *p * 2 cambia b. Cosa stampa la seconda printf?', type:'text', ans:['26'], ok:'Esatto.', bad:'b = 13 · 2.' }
+    ], done:'<b>Fatto!</b> Stampa <code>2 13 13</code> e poi <code>26</code>. Il parametro senza * non tocca il main; quello con * sì.' },
+  ex:[
+    { id:'e1', type:'choice', q:'<code>int a = 7; int *p = &amp;a;</code> Cosa vale <code>*p</code>?', opts:['L\'indirizzo di a','7','L\'indirizzo di p'], a:1, hint:'* = vai all\'indirizzo e guarda.', sol:'*p è il valore all\'indirizzo contenuto in p, cioè a = 7.' },
+    { id:'e2', type:'choice', q:'Vuoi una funzione che azzera una variabile int del chiamante. Quale firma e quale chiamata?', opts:['void azzera(int x) chiamata con azzera(n)','void azzera(int *x) chiamata con azzera(&amp;n), e dentro *x = 0','void azzera(int *x) chiamata con azzera(n)'], a:1, hint:'Deve ricevere l\'indirizzo.', sol:'<code>void azzera(int *x) { *x = 0; }</code> e <code>azzera(&amp;n);</code>' },
+    { id:'e3', type:'out', q:'Cosa stampa?'+code(String.raw`
+int a = 4, b = 6;
+int *p = &a, *q = &b;
+*p = *q + 1;
+q = p;
+*q = *q * 10;
+printf("%d %d\n", a, b);`), a:'70 6', hint:'Attento a q = p: ora anche q punta ad a.', sol:'<pre class="code">70 6</pre>*p = 6 + 1 → a = 7. q = p: ora q punta ad a. *q = 7 · 10 → a = 70. b non è mai cambiata.' },
+    { id:'e4', type:'code', tag:'al PC', q:'Scrivi <code>void dividi(int a, int b, int *q, int *r)</code> che mette in *q il quoziente intero e in *r il resto di a diviso b, e un main che la prova con 17 e 5 (deve stampare <code>3 2</code>).', hint:'*q = a / b; *r = a % b; nel main due variabili e la chiamata con &amp;.', sol:code(String.raw`
+#include <stdio.h>
+
+void dividi(int a, int b, int *q, int *r) {
+    *q = a / b;
+    *r = a % b;
+}
+
+int main(void) {
+    int q, r;
+    dividi(17, 5, &q, &r);
+    printf("%d %d\n", q, r);
+    return 0;
+}`) }
+  ],
+  quaderno:[
+    '<b>&amp;a</b> = indirizzo di a. <b>int *p</b> = p è un puntatore a int. <b>*p</b> = il valore all\'indirizzo in p.',
+    '<b>Modificare una variabile del chiamante:</b> parametro <code>tipo *x</code>, dentro <code>*x = ...</code>, chiamata con <code>&amp;variabile</code>.',
+    '<b>Più risultati:</b> uno con return, gli altri con parametri puntatore (es. <code>int *dim</code>).',
+    '<b>Mai</b> restituire l\'indirizzo di una variabile locale.'
+  ]
+});
+
+/* ================= 8 · PIÙ FILE ================= */
+CH.push({
+  id:'piu-file', n:8, short:'Progetti su più file', when:'piano del 28/11 · slide 11a-11b',
+  title:'Progetti su più file: .h e .c',
+  serve:'<p class="big">La prova al PC si consegna <b>sempre</b> divisa in più file: <code>element.h</code>, <code>list.h</code> / <code>list.c</code>, un modulo tuo (es. <code>shop.h</code> / <code>shop.c</code>) e <code>main.c</code>. Se l\'organizzazione è sbagliata il progetto non compila, e un progetto che non compila vale pochissimo.</p>',
+  exam:'il testo scrive già i nomi dei moduli: "Esercizio 1 – Strutture dati e funzioni di lettura (mod. element.h e shop.h/.c)".',
+  idea:{ title:'Il menù e la cucina', html:
+    '<p>Il file <b>.h</b> (header) è il <b>menù</b>: dice quali funzioni esistono e cosa ricevono/restituiscono (i prototipi), e definisce i tipi (struct, typedef). Non c\'è il codice delle funzioni.</p>'
+   +'<p>Il file <b>.c</b> con lo stesso nome è la <b>cucina</b>: contiene il codice vero di quelle funzioni.</p>'
+   +'<p>Chi vuole usare le funzioni (per esempio main.c) legge solo il menù: scrive <code>#include "matematica.h"</code>.</p>'
+   +'<div class="note"><code>#include &lt;stdio.h&gt;</code> con le parentesi angolari = libreria di sistema.<br><code>#include "matematica.h"</code> con le virgolette = file tuo, nella cartella del progetto.</div>' },
+  widgets:[
+    { type:'html', eyebrow:'Un progetto completo', title:'Tre file che lavorano insieme', html:
+      '<p><b>matematica.h</b> (il menù)</p>'+code(String.raw`
+#ifndef MATEMATICA_H
+#define MATEMATICA_H
+
+int quadrato(int x);
+int massimo(int a, int b);
+
+#endif`)
+     +'<p><b>matematica.c</b> (la cucina)</p>'+code(String.raw`
+#include "matematica.h"
+
+int quadrato(int x) {
+    return x * x;
+}
+
+int massimo(int a, int b) {
+    return (a > b) ? a : b;
+}`)
+     +'<p><b>main.c</b> (chi usa)</p>'+code(String.raw`
+#include <stdio.h>
+#include "matematica.h"
+
+int main(void) {
+    printf("%d\n", massimo(quadrato(3), 5));   /* stampa 9 */
+    return 0;
+}`)
+     +'<p>Si compilano <b>tutti i .c insieme</b> (i .h no, vengono inclusi):</p>'+code(String.raw`gcc -Wall -o prog main.c matematica.c`)
+     +'<p>In Code::Blocks o Visual Studio: tutti i file devono essere aggiunti al <b>progetto</b>, poi Rebuild All.</p>' },
+    { type:'html', eyebrow:'Quando non compila', title:'I tre errori tipici e cosa vogliono dire', html:
+      '<div class="scroll"><table class="t"><tr><th>Messaggio</th><th>Cosa vuol dire</th><th>Come si risolve</th></tr>'
+     +'<tr><td><code>implicit declaration of function \'quadrato\'</code></td><td>Usi una funzione che il compilatore non ha visto dichiarata</td><td>Manca <code>#include "matematica.h"</code> in quel file</td></tr>'
+     +'<tr><td><code>undefined reference to \'quadrato\'</code></td><td>Il prototipo c\'è, ma il codice della funzione non si trova</td><td>Non hai compilato matematica.c insieme (o non è nel progetto), oppure il nome nel .c è diverso</td></tr>'
+     +'<tr><td><code>redefinition of \'struct prodotto\'</code></td><td>Lo stesso .h è stato incluso due volte</td><td>Mancano le guardie <code>#ifndef … #define … #endif</code></td></tr></table></div>' }
+  ],
+  why:[
+    { easy:true, f:'Le guardie #ifndef NOME_H / #define NOME_H / #endif', t:'La prima volta che il file viene incluso, NOME_H non è definito: il contenuto passa e NOME_H viene definito. La seconda volta NOME_H esiste già e il contenuto viene saltato. Così niente doppioni. (<code>#pragma once</code>, che trovi in list.h, fa la stessa cosa.)' },
+    { easy:true, f:'Nel .h solo prototipi e tipi, niente codice delle funzioni', t:'Il .h viene copiato in ogni file che lo include. Se dentro ci fosse il codice di una funzione, quella funzione esisterebbe due volte e il linker si lamenterebbe.' },
+    { easy:false, f:'Compilazione in due fasi: compilatore (ogni .c da solo) e linker (unisce tutto)', t:'Basta sapere che "undefined reference" è un errore del linker, cioè manca un .c o una funzione, non un include.' }
+  ],
+  guided:{ title:'Chi va dove?', steps:[
+      { h:'<code>typedef struct { int id; float prezzo; } Prodotto;</code> dove la metti?', type:'choice', opts:['Nel .h, perché è un tipo che usano anche gli altri file','Nel main.c','In tutti i .c, copiata'], ans:0, ok:'Giusto: i tipi condivisi stanno nel .h (all\'esame spesso in element.h).', bad:'Se la copi in più file, il compilatore la vede due volte. Va in un solo posto condiviso.' },
+      { h:'Il codice di <code>float valore_ordine(Ordine o, list prodotti) { ... }</code> dove va?', type:'choice', opts:['shop.h','shop.c','main.c'], ans:1, ok:'Sì: il corpo delle funzioni sta nel .c del modulo. In shop.h va solo il prototipo.', bad:'Nel .h vanno solo i prototipi.' },
+      { h:'main.c usa valore_ordine. Che riga scrivi in cima a main.c?', type:'text', ans:['#include"shop.h"'], ok:'Perfetto.', bad:'Con le virgolette, ed è il file .h.' }
+    ], done:'<b>Fatto!</b> Schema dell\'esame: element.h (tipi) · list.h / list.c (liste, già dati) · shop.h / shop.c (le tue funzioni) · main.c (i test).' },
+  ex:[
+    { id:'e1', type:'choice', q:'Che cosa scrivi per includere la libreria delle stringhe del sistema?', opts:['#include "string.h"','#include &lt;string.h&gt;','#include string.h'], a:1, hint:'Libreria di sistema = parentesi angolari.', sol:'<code>#include &lt;string.h&gt;</code>' },
+    { id:'e2', type:'choice', q:'Compili con <code>gcc -Wall -o prog main.c</code> e ottieni <code>undefined reference to \'massimo\'</code>. Perché?', opts:['Manca l\'include di matematica.h','Non hai messo matematica.c nella compilazione','Manca il return 0'], a:1, hint:'Undefined reference = il codice della funzione non si trova.', sol:'Va compilato anche matematica.c: <code>gcc -Wall -o prog main.c matematica.c</code>.' },
+    { id:'e3', type:'choice', q:'A cosa servono #ifndef / #define / #endif in un file .h?', opts:['A rendere il programma più veloce','A evitare che il contenuto del .h venga incluso due volte','A definire le costanti'], a:1, hint:'Pensa a cosa succede se due file includono lo stesso .h.', sol:'Sono le guardie: impediscono le definizioni doppie.' },
+    { id:'e4', type:'code', tag:'al PC', q:'Prendi la funzione conta_divisori del capitolo 5 e dividi il programma in tre file: <code>numeri.h</code> (con guardie e prototipo), <code>numeri.c</code> (il codice), <code>main.c</code> (che la usa). Compila con un solo comando gcc.', hint:'Guarda l\'esempio matematica.h / matematica.c / main.c qui sopra.', sol:code(String.raw`
+/* numeri.h */
+#ifndef NUMERI_H
+#define NUMERI_H
+int conta_divisori(int n);
+#endif
+
+/* numeri.c */
+#include "numeri.h"
+int conta_divisori(int n) {
+    int i, cont = 0;
+    for (i = 1; i <= n; i++)
+        if (n % i == 0) cont++;
+    return cont;
+}
+
+/* main.c */
+#include <stdio.h>
+#include "numeri.h"
+int main(void) {
+    printf("%d\n", conta_divisori(12));
+    return 0;
+}`)+'<p>Comando: <code>gcc -Wall -o prog main.c numeri.c</code></p>' }
+  ],
+  quaderno:[
+    '<b>.h</b> = prototipi + tipi (struct, typedef) + guardie. <b>.c</b> = codice delle funzioni, con <code>#include "suo.h"</code>.',
+    '<b>Guardie:</b> <code>#ifndef X_H</code> / <code>#define X_H</code> / … / <code>#endif</code>.',
+    '<b>&lt;...&gt;</b> sistema, <b>"..."</b> file miei.',
+    '<b>Compilare:</b> tutti i .c insieme. In Code::Blocks: tutti i file nel progetto, Rebuild All.',
+    '<b>Errori:</b> implicit declaration → manca include; undefined reference → manca un .c; redefinition → mancano le guardie.'
+  ]
+});
+
+/* Capitoli 9-12: array e stringhe, struct e matrici, file, liste. Programmi verificati con gcc -Wall. */
+
+/* ================= 9 · ARRAY E STRINGHE ================= */
+CH.push({
+  id:'array-stringhe', n:9, short:'Array e stringhe', when:'piano del 2/12 · slide 12a-12c · esercitazioni 08 e 09',
+  title:'Array e stringhe',
+  serve:'<p class="big">Al PC i dati si tengono in <b>vettori</b> (array) e i nomi sono <b>stringhe</b>. Nello scritto il "cosa stampa" gioca quasi sempre con le stringhe: il carattere <code>\'\\0\'</code> in fondo, <code>strlen</code>, l\'aritmetica dei caratteri.</p>',
+  exam:'tema del 9 feb 2026: <code>do { i++; } while (*(source + i) != \'\\0\');</code> conta i caratteri fino al terminatore. Al PC: "restituisca un vettore … e la sua dimensione logica".',
+  idea:{ title:'Una fila di armadietti numerati', html:
+    '<p>Un array è una fila di armadietti tutti dello stesso tipo, numerati <b>da 0</b>. <code>int voti[5];</code> crea 5 armadietti: voti[0], voti[1], voti[2], voti[3], voti[4]. <b>voti[5] non esiste</b>.</p>'
+   +'<p>Una <b>stringa</b> è un array di char che finisce con il carattere speciale <code>\'\\0\'</code> (terminatore, vale 0). <code>char nome[] = "Pia";</code> occupa <b>4</b> caselle: P, i, a, \\0.</p>'
+   +'<div class="note"><b>Dimensione fisica</b> = quante caselle ho creato (es. 100). <b>Dimensione logica</b> = quante ne sto usando davvero (es. 12). All\'esame te la chiedono sempre: va restituita o passata a parte, perché l\'array non la sa.</div>' },
+  widgets:[
+    { type:'tracer', title:'Il massimo di un array', intro:'Le caselle evidenziate in verde sono quelle che il ciclo sta guardando.',
+      code:String.raw`
+#include <stdio.h>
+#include <string.h>
+#define N 5
+
+int massimo(int v[], int dim) {
+    int i, max = v[0];
+    for (i = 1; i < dim; i++)
+        if (v[i] > max)
+            max = v[i];
+    return max;
+}
+
+int main(void) {
+    int voti[N] = {24, 18, 30, 27, 21};
+    char nome[] = "Pia";
+    int m = massimo(voti, N);
+    printf("max = %d\n", m);
+    printf("%s ha %d lettere\n", nome, (int) strlen(nome));
+    return 0;
+}`,
+      steps:[
+        { l:14, f:[['main',{}]], arr:[{n:'voti (int[5])',v:['24','18','30','27','21']}], say:'Array di 5 interi, inizializzato con le graffe. Gli indici vanno da 0 a 4.' },
+        { l:15, f:[['main',{}]], arr:[{n:'voti (int[5])',v:['24','18','30','27','21']},{n:'nome (char[4])',v:['P','i','a','\\0']}], say:'"Pia" sono 3 lettere, ma l\'array è lungo 4: in fondo il C mette da solo il terminatore \\0.' },
+        { l:16, f:[['main',{}]], arr:[{n:'voti (int[5])',v:['24','18','30','27','21']}], say:'Passo l\'array e la sua dimensione. Un array passato a una funzione passa il suo <b>indirizzo</b>: la funzione lavora sull\'array originale.' },
+        { l:6, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'???',max:'24'}]], arr:[{n:'voti',v:['24','18','30','27','21'],hl:[0]}], say:'Parto dicendo che il massimo è il primo elemento, v[0] = 24.' },
+        { l:8, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'1',max:'24'}]], arr:[{n:'voti',v:['24','18','30','27','21'],hl:[1]}], say:'i = 1: 18 &gt; 24? No.' },
+        { l:9, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'2',max:'30'}]], arr:[{n:'voti',v:['24','18','30','27','21'],hl:[2]}], say:'i = 2: 30 &gt; 24? Sì, max = 30.' },
+        { l:8, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'3',max:'30'}]], arr:[{n:'voti',v:['24','18','30','27','21'],hl:[3]}], say:'i = 3: 27 &gt; 30? No.' },
+        { l:8, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'4',max:'30'}]], arr:[{n:'voti',v:['24','18','30','27','21'],hl:[4]}], say:'i = 4: 21 &gt; 30? No.' },
+        { l:10, f:[['main',{}],['massimo',{v:'indirizzo di voti',dim:'5',i:'5',max:'30'}]], arr:[{n:'voti',v:['24','18','30','27','21']}], say:'i = 5: 5 &lt; 5 è falso, esco. Restituisco 30. Nota: il ciclo si ferma prima di toccare v[5], che non esiste.' },
+        { l:17, f:[['main',{m:'30'}]], out:'max = 30\n', say:'m = 30.' },
+        { l:18, f:[['main',{m:'30'}]], arr:[{n:'nome',v:['P','i','a','\\0']}], out:'max = 30\nPia ha 3 lettere\n', say:'<code>%s</code> stampa i caratteri fino al \\0. <code>strlen</code> conta i caratteri <b>prima</b> del \\0: 3.' }
+      ] },
+    { type:'html', eyebrow:'Tabella da tenere davanti (string.h)', title:'Le funzioni delle stringhe', html:
+      '<div class="scroll"><table class="t"><tr><th>Funzione</th><th>Cosa fa</th><th>Attenzione</th></tr>'
+     +'<tr><td><code>strlen(s)</code></td><td>quanti caratteri prima del \\0</td><td>"Pia" → 3 (l\'array è lungo 4)</td></tr>'
+     +'<tr><td><code>strcpy(dest, src)</code></td><td>copia src dentro dest</td><td>Non si può scrivere <code>dest = src;</code> con gli array</td></tr>'
+     +'<tr><td><code>strcmp(a, b)</code></td><td>confronta: <b>0 se sono uguali</b>, negativo se a viene prima in ordine alfabetico, positivo se dopo</td><td>Per "uguali" si scrive <code>strcmp(a, b) == 0</code>, non <code>a == b</code></td></tr>'
+     +'<tr><td><code>strcat(dest, src)</code></td><td>attacca src in fondo a dest</td><td>dest deve avere spazio</td></tr>'
+     +'<tr><td><code>scanf("%s", s)</code></td><td>legge una parola (fino allo spazio)</td><td><b>Senza &amp;</b>: il nome dell\'array è già un indirizzo</td></tr></table></div>' }
+  ],
+  why:[
+    { easy:true, f:'Gli indici partono da 0, l\'ultimo è dim − 1', t:'L\'indice è "quante caselle salto dall\'inizio": la prima casella è a distanza 0. Per questo i cicli sono <code>for (i = 0; i &lt; dim; i++)</code>, con il &lt; e non il &lt;=.' },
+    { easy:true, f:'Un array passato a una funzione può essere modificato dalla funzione', t:'Il nome dell\'array è l\'indirizzo della prima casella. La funzione riceve l\'indirizzo, quindi lavora sull\'originale (come coi puntatori del capitolo 7).' },
+    { easy:true, f:'Una stringa deve avere spazio per il \\0', t:'Per un nome di al massimo 30 caratteri serve <code>char nome[31];</code>. Per questo nei temi d\'esame trovi sempre "max 30 caratteri" e le soluzioni usano [31].' },
+    { easy:true, f:'v[i] e *(v + i) sono la stessa cosa', t:'v è l\'indirizzo della prima casella; v + i è l\'indirizzo della casella i; * ci va dentro. Il tema del 9 feb 2026 usa proprio <code>*(source + i)</code>.' },
+    { easy:false, f:'strcmp restituisce 0 quando le stringhe sono uguali', t:'È al contrario di quello che ti aspetteresti ("vero" = uguali). È una convenzione: imparala a memoria.' }
+  ],
+  warn:{ title:'Uscire dall\'array', html:'<p>Il C non controlla gli indici. Se scrivi <code>v[5]</code> in un array di 5, leggi o scrivi memoria che non è tua: il programma può dare numeri a caso o bloccarsi, senza nessun errore di compilazione. Controlla sempre il <code>&lt;</code> del ciclo.</p>' },
+  guided:{ title:'Stringhe come nello scritto', intro:code(String.raw`
+char s[10] = "casa";
+char t[10];
+int i;
+strcpy(t, s);
+t[0] = 'r';
+for (i = 0; s[i] != '\0'; i++)
+    s[i] = s[i] + 1;
+printf("%s %s %d\n", s, t, (int) strlen(t));`), steps:[
+      { h:'Dopo strcpy e t[0] = \'r\', cosa c\'è in t?', type:'text', ans:['rasa'], ok:'Sì: t è una copia, cambiare t non cambia s.', bad:'t è una copia di "casa", poi la prima lettera diventa r.' },
+      { h:'Il ciclo aggiunge 1 a ogni carattere di s. Cosa diventa "casa"?', type:'text', ans:['dbtb'], ok:'Giusto: c→d, a→b, s→t, a→b.', bad:'Ogni lettera diventa la successiva dell\'alfabeto.' },
+      { h:'Cosa stampa l\'ultima riga?', type:'text', ans:['dbtb rasa 4'], ok:'Perfetto.', bad:'s, poi t, poi la lunghezza di t.' }
+    ], done:'<b>Fatto!</b> Stampa <code>dbtb rasa 4</code>. Il ciclo <code>for (i = 0; s[i] != \'\\0\'; i++)</code> è lo schema per scorrere una stringa: ricordatelo.' },
+  ex:[
+    { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
+int v[6] = {3, 8, 1, 9, 4, 6};
+int i, s = 0;
+for (i = 0; i < 6; i = i + 2)
+    s = s + v[i];
+printf("%d %d\n", s, v[i - 1]);`), a:'8 6', hint:'i prende 0, 2, 4. Dopo il ciclo i vale 6.', sol:'<pre class="code">8 6</pre>s = v[0] + v[2] + v[4] = 3 + 1 + 4 = 8. Dopo il ciclo i = 6, quindi v[5] = 6.' },
+    { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
+void azzera_negativi(int v[], int dim) {
+    int i;
+    for (i = 0; i < dim; i++)
+        if (v[i] < 0) v[i] = 0;
+}
+int main(void) {
+    int a[4] = {5, -2, 7, -1};
+    int i;
+    azzera_negativi(a, 4);
+    for (i = 0; i < 4; i++) printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}`), a:'5 0 7 0', hint:'L\'array passato alla funzione è l\'originale.', sol:'<pre class="code">5 0 7 0 </pre>La funzione modifica proprio a, perché riceve il suo indirizzo.' },
+    { id:'e3', type:'choice', q:'Come controlli se la stringa <code>nome</code> è uguale a "Rossi"?', opts:['if (nome == "Rossi")','if (strcmp(nome, "Rossi") == 0)','if (strcmp(nome, "Rossi") == 1)'], a:1, hint:'strcmp restituisce 0 se sono uguali.', sol:'<code>if (strcmp(nome, "Rossi") == 0)</code>. Con == confronteresti gli indirizzi, non il testo.' },
+    { id:'e4', type:'text', q:'Quante caselle occupa <code>char s[] = "esame";</code> ?', a:['6'], hint:'Conta le lettere e aggiungi il terminatore.', sol:'5 lettere + \\0 = <b>6</b>.' },
+    { id:'e5', type:'code', tag:'al PC', q:'Scrivi <code>int conta_maggiori(int v[], int dim, int soglia)</code> che restituisce quanti elementi di v sono maggiori di soglia, e un main che la prova su {4, 12, 7, 20, 3} con soglia 5 (risultato 3).', hint:'Ciclo da 0 a dim − 1, contatore.', sol:code(String.raw`
+#include <stdio.h>
+
+int conta_maggiori(int v[], int dim, int soglia) {
+    int i, cont = 0;
+    for (i = 0; i < dim; i++)
+        if (v[i] > soglia)
+            cont++;
+    return cont;
+}
+
+int main(void) {
+    int a[5] = {4, 12, 7, 20, 3};
+    printf("%d\n", conta_maggiori(a, 5, 5));
+    return 0;
+}`) }
+  ],
+  quaderno:[
+    '<b>Indici da 0 a dim − 1.</b> Ciclo tipo: <code>for (i = 0; i &lt; dim; i++)</code>.',
+    '<b>Array a una funzione:</b> <code>int f(int v[], int dim)</code>; la funzione può modificarlo.',
+    '<b>Stringa:</b> array di char con <code>\'\\0\'</code> in fondo; spazio = lunghezza massima + 1.',
+    '<b>Scorrere una stringa:</b> <code>for (i = 0; s[i] != \'\\0\'; i++)</code>.',
+    '<b>strcmp(a, b) == 0</b> vuol dire uguali. Copiare: strcpy. Lunghezza: strlen. scanf("%s", s) senza &amp;.'
+  ]
+});
+
+/* ================= 10 · STRUCT E MATRICI ================= */
+CH.push({
+  id:'struct-matrici', n:10, short:'Struct, enum, matrici', when:'piano del 2/12 e del 5/12 · slide 12d, 13, 14',
+  title:'Struct (record), enum e matrici',
+  serve:'<p class="big">Ogni prova al PC comincia con "<b>Si definisca una struttura dati Prodotto</b> che rappresenti i dati di un prodotto". Le struct sono il modo di mettere insieme dati diversi (un id, un nome, un prezzo) in un\'unica variabile.</p>',
+  exam:'7 gen 2026: struct Prodotto (ID, nome, categoria, prezzo, quantità), struct Acquisto, struct Ordine con dentro un vettore dinamico di Acquisto. Le matrici escono meno, ma sono nel programma.',
+  idea:{ title:'La scheda anagrafica', html:
+    '<p>Una struct è una <b>scheda</b> con dei campi da compilare. Definisci una volta com\'è fatta la scheda, poi crei quante schede vuoi.</p>'
+   +code(String.raw`
+typedef struct {
+    int id;
+    char nome[31];
+    float prezzo;
+} Prodotto;`)
+   +'<p>Da qui in poi <code>Prodotto</code> è un tipo come int. <code>Prodotto p;</code> crea una scheda. Ai campi si arriva con il punto: <code>p.id</code>, <code>p.prezzo</code>.</p>'
+   +'<div class="note">Se invece hai un <b>puntatore</b> alla scheda (<code>Prodotto *q = &amp;p;</code>) si usa la freccia: <code>q-&gt;prezzo</code>, che vuol dire esattamente <code>(*q).prezzo</code>.</div>' },
+  widgets:[
+    { type:'tracer', title:'Il prodotto più economico',
+      code:String.raw`
+#include <stdio.h>
+
+typedef struct {
+    int id;
+    char nome[31];
+    float prezzo;
+} Prodotto;
+
+int main(void) {
+    Prodotto v[3] = { {7, "mouse", 19.5}, {3, "cavo", 4.0}, {9, "monitor", 129.9} };
+    Prodotto *p;
+    int i, imin = 0;
+    for (i = 1; i < 3; i++)
+        if (v[i].prezzo < v[imin].prezzo)
+            imin = i;
+    printf("%s costa %.2f\n", v[imin].nome, v[imin].prezzo);
+    p = &v[2];
+    p->prezzo = 99.0;
+    printf("%d %.1f\n", v[2].id, v[2].prezzo);
+    return 0;
+}`,
+      steps:[
+        { l:3, say:'Definisco il tipo Prodotto: tre campi. Non crea ancora nessuna variabile.' },
+        { l:10, f:[['main',{}]], arr:[{n:'v (Prodotto[3]): id nome prezzo',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9']}], say:'Un array di 3 struct. Ogni casella è una scheda intera.' },
+        { l:12, f:[['main',{i:'???',imin:'0'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9'],hl:[0]}], say:'imin è l\'<b>indice</b> del più economico finora: parto da 0. Conviene tenere l\'indice, non il prezzo, così alla fine ho tutta la scheda.' },
+        { l:15, f:[['main',{i:'1',imin:'1'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9'],hl:[1]}], say:'i = 1: v[1].prezzo = 4.0 &lt; v[0].prezzo = 19.5. Sì: imin = 1.' },
+        { l:14, f:[['main',{i:'2',imin:'1'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9'],hl:[2]}], say:'i = 2: 129.9 &lt; 4.0? No.' },
+        { l:16, f:[['main',{i:'3',imin:'1'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9'],hl:[1]}], out:'cavo costa 4.00\n', say:'Stampo nome e prezzo della scheda v[1].' },
+        { l:17, f:[['main',{i:'3',imin:'1',p:'indirizzo di v[2]'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 129.9'],hl:[2]}], out:'cavo costa 4.00\n', say:'p è un puntatore a Prodotto e punta alla terza scheda.' },
+        { l:18, f:[['main',{i:'3',imin:'1',p:'indirizzo di v[2]'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 99.0'],hl:[2]}], out:'cavo costa 4.00\n', say:'<code>p-&gt;prezzo</code> = il campo prezzo della scheda puntata da p. Cambia v[2].' },
+        { l:19, f:[['main',{i:'3',imin:'1',p:'indirizzo di v[2]'}]], arr:[{n:'v',v:['7 mouse 19.5','3 cavo 4.0','9 monitor 99.0']}], out:'cavo costa 4.00\n9 99.0\n', say:'Stampa id e nuovo prezzo di v[2].' }
+      ] },
+    { type:'html', eyebrow:'Matrici ed enum', title:'Una tabella di numeri, e i nomi al posto dei numeri', html:
+      '<p>Una <b>matrice</b> è un array di array: <code>int m[2][3];</code> ha 2 righe e 3 colonne. <code>m[i][j]</code> è l\'elemento di riga i e colonna j (entrambi da 0). Si scorre con due cicli uno dentro l\'altro:</p>'
+     +code(String.raw`
+int m[2][3] = { {1, 2, 3}, {4, 5, 6} };
+int i, j;
+for (i = 0; i < 2; i++) {          /* righe */
+    for (j = 0; j < 3; j++)        /* colonne */
+        printf("%d ", m[i][j]);
+    printf("\n");
+}`)
+     +'<p>Stampa la tabella riga per riga: <code>1 2 3</code> e poi <code>4 5 6</code>.</p>'
+     +'<p>Un <b>enum</b> dà nomi a dei numeri: <code>typedef enum { ELETTRONICA, CASA, SPORT } Categoria;</code> vuol dire ELETTRONICA = 0, CASA = 1, SPORT = 2. Serve solo a rendere il codice più leggibile.</p>' }
+  ],
+  why:[
+    { easy:true, f:'punto per la struct, freccia per il puntatore a struct', t:'<code>q-&gt;campo</code> è solo un modo corto di scrivere <code>(*q).campo</code>: prima vai alla struct puntata, poi prendi il campo.' },
+    { easy:true, f:'Le struct si passano per valore (copia intera)', t:'Come gli int: se una funzione riceve <code>Prodotto p</code> e lo modifica, cambia la copia. Per modificare l\'originale si passa <code>Prodotto *p</code> e si usa la freccia.' },
+    { easy:true, f:'Una struct si può assegnare con =, un array no', t:'<code>p1 = p2;</code> copia tutti i campi (anche le stringhe dentro). È comodo negli scambi dell\'ordinamento (capitolo 13).' },
+    { easy:false, f:'typedef struct { ... } Nome; contro struct nome { ... };', t:'Sono due modi di scrivere. Con typedef poi scrivi solo <code>Nome</code>, senza la parola struct. Usa sempre la forma con typedef, come nelle soluzioni del prof.' }
+  ],
+  guided:{ title:'Definire la struct del tema', intro:'<p>Dal tema del 7 gen 2026: "ogni riga rappresenta un prodotto con i campi: un intero ID; il nome, una stringa senza spazi di al massimo 30 caratteri; la categoria, un carattere; il prezzo unitario, un float; la quantità in magazzino, un intero."</p>', steps:[
+      { h:'Che tipo usi per il nome (max 30 caratteri)?', type:'choice', opts:['char nome;','char nome[30];','char nome[31];'], ans:2, ok:'Giusto: 30 caratteri + il \\0.', bad:'Una stringa ha bisogno di una casella in più per il terminatore.' },
+      { h:'E per la categoria (\'E\', \'C\' o \'S\')?', type:'choice', opts:['char categoria;','char categoria[2];','int categoria;'], ans:0, ok:'Sì: un solo carattere è un char.', bad:'È un singolo carattere, non una stringa.' },
+      { h:'Come scrivi il campo per la quantità?', type:'text', ans:['intquantita;','intqta;','intquantità;'], ok:'Bene. (Nel tema si consiglia "quantita" senza accento.)', bad:'Un intero: int seguito dal nome e dal punto e virgola.' }
+    ], done:'<b>Fatto!</b> La struct completa:'+code(String.raw`
+typedef struct {
+    int id;
+    char nome[31];
+    char categoria;
+    float prezzo;
+    int quantita;
+} Prodotto;`) },
+  ex:[
+    { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
+typedef struct { char nome[20]; int voto; } Studente;
+void promuovi(Studente *s) { s->voto = s->voto + 2; }
+void prova(Studente s) { s.voto = 0; }
+int main(void) {
+    Studente a = {"Ugo", 17};
+    promuovi(&a);
+    prova(a);
+    printf("%s %d\n", a.nome, a.voto);
+    return 0;
+}`), a:'Ugo 19', hint:'promuovi riceve l\'indirizzo, prova riceve una copia.', sol:'<pre class="code">Ugo 19</pre>promuovi cambia l\'originale (17 + 2). prova azzera solo la sua copia.' },
+    { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
+int m[2][3] = { {1, 2, 3}, {4, 5, 6} };
+int i, j, s = 0;
+for (i = 0; i < 2; i++)
+    for (j = 0; j < 3; j++)
+        if (i != j) s = s + m[i][j];
+printf("%d %d\n", s, m[1][0]);`), a:'15 4', hint:'Si saltano gli elementi con i uguale a j: m[0][0] e m[1][1].', sol:'<pre class="code">15 4</pre>Somma di tutti = 21, meno m[0][0] = 1 e m[1][1] = 5 → 15. m[1][0] = 4.' },
+    { id:'e3', type:'choice', q:'<code>Prodotto *q;</code> Come leggi il prezzo del prodotto puntato da q?', opts:['q.prezzo','q-&gt;prezzo','*q.prezzo'], a:1, hint:'Puntatore a struct = freccia.', sol:'<code>q-&gt;prezzo</code> (oppure <code>(*q).prezzo</code>, con le parentesi). <code>*q.prezzo</code> senza parentesi è sbagliato.' },
+    { id:'e4', type:'code', tag:'al PC', q:'Definisci <code>typedef struct { int id; char nome[31]; float prezzo; int quantita; } Prodotto;</code> e scrivi <code>float valore_totale(Prodotto v[], int dim)</code> che restituisce la somma di prezzo · quantita di tutti i prodotti.', hint:'Accumulatore float che parte da 0, ciclo su v[i].prezzo * v[i].quantita.', sol:code(String.raw`
+float valore_totale(Prodotto v[], int dim) {
+    int i;
+    float tot = 0;
+    for (i = 0; i < dim; i++)
+        tot = tot + v[i].prezzo * v[i].quantita;
+    return tot;
+}`) }
+  ],
+  quaderno:[
+    '<b>Struct:</b> <code>typedef struct { campi } Nome;</code> nel .h (all\'esame in element.h).',
+    '<b>Campi:</b> <code>p.campo</code>; con puntatore <code>q-&gt;campo</code>.',
+    '<b>Stringhe nella struct:</b> <code>char nome[31]</code> per max 30 caratteri.',
+    '<b>Modificare una struct in una funzione:</b> parametro <code>Nome *p</code>, dentro <code>p-&gt;campo = ...</code>.',
+    '<b>Matrice:</b> <code>m[riga][colonna]</code>, due cicli annidati.'
+  ]
+});
+
+/* ================= 11 · FILE ================= */
+CH.push({
+  id:'file', n:11, short:'File di testo e binari', when:'piano del 9/12 · slide 15, 16a, 16b · esercitazione File',
+  title:'Leggere e scrivere file',
+  serve:'<p class="big">La prova al PC comincia <b>sempre</b> con "si definisca la funzione che legge i dati dal file <code>prodotti.txt</code>". Se non sai leggere il file non hai dati, e tutto il resto della prova non si può provare. È il pezzo più importante da tenere pronto in RACCOLTA_C.</p>',
+  exam:'scritto 18 giu 2026 e 22 gen 2026, domanda di teoria: "le funzioni per l\'I/O su file con formato (fprintf e fscanf) a confronto con fread e fwrite". Al PC: file di testo con righe tipo <code>11 Smartphone_Eco E 299.99 15</code>.',
+  idea:{ title:'Il quaderno con il segnalibro', html:
+    '<p>Un file aperto è un quaderno con un <b>segnalibro</b>. <code>fopen</code> apre il quaderno e mette il segnalibro all\'inizio. Ogni <code>fscanf</code> legge da dove sta il segnalibro e lo sposta avanti. Quando il segnalibro arriva in fondo, fscanf non riesce più a leggere.</p>'
+   +'<p><code>fscanf</code> è uguale a <code>scanf</code>, solo che legge dal file invece che dalla tastiera, e restituisce <b>quanti valori è riuscito a leggere</b>.</p>'
+   +'<div class="note">Schema di lettura: <b>apri</b> (e controlla che non sia NULL) → <b>ciclo finché fscanf legge tutti i campi</b> → <b>chiudi</b> con fclose.</div>' },
+  widgets:[
+    { type:'tracer', title:'Il valore del magazzino', intro:'Il file prodotti.txt ha 3 righe: id, nome, prezzo, quantità. La riga verde del file è quella dove sta il segnalibro.',
+      code:String.raw`
+#include <stdio.h>
+
+int main(void) {
+    FILE *f;
+    int id, q;
+    float prezzo, totale = 0;
+    char nome[31];
+    f = fopen("prodotti.txt", "r");
+    if (f == NULL) {
+        printf("Errore apertura\n");
+        return 1;
+    }
+    while (fscanf(f, "%d %s %f %d", &id, nome, &prezzo, &q) == 4) {
+        totale = totale + prezzo * q;
+    }
+    fclose(f);
+    printf("Valore magazzino: %.2f\n", totale);
+    return 0;
+}`,
+      steps:[
+        { l:4, v:{f:'???'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1']}], say:'<code>FILE *f</code>: un puntatore che rappresenterà il file aperto.' },
+        { l:8, v:{f:'file aperto in lettura',totale:'0'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[0]}], say:'<code>fopen(nome, "r")</code> apre in lettura ("r" = read). Il segnalibro è all\'inizio.' },
+        { l:9, v:{f:'file aperto in lettura',totale:'0'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[0]}], say:'Se il file non esiste fopen restituisce NULL. Il controllo è obbligatorio: senza, il programma si blocca alla prima lettura.' },
+        { l:13, v:{f:'file aperto in lettura',id:'1',nome:'"mouse"',prezzo:'19.50',q:'4',totale:'0'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[0]}], say:'fscanf legge 4 valori dalla prima riga e restituisce 4. 4 == 4: vero, entro. (nome senza &amp;: è un array.)' },
+        { l:14, v:{f:'file aperto in lettura',id:'1',nome:'"mouse"',prezzo:'19.50',q:'4',totale:'78.00'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[0]}], say:'totale = 0 + 19.50 · 4 = 78.00.' },
+        { l:13, v:{f:'file aperto in lettura',id:'2',nome:'"cavo"',prezzo:'4.00',q:'10',totale:'78.00'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[1]}], say:'Seconda riga, di nuovo 4 valori letti.' },
+        { l:14, v:{f:'file aperto in lettura',id:'2',nome:'"cavo"',prezzo:'4.00',q:'10',totale:'118.00'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[1]}], say:'totale = 78 + 4.00 · 10 = 118.00.' },
+        { l:13, v:{f:'file aperto in lettura',id:'3',nome:'"monitor"',prezzo:'129.90',q:'1',totale:'118.00'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[2]}], say:'Terza riga.' },
+        { l:14, v:{f:'file aperto in lettura',id:'3',nome:'"monitor"',prezzo:'129.90',q:'1',totale:'247.90'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1'],hl:[2]}], say:'totale = 118 + 129.90 = 247.90.' },
+        { l:13, v:{f:'file aperto in lettura',id:'3',nome:'"monitor"',prezzo:'129.90',q:'1',totale:'247.90'}, arr:[{n:'file prodotti.txt',v:['1 mouse 19.50 4','2 cavo 4.00 10','3 monitor 129.90 1']}], say:'Il file è finito: fscanf non legge niente e restituisce EOF (un numero negativo), che non è 4. Esco dal ciclo.' },
+        { l:16, v:{f:'chiuso',totale:'247.90'}, say:'fclose chiude il file. Va sempre fatto.' },
+        { l:17, v:{f:'chiuso',totale:'247.90'}, out:'Valore magazzino: 247.90\n', say:'Stampa il totale.' }
+      ] },
+    { type:'html', eyebrow:'Righe con un numero variabile di pezzi', title:'Il trucco del tema del 7 gennaio 2026', html:
+      '<p>Riga del file: <code>ORD100 Alice_Verdi 2 11-1 35-2</code>. Dopo il nome c\'è <b>quante coppie seguono</b> (2), poi le coppie "id-quantità" separate da un trattino.</p>'
+     +'<p>Si legge prima la parte fissa, poi un ciclo per le coppie. Nel formato di fscanf il trattino si scrive così com\'è: <code>"%d-%d"</code> vuol dire "un intero, un trattino, un intero".</p>'
+     +code(String.raw`
+while (fscanf(f, "%s %s %d", id, cliente, &n) == 3) {
+    for (i = 0; i < n; i++)
+        fscanf(f, "%d-%d", &prod, &qta);
+    /* qui ho letto un ordine intero */
+}`) },
+    { type:'html', eyebrow:'Risposta pronta per lo scritto (1 punto)', title:'File di testo contro file binari', html:
+      '<div class="exam"><p><b>fprintf / fscanf</b> fanno I/O <b>con formato</b> su file di <b>testo</b>: i dati vengono convertiti in caratteri leggibili (il numero 247 diventa i caratteri \'2\' \'4\' \'7\'), usando una stringa di formato come in printf/scanf. Il file si apre con "r", "w" o "a".</p>'
+     +'<p><b>fwrite / fread</b> fanno I/O <b>binario</b>: copiano i byte della memoria così come sono, senza conversione, a blocchi: <code>fwrite(&amp;x, sizeof(x), 1, f)</code> scrive 1 elemento grande sizeof(x). Il file si apre con "rb" o "wb", non è leggibile con un editor, ma è più veloce e compatto.</p>'
+     +'<p>Entrambe restituiscono quanti elementi sono riuscite a leggere/scrivere: si usa per capire quando il file è finito.</p></div>' }
+  ],
+  why:[
+    { easy:true, f:'while (fscanf(...) == numero di campi)', t:'fscanf restituisce quanti valori ha letto. Finché legge tutti i campi della riga, la riga è buona; quando il file finisce restituisce EOF e il ciclo si ferma da solo. È più sicuro di <code>while (!feof(f))</code>, che fa un giro in più.' },
+    { easy:true, f:'Controllare fopen == NULL', t:'Se il file non c\'è o il nome è sbagliato, fopen dà NULL. Leggere da NULL fa bloccare il programma, quindi all\'esame il controllo è richiesto.' },
+    { easy:false, f:'Modi di apertura: "r" lettura, "w" scrittura (cancella il file!), "a" aggiunge in fondo, con "b" per i binari', t:'Sono convenzioni: tienile nella tabella in RACCOLTA_C.' },
+    { easy:true, f:'%s in fscanf legge fino al primo spazio', t:'Per questo i temi d\'esame dicono sempre "una stringa senza spazi" (Alice_Verdi con il trattino basso).' }
+  ],
+  warn:{ title:'"w" cancella il file', html:'<p>Aprire con <code>fopen("prodotti.txt", "w")</code> svuota il file subito, anche se poi non scrivi niente. All\'esame il file di prova ti serve: aprilo solo con "r".</p>' },
+  guided:{ title:'Leggere le righe del tema', intro:'<p>File ord.txt:</p>'+code(String.raw`
+ORD1 2 11-1 35-2
+ORD2 3 21-4 22-1 41-1`)+code(String.raw`
+while (fscanf(f, "%s %d", id, &n) == 2) {
+    tot = 0;
+    for (i = 0; i < n; i++) {
+        fscanf(f, "%d-%d", &prod, &qta);
+        tot = tot + qta;
+    }
+    printf("%s %d\n", id, tot);
+}`), steps:[
+      { h:'Prima riga: cosa legge il primo fscanf in id e n?', type:'choice', opts:['id = "ORD1", n = 2','id = "ORD1", n = 11','id = "ORD1 2", n = 11'], ans:0, ok:'Giusto: %s si ferma allo spazio.', bad:'%s legge fino allo spazio, poi %d legge il numero seguente.' },
+      { h:'Poi il for legge 2 coppie: 11-1 e 35-2. Quanto vale tot?', type:'text', ans:['3'], ok:'Sì: 1 + 2.', bad:'Si sommano le quantità, cioè il numero dopo il trattino.' },
+      { h:'Cosa stampa per la seconda riga?', type:'text', ans:['ORD2 6'], ok:'Perfetto: 4 + 1 + 1.', bad:'Tre coppie: le quantità sono 4, 1, 1.' }
+    ], done:'<b>Fatto!</b> Stampa <code>ORD1 3</code> e <code>ORD2 6</code>. Schema "parte fissa + ciclo per le parti variabili": è proprio il cuore della funzione leggi_singolo_ordine del tema.' },
+  ex:[
+    { id:'e1', type:'choice', q:'Cosa restituisce fscanf quando il file è finito?', opts:['0 sempre','EOF (un numero negativo)','NULL'], a:1, hint:'NULL è di fopen.', sol:'EOF. Per questo si controlla <code>== numero di campi</code>, che copre sia EOF sia una riga scritta male.' },
+    { id:'e2', type:'choice', q:'Vuoi aggiungere una riga in fondo a un file senza perdere quelle che ci sono. Che modo usi?', opts:['"r"','"w"','"a"'], a:2, hint:'a come append (aggiungi).', sol:'<code>"a"</code>. Con "w" il file verrebbe svuotato.' },
+    { id:'e3', type:'choice', q:'Quale differenza è giusta tra fprintf e fwrite?', opts:['fprintf scrive caratteri leggibili con un formato, fwrite copia i byte così come sono','Sono uguali','fwrite scrive solo stringhe'], a:0, hint:'Testo contro binario.', sol:'fprintf: testo con formato. fwrite: binario, a blocchi di byte, senza conversione.' },
+    { id:'e4', type:'code', tag:'al PC', q:'Crea a mano un file voti.txt con righe "nome voto" (es. <code>Ugo 24</code>). Scrivi un programma che lo legge e stampa la media dei voti e quanti studenti hanno preso almeno 18.', hint:'Apri e controlla NULL; while (fscanf(f, "%s %d", nome, &amp;voto) == 2); somma, contatore totale e contatore promossi; attenzione alla divisione intera per la media.', sol:code(String.raw`
+#include <stdio.h>
+
+int main(void) {
+    FILE *f;
+    char nome[31];
+    int voto, n = 0, promossi = 0, somma = 0;
+    f = fopen("voti.txt", "r");
+    if (f == NULL) {
+        printf("Errore apertura\n");
+        return 1;
+    }
+    while (fscanf(f, "%s %d", nome, &voto) == 2) {
+        somma = somma + voto;
+        n++;
+        if (voto >= 18)
+            promossi++;
+    }
+    fclose(f);
+    if (n > 0)
+        printf("Media %.2f, promossi %d\n", (float) somma / n, promossi);
+    return 0;
+}`)+'<p>Nota il <code>(float)</code>: senza, la media sarebbe una divisione intera (capitolo 3).</p>' }
+  ],
+  quaderno:[
+    '<b>Schema lettura:</b> <code>f = fopen(nome, "r"); if (f == NULL) {...} while (fscanf(f, "...", ...) == N) {...} fclose(f);</code>',
+    '<b>fscanf</b> restituisce quanti campi ha letto; EOF a fine file.',
+    '<b>Modi:</b> "r" leggi, "w" scrivi (svuota!), "a" aggiungi; "rb" / "wb" binari.',
+    '<b>Righe variabili:</b> leggo la parte fissa, poi un for per le coppie (es. <code>"%d-%d"</code>).',
+    '<b>Teoria:</b> fprintf/fscanf = testo con formato; fwrite/fread = binario a blocchi, senza conversione.'
+  ]
+});
+
+/* ================= 12 · LISTE ================= */
+CH.push({
+  id:'liste', n:12, short:'Liste', when:'piano del 12/12 · slide 18 · list.h e list.c',
+  title:'Le liste e la ricorsione sulle liste',
+  serve:'<p class="big">È <b>l\'esercizio 1 dello scritto, 6 punti su 12</b>, in tutti i temi del 2025-2026. Ed è anche nella prova al PC (leggi_prodotti restituisce una list). Questo è il capitolo che vale di più: lo schema è sempre lo stesso, e si impara.</p>',
+  exam:'"Si definisca una funzione RICORSIVA <code>list almenoDue(list matr, list esami)</code> … usando le primitive dell\'ADT lista … e una funzione main che crei le liste dell\'esempio e stampi il risultato." showlist non è una primitiva: se la usi, la devi scrivere.',
+  idea:{ title:'Il trenino', html:
+    '<p>Una lista è un <b>trenino</b>: ogni vagone porta un valore e un gancio verso il vagone dopo. L\'ultimo vagone ha il gancio vuoto (NULL). La lista vuota è un trenino senza vagoni.</p>'
+   +'<p>Non si lavora mai sui ganci a mano: si usano 5 <b>primitive</b> (le trovi in list.h):</p>'
+   +'<div class="scroll"><table class="t"><tr><th>Primitiva</th><th>Cosa fa</th><th>Esempio con l = [4, 9, 2]</th></tr>'
+   +'<tr><td><code>emptylist()</code></td><td>restituisce la lista vuota</td><td>[ ]</td></tr>'
+   +'<tr><td><code>empty(l)</code></td><td>vero se l è vuota</td><td>falso</td></tr>'
+   +'<tr><td><code>head(l)</code></td><td>il primo valore</td><td>4</td></tr>'
+   +'<tr><td><code>tail(l)</code></td><td>la lista senza il primo vagone</td><td>[9, 2]</td></tr>'
+   +'<tr><td><code>cons(x, l)</code></td><td>una nuova lista con x attaccato <b>davanti</b></td><td>cons(1, l) = [1, 4, 9, 2]</td></tr></table></div>'
+   +'<div class="note">La lista [4, 9, 2, 7] si costruisce dall\'interno verso l\'esterno: <code>cons(4, cons(9, cons(2, cons(7, emptylist()))))</code>. Il primo cons scritto è il primo elemento.</div>' },
+  widgets:[
+    { type:'tracer', title:'Lo schema dell\'esame: tenere solo alcuni elementi', intro:'maggiori(l, s) restituisce una nuova lista con gli elementi di l maggiori di s. È lo stesso schema di almenoDue, filtra, listBuild dei temi.',
+      code:String.raw`
+#include <stdio.h>
+#include "element.h"
+#include "list.h"
+
+void showlist(list l) {
+    while (!empty(l)) {
+        printf("%d ", head(l));
+        l = tail(l);
+    }
+    printf("\n");
+}
+
+list maggiori(list l, int s) {
+    if (empty(l))
+        return emptylist();
+    if (head(l) > s)
+        return cons(head(l), maggiori(tail(l), s));
+    return maggiori(tail(l), s);
+}
+
+int main(void) {
+    list l, r;
+    l = cons(4, cons(9, cons(2, cons(7, emptylist()))));
+    r = maggiori(l, 5);
+    showlist(r);
+    freelist(l);
+    freelist(r);
+    return 0;
+}`,
+      steps:[
+        { l:23, f:[['main',{}]], list:{l:['4','9','2','7']}, say:'Costruisco l = [4, 9, 2, 7].' },
+        { l:24, f:[['main',{r:'???'}]], list:{l:['4','9','2','7']}, say:'Chiamo maggiori(l, 5): voglio gli elementi &gt; 5, cioè [9, 7].' },
+        { l:18, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}]], say:'l non è vuota. head = 4: 4 &gt; 5? No. Quindi <b>lo salto</b>: il risultato è quello della chiamata sulla coda.' },
+        { l:17, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7]',s:'5'}]], say:'head = 9 &gt; 5: sì. Lo <b>tengo</b>: il risultato sarà cons(9, risultato della coda). Aspetto la coda.' },
+        { l:18, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7] (attende per fare cons 9)',s:'5'}],['maggiori 3',{l:'[2, 7]',s:'5'}]], say:'head = 2: no, lo salto.' },
+        { l:17, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7] (attende per fare cons 9)',s:'5'}],['maggiori 3',{l:'[2, 7]',s:'5'}],['maggiori 4',{l:'[7]',s:'5'}]], say:'head = 7: sì, lo tengo. Aspetto la coda, che è vuota.' },
+        { l:15, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7] (attende per fare cons 9)',s:'5'}],['maggiori 3',{l:'[2, 7]',s:'5'}],['maggiori 4',{l:'[7] (attende per fare cons 7)',s:'5'}],['maggiori 5',{l:'[ ]',s:'5'}]], say:'<b>Caso base:</b> lista vuota → restituisco la lista vuota. Ora si risale.' },
+        { l:17, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7] (attende per fare cons 9)',s:'5'}],['maggiori 3',{l:'[2, 7]',s:'5'}],['maggiori 4',{l:'[7]',s:'5'}]], say:'maggiori 4 riceve [ ] e restituisce cons(7, [ ]) = [7].' },
+        { l:18, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7] (attende per fare cons 9)',s:'5'}],['maggiori 3',{l:'[2, 7]',s:'5'}]], say:'maggiori 3 aveva saltato il 2: restituisce [7] così com\'è.' },
+        { l:17, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}],['maggiori 2',{l:'[9, 2, 7]',s:'5'}]], say:'maggiori 2 riceve [7] e restituisce cons(9, [7]) = [9, 7].' },
+        { l:18, f:[['main',{r:'???'}],['maggiori 1',{l:'[4, 9, 2, 7]',s:'5'}]], say:'maggiori 1 aveva saltato il 4: restituisce [9, 7].' },
+        { l:24, f:[['main',{}]], list:{l:['4','9','2','7'], r:['9','7']}, say:'r = [9, 7]. È una lista <b>nuova</b>: l è rimasta uguale.' },
+        { l:25, f:[['main',{}]], list:{l:['4','9','2','7'], r:['9','7']}, out:'9 7 \n', say:'showlist (scritta da noi, iterativa) stampa i valori.' },
+        { l:26, f:[['main',{}]], out:'9 7 \n', say:'freelist libera la memoria delle liste (le primitive cons usano malloc).' }
+      ] },
+    { type:'recipe', title:'La ricetta per l\'esercizio 1 dello scritto', intro:'Vale per tutte le funzioni ricorsive che costruiscono una lista nuova.', steps:[
+      { h:'Caso base', html:code(String.raw`
+if (empty(l))
+    return emptylist();`)+'<p>Lista vuota in ingresso → lista vuota in uscita.</p>' },
+      { h:'Decidi se tenere head(l)', html:'<p>Scrivi la condizione del testo: "compare almeno due volte nella lista esami", "è maggiore di s", "è presente nell\'altra lista"… Spesso per la condizione serve una funzione <b>iterativa</b> di aiuto (es. <code>conta</code>).</p>' },
+      { h:'Se lo tieni: cons davanti al risultato della coda', html:code(String.raw`return cons(head(l), f(tail(l), ...));`) },
+      { h:'Se non lo tieni: solo il risultato della coda', html:code(String.raw`return f(tail(l), ...);`) },
+      { h:'Scrivi il main dell\'esempio', html:'<p>Costruisci le liste dell\'esempio con cons annidati, chiama la funzione, stampa il risultato con una showlist <b>scritta da te</b>, poi freelist. Includi <code>"element.h"</code> e <code>"list.h"</code>.</p>' }
+    ] }
+  ],
+  why:[
+    { easy:true, f:'cons attacca davanti, non in fondo', t:'Attaccare davanti è facile (un vagone nuovo che si aggancia al primo). Per questo con cons e ricorsione l\'ordine si conserva, mentre con un ciclo che fa cons l\'ordine si inverte (vedi esercizio 4).' },
+    { easy:true, f:'La ricorsione sulle liste usa tail(l) come "problema più piccolo"', t:'La coda ha un elemento in meno: prima o poi si arriva alla lista vuota, che è il caso base.' },
+    { easy:true, f:'head e tail di una lista vuota fanno terminare il programma', t:'In list.c c\'è <code>if (empty(l)) exit(-2);</code>. Quindi prima di head/tail controlla sempre empty.' },
+    { easy:false, f:'Come sono fatte dentro le primitive (malloc, puntatore next)', t:'Allo scritto le primitive "non è necessario riportarle". Basta saperle usare.' }
+  ],
+  guided:{ title:'Scrivi almenoUno: elementi di a presenti anche in b', intro:'<p>Funzione iterativa di aiuto già pronta:</p>'+code(String.raw`
+int conta(int x, list l) {     /* quante volte x compare in l */
+    int c = 0;
+    while (!empty(l)) {
+        if (head(l) == x) c++;
+        l = tail(l);
+    }
+    return c;
+}`)+'<p>Vuoi <code>list comuni(list a, list b)</code>: gli elementi di a che compaiono almeno una volta in b, nello stesso ordine.</p>', steps:[
+      { h:'Caso base: cosa restituisci se a è vuota?', type:'choice', opts:['b','emptylist()','NULL di b'], ans:1, ok:'Giusto.', bad:'Se non ci sono elementi da controllare, il risultato è la lista vuota.' },
+      { h:'Che condizione usi per tenere head(a)?', type:'choice', opts:['conta(head(a), b) &gt; 0','head(a) == head(b)','conta(head(b), a) &gt; 0'], ans:0, ok:'Sì: head(a) compare almeno una volta in b.', bad:'Devi cercare head(a) in tutta la lista b.' },
+      { h:'Se la condizione è vera, cosa restituisci?', type:'choice', opts:['cons(head(a), comuni(tail(a), b))','cons(head(a), comuni(tail(a), tail(b)))','comuni(tail(a), b)'], ans:0, ok:'Perfetto. Nota: b si passa intera, non la sua coda.', bad:'La ricorsione va sulla coda di a. b resta intera, perché devi poterci cercare tutto.' },
+      { h:'Con a = [3, 5, 1, 3] e b = [1, 2, 3], quale lista esce?', type:'text', ans:['[3,1,3]','3,1,3','313'], ok:'Esatto: 5 non è in b.', bad:'Tieni gli elementi di a che stanno in b, nell\'ordine di a, anche ripetuti.' }
+    ], done:'<b>Fatto!</b>'+code(String.raw`
+list comuni(list a, list b) {
+    if (empty(a))
+        return emptylist();
+    if (conta(head(a), b) > 0)
+        return cons(head(a), comuni(tail(a), b));
+    return comuni(tail(a), b);
+}`)+'<p>Ricetta: caso base, condizione con la funzione di aiuto, cons + ricorsione oppure solo ricorsione.</p>' },
+  ex:[
+    { id:'e1', type:'text', q:'l = cons(1, cons(2, cons(3, emptylist()))). Quanto vale head(tail(l))?', a:['2'], hint:'tail(l) = [2, 3].', sol:'tail(l) = [2, 3], head di quella = <b>2</b>.' },
+    { id:'e2', type:'text', q:code(String.raw`
+int lung(list l) {
+    if (empty(l)) return 0;
+    return 1 + lung(tail(l));
+}`)+'Con l = [1, 2, 3], quanto restituisce lung(l)?', a:['3'], hint:'Ogni chiamata aggiunge 1, la lista vuota vale 0.', sol:'1 + 1 + 1 + 0 = <b>3</b>.' },
+    { id:'e3', type:'text', q:code(String.raw`
+list doppi(list l) {
+    if (empty(l)) return emptylist();
+    return cons(2 * head(l), doppi(tail(l)));
+}`)+'Con l = [1, 2, 3], quale lista restituisce? (scrivi come [a, b, c])', a:['[2,4,6]','2,4,6'], hint:'Ogni elemento raddoppiato, stesso ordine.', sol:'<b>[2, 4, 6]</b>.' },
+    { id:'e4', type:'text', q:code(String.raw`
+list mistero(list l) {
+    list r = emptylist();
+    while (!empty(l)) {
+        r = cons(head(l), r);
+        l = tail(l);
+    }
+    return r;
+}`)+'Con l = [1, 2, 3], cosa restituisce?', a:['[3,2,1]','3,2,1'], hint:'cons attacca davanti: il primo letto finisce in fondo.', sol:'<b>[3, 2, 1]</b>: la lista al contrario. Con un ciclo iterativo e cons l\'ordine si inverte; con la ricorsione no.' },
+    { id:'e5', type:'code', tag:'come allo scritto, 6 punti', q:'Si definisca una funzione RICORSIVA <code>list almenoK(list v, list conteggi, int k)</code> che restituisce gli elementi di v che compaiono almeno k volte nella lista conteggi, usando una funzione ITERATIVA <code>int conta(int x, list l)</code>. Si scriva il main che costruisce v = [5, 3, 17, 29] e conteggi = [5, 17, 5, 29, 17, 17], chiama almenoK(v, conteggi, 2) e stampa il risultato [5, 17].', hint:'È lo schema di comuni, con la condizione conta(head(v), conteggi) &gt;= k. Nel main ti serve anche una showlist tua.', sol:code(String.raw`
+#include <stdio.h>
+#include "element.h"
+#include "list.h"
+
+int conta(int x, list l) {
+    int c = 0;
+    while (!empty(l)) {
+        if (head(l) == x)
+            c++;
+        l = tail(l);
+    }
+    return c;
+}
+
+list almenoK(list v, list conteggi, int k) {
+    if (empty(v))
+        return emptylist();
+    if (conta(head(v), conteggi) >= k)
+        return cons(head(v), almenoK(tail(v), conteggi, k));
+    return almenoK(tail(v), conteggi, k);
+}
+
+void showlist(list l) {
+    while (!empty(l)) {
+        printf("%d ", head(l));
+        l = tail(l);
+    }
+    printf("\n");
+}
+
+int main(void) {
+    list v, c, r;
+    v = cons(5, cons(3, cons(17, cons(29, emptylist()))));
+    c = cons(5, cons(17, cons(5, cons(29, cons(17, cons(17, emptylist()))))));
+    r = almenoK(v, c, 2);
+    showlist(r);          /* 5 17 */
+    freelist(v);
+    freelist(c);
+    freelist(r);
+    return 0;
+}`)+'<p>Confronta con la soluzione del prof del 9 feb 2026 (almenoDue): è identica, con 2 al posto di k.</p>' }
+  ],
+  quaderno:[
+    '<b>Primitive:</b> emptylist(), empty(l), head(l), tail(l), cons(x, l). showlist e member <b>non</b> sono primitive: se le usi le scrivi.',
+    '<b>Costruire [a, b, c]:</b> <code>cons(a, cons(b, cons(c, emptylist())))</code>.',
+    '<b>Ricetta ricorsiva (es. 1 scritto):</b> if empty → emptylist(); if condizione su head → cons(head, f(tail)); else → f(tail).',
+    '<b>Iterativa (funzione di aiuto):</b> <code>while (!empty(l)) { ... head(l) ...; l = tail(l); }</code>.',
+    '<b>Main:</b> include "element.h" e "list.h", crea le liste dell\'esempio, chiama, stampa, freelist.'
+  ]
+});
+
+/* Capitoli 13-14: allocazione dinamica e ordinamento, ricetta della prova al PC. Programmi verificati con gcc -Wall. */
+
+/* ================= 13 · MALLOC E ORDINAMENTO ================= */
+CH.push({
+  id:'malloc-ordinamento', n:13, short:'Allocazione dinamica e ordinamento', when:'piano del 16/12 · slide 19 (ordinamento) e 20 (allocazione dinamica)',
+  title:'Allocazione dinamica (malloc, free) e ordinamento',
+  serve:'<p class="big">Al PC quasi ogni funzione "restituisce un <b>vettore dinamicamente allocato</b>" e una vuole il vettore "<b>ordinato</b> in modo decrescente in base al prezzo, a parità…". Allo scritto la domanda di teoria del 13 feb 2025, del 7 gen 2026 e del 9 lug 2026 era proprio la gestione della memoria (stack, heap, malloc, free).</p>',
+  exam:'7 gen 2026: <code>Ordine* leggi_ordini(char* fileName, int* dim)</code> ("non è noto a priori il numero di ordini, quindi il vettore dovrà essere dinamicamente allocato") e <code>Prodotto* prodotti_ordinati(list prodotti, int *dim)</code> "con qualsiasi algoritmo visto a lezione, ad eccezione di NaiveSort".',
+  idea:{ title:'Lo stack è il banco, l\'heap è il magazzino', html:
+    '<p>Le variabili normali stanno nello <b>stack</b>, il banco di lavoro di ogni funzione: quando la funzione finisce, il banco viene sgombrato. Per questo una funzione non può restituire un array locale.</p>'
+   +'<p>Con <code>malloc</code> chiedi spazio nel <b>heap</b>, il magazzino: quello spazio resta tuo finché non lo restituisci con <code>free</code>, anche dopo che la funzione è finita. E puoi chiederne quanto ti serve <b>mentre il programma gira</b> (per esempio dopo aver contato le righe di un file).</p>'
+   +code(String.raw`int *v = (int *) malloc(n * sizeof(int));   /* spazio per n interi */`)
+   +'<div class="note">Si legge: "dammi n · (quanto è grande un int) byte, e trattali come un array di int". Da qui in poi <code>v[0]</code> … <code>v[n-1]</code> si usano come un array normale. Alla fine: <code>free(v);</code></div>' },
+  widgets:[
+    { type:'tracer', title:'Una funzione che restituisce un vettore e la sua dimensione', intro:'Da tastiera arrivano 6, −2, 9, 0. La funzione tiene solo i positivi. Guarda il riquadro "heap": sopravvive alla fine della funzione.',
+      code:String.raw`
+#include <stdio.h>
+#include <stdlib.h>
+
+int *leggi_positivi(int n, int *dim) {
+    int *v, i, x;
+    v = (int *) malloc(n * sizeof(int));
+    *dim = 0;
+    for (i = 0; i < n; i++) {
+        scanf("%d", &x);
+        if (x > 0) {
+            v[*dim] = x;
+            (*dim)++;
+        }
+    }
+    return v;
+}
+
+int main(void) {
+    int *p, d, i;
+    p = leggi_positivi(4, &d);
+    for (i = 0; i < d; i++)
+        printf("%d ", p[i]);
+    printf("(%d)\n", d);
+    free(p);
+    return 0;
+}`,
+      steps:[
+        { l:20, f:[['main',{p:'???',d:'???'}]], say:'main chiama leggi_positivi(4, &amp;d): al massimo 4 numeri; la dimensione logica tornerà dentro d (parametro puntatore, capitolo 7).' },
+        { l:6, f:[['main',{p:'???',d:'???'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'???',x:'???'}]], heap:{'4 int a partire da 5000':'?  ?  ?  ?'}, say:'malloc prende nel heap lo spazio per 4 int (dimensione fisica 4) e restituisce l\'indirizzo, che va in v.' },
+        { l:7, f:[['main',{p:'???',d:'0'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'???',x:'???'}]], heap:{'4 int a partire da 5000':'?  ?  ?  ?'}, say:'*dim = 0: la d del main parte da 0 (nessun elemento usato).' },
+        { l:12, f:[['main',{p:'???',d:'1'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'0',x:'6'}]], heap:{'4 int a partire da 5000':'6  ?  ?  ?'}, say:'Legge 6, positivo: v[0] = 6 e (*dim)++ porta d a 1. Le parentesi in (*dim)++ servono: prima vado a d, poi aumento.' },
+        { l:10, f:[['main',{p:'???',d:'1'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'1',x:'-2'}]], heap:{'4 int a partire da 5000':'6  ?  ?  ?'}, say:'Legge −2: non positivo, salto.' },
+        { l:12, f:[['main',{p:'???',d:'2'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'2',x:'9'}]], heap:{'4 int a partire da 5000':'6  9  ?  ?'}, say:'Legge 9: v[1] = 9, d = 2.' },
+        { l:15, f:[['main',{p:'???',d:'2'}],['leggi_positivi',{n:'4',dim:'indirizzo di d',v:'5000 (heap)',i:'4',x:'0'}]], heap:{'4 int a partire da 5000':'6  9  ?  ?'}, say:'Legge 0: salto. Ciclo finito. Restituisco v, cioè l\'indirizzo 5000.' },
+        { l:20, f:[['main',{p:'5000 (heap)',d:'2'}]], heap:{'4 int a partire da 5000':'6  9  ?  ?'}, say:'Il record di leggi_positivi è sparito, ma il blocco nel heap no: p lo punta. Dimensione fisica 4, logica 2.' },
+        { l:23, f:[['main',{p:'5000 (heap)',d:'2',i:'2'}]], heap:{'4 int a partire da 5000':'6  9  ?  ?'}, out:'6 9 (2)\n', say:'Stampo solo i primi d elementi.' },
+        { l:24, f:[['main',{p:'5000 (liberato)',d:'2',i:'2'}]], out:'6 9 (2)\n', say:'free(p) restituisce il blocco al magazzino. Da qui p non va più usato.' }
+      ] },
+    { type:'tracer', title:'Bubble sort su [5, 1, 4, 2]', intro:'Confronta due vicini alla volta e li scambia se sono nell\'ordine sbagliato. Dopo ogni giro esterno il più grande rimasto è arrivato in fondo.',
+      code:String.raw`
+#include <stdio.h>
+
+void bubble_sort(int v[], int n) {
+    int i, j, t;
+    for (i = 0; i < n - 1; i++)
+        for (j = 0; j < n - 1 - i; j++)
+            if (v[j] > v[j + 1]) {
+                t = v[j];
+                v[j] = v[j + 1];
+                v[j + 1] = t;
+            }
+}
+
+int main(void) {
+    int a[4] = {5, 1, 4, 2};
+    int i;
+    bubble_sort(a, 4);
+    for (i = 0; i < 4; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}`,
+      steps:[
+        { l:17, f:[['main',{}]], arr:[{n:'a',v:['5','1','4','2']}], say:'Ordino a in modo crescente.' },
+        { l:7, f:[['main',{}],['bubble_sort',{n:'4',i:'0',j:'0'}]], arr:[{n:'a',v:['5','1','4','2'],hl:[0,1]}], say:'Giro i = 0. Confronto v[0] = 5 e v[1] = 1: 5 &gt; 1, vanno scambiati.' },
+        { l:10, f:[['main',{}],['bubble_sort',{n:'4',i:'0',j:'0',t:'5'}]], arr:[{n:'a',v:['1','5','4','2'],hl:[0,1]}], say:'Scambio con la variabile di appoggio t (servono 3 assegnazioni).' },
+        { l:10, f:[['main',{}],['bubble_sort',{n:'4',i:'0',j:'1',t:'5'}]], arr:[{n:'a',v:['1','4','5','2'],hl:[1,2]}], say:'j = 1: 5 &gt; 4, scambio.' },
+        { l:10, f:[['main',{}],['bubble_sort',{n:'4',i:'0',j:'2',t:'5'}]], arr:[{n:'a',v:['1','4','2','5'],hl:[2,3]}], say:'j = 2: 5 &gt; 2, scambio. Fine del giro: il 5, il più grande, è in fondo.' },
+        { l:7, f:[['main',{}],['bubble_sort',{n:'4',i:'1',j:'0',t:'5'}]], arr:[{n:'a',v:['1','4','2','5'],hl:[0,1]}], say:'Giro i = 1 (si arriva solo fino a n − 1 − i, l\'ultimo è già a posto). 1 &gt; 4? No.' },
+        { l:10, f:[['main',{}],['bubble_sort',{n:'4',i:'1',j:'1',t:'4'}]], arr:[{n:'a',v:['1','2','4','5'],hl:[1,2]}], say:'j = 1: 4 &gt; 2, scambio.' },
+        { l:7, f:[['main',{}],['bubble_sort',{n:'4',i:'2',j:'0',t:'4'}]], arr:[{n:'a',v:['1','2','4','5'],hl:[0,1]}], say:'Giro i = 2: 1 &gt; 2? No. Fine.' },
+        { l:20, f:[['main',{i:'4'}]], arr:[{n:'a',v:['1','2','4','5']}], out:'1 2 4 5 \n', say:'Ordinato. La funzione ha modificato l\'array del main (capitolo 9).' }
+      ] }
+  ],
+  why:[
+    { easy:true, f:'malloc(n * sizeof(tipo))', t:'malloc conta in byte. sizeof(int) dice quanti byte è grande un int (di solito 4), così non devi saperlo tu. Per una struct: <code>malloc(n * sizeof(Prodotto))</code>.' },
+    { easy:true, f:'Ogni malloc ha il suo free', t:'Il magazzino non si svuota da solo. Se non liberi, la memoria resta occupata finché il programma finisce (memory leak). L\'esercizio 4 della prova al PC chiede esplicitamente la "de-allocazione memoria".' },
+    { easy:true, f:'realloc(v, nuova_dim * sizeof(tipo)) allarga un blocco', t:'Serve quando non sai quanti elementi arriveranno: parti piccolo e allarghi. Restituisce il nuovo indirizzo, quindi si scrive <code>v = realloc(v, ...)</code>.' },
+    { easy:true, f:'Ordinare con più criteri: una funzione di confronto', t:'Scrivi <code>int confronta(Prodotto a, Prodotto b)</code> che restituisce un numero negativo se a deve venire prima, positivo se dopo. Dentro: prima il criterio principale, poi, solo a parità, il secondo, poi il terzo. Nel bubble sort cambi solo la condizione dello scambio.' },
+    { easy:false, f:'Quanto è veloce ogni algoritmo (bubble sort, selection sort, merge sort, quick sort)', t:'Per il 18 basta saperne scrivere bene uno (il bubble sort qui sopra) e adattarlo alle struct. Le complessità segnale a memoria dalla slide 19 se vuoi la domanda di teoria completa.' }
+  ],
+  warn:{ title:'Due errori che fanno crashare', html:'<p>1) Usare un puntatore <b>dopo</b> free. 2) Scrivere oltre la dimensione chiesta a malloc (per esempio v[4] con spazio per 4). Nessuno dei due dà errore di compilazione: il programma si comporta in modo strano o si blocca.</p>' },
+  guided:{ title:'L\'ordinamento del tema del 7 gennaio 2026', intro:'<p>"Vettore di prodotti ordinato in modo <b>decrescente</b> in base al prezzo; a parità di prezzo, prima i prodotti con <b>meno</b> elementi in magazzino; a ulteriore parità, <b>crescente</b> rispetto all\'ID."</p>'+code(String.raw`
+int confronta(Prodotto a, Prodotto b) {
+    if (a.prezzo != b.prezzo)
+        return (a.prezzo > b.prezzo) ? -1 : 1;
+    if (a.quantita != b.quantita)
+        return (a.quantita < b.quantita) ? -1 : 1;
+    return (a.id < b.id) ? -1 : 1;
+}
+/* nel bubble sort: if (confronta(v[j], v[j + 1]) > 0) scambio */`), steps:[
+      { h:'Prodotti: A (id 11, 299.99 €, 15 pezzi) e B (id 12, 1199 €, 8 pezzi). Chi viene prima?', type:'choice', opts:['A','B'], ans:1, ok:'Giusto: prezzo decrescente, il più caro va prima.', bad:'Il primo criterio è il prezzo, dal più alto al più basso.' },
+      { h:'A (id 11, 299.99, 15 pezzi) e C (id 14, 299.99, 5 pezzi). Chi viene prima?', type:'choice', opts:['A','C'], ans:1, ok:'Sì: stesso prezzo, quindi conta la quantità, e prima chi ne ha meno.', bad:'Prezzi uguali: si passa al secondo criterio, meno pezzi in magazzino.' },
+      { h:'A (id 11) e D (id 13), entrambi 299.99 € e 15 pezzi. Chi viene prima?', type:'choice', opts:['A','D'], ans:0, ok:'Giusto: terzo criterio, ID crescente.', bad:'Tutto uguale tranne l\'ID: si va in ordine crescente di ID.' },
+      { h:'Ordina B, A, C, D: scrivi gli id nell\'ordine finale, separati da virgola', type:'text', ans:['12,14,11,13'], ok:'Perfetto: è esattamente quello che stampa il programma.', bad:'Prima il più caro (12). Poi tra i tre da 299.99: meno pezzi (14), poi ID crescente (11, 13).' }
+    ], done:'<b>Fatto!</b> Ordine: 12, 14, 11, 13. Lo schema è sempre lo stesso: un if per criterio, nell\'ordine del testo, e si passa al successivo solo a parità.' },
+  ex:[
+    { id:'e1', type:'choice', q:'Spazio per n struct Ordine nel heap:', opts:['Ordine v[n];','Ordine *v = (Ordine *) malloc(n * sizeof(Ordine));','Ordine *v = malloc(n);'], a:1, hint:'Servono n volte la grandezza di un Ordine.', sol:'<code>malloc(n * sizeof(Ordine))</code>. <code>malloc(n)</code> darebbe solo n byte.' },
+    { id:'e2', type:'choice', q:'Dove stanno le variabili locali e dove la memoria presa con malloc?', opts:['Tutte e due nello stack','Locali nello stack, malloc nel heap','Locali nel heap, malloc nello stack'], a:1, hint:'Stack = banco della funzione, heap = magazzino.', sol:'Locali (e parametri) nello <b>stack</b>, nei record di attivazione; malloc nel <b>heap</b>. Il codice del programma sta in una terza area ("area codice").' },
+    { id:'e3', type:'text', q:'Dopo il primo giro esterno del bubble sort crescente su [3, 8, 2, 6], com\'è l\'array? (scrivi come 1,2,3,4)', a:['3,2,6,8'], hint:'Confronta 3-8, poi 8-2, poi 8-6, scambiando quando serve.', sol:'3-8 ok → 8-2 scambio [3, 2, 8, 6] → 8-6 scambio [3, 2, 6, 8]. Risposta <b>3, 2, 6, 8</b>: l\'8 è arrivato in fondo.' },
+    { id:'e4', type:'code', tag:'al PC', q:'Scrivi <code>Prodotto *sopra_soglia(Prodotto v[], int dim, float soglia, int *dimRes)</code> che restituisce un vettore dinamico con i prodotti di prezzo maggiore di soglia, e la sua dimensione in *dimRes. (È lo schema di ordini_sopra_soglia del tema.)', hint:'Primo modo semplice: malloc di dim elementi (il caso peggiore), poi copi quelli buoni contando con *dimRes.', sol:code(String.raw`
+Prodotto *sopra_soglia(Prodotto v[], int dim, float soglia, int *dimRes) {
+    Prodotto *res;
+    int i;
+    res = (Prodotto *) malloc(dim * sizeof(Prodotto));
+    *dimRes = 0;
+    for (i = 0; i < dim; i++) {
+        if (v[i].prezzo > soglia) {
+            res[*dimRes] = v[i];      /* le struct si copiano con = */
+            (*dimRes)++;
+        }
+    }
+    return res;
+}`)+'<p>Chi chiama poi farà <code>free(res)</code>. Variante più fine: prima conti quanti sono, poi fai malloc esattamente di quella dimensione.</p>' }
+  ],
+  quaderno:[
+    '<b>Vettore dinamico:</b> <code>T *v = (T *) malloc(n * sizeof(T));</code> … <code>free(v);</code>',
+    '<b>Restituire vettore + dimensione:</b> <code>T *f(..., int *dim)</code>, dentro <code>*dim = 0;</code> e <code>(*dim)++</code>.',
+    '<b>Stack</b> = variabili locali e record di attivazione (spariscono). <b>Heap</b> = malloc (resta fino a free). <b>Area codice</b> = le istruzioni.',
+    '<b>Bubble sort:</b> due for, <code>j &lt; n - 1 - i</code>, scambio con t.',
+    '<b>Più criteri:</b> funzione confronta con un if per criterio; nel sort scambio se confronta(v[j], v[j+1]) &gt; 0.'
+  ]
+});
+
+/* ================= 14 · LA PROVA AL PC ================= */
+CH.push({
+  id:'prova-pc', n:14, short:'La prova al PC: la ricetta', when:'piano del 19/12 (prima prova a tempo) e fase 4',
+  title:'La prova al PC: come prendere almeno 11 su 20',
+  serve:'<p class="big">Hai 2 ore, slide e appunti ammessi, niente internet. Servono <b>11 punti su 20</b>. Non serve finire tutto: serve consegnare un progetto <b>che compila</b> con le prime parti fatte bene e provate nel main.</p>',
+  exam:'struttura fissa (7 gen 2026): Esercizio 1 strutture dati e lettura dei file · Esercizio 2 ordinamento · Esercizio 3 funzioni di calcolo e filtro · Esercizio 4 stampe nel main e free. "Il main non è opzionale; i test richiesti vanno implementati."',
+  idea:{ title:'Prima le fondamenta, poi i piani', html:
+    '<p>Gli esercizi sono in fila come i piani di una casa: senza la lettura dei file (Esercizio 1) non hai dati per provare niente del resto. Quindi l\'Esercizio 1 si fa per primo e si fa bene, anche a costo di lasciare indietro l\'ultimo.</p>'
+   +'<div class="note"><b>Regola d\'oro:</b> compila spesso (ogni funzione nuova). Un progetto che non compila vale quasi zero, anche se dentro ci sono cose giuste. Se una funzione non ti riesce, lasciala che compila (anche incompleta) e passa avanti.</div>' },
+  widgets:[
+    { type:'recipe', title:'Le 2 ore, minuto per minuto', steps:[
+      { h:'0-10 min · Leggi tutto e guarda i file', html:'<p>Leggi il testo intero. Apri prodotti.txt e ordini.txt e guarda <b>esattamente</b> com\'è fatta una riga (spazi, trattini, quanti campi). Segna i nomi delle funzioni e le firme: vanno copiate identiche.</p>' },
+      { h:'10-20 min · Prepara il progetto', html:'<p>Crea i file come chiede il testo: element.h, list.h / list.c (te li danno), modulo.h / modulo.c, main.c. Copia dalla tua RACCOLTA_C lo scheletro pronto (sotto). <b>Compila subito</b> il progetto vuoto.</p>' },
+      { h:'20-55 min · Esercizio 1: struct e lettura', html:'<p>Scrivi le struct in element.h. Scrivi la funzione di lettura (schema del capitolo 11). Nel main: leggi e <b>stampa</b> quello che hai letto. Finché la stampa non è identica al file, non andare avanti.</p>' },
+      { h:'55-75 min · Esercizio 2: ordinamento', html:'<p>Funzione confronta con i criteri del testo + bubble sort (capitolo 13). Prova nel main stampando il vettore ordinato.</p>' },
+      { h:'75-105 min · Esercizio 3: le funzioni di calcolo', html:'<p>Sono quasi sempre: un calcolo su un elemento (es. valore di un ordine), un filtro che restituisce un vettore dinamico (sopra soglia), un conteggio. Una alla volta, ognuna provata nel main.</p>' },
+      { h:'105-120 min · Esercizio 4 e consegna', html:'<p>Stampe finali richieste e <b>free</b> di tutto (freelist per le liste, free per i vettori). Rebuild All: zero errori e zero warning. Commento in cima a ogni file con nome, cognome, matricola e numero della prova.</p>' }
+    ] },
+    { type:'html', eyebrow:'Da copiare in RACCOLTA_C prima dell\'esame', title:'Lo scheletro della lettura in lista', html:
+      '<p>È la funzione che c\'è in tutte le prove: legge un file di testo e restituisce una lista di struct. Cambi solo la struct e la stringa di formato.</p>'
+     +code(String.raw`
+/* element.h */
+#ifndef ELEMENT_H
+#define ELEMENT_H
+typedef struct {
+    int id;
+    char nome[31];
+    char categoria;
+    float prezzo;
+    int quantita;
+} Prodotto;
+typedef Prodotto element;
+#endif
+
+/* shop.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include "element.h"
+#include "list.h"
+#include "shop.h"
+
+list leggi_prodotti(char *fileName) {
+    FILE *f;
+    Prodotto p;
+    list l = emptylist();
+    f = fopen(fileName, "r");
+    if (f == NULL) {
+        printf("Errore apertura %s\n", fileName);
+        return emptylist();
+    }
+    while (fscanf(f, "%d %s %c %f %d", &p.id, p.nome, &p.categoria,
+                  &p.prezzo, &p.quantita) == 5) {
+        l = cons(p, l);
+    }
+    fclose(f);
+    return l;
+}`)
+     +'<p>Nota <code>" %c"</code>: per leggere un singolo carattere dopo uno spazio, lo spazio nel formato prima di %c salta gli spazi. Qui c\'è già lo spazio dopo <code>%s</code>, quindi va bene. Con cons in un ciclo la lista esce al contrario rispetto al file: di solito il testo lo accetta; se chiede lo stesso ordine, si inverte alla fine.</p>' }
+  ],
+  why:[
+    { easy:true, f:'Compilare dopo ogni funzione', t:'Se compili dopo 5 funzioni e hai 30 errori, non sai da dove vengono. Se compili dopo ognuna, l\'errore è per forza in quella appena scritta.' },
+    { easy:true, f:'Stampare quello che hai letto prima di andare avanti', t:'Se la lettura è sbagliata, tutti i calcoli dopo sono sbagliati anche se il codice è giusto, e non capisci perché.' },
+    { easy:true, f:'Il main con i test vale punti', t:'Il testo dice "realizzare nel main opportuni test". Ogni funzione che scrivi va chiamata e il risultato stampato, altrimenti per il correttore non è provata.' }
+  ],
+  guided:{ title:'Scelte sotto pressione', steps:[
+      { h:'Sono passati 70 minuti e la funzione di ordinamento non funziona. Cosa fai?', type:'choice', opts:['Continuo finché non va, anche se ci metto un\'ora','La lascio che compila (anche imperfetta), la segno e passo all\'Esercizio 3','Cancello tutto e ricomincio'], ans:1, ok:'Giusto: i punti dell\'Esercizio 3 valgono quanto quelli che stai inseguendo. Ci torni se avanza tempo.', bad:'Il tempo è la risorsa più scarsa. Un pezzo incompleto che compila non fa perdere il resto.' },
+      { h:'Mancano 5 minuti e il progetto ha un errore di compilazione in una funzione dell\'Esercizio 3. Cosa fai?', type:'choice', opts:['Consegno così','Commento la funzione rotta (e la sua chiamata nel main) e consegno un progetto che compila','Riscrivo la funzione'], ans:1, ok:'Esatto: un progetto che compila con 3 esercizi su 4 vale molto più di uno che non compila.', bad:'Un progetto che non compila non si può provare: perderesti anche i punti delle parti giuste.' },
+      { h:'Il testo dice <code>float valore_ordine(Ordine o, list prodotti)</code>. Tu preferiresti passare un puntatore. Cosa fai?', type:'choice', opts:['Cambio la firma','Uso esattamente la firma del testo'], ans:1, ok:'Sempre la firma del testo: il correttore la cerca così.', bad:'Le firme si copiano identiche.' }
+    ], done:'<b>Fatto!</b> Strategia: Esercizio 1 perfetto, compilare sempre, test nel main per ogni funzione, mai consegnare un progetto che non compila.' },
+  ex:[
+    { id:'e1', type:'choice', q:'Qual è la prima cosa da fare dopo aver letto il testo?', opts:['Scrivere l\'ordinamento','Aprire i file di esempio e guardare come sono fatte le righe','Scrivere il main finale'], a:1, hint:'Tutto parte dalla lettura dei file.', sol:'Guardare i file: il formato di fscanf dipende da come sono fatte le righe (spazi, trattini, numero di campi).' },
+    { id:'e2', type:'choice', q:'Quale di questi warning va corretto prima di consegnare?', opts:['Nessuno, i warning non contano','Tutti: il testo chiede "verificare l\'assenza di warning"','Solo quelli rossi'], a:1, hint:'Leggi l\'avvertenza del testo.', sol:'Tutti. Spesso un warning è un errore vero (es. scanf senza &amp;, = al posto di ==).' },
+    { id:'e3', type:'code', tag:'simulazione, 2 ore', q:'Fai la prova al PC del <b>7 gennaio 2026</b> a tempo (file in MATERIALI/Fondamenti: "TEMA Prova al PC 7 gennaio 2026"). Timer 2 ore, solo slide e tuoi appunti, niente internet. Poi confronta con la soluzione del prof e dai un punteggio onesto su 20.', hint:'Segui le 2 ore minuto per minuto qui sopra. Comincia dallo scheletro della lettura.', sol:'<p>La soluzione ufficiale è nello stesso PDF, dopo il testo. Quando hai finito, scrivi al tutor: il punteggio che ti dai, quali esercizi hai completato e dove ti sei bloccato. Da lì si preparano le schede sugli errori.</p>' }
+  ],
+  quaderno:[
+    '<b>Ordine:</b> leggo testo e file → progetto che compila → Es. 1 (struct + lettura + stampa) → Es. 2 → Es. 3 → Es. 4 e free.',
+    '<b>Compilo dopo ogni funzione.</b> Rebuild All finale: zero errori, zero warning.',
+    '<b>Firme identiche al testo.</b> Test nel main per ogni funzione.',
+    '<b>Se mi blocco:</b> lascio la funzione che compila e vado avanti. Mai consegnare un progetto che non compila.',
+    '<b>RACCOLTA_C:</b> scheletro lettura in lista, lettura in vettore dinamico, bubble sort con confronta, showlist, free.'
+  ]
+});
+
+/* Motore della Lavagna di Fondamenti.
+   Ogni capitolo è un oggetto in CH (vedi capitoli/*.js). Questo file lo disegna:
+   a cosa serve → idea → codice passo passo (tracer) → ricetta → perché delle regole → attenzione
+   → esercizio guidato → esercizi da solo → quaderno + copia risultati. */
+(function(){
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const store = {
+    get(k){ try { return JSON.parse(localStorage.getItem(k)) || {}; } catch(e){ return {}; } },
+    set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  const say = (el, ok, txt) => { el.innerHTML = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
+  const norm = s => String(s).toLowerCase().replace(/\s+/g,'').replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/,/g,'.');
+  const normOut = s => String(s).replace(/\r/g,'').split('\n').map(x=>x.replace(/\s+$/,'').replace(/^\s+/,'')).join('\n').replace(/\n+$/,'').replace(/^\n+/,'');
+  const plain = h => { const t=document.createElement('div'); t.innerHTML=h; return t.textContent.replace(/\s+/g,' ').trim(); };
+  const CH = window.CH;
+  const key = id => 'lavagna-fond-'+id;
+
+  function board(eyebrow, title, inner){
+    const s = document.createElement('section'); s.className = 'board';
+    s.innerHTML = (eyebrow?'<div class="eyebrow">'+eyebrow+'</div>':'')+(title?'<h2>'+title+'</h2>':'')+(inner||'');
+    return s;
+  }
+
+  /* ---------- tracer ---------- */
+  function tracer(t){
+    const s = board(t.eyebrow || 'Il codice si esegue passo passo', t.title || '', (t.intro?'<p>'+t.intro+'</p>':''));
+    const lines = t.code.replace(/^\n/,'').replace(/\s+$/,'').split('\n');
+    const wrap = document.createElement('div'); wrap.className = 'tracer';
+    wrap.innerHTML = '<div class="src">'+lines.map((l,i)=>'<span class="ln" data-l="'+(i+1)+'"><i>'+(i+1)+'</i>'+(esc(l)||' ')+'</span>').join('')+'</div>'
+      + '<div class="side"><div class="panel"><div class="lab">Memoria</div><div data-mem></div></div>'
+      + '<div class="panel"><div class="lab">Stampa sullo schermo</div><div class="outbox" data-out></div></div></div>';
+    s.appendChild(wrap);
+    const sayEl = document.createElement('p'); sayEl.className = 'say note'; s.appendChild(sayEl);
+    const ctr = document.createElement('div'); ctr.className = 'row';
+    ctr.innerHTML = '<button data-prev>← Indietro</button><button class="primary" data-nxt>Avanti →</button><button data-rst>Ricomincia</button><span class="badge" data-cnt></span>';
+    s.appendChild(ctr);
+    let k = 0;
+    const frames = st => st.f || (st.v ? [['main', st.v]] : []);
+    const flat = st => { const o={}; frames(st).forEach(([fn,vs],i)=>Object.keys(vs).forEach(n=>o[i+'|'+fn+'|'+n]=vs[n])); return o; };
+    function render(){
+      const st = t.steps[k], prev = k>0 ? flat(t.steps[k-1]) : {};
+      wrap.querySelectorAll('.ln').forEach(el => el.classList.toggle('on', +el.dataset.l === st.l));
+      const fr = frames(st);
+      let mem = fr.length ? fr.map(([fn,vs],i) => '<div class="frame'+(i===fr.length-1?' top':'')+'"><div class="fn">'+esc(fn)+'</div>'
+        + (Object.keys(vs).length ? Object.keys(vs).map(n => { const ch = k>0 && prev[i+'|'+fn+'|'+n] !== vs[n];
+            const m = /^(.*?)\s*@(\S+)$/.exec(n); const nm = m?m[1]:n, ad = m?'<span class="a">indirizzo '+m[2]+'</span>':'';
+            return '<div class="var"><span class="n">'+esc(nm)+'</span><span class="v'+(ch?' chg':'')+'">'+esc(vs[n])+'</span>'+ad+'</div>'; }).join('')
+          : '<div class="var"><span class="n">(nessuna variabile)</span></div>')
+        + '</div>').join('') : '<div class="var"><span class="n">(vuota)</span></div>';
+      if (st.list) mem += Object.keys(st.list).map(n => '<div class="frame"><div class="fn">lista '+esc(n)+'</div><div class="lst">'
+          + st.list[n].map(x=>'<span class="cell">'+esc(x)+'</span><span class="arr">→</span>').join('')+'<span class="nil">NULL</span></div></div>').join('');
+      if (st.arr) mem += st.arr.map(a => '<div class="frame"><div class="fn">'+esc(a.n)+'</div><div class="arrv">'
+          + a.v.map((x,i)=>'<span'+((a.hl||[]).includes(i)?' class="hl"':'')+'>'+esc(x)+'<small>['+i+']</small></span>').join('')+'</div></div>').join('');
+      if (st.heap) mem += '<div class="frame"><div class="fn">heap (memoria presa con malloc)</div>'+Object.keys(st.heap).map(n=>'<div class="var"><span class="n">'+esc(n)+'</span><span class="v">'+esc(st.heap[n])+'</span></div>').join('')+'</div>';
+      wrap.querySelector('[data-mem]').innerHTML = mem;
+      wrap.querySelector('[data-out]').textContent = st.out || '';
+      sayEl.innerHTML = st.say || '';
+      ctr.querySelector('[data-cnt]').textContent = 'passo '+(k+1)+' di '+t.steps.length;
+      ctr.querySelector('[data-prev]').disabled = k===0;
+      ctr.querySelector('[data-nxt]').disabled = k===t.steps.length-1;
+    }
+    ctr.querySelector('[data-prev]').onclick = () => { if (k>0){ k--; render(); } };
+    ctr.querySelector('[data-nxt]').onclick = () => { if (k<t.steps.length-1){ k++; render(); } };
+    ctr.querySelector('[data-rst]').onclick = () => { k=0; render(); };
+    render();
+    return s;
+  }
+
+  /* ---------- complemento a 2: 8 interruttori ---------- */
+  function bits(w){
+    const s = board(w.eyebrow || 'Prova tu', w.title || '8 interruttori', (w.intro?'<p>'+w.intro+'</p>':''));
+    const W = [-128,64,32,16,8,4,2,1];
+    const b = [0,0,0,0,0,0,0,0];
+    const grid = document.createElement('div'); grid.className = 'bits';
+    grid.innerHTML = W.map((w,i)=>'<div><button id="bit'+i+'" aria-label="bit di peso '+w+'">0</button><small'+(i===0?' class="neg"':'')+'>'+w+'</small></div>').join('');
+    s.appendChild(grid);
+    const out = document.createElement('p'); out.className = 'readout'; s.appendChild(out);
+    const row = document.createElement('div'); row.className = 'row';
+    row.innerHTML = '<label for="c2in">Scrivi un numero tra −128 e 127:</label><input type="text" id="c2in" inputmode="numeric" style="width:6em"><button data-go>Mostra in binario</button>';
+    s.appendChild(row);
+    const how = document.createElement('div'); how.className = 'note'; how.hidden = true; s.appendChild(how);
+    function draw(){
+      b.forEach((x,i)=>{ const el=grid.querySelector('#bit'+i); el.textContent=x; el.classList.toggle('one', !!x); });
+      const v = b.reduce((a,x,i)=>a+x*W[i],0);
+      out.innerHTML = 'Bit: <b class="mono">'+b.join('')+'</b> → valore <b>'+v+'</b> = '+(b.some(x=>x)?b.map((x,i)=>x?'('+W[i]+')':null).filter(Boolean).join(' + '):'0');
+    }
+    grid.querySelectorAll('button').forEach((el,i)=>el.onclick=()=>{ b[i]=1-b[i]; how.hidden=true; draw(); });
+    row.querySelector('[data-go]').onclick = () => {
+      const n = parseInt(String(row.querySelector('#c2in').value).replace('−','-'),10);
+      if (isNaN(n) || n<-128 || n>127){ how.hidden=false; how.innerHTML='Con 8 bit in complemento a 2 si va da −128 a 127. Scrivi un numero in questo intervallo.'; return; }
+      const bin = x => x.toString(2).padStart(8,'0');
+      if (n>=0){ how.innerHTML = n+' è positivo: si scrive in binario normale su 8 bit → <b class="mono">'+bin(n)+'</b>.'; }
+      else { const m=-n, p=bin(m), inv=p.split('').map(c=>c==='0'?'1':'0').join(''), r=bin(256+n);
+        how.innerHTML = n+' è negativo. Ricetta:<br>1) scrivo '+m+' in binario: <span class="mono">'+p+'</span><br>2) inverto tutti i bit: <span class="mono">'+inv+'</span><br>3) aggiungo 1: <b class="mono">'+r+'</b>'; }
+      how.hidden=false;
+      bin(n<0?256+n:n).split('').forEach((c,i)=>b[i]=+c); draw();
+    };
+    draw();
+    return s;
+  }
+
+  /* ---------- ricetta a passi ---------- */
+  function recipe(r){
+    const s = board(r.eyebrow || 'La ricetta, un passo alla volta', r.title, (r.intro?'<p>'+r.intro+'</p>':''));
+    const box = document.createElement('div'); box.className='steps';
+    box.innerHTML = r.steps.map((st,i)=>'<div class="step"'+(i?' hidden':'')+'><h3>Passo '+(i+1)+' · '+st.h+'</h3>'+st.html+'</div>').join('');
+    s.appendChild(box);
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = '<button class="primary" data-n>Passo successivo</button><button data-r>Ricomincia</button>'; s.appendChild(row);
+    const els = [...box.children]; let shown = 1;
+    row.querySelector('[data-n]').onclick = () => { if (shown<els.length){ els[shown].hidden=false; els[shown].classList.add('reveal'); shown++; } };
+    row.querySelector('[data-r]').onclick = () => { els.forEach((e,i)=>e.hidden=i>0); shown=1; };
+    return s;
+  }
+
+  /* ---------- perché delle regole ---------- */
+  function why(list){
+    const s = board('Il perché delle regole', 'Da capire o da imparare a memoria?',
+      '<p>Per ogni regola ti dico se il motivo è <span class="tag easy">facile da capire</span> (e allora te lo spiego) oppure <span class="tag memo">a memoria</span> (il motivo è lungo o non serve: segnatela e basta).</p>');
+    const d = document.createElement('div'); d.className='why';
+    d.innerHTML = list.map(w=>'<div class="item"><span class="tag '+(w.easy?'easy':'memo')+'">'+(w.easy?'facile da capire':'a memoria')+'</span><div><b>'+w.f+'</b><br>'+w.t+'</div></div>').join('');
+    s.appendChild(d); return s;
+  }
+
+  /* ---------- esercizio guidato ---------- */
+  function guided(ch, g){
+    const s = board('Tocca a te · esercizio guidato', g.title, (g.intro||''));
+    const box = document.createElement('div'); box.className='steps'; s.appendChild(box);
+    const res = store.get(key(ch.id));
+    const els = g.steps.map((st,i)=>{
+      const d = document.createElement('div'); d.className='step'; d.hidden = i>0;
+      let body = st.html ? '<div>'+st.html+'</div>' : '';
+      if (st.type==='choice') body += '<div class="choice">'+st.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else body += '<div class="row"><input type="text" id="g-'+ch.id+'-'+i+'" aria-label="risposta"><button data-c>Controlla</button></div>';
+      d.innerHTML = '<h3>Passo '+(i+1)+' · '+st.h+'</h3>'+body+'<span class="feedback"></span>';
+      box.appendChild(d); return d;
+    });
+    const fin = document.createElement('div'); fin.className='note reveal'; fin.hidden=true; fin.innerHTML=g.done; box.appendChild(fin);
+    const id = i => 'g'+(i+1);
+    const pass = i => { res[id(i)] = res[id(i)]==='errore' ? 'ok-dopo' : (res[id(i)]||'ok'); store.set(key(ch.id),res); if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; nav(); };
+    const fail = i => { if (!/^ok/.test(res[id(i)]||'')) res[id(i)]='errore'; store.set(key(ch.id),res); };
+    g.steps.forEach((st,i)=>{
+      const d = els[i], fb = d.querySelector('.feedback');
+      if (st.type==='choice') d.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{
+        d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+        if (+b.dataset.j===st.ans){ b.classList.add('right'); say(fb,true,st.ok); pass(i); } else { b.classList.add('wrong'); say(fb,false,st.bad); fail(i); }
+      });
+      else d.querySelector('[data-c]').onclick = () => {
+        const v = norm(d.querySelector('input').value), ans = [].concat(st.ans).map(norm);
+        if (ans.includes(v)){ say(fb,true,st.ok); pass(i); } else { say(fb,false,st.bad); fail(i); }
+      };
+      if (/^ok/.test(res[id(i)]||'')){ if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; }
+    });
+    return s;
+  }
+
+  /* ---------- esercizi da solo ---------- */
+  const LAB = { ok:'giusto al primo colpo', 'ok-dopo':'giusto dopo errore o aiuto', errore:'sbagliato', 'soluzione vista':'guardato la soluzione',
+    'auto-ok':'fatto giusto (detto da Pietro)', 'auto-no':'sbagliato (detto da Pietro)' };
+  function exercises(ch){
+    const s = board('Esercizi da solo', ch.exTitle || 'Adesso senza aiuti', '<p>'+(ch.exIntro || 'Prova prima da solo, su carta come all\'esame. Se ti blocchi apri l\'aiuto, poi la soluzione.')+'</p>');
+    const res = store.get(key(ch.id));
+    ch.ex.forEach((e,i)=>{
+      const d = document.createElement('div'); d.className='ex';
+      let ans = '';
+      if (e.type==='choice') ans = '<div class="choice">'+e.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else if (e.type==='text') ans = '<div class="row"><input type="text" id="x-'+ch.id+'-'+e.id+'" aria-label="risposta"><button data-c>Controlla</button></div>';
+      else if (e.type==='out') ans = '<label for="x-'+ch.id+'-'+e.id+'" class="eyebrow">Scrivi esattamente cosa stampa, una riga per riga</label><textarea id="x-'+ch.id+'-'+e.id+'"></textarea><div class="row"><button data-c>Controlla</button></div>';
+      else if (e.type==='code') ans = '<label for="x-'+ch.id+'-'+e.id+'" class="eyebrow">Scrivi qui (o sul quaderno / al PC), poi confronta con la soluzione</label><textarea id="x-'+ch.id+'-'+e.id+'" style="min-height:8em"></textarea>';
+      d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+(e.tag?' · '+e.tag:'')+'</b><span class="badge"></span></div><div>'+e.q+'</div>'+ans
+        + '<div class="row">'+(e.hint?'<button data-h>Aiuto</button>':'')+'<button data-s>Soluzione</button></div><span class="feedback"></span>'
+        + (e.hint?'<div class="note" data-hint hidden>'+e.hint+'</div>':'')+'<div class="note" data-sol hidden>'+e.sol
+        + (e.type==='code'?'<div class="row" style="margin-top:10px"><button data-ao>L\'avevo fatto giusto</button><button data-an>Avevo sbagliato o non ci sono riuscito</button></div>':'')+'</div>';
+      s.appendChild(d);
+      const fb = d.querySelector('.feedback'), bd = d.querySelector('.badge');
+      const badge = () => { const r=res[e.id]; bd.textContent = LAB[r] || 'da fare';
+        bd.className = 'badge'+(/^ok|auto-ok/.test(r||'')?' done':(r==='errore'||r==='auto-no')?' bad':''); };
+      badge();
+      const right = () => { res[e.id] = (res[e.id]==='errore'||res[e.id]==='soluzione vista'||res[e.id+'_aiuto']) ? 'ok-dopo' : (res[e.id]||'ok'); say(fb,true,'Giusto!'); store.set(key(ch.id),res); badge(); nav(); };
+      const wrong = msg => { if (!/^ok/.test(res[e.id]||'')) res[e.id]='errore'; say(fb,false,msg); store.set(key(ch.id),res); badge(); };
+      if (e.type==='choice') d.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{
+        d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+        if (+b.dataset.j===e.a){ b.classList.add('right'); right(); } else { b.classList.add('wrong'); wrong('Non è questa. Prova con l\'aiuto.'); }
+      });
+      if (e.type==='text') d.querySelector('[data-c]').onclick = () => { const v=norm(d.querySelector('input').value);
+        if (!v){ say(fb,false,'Scrivi una risposta.'); return; } [].concat(e.a).map(norm).includes(v) ? right() : wrong('Non è questo. Prova con l\'aiuto.'); };
+      if (e.type==='out') d.querySelector('[data-c]').onclick = () => { const v=normOut(d.querySelector('textarea').value);
+        if (!v){ say(fb,false,'Scrivi cosa stampa.'); return; } v===normOut(e.a) ? right() : wrong('Non torna, almeno una riga è diversa. Controlla spazi e a capo, poi prova con l\'aiuto.'); };
+      if (e.hint) d.querySelector('[data-h]').onclick = () => { d.querySelector('[data-hint]').hidden=false; res[e.id+'_aiuto']=true; store.set(key(ch.id),res); };
+      d.querySelector('[data-s]').onclick = () => { d.querySelector('[data-sol]').hidden=false;
+        if (e.type!=='code' && !/^ok/.test(res[e.id]||'')){ res[e.id]='soluzione vista'; store.set(key(ch.id),res); badge(); } };
+      if (e.type==='code'){
+        d.querySelector('[data-ao]').onclick = () => { res[e.id]='auto-ok'; store.set(key(ch.id),res); badge(); nav(); };
+        d.querySelector('[data-an]').onclick = () => { res[e.id]='auto-no'; store.set(key(ch.id),res); badge(); nav(); };
+      }
+    });
+    return s;
+  }
+
+  /* ---------- quaderno + copia ---------- */
+  function notebook(ch){
+    const s = board('Sul quaderno (e nella cartella RACCOLTA_C)', 'Da scrivere a mano', '<ul class="recap">'+ch.quaderno.map(x=>'<li>'+x+'</li>').join('')+'</ul>');
+    const box = document.createElement('div');
+    box.innerHTML = '<div class="row"><button class="primary">Copia i miei risultati per il tutor</button><span class="feedback"></span></div><textarea hidden readonly style="margin-top:8px;min-height:120px"></textarea>';
+    s.appendChild(box);
+    const btn = box.querySelector('button'), fb = box.querySelector('.feedback'), ta = box.querySelector('textarea');
+    btn.onclick = () => {
+      const res = store.get(key(ch.id)), lines = ['Lavagna Fondamenti, capitolo '+ch.n+' '+plain(ch.short)+':'];
+      Object.keys(res).filter(k=>/^g\d+$/.test(k)).sort().forEach(k=>lines.push('Guidato passo '+k.slice(1)+': '+(LAB[res[k]]||res[k])));
+      ch.ex.forEach((e,i)=>lines.push('Esercizio '+(i+1)+' ('+plain(e.q).slice(0,70)+'): '+(LAB[res[e.id]]||'non fatto')+(res[e.id+'_aiuto']?', aperto aiuto':'')));
+      const txt = lines.join('\n'); ta.value = txt;
+      const fallback = () => { ta.hidden=false; ta.select(); say(fb,true,'Seleziona il testo qui sotto e incollalo nella chat del tutor.'); };
+      try { navigator.clipboard.writeText(txt).then(()=>say(fb,true,'Copiato: incollalo nella chat del tutor di Fondamenti.'), fallback); } catch(e){ fallback(); }
+    };
+    return s;
+  }
+
+  /* ---------- montaggio del capitolo ---------- */
+  function build(ch){
+    const m = $('main'); m.innerHTML = '';
+    const head = board('Capitolo '+ch.n+' · '+ch.when, ch.title, ch.serve + (ch.exam?'<div class="exam"><b>All\'esame:</b> '+ch.exam+'</div>':''));
+    m.appendChild(head);
+    if (ch.idea) m.appendChild(board('L\'idea in una immagine', ch.idea.title, ch.idea.html));
+    (ch.widgets||[]).forEach(w => {
+      if (w.type==='tracer') m.appendChild(tracer(w));
+      else if (w.type==='bits') m.appendChild(bits(w));
+      else if (w.type==='recipe') m.appendChild(recipe(w));
+      else if (w.type==='html') { const s=board(w.eyebrow, w.title, w.html); m.appendChild(s); if (w.init) w.init(s); }
+    });
+    if (ch.why) m.appendChild(why(ch.why));
+    if (ch.warn) m.appendChild(board('Attenzione', ch.warn.title, '<div class="warn">'+ch.warn.html+'</div>'));
+    if (ch.guided) m.appendChild(guided(ch, ch.guided));
+    if (ch.ex) m.appendChild(exercises(ch));
+    if (ch.quaderno) m.appendChild(notebook(ch));
+    const i = CH.indexOf(ch);
+    if (i < CH.length-1){ const nx = document.createElement('div'); nx.className='next';
+      nx.innerHTML = '<a href="#'+CH[i+1].id+'"><button class="primary" tabindex="-1">Capitolo '+CH[i+1].n+': '+plain(CH[i+1].short)+' →</button></a>'; m.appendChild(nx); }
+  }
+
+  function done(ch){ const r = store.get(key(ch.id)); return ch.ex && ch.ex.every(e=>/^ok|auto-ok/.test(r[e.id]||'')); }
+  function nav(){
+    const cur = current();
+    $('nav').innerHTML = CH.map(c=>'<a href="#'+c.id+'" class="'+(c.id===cur?'on':'')+'">'+(done(c)?'<span class="tick">✓</span> ':'')+c.n+' · '+c.short+'</a>').join('');
+  }
+  function current(){ const h=(location.hash||'').slice(1); return CH.some(c=>c.id===h) ? h : CH[0].id; }
+  function show(){ const ch = CH.find(c=>c.id===current()); build(ch); nav(); }
+  window.addEventListener('hashchange', () => { show(); window.scrollTo(0,0); });
+  show();
+})();
+
+</script>
+</body>
+</html>

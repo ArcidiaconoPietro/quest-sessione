@@ -1,0 +1,173 @@
+<title>Lavagna di Fondamenti</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: una colonna di lettura come la Lavagna di Analisi (stessa famiglia), un capitolo alla volta, indice in alto.
+   Verde = colore di Fondamenti nella dashboard. Il codice C sta in un "terminale" con la riga attiva evidenziata. */
+:root {
+  --bg: #eef1f4;
+  --board: #ffffff;
+  --ink: #1b2430;
+  --muted: #5a6676;
+  --line: #d4dbe3;
+  --soft: #e6ebf1;
+  --fon: #17855a;      /* verde Fondamenti: cose importanti, riga attiva */
+  --mem: #2f62c9;      /* blu: memoria, variabili */
+  --out: #a3620a;      /* arancio: ciò che il programma stampa */
+  --ok: #1f8a4c;
+  --bad: #c2412f;
+  --code-bg: #f6f8fa;
+  --code-hl: #d9f2e6;
+  --chalk: "Caveat", "Comic Sans MS", cursive;
+  --text: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141a21; --board: #1d252f; --ink: #e9eef4; --muted: #a2afbf; --line: #334050; --soft: #26303c;
+    --fon: #4fd39b; --mem: #86b2ff; --out: #ffb65c; --ok: #5fd08f; --bad: #ff8b78;
+    --code-bg: #161d26; --code-hl: #1f4434;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141a21; --board: #1d252f; --ink: #e9eef4; --muted: #a2afbf; --line: #334050; --soft: #26303c;
+  --fon: #4fd39b; --mem: #86b2ff; --out: #ffb65c; --ok: #5fd08f; --bad: #ff8b78;
+  --code-bg: #161d26; --code-hl: #1f4434;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 60px;
+}
+.wrap { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.chapter { display: flex; flex-direction: column; gap: 22px; }
+header h1 { font-family: var(--chalk); font-size: 2.6rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); }
+nav.chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.chapters a {
+  font-size: .88rem; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--muted); background: var(--board);
+}
+nav.chapters a.on { background: var(--ink); color: var(--board); border-color: var(--ink); }
+nav.chapters a .tick { color: var(--ok); font-weight: 700; }
+nav.chapters a.on .tick { color: var(--board); }
+section.board {
+  background: var(--board); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h2 { font-family: var(--chalk); font-size: 2rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+h3 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+.big { font-size: 1.12rem; }
+.fon { color: var(--fon); font-weight: 700; }
+.memc { color: var(--mem); font-weight: 700; }
+.outc { color: var(--out); font-weight: 700; }
+code, .mono, pre, .tracer .src, textarea, input[type=text] { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+code, .mono { font-family: var(--mono); font-size: .9em; }
+:not(pre) > code { background: var(--soft); padding: 1px 5px; border-radius: 5px; }
+pre.code {
+  margin: 0; font-family: var(--mono); font-size: .86rem; line-height: 1.55; background: var(--code-bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-x: auto; white-space: pre;
+}
+.note { background: var(--soft); border-radius: 10px; padding: 12px 14px; }
+.warn { border: 2px dashed var(--bad); border-radius: 10px; padding: 12px 14px; }
+.exam { border-left: 4px solid var(--fon); background: color-mix(in srgb, var(--fon) 9%, transparent); border-radius: 0 10px 10px 0; padding: 10px 14px; }
+button {
+  font: inherit; font-size: .95rem; cursor: pointer; border-radius: 10px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--board); color: var(--ink);
+}
+button.primary { background: var(--ink); color: var(--board); border-color: var(--ink); }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--fon); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+input[type=text], textarea {
+  font-family: var(--mono); font-size: 1rem; padding: 5px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+}
+input[type=text] { width: 12em; max-width: 100%; }
+textarea { width: 100%; min-height: 4.5em; resize: vertical; }
+.feedback { font-size: .95rem; min-height: 1.4em; }
+.feedback.ok { color: var(--ok); font-weight: 700; }
+.feedback.bad { color: var(--bad); }
+.ex { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ex:first-child { border-top: 0; padding-top: 0; }
+.ex .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.badge { font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.badge.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); font-weight: 700; }
+.badge.bad { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; }
+.choice button.right { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.choice button.wrong { border-color: var(--bad); color: var(--bad); }
+.why { display: flex; flex-direction: column; gap: 10px; }
+.why .item { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
+.why .item > div { min-width: 0; }
+.tag { font-size: .75rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.tag.easy { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.tag.memo { background: color-mix(in srgb, var(--out) 20%, transparent); color: var(--out); }
+.next { display: flex; justify-content: flex-end; }
+footer { color: var(--muted); font-size: .9rem; text-align: center; }
+table.t { border-collapse: collapse; width: 100%; font-size: .95rem; }
+table.t td, table.t th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.t th { color: var(--muted); font-size: .85rem; }
+.scroll { overflow-x: auto; }
+
+/* ---- tracer: codice che si esegue passo passo ---- */
+.tracer { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 640px) { .tracer { grid-template-columns: minmax(0, 1fr); } }
+.tracer .src { font-family: var(--mono); font-size: .82rem; line-height: 1.5; background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 0; overflow-x: auto; }
+.tracer .ln { display: block; white-space: pre; padding: 0 10px 0 0; }
+.tracer .ln i { display: inline-block; width: 2.6em; text-align: right; padding-right: .9em; color: var(--muted); font-style: normal; user-select: none; }
+.tracer .ln.on { background: var(--code-hl); box-shadow: inset 4px 0 0 var(--fon); }
+.tracer .side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.panel .lab { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+.frame { border: 1px dashed var(--line); border-radius: 8px; padding: 4px 8px; margin-top: 6px; }
+.frame:first-child { margin-top: 0; }
+.frame.top { border-style: solid; border-color: var(--mem); }
+.frame .fn { font-size: .78rem; color: var(--muted); font-weight: 700; }
+.var { display: flex; gap: 8px; align-items: baseline; font-family: var(--mono); font-size: .84rem; flex-wrap: wrap; }
+.var .n { color: var(--muted); }
+.var .v { color: var(--mem); font-weight: 700; word-break: break-all; }
+.var .v.chg { background: color-mix(in srgb, var(--mem) 18%, transparent); border-radius: 4px; padding: 0 3px; }
+.var .a { color: var(--muted); font-size: .75rem; }
+.outbox { font-family: var(--mono); font-size: .84rem; white-space: pre-wrap; color: var(--out); min-height: 1.5em; word-break: break-word; }
+.say { font-size: .95rem; }
+.lst { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--mono); font-size: .84rem; margin-top: 4px; }
+.lst .cell { border: 2px solid var(--mem); border-radius: 6px; padding: 1px 8px; color: var(--mem); font-weight: 700; }
+.lst .arr { color: var(--muted); }
+.lst .nil { color: var(--muted); font-style: italic; }
+.arrv { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.arrv span { font-family: var(--mono); font-size: .8rem; border: 1px solid var(--mem); border-radius: 5px; padding: 0 6px; min-width: 2em; text-align: center; }
+.arrv span small { display: block; color: var(--muted); font-size: .65rem; border-top: 1px solid var(--line); }
+.arrv span.hl { background: color-mix(in srgb, var(--fon) 22%, transparent); border-color: var(--fon); }
+
+/* ---- complemento a 2 ---- */
+.bits { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; max-width: 520px; }
+.bits button { font-family: var(--mono); font-size: 1.3rem; font-weight: 700; padding: 8px 0; }
+.bits button.one { background: var(--fon); color: var(--board); border-color: var(--fon); }
+.bits small { display: block; text-align: center; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.bits small.neg { color: var(--bad); font-weight: 700; }
+.readout { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: up .3s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lavagna di Fondamenti</h1>
+    <p>Fondamenti di Informatica T · un capitolo per argomento, nell'ordine del piano. In ogni capitolo: a cosa serve all'esame, il codice che si esegue passo passo, la ricetta, poi tocca a te.</p>
+  </header>
+  <nav class="chapters" aria-label="Capitoli" id="nav"></nav>
+  <main id="main" class="chapter"></main>
+  <footer>Le risposte che dai restano solo in questo browser. Per farle arrivare al tutor usa "Copia i miei risultati per il tutor" in fondo a ogni capitolo.</footer>
+</div>
