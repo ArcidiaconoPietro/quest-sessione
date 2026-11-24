@@ -153,6 +153,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <a href="#regole-derivazione" data-ch="regole-derivazione">10 · Regole di derivazione</a>
     <a href="#teoremi-taylor" data-ch="teoremi-taylor">11 · Rolle, Lagrange, Taylor</a>
     <a href="#studio-funzione" data-ch="studio-funzione">12 · Studio di funzione</a>
+    <a href="#integrali-indefiniti" data-ch="integrali-indefiniti">13 · Integrali indefiniti</a>
+    <a href="#integrali-definiti" data-ch="integrali-definiti">14 · Integrali definiti</a>
   </nav>
 
   <!-- ================= CAPITOLO 1 ================= -->
@@ -1266,6 +1268,180 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
   </div>
 
+  <!-- ================= CAPITOLO 13 ================= -->
+  <div class="chapter" data-ch="integrali-indefiniti" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 13 · blocco del 10/12 · Albano lezioni 12 e 13 novembre · dispensa pp. 127-140</div>
+      <h2>Gli integrali indefiniti</h2>
+      <p class="big">Derivare: da f trovo f′. Integrare è il viaggio al contrario: ti do f, trovi una funzione F che derivata dà f. F si chiama <b>primitiva</b>.</p>
+      <div class="math">∫ f(x) dx = F(x) + C &nbsp; significa &nbsp; F′(x) = f(x)</div>
+      <p>A cosa serve: è il passo che ti serve per calcolare aree (capitolo 14) e per risolvere le equazioni differenziali (capitolo 15). All'esame c'è quasi sempre un integrale da calcolare.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Perché + C · prima guardiamo <span class="tag cap">facile</span></div>
+      <h2>Tante primitive, tutte "parallele"</h2>
+      <p>Se F è una primitiva, anche F + 1, F − 3, F + C vanno bene: la derivata di una costante è 0. Nel grafico: sposta C, la curva sale e scende, ma nel punto x₀ la pendenza resta la stessa, e vale proprio f(x₀).</p>
+      <canvas id="plotII" aria-label="Famiglia di primitive"></canvas>
+      <div class="controls">
+        <label for="iiS">f(x) = <select id="iiS">
+          <option value="0">2x &nbsp;(primitiva x² + C)</option>
+          <option value="1">cos x &nbsp;(primitiva sin x + C)</option>
+          <option value="2">1/x, x &gt; 0 &nbsp;(primitiva ln x + C)</option>
+        </select></label>
+        <label for="iiC">C: <input type="range" id="iiC" min="-30" max="30" value="10"></label>
+      </div>
+      <div class="readout" id="iiOut"></div>
+      <div class="note">E sono le uniche: due primitive della stessa f hanno differenza con derivata 0, quindi costante (conseguenza di Lagrange, capitolo 11). Vale su un intervallo.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Integrali immediati <span class="tag mem">a memoria</span> <span class="tag cap">sono le derivate lette al contrario</span></div>
+      <h2>La tabellina</h2>
+      <div class="when">
+        <div>∫ xᵃ dx = <span class="fr"><span>x<sup>a+1</sup></span><span>a + 1</span></span> + C &nbsp; (a ≠ −1)</div>
+        <div>∫ <span class="fr"><span>1</span><span>x</span></span> dx = ln |x| + C</div>
+        <div>∫ eˣ dx = eˣ + C</div>
+        <div>∫ sin x dx = −cos x + C</div>
+        <div>∫ cos x dx = sin x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>1 + x²</span></span> dx = arctan x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>cos² x</span></span> dx = tan x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>√(1 − x²)</span></span> dx = arcsin x + C</div>
+      </div>
+      <p>Linearità <span class="tag cap">facile</span>: ∫ (a f + b g) dx = a ∫ f dx + b ∫ g dx. <b>Il trucco per controllare sempre:</b> deriva il risultato. Se torna f, è giusto.</p>
+      <p><b>Immediati "generalizzati"</b>: se dentro c'è g(x) e fuori c'è g′(x), è la catena al contrario. ∫ g′(x)/g(x) dx = ln |g(x)| + C, ∫ g′(x) e<sup>g(x)</sup> dx = e<sup>g(x)</sup> + C. Esempio: ∫ 2x/(x² + 1) dx = ln(x² + 1) + C.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 1 <span class="tag cap">è la catena al contrario</span></div>
+      <h2>Sostituzione</h2>
+      <p>Pongo t = g(x), quindi dt = g′(x) dx. Riscrivo tutto con t, integro, rimetto x.</p>
+      <div class="math left">∫ cos(3x) dx: &nbsp; t = 3x, dt = 3 dx, dx = dt/3 &nbsp;→&nbsp; ∫ cos t · dt/3 = (1/3) sin t + C = (1/3) sin(3x) + C</div>
+      <p>Regola pratica: con f(ax + b) dentro, il risultato è F(ax + b)/a. Esempio: ∫ e<sup>2x</sup> dx = e<sup>2x</sup>/2 + C.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 2 <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è facile</span></div>
+      <h2>Per parti</h2>
+      <div class="math"><span class="box cop">∫ f(x) g′(x) dx = f(x) g(x) − ∫ f′(x) g(x) dx</span></div>
+      <p><b>Perché (una riga):</b> (f g)′ = f′g + f g′ (regola del prodotto). Integro tutti e due i lati: f g = ∫ f′g dx + ∫ f g′ dx. Sposto un pezzo e ho la formula.</p>
+      <p><b>Chi scegliere come f (da derivare):</b> quella che derivata diventa più semplice. Polinomi: da derivare (x → 1). eˣ, sin, cos: da integrare (restano uguali). ln x e arctan x: sempre da derivare (diventano 1/x e 1/(1 + x²)).</p>
+      <div class="math left">∫ ln x dx = ∫ ln x · 1 dx: f = ln x, g′ = 1 → x ln x − ∫ (1/x) · x dx = x ln x − x + C</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 3 · funzioni razionali <span class="tag cap">da capire con lo schema</span></div>
+      <h2>Fratti semplici</h2>
+      <p>Per ∫ P(x)/Q(x) dx con polinomi:</p>
+      <div class="steps">
+        <div class="step"><h3>1 · Se grado di P ≥ grado di Q</h3><p>Prima faccio la divisione tra polinomi: P/Q = quoziente + resto/Q.</p></div>
+        <div class="step"><h3>2 · Scompongo Q</h3><p>Radici distinte: <span class="fr"><span>1</span><span>(x − a)(x − b)</span></span> = <span class="fr"><span>A</span><span>x − a</span></span> + <span class="fr"><span>B</span><span>x − b</span></span>. Trovo A e B facendo il denominatore comune e uguagliando i numeratori.</p></div>
+        <div class="step"><h3>3 · Integro i pezzi</h3><p>∫ A/(x − a) dx = A ln |x − a| + C. Se Q ha radice doppia: ∫ 1/(x − a)² dx = −1/(x − a) + C. Se Q non ha radici (Δ &lt; 0): si arriva a un arctan.</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>∫ x eˣ dx per parti</h2>
+      <div class="steps" id="guided-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Ricorda il controllo: deriva la risposta che scegli e guarda se torna la funzione di partenza.</p>
+      <div id="ex-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>∫ f dx = F + C ⇔ F′ = f. Controllo: derivo il risultato.</li>
+        <li>Tabellina: xᵃ → x<sup>a+1</sup>/(a + 1); 1/x → ln|x|; eˣ → eˣ; sin → −cos; cos → sin; 1/(1 + x²) → arctan x; 1/cos² x → tan x.</li>
+        <li>g′/g → ln|g|; f(ax + b) → F(ax + b)/a.</li>
+        <li>Per parti: ∫ f g′ = f g − ∫ f′ g. Derivo polinomi, ln, arctan; integro eˣ, sin, cos.</li>
+        <li>Razionali: divisione se serve → A/(x − a) + B/(x − b) → ln.</li>
+      </ul>
+      <div data-copy="integrali-indefiniti"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 14 ================= -->
+  <div class="chapter" data-ch="integrali-definiti" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 14 · blocco del 14/12 · Albano lezione 19 novembre · dispensa pp. 118-126</div>
+      <h2>Gli integrali definiti</h2>
+      <p class="big">Domanda: quanto è grande l'area sotto il grafico di f, tra x = a e x = b? La risposta si scrive</p>
+      <div class="math"><span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx</div>
+      <p>A cosa serve: aree, ma anche medie, lavoro, spazio percorso da una velocità. E il teorema fondamentale lega tutto agli integrali indefiniti del capitolo 13: per calcolare un'area basta una primitiva.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · prima guardiamo i numeri</div>
+      <h2>Tanti rettangoli sottili</h2>
+      <p>Non so calcolare l'area sotto una curva, ma so calcolare quella dei rettangoli. Divido [a, b] in n pezzi, su ciascuno metto un rettangolo alto quanto f nel punto di mezzo, e sommo. Aumenta n: la somma si avvicina all'area vera.</p>
+      <canvas id="plotID" aria-label="Somme di Riemann"></canvas>
+      <div class="controls">
+        <label for="idS">Funzione: <select id="idS">
+          <option value="0">x² su [0, 2]</option>
+          <option value="1">sin x su [0, π]</option>
+          <option value="2">eˣ su [0, 1]</option>
+        </select></label>
+        <label for="idN">n rettangoli: <input type="range" id="idN" min="1" max="60" value="4"></label>
+      </div>
+      <div class="readout" id="idOut"></div>
+      <p>L'integrale definito è il limite di queste somme per n → +∞ (rettangoli sempre più sottili). <b>Attenzione:</b> dove f è sotto l'asse x, i rettangoli contano con il segno meno.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il teorema fondamentale del calcolo <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Per l'area basta una primitiva</h2>
+      <div class="math left"><span class="box cop">Se f è continua su [a, b] e F è una sua primitiva, allora <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = F(b) − F(a) = [F(x)]<sub>a</sub><sup>b</sup></span></div>
+      <p><b>Perché (facile):</b> chiamo A(x) l'area da a fino a x. Se sposto x di un pochino h, aggiungo una striscia sottile alta circa f(x) e larga h: A(x + h) − A(x) ≈ f(x) · h. Divido per h e faccio il limite per h → 0: A′(x) = f(x). Quindi l'area A è una primitiva di f! E A(a) = 0, da cui A(b) = F(b) − F(a).</p>
+      <div class="math left"><span class="box thief"><b>Funzione integrale.</b> F(x) = <span class="sig"><span>x</span><b>∫</b><span>a</span></span> f(t) dt ha derivata F′(x) = f(x).</span></div>
+      <div class="math left"><b>Teorema della media</b> <span class="tag mem">a memoria</span>: se f è continua su [a, b], esiste c in [a, b] con <span class="fr"><span>1</span><span>b − a</span></span> <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = f(c). L'altezza media del grafico è raggiunta da qualche parte.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Proprietà e trucchi <span class="tag cap">facili</span></div>
+      <h2>Cosa ti serve all'esame</h2>
+      <div class="steps">
+        <div class="step"><h3>Linearità e additività</h3><p>∫ (a f + b g) = a ∫ f + b ∫ g. Se a &lt; c &lt; b, l'integrale da a a b = da a a c + da c a b (spezzo l'area).</p></div>
+        <div class="step"><h3>Funzioni dispari su [−a, a]</h3><p>Se f(−x) = −f(x), l'integrale da −a ad a fa 0: l'area sopra e quella sotto si cancellano.</p></div>
+        <div class="step"><h3>Area vera (sempre positiva)</h3><p>Se f cambia segno, spezza nei punti dove f = 0 e prendi il valore assoluto di ogni pezzo. Area tra due curve: ∫ (sopra − sotto) dx.</p></div>
+        <div class="step"><h3>Sostituzione: cambia anche gli estremi</h3><p>Se pongo t = g(x), gli estremi diventano g(a) e g(b). Così non devi tornare alla x.</p></div>
+        <div class="step"><h3>Integrali impropri</h3><p>Se un estremo è ±∞: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> f dx = <span class="lim">lim<span>M→+∞</span></span> <span class="sig"><span>M</span><b>∫</b><span>1</span></span> f dx. Come le serie: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> 1/xᵖ dx converge solo se p &gt; 1.</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="sig"><span>2</span><b>∫</b><span>0</span></span> (x² + 1) dx</h2>
+      <div class="steps" id="guided-integrali-definiti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Frazioni tipo 1/3 vanno bene. Per +∞ scrivi <b>inf</b>.</p>
+      <div id="ex-integrali-definiti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Integrale definito = limite delle somme di rettangoli per n → +∞. Sotto l'asse conta col meno.</li>
+        <li>Teorema fondamentale: ∫<sub>a</sub><sup>b</sup> f dx = F(b) − F(a). Funzione integrale: (∫<sub>a</sub><sup>x</sup> f(t) dt)′ = f(x).</li>
+        <li>Media: esiste c con f(c) = (1/(b − a)) ∫<sub>a</sub><sup>b</sup> f dx.</li>
+        <li>Dispari su [−a, a] ⇒ 0. Area tra curve: ∫ (sopra − sotto). Sostituzione: cambio gli estremi.</li>
+        <li>Improprio: limite per M → +∞. ∫<sub>1</sub><sup>+∞</sup> 1/xᵖ converge ⇔ p &gt; 1.</li>
+      </ul>
+      <div data-copy="integrali-definiti"></div>
+    </section>
+  </div>
+
   <footer>Lavagna del tutor di Analisi T-1 · fonti: lavagne di Mughetti e Albano, dispensa Unibo (Arcozzi-Galeotti) · esame 25 gennaio 2027</footer>
 </div>
 
@@ -2001,6 +2177,97 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     { id:'e7', type:'num', lbl:'x', q:'f(x) = x³ − 6x²: in quale x c\'è il flesso?', a:2, hint:'f″(x) = 6x − 12.', sol:'6x − 12 = 0, x = 2, e f″ cambia segno lì.' },
     { id:'e8', type:'choice', q:'f(x) = x⁴ ha f″(0) = 0. In x = 0 c\'è un flesso?', a:1, opts:['sì','no: f″ = 12x² non cambia segno','non si può dire'], hint:'Guarda il segno di f″ = 12x² prima e dopo 0.', sol:'12x² ≥ 0 da tutte e due le parti: sempre ∪, niente flesso. In 0 c\'è un minimo.' },
     { id:'e9', type:'choice', q:'Se f′(x) &gt; 0 per ogni x in (a, b), allora su (a, b) f è…', a:0, opts:['crescente','concava verso l\'alto','positiva'], hint:'f′ è la pendenza.', sol:'Crescente (conseguenza di Lagrange). Positiva e concava sono altre cose: segno di f e di f″.' }
+  ];
+
+  /* ===== capitolo 13: Integrali indefiniti ===== */
+  order.push('integrali-indefiniti'); NAMES['integrali-indefiniti'] = '13 Integrali indefiniti';
+  const II = [
+    { F:x=>x*x, f:x=>2*x, x0:1, xr:[-2.5,2.5], yr:[-4,8], n:'2x', Fn:'x²' },
+    { F:Math.sin, f:Math.cos, x0:0.8, xr:[-4,4], yr:[-4,4.5], n:'cos x', Fn:'sin x' },
+    { F:x=>x>0?Math.log(x):NaN, f:x=>1/x, x0:1, xr:[0,5], yr:[-5,5], n:'1/x', Fn:'ln x' }
+  ];
+  draws['integrali-indefiniti'] = () => {
+    const c = II[+$('iiS').value], C = (+$('iiC').value)/10, m = c.f(c.x0);
+    const fns = [-2,-1,0,1,2].map(k => ({f:x=>c.F(x)+k, color:'--muted', width:1}));
+    fns.push({f:x=>c.F(x)+C, color:'--thief', width:2.5});
+    fns.push({f:x=>c.F(c.x0)+C+m*(x-c.x0), color:'--cop', dash:true, width:1.5});
+    plotF($('plotII'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns, points:[{x:c.x0, y:c.F(c.x0)+C, color:'--cop'}] });
+    $('iiOut').innerHTML = 'F(x) = '+c.Fn+' '+(C<0?'− '+it(-C,1):'+ '+it(C,1))+' · pendenza in x₀ = '+it(c.x0,1)+': <b class="cop">'+it(m,3)+'</b> = f(x₀), qualunque sia C';
+  };
+  $('iiS').addEventListener('change', () => draws['integrali-indefiniti']());
+  $('iiC').addEventListener('input', () => draws['integrali-indefiniti']());
+
+  guided('integrali-indefiniti', 'lavagna-integrali-indefiniti', [
+    { h:'Passo 1 · Per parti: chi derivo (f) e chi integro (g′)?', type:'choice', ans:0,
+      opts:['f = x (da derivare), g′ = eˣ (da integrare)','f = eˣ, g′ = x','non serve, è immediato'],
+      ok:'Giusto: derivata di x è 1 (più semplice), e eˣ integrato resta eˣ.', bad:'Il polinomio derivato si semplifica. eˣ integrato resta uguale.' },
+    { h:'Passo 2 · f′ = 1 e g = eˣ. Applico ∫ f g′ = f g − ∫ f′ g:', type:'choice', ans:1,
+      opts:['x eˣ + ∫ eˣ dx','x eˣ − ∫ eˣ dx','eˣ − ∫ x dx'],
+      ok:'Esatto: f g = x eˣ, e ∫ f′ g = ∫ 1 · eˣ dx.', bad:'f g = x · eˣ; f′ g = 1 · eˣ; in mezzo c\'è il meno.' },
+    { h:'Passo 3 · ∫ eˣ dx = eˣ. Quindi il risultato è:', type:'choice', ans:2,
+      opts:['x eˣ + eˣ + C','x eˣ + C','x eˣ − eˣ + C'],
+      ok:'Sì.', bad:'x eˣ − (eˣ) + C.' },
+    { h:'Passo 4 · Controllo derivando: (x eˣ − eˣ)′ = eˣ + x eˣ − eˣ = ? Quanto vale in x = 1, se scrivo il risultato come k · e (scrivi k)?', type:'nums', ans:[1],
+      html:'(x eˣ − eˣ)′ in x = 1 = '+inp('k','3em')+' · e',
+      ok:'Perfetto: la derivata è x eˣ, che in x = 1 vale e. Torna la funzione di partenza: il risultato è giusto.', bad:'eˣ e −eˣ si cancellano: resta x eˣ. In x = 1 vale 1 · e.' }
+  ], '<b>Fatto!</b> ∫ x eˣ dx = x eˣ − eˣ + C = (x − 1) eˣ + C. Controllo: (x eˣ − eˣ)′ = x eˣ ✓.');
+
+  EX['integrali-indefiniti'] = [
+    { id:'e1', type:'choice', q:'∫ (3x² + 2x) dx', a:0, opts:['x³ + x² + C','6x + 2 + C','x³ + 2x² + C'], hint:'xᵃ → x<sup>a+1</sup>/(a + 1), pezzo per pezzo.', sol:'3 · x³/3 + 2 · x²/2 = x³ + x² + C.' },
+    { id:'e2', type:'choice', q:'∫ cos(2x) dx', a:1, opts:['sin(2x) + C','sin(2x)/2 + C','2 sin(2x) + C'], hint:'f(ax + b) → F(ax + b)/a.', sol:'sin(2x)/2 + C. Controllo: derivata = cos(2x) · 2 / 2 ✓.' },
+    { id:'e3', type:'choice', q:'∫ '+FR('2x','x² + 1')+' dx', a:2, opts:['2x · arctan x + C','arctan(x²) + C','ln(x² + 1) + C'], hint:'Sopra c\'è la derivata di quello che sta sotto.', sol:'g′/g con g = x² + 1: ln(x² + 1) + C.' },
+    { id:'e4', type:'choice', q:'∫ x cos x dx', a:0, opts:['x sin x + cos x + C','x sin x − cos x + C','(x²/2) sin x + C'], hint:'Per parti: f = x, g′ = cos x, quindi g = sin x.', sol:'x sin x − ∫ sin x dx = x sin x + cos x + C.' },
+    { id:'e5', type:'choice', q:'∫ ln x dx', a:1, opts:['1/x + C','x ln x − x + C','x ln x + C'], hint:'Per parti con ln x · 1: f = ln x, g′ = 1.', sol:'x ln x − ∫ x · (1/x) dx = x ln x − x + C.' },
+    { id:'e6', type:'num', lbl:'F(1)', q:'F(x) = ∫ 6x² dx, scelta con F(0) = 0. Quanto vale F(1)?', a:2, hint:'Primitiva: 2x³ + C. F(0) = 0 dice C = 0.', sol:'F(x) = 2x³, F(1) = 2.' },
+    { id:'e7', type:'num', lbl:'A', q:FR('1','(x − 1)(x + 1)')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+'. Quanto vale A?', a:0.5, hint:'Denominatore comune: A(x + 1) + B(x − 1) = 1. Metti x = 1.', sol:'x = 1: 2A = 1, A = 1/2. (Con x = −1: B = −1/2.)' },
+    { id:'e8', type:'choice', q:'∫ '+FR('eˣ','1 + eˣ')+' dx', a:0, opts:['ln(1 + eˣ) + C','eˣ · ln(1 + eˣ) + C','arctan(eˣ) + C'], hint:'La derivata di 1 + eˣ è eˣ.', sol:'g′/g: ln(1 + eˣ) + C.' },
+    { id:'e9', type:'choice', q:'∫ '+FR('1','1 + x²')+' dx', a:2, opts:['ln(1 + x²) + C','tan x + C','arctan x + C'], hint:'Tabellina.', sol:'arctan x + C.' }
+  ];
+
+  /* ===== capitolo 14: Integrali definiti ===== */
+  order.push('integrali-definiti'); NAMES['integrali-definiti'] = '14 Integrali definiti';
+  const ID = [
+    { f:x=>x*x, a:0, b:2, ex:8/3, exs:'8/3 ≈ 2,6667', xr:[-0.3,2.3], yr:[-0.5,4.5] },
+    { f:Math.sin, a:0, b:Math.PI, ex:2, exs:'2', xr:[-0.3,3.5], yr:[-0.3,1.3] },
+    { f:Math.exp, a:0, b:1, ex:Math.E-1, exs:'e − 1 ≈ 1,7183', xr:[-0.2,1.2], yr:[-0.3,3] }
+  ];
+  draws['integrali-definiti'] = () => {
+    const c = ID[+$('idS').value], n = +$('idN').value, w = (c.b-c.a)/n;
+    const step = x => { if (x < c.a || x > c.b) return 0; const k = Math.min(n-1, Math.floor((x-c.a)/w)); return c.f(c.a + (k+0.5)*w); };
+    let S = 0; for (let k=0;k<n;k++) S += c.f(c.a+(k+0.5)*w)*w;
+    plotF($('plotID'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], area:{f:step, a:c.a, b:c.b, color:'--thief'},
+      fns:[{f:step, color:'--thief', width:1}, {f:c.f, color:'--ink', width:2.5}] });
+    $('idOut').innerHTML = 'Somma di '+n+' rettangoli = <b class="thief">'+it(S,4)+'</b> · area vera = <b class="cop">'+c.exs+'</b><br><span style="font-size:1rem">Differenza: '+it(Math.abs(S-c.ex),4)+'. Più rettangoli, più si avvicina.</span>';
+  };
+  $('idS').addEventListener('change', () => draws['integrali-definiti']());
+  $('idN').addEventListener('input', () => draws['integrali-definiti']());
+
+  const INT = (a,b) => '<span class="sig"><span>'+b+'</span><b>∫</b><span>'+a+'</span></span>';
+  guided('integrali-definiti', 'lavagna-integrali-definiti', [
+    { h:'Passo 1 · Primitiva di x² + 1:', type:'choice', ans:1,
+      opts:['2x + C','x³/3 + x','x³ + x'],
+      ok:'Giusto. Per l\'integrale definito la C non serve: si cancella in F(b) − F(a).', bad:'xᵃ → x<sup>a+1</sup>/(a + 1). E 1 → x.' },
+    { h:'Passo 2 · F(2) = 2³/3 + 2 = ?', type:'nums', ans:[14/3],
+      html:'F(2) = '+inp('F(2)'),
+      ok:'Sì: 8/3 + 6/3 = 14/3.', bad:'8/3 + 2 = 8/3 + 6/3.' },
+    { h:'Passo 3 · F(0) = 0³/3 + 0 = ?', type:'nums', ans:[0],
+      html:'F(0) = '+inp('F(0)'),
+      ok:'Esatto.', bad:'Metti 0 al posto di x.' },
+    { h:'Passo 4 · Risultato: F(2) − F(0).', type:'nums', ans:[14/3],
+      html:INT(0,2)+' (x² + 1) dx = '+inp('risultato'),
+      ok:'Perfetto: 14/3 ≈ 4,67.', bad:'14/3 − 0.' }
+  ], '<b>Fatto!</b> '+INT(0,2)+' (x² + 1) dx = [x³/3 + x]<sub>0</sub><sup>2</sup> = 14/3 − 0 = 14/3. Schema: primitiva → F(b) → F(a) → sottrai.');
+
+  EX['integrali-definiti'] = [
+    { id:'e1', type:'num', lbl:'integrale', q:INT(0,1)+' x² dx', a:1/3, hint:'Primitiva x³/3.', sol:'1/3 − 0 = 1/3.' },
+    { id:'e2', type:'num', lbl:'integrale', q:INT(0,'π')+' sin x dx', a:2, hint:'Primitiva −cos x. cos π = −1.', sol:'[−cos x] da 0 a π = −(−1) − (−1) = 2.' },
+    { id:'e3', type:'num', lbl:'integrale', q:INT(1,'e')+' '+FR('1','x')+' dx', a:1, hint:'Primitiva ln x.', sol:'ln e − ln 1 = 1 − 0 = 1.' },
+    { id:'e4', type:'num', lbl:'integrale', q:INT('−1',1)+' x³ dx', a:0, hint:'x³ è dispari.', sol:'Dispari su [−1, 1]: 0. Anche col conto: 1/4 − 1/4 = 0.' },
+    { id:'e5', type:'num', lbl:'integrale', q:INT(0,'ln 2')+' eˣ dx', a:1, hint:'Primitiva eˣ. e<sup>ln 2</sup> = 2.', sol:'2 − 1 = 1.' },
+    { id:'e6', type:'num', lbl:'area', q:'Area tra y = x e y = x² per x tra 0 e 1', a:1/6, hint:'Tra 0 e 1, x sta sopra x². Area = '+INT(0,1)+' (x − x²) dx.', sol:'1/2 − 1/3 = 1/6.' },
+    { id:'e7', type:'num', lbl:'F′(2)', q:'F(x) = '+INT(0,'x')+' t² dt. Quanto vale F′(2)?', a:4, hint:'Teorema fondamentale: F′(x) = f(x).', sol:'F′(x) = x², F′(2) = 4. Non serve calcolare l\'integrale.' },
+    { id:'e8', type:'num', lbl:'integrale', q:INT(0,1)+' 2x (x² + 1)³ dx', a:15/4, hint:'Sostituzione t = x² + 1, dt = 2x dx. Estremi: t da 1 a 2.', sol:INT(1,2)+' t³ dt = [t⁴/4] da 1 a 2 = 4 − 1/4 = 15/4.' },
+    { id:'e9', type:'num', lbl:'integrale', q:INT(1,'+∞')+' '+FR('1','x²')+' dx', a:1, hint:'Integra da 1 a M, poi fai il limite per M → +∞.', sol:'[−1/x] da 1 a M = 1 − 1/M → 1 per M → +∞.' }
   ];
 
   Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));

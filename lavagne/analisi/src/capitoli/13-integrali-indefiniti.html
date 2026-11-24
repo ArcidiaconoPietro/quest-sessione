@@ -1,0 +1,97 @@
+  <div class="chapter" data-ch="integrali-indefiniti">
+    <section class="board">
+      <div class="eyebrow">Capitolo 13 · blocco del 10/12 · Albano lezioni 12 e 13 novembre · dispensa pp. 127-140</div>
+      <h2>Gli integrali indefiniti</h2>
+      <p class="big">Derivare: da f trovo f′. Integrare è il viaggio al contrario: ti do f, trovi una funzione F che derivata dà f. F si chiama <b>primitiva</b>.</p>
+      <div class="math">∫ f(x) dx = F(x) + C &nbsp; significa &nbsp; F′(x) = f(x)</div>
+      <p>A cosa serve: è il passo che ti serve per calcolare aree (capitolo 14) e per risolvere le equazioni differenziali (capitolo 15). All'esame c'è quasi sempre un integrale da calcolare.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Perché + C · prima guardiamo <span class="tag cap">facile</span></div>
+      <h2>Tante primitive, tutte "parallele"</h2>
+      <p>Se F è una primitiva, anche F + 1, F − 3, F + C vanno bene: la derivata di una costante è 0. Nel grafico: sposta C, la curva sale e scende, ma nel punto x₀ la pendenza resta la stessa, e vale proprio f(x₀).</p>
+      <canvas id="plotII" aria-label="Famiglia di primitive"></canvas>
+      <div class="controls">
+        <label for="iiS">f(x) = <select id="iiS">
+          <option value="0">2x &nbsp;(primitiva x² + C)</option>
+          <option value="1">cos x &nbsp;(primitiva sin x + C)</option>
+          <option value="2">1/x, x &gt; 0 &nbsp;(primitiva ln x + C)</option>
+        </select></label>
+        <label for="iiC">C: <input type="range" id="iiC" min="-30" max="30" value="10"></label>
+      </div>
+      <div class="readout" id="iiOut"></div>
+      <div class="note">E sono le uniche: due primitive della stessa f hanno differenza con derivata 0, quindi costante (conseguenza di Lagrange, capitolo 11). Vale su un intervallo.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Integrali immediati <span class="tag mem">a memoria</span> <span class="tag cap">sono le derivate lette al contrario</span></div>
+      <h2>La tabellina</h2>
+      <div class="when">
+        <div>∫ xᵃ dx = <span class="fr"><span>x<sup>a+1</sup></span><span>a + 1</span></span> + C &nbsp; (a ≠ −1)</div>
+        <div>∫ <span class="fr"><span>1</span><span>x</span></span> dx = ln |x| + C</div>
+        <div>∫ eˣ dx = eˣ + C</div>
+        <div>∫ sin x dx = −cos x + C</div>
+        <div>∫ cos x dx = sin x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>1 + x²</span></span> dx = arctan x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>cos² x</span></span> dx = tan x + C</div>
+        <div>∫ <span class="fr"><span>1</span><span>√(1 − x²)</span></span> dx = arcsin x + C</div>
+      </div>
+      <p>Linearità <span class="tag cap">facile</span>: ∫ (a f + b g) dx = a ∫ f dx + b ∫ g dx. <b>Il trucco per controllare sempre:</b> deriva il risultato. Se torna f, è giusto.</p>
+      <p><b>Immediati "generalizzati"</b>: se dentro c'è g(x) e fuori c'è g′(x), è la catena al contrario. ∫ g′(x)/g(x) dx = ln |g(x)| + C, ∫ g′(x) e<sup>g(x)</sup> dx = e<sup>g(x)</sup> + C. Esempio: ∫ 2x/(x² + 1) dx = ln(x² + 1) + C.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 1 <span class="tag cap">è la catena al contrario</span></div>
+      <h2>Sostituzione</h2>
+      <p>Pongo t = g(x), quindi dt = g′(x) dx. Riscrivo tutto con t, integro, rimetto x.</p>
+      <div class="math left">∫ cos(3x) dx: &nbsp; t = 3x, dt = 3 dx, dx = dt/3 &nbsp;→&nbsp; ∫ cos t · dt/3 = (1/3) sin t + C = (1/3) sin(3x) + C</div>
+      <p>Regola pratica: con f(ax + b) dentro, il risultato è F(ax + b)/a. Esempio: ∫ e<sup>2x</sup> dx = e<sup>2x</sup>/2 + C.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 2 <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è facile</span></div>
+      <h2>Per parti</h2>
+      <div class="math"><span class="box cop">∫ f(x) g′(x) dx = f(x) g(x) − ∫ f′(x) g(x) dx</span></div>
+      <p><b>Perché (una riga):</b> (f g)′ = f′g + f g′ (regola del prodotto). Integro tutti e due i lati: f g = ∫ f′g dx + ∫ f g′ dx. Sposto un pezzo e ho la formula.</p>
+      <p><b>Chi scegliere come f (da derivare):</b> quella che derivata diventa più semplice. Polinomi: da derivare (x → 1). eˣ, sin, cos: da integrare (restano uguali). ln x e arctan x: sempre da derivare (diventano 1/x e 1/(1 + x²)).</p>
+      <div class="math left">∫ ln x dx = ∫ ln x · 1 dx: f = ln x, g′ = 1 → x ln x − ∫ (1/x) · x dx = x ln x − x + C</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Metodo 3 · funzioni razionali <span class="tag cap">da capire con lo schema</span></div>
+      <h2>Fratti semplici</h2>
+      <p>Per ∫ P(x)/Q(x) dx con polinomi:</p>
+      <div class="steps">
+        <div class="step"><h3>1 · Se grado di P ≥ grado di Q</h3><p>Prima faccio la divisione tra polinomi: P/Q = quoziente + resto/Q.</p></div>
+        <div class="step"><h3>2 · Scompongo Q</h3><p>Radici distinte: <span class="fr"><span>1</span><span>(x − a)(x − b)</span></span> = <span class="fr"><span>A</span><span>x − a</span></span> + <span class="fr"><span>B</span><span>x − b</span></span>. Trovo A e B facendo il denominatore comune e uguagliando i numeratori.</p></div>
+        <div class="step"><h3>3 · Integro i pezzi</h3><p>∫ A/(x − a) dx = A ln |x − a| + C. Se Q ha radice doppia: ∫ 1/(x − a)² dx = −1/(x − a) + C. Se Q non ha radici (Δ &lt; 0): si arriva a un arctan.</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>∫ x eˣ dx per parti</h2>
+      <div class="steps" id="guided-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Ricorda il controllo: deriva la risposta che scegli e guarda se torna la funzione di partenza.</p>
+      <div id="ex-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>∫ f dx = F + C ⇔ F′ = f. Controllo: derivo il risultato.</li>
+        <li>Tabellina: xᵃ → x<sup>a+1</sup>/(a + 1); 1/x → ln|x|; eˣ → eˣ; sin → −cos; cos → sin; 1/(1 + x²) → arctan x; 1/cos² x → tan x.</li>
+        <li>g′/g → ln|g|; f(ax + b) → F(ax + b)/a.</li>
+        <li>Per parti: ∫ f g′ = f g − ∫ f′ g. Derivo polinomi, ln, arctan; integro eˣ, sin, cos.</li>
+        <li>Razionali: divisione se serve → A/(x − a) + B/(x − b) → ln.</li>
+      </ul>
+      <div data-copy="integrali-indefiniti"></div>
+    </section>
+  </div>
