@@ -1,0 +1,1605 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Lavagna di Analisi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: una colonna di lettura stretta, come una lavagna che scorre; un capitolo alla volta, indice in alto */
+:root {
+  --bg: #eef2ef;
+  --board: #ffffff;
+  --ink: #1d2a24;
+  --muted: #5b6b63;
+  --line: #d3ddd7;
+  --cop: #2f62c9;      /* blu: carabinieri, riferimenti */
+  --thief: #b67800;    /* giallo: la successione da studiare */
+  --ok: #1f8a4c;
+  --bad: #c2412f;
+  --soft: #e3ebe6;
+  --chalk: "Caveat", "Comic Sans MS", cursive;
+  --text: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15201b; --board: #1e2d26; --ink: #ecf2ee; --muted: #a3b5ab; --line: #34473e;
+    --cop: #86b2ff; --thief: #ffc94d; --ok: #5fd08f; --bad: #ff8b78; --soft: #263830;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15201b; --board: #1e2d26; --ink: #ecf2ee; --muted: #a3b5ab; --line: #34473e;
+  --cop: #86b2ff; --thief: #ffc94d; --ok: #5fd08f; --bad: #ff8b78; --soft: #263830;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 60px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.chapter { display: flex; flex-direction: column; gap: 22px; }
+header h1 { font-family: var(--chalk); font-size: 2.6rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); }
+nav.chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.chapters a {
+  font-size: .9rem; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--muted); background: var(--board);
+}
+nav.chapters a.on { background: var(--ink); color: var(--board); border-color: var(--ink); }
+nav.chapters a .tick { color: var(--ok); font-weight: 700; }
+section.board {
+  background: var(--board); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h2 { font-family: var(--chalk); font-size: 2rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.big { font-size: 1.15rem; }
+.cop { color: var(--cop); font-weight: 700; }
+.thief { color: var(--thief); font-weight: 700; }
+.math { font-size: 1.35rem; display: flex; align-items: center; justify-content: center; gap: .5em; flex-wrap: wrap; padding: 8px 0; }
+.math.left { justify-content: flex-start; }
+.fr { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.2; }
+.fr > span { padding: 0 .25em; }
+.fr > span + span { border-top: 2px solid currentColor; }
+.rt { white-space: nowrap; }
+.rt sup { font-size: .6em; margin-right: -.3em; vertical-align: .85em; }
+.rt .ov { border-top: 2px solid currentColor; padding: 0 .15em; }
+.box { border-radius: 8px; padding: 2px 8px; }
+.lim { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.05; vertical-align: middle; margin-right: .2em; }
+.lim > span { font-size: .55em; white-space: nowrap; }
+.box.cop { background: color-mix(in srgb, var(--cop) 14%, transparent); }
+.box.thief { background: color-mix(in srgb, var(--thief) 18%, transparent); }
+.note { background: var(--soft); border-radius: 10px; padding: 12px 14px; }
+.warn { border: 2px dashed var(--bad); border-radius: 10px; padding: 12px 14px; }
+canvas { width: 100%; height: 300px; display: block; border-radius: 10px; background: var(--soft); }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: .95rem; }
+input[type=range] { width: 180px; max-width: 100%; accent-color: var(--thief); }
+select { font: inherit; font-size: .95rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); max-width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .9rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+button {
+  font: inherit; font-size: .95rem; cursor: pointer; border-radius: 10px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--board); color: var(--ink);
+}
+button.primary { background: var(--ink); color: var(--board); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid var(--thief); outline-offset: 2px; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; }
+.step h3 { margin: 0; font-size: 1rem; }
+input[type=text] {
+  font: inherit; font-size: 1.1rem; width: 5.5em; padding: 4px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink); text-align: center;
+}
+.feedback { font-size: .95rem; min-height: 1.4em; }
+.feedback.ok { color: var(--ok); font-weight: 700; }
+.feedback.bad { color: var(--bad); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ex { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.ex:first-child { border-top: 0; padding-top: 0; }
+.ex .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.badge { font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.badge.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); font-weight: 700; }
+ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; }
+.choice button.right { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.choice button.wrong { border-color: var(--bad); color: var(--bad); }
+table.vals { border-collapse: collapse; font-variant-numeric: tabular-nums; width: 100%; }
+table.vals td, table.vals th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: right; }
+table.vals th { color: var(--muted); font-weight: 700; font-size: .9rem; }
+.scroll { overflow-x: auto; }
+.readout { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.next { display: flex; justify-content: flex-end; }
+footer { color: var(--muted); font-size: .9rem; text-align: center; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: up .35s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+.sig { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; vertical-align: middle; margin-right: .15em; }
+.sig > b { font-size: 1.5em; font-weight: 400; line-height: .9; }
+.sig > span { font-size: .55em; white-space: nowrap; }
+.when { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 8px 14px; }
+.when > div { background: var(--soft); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+@media (max-width: 520px) { .when { grid-template-columns: 1fr; } }
+.tag { display: inline-block; font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--cop) 15%, transparent); color: var(--cop); }
+.tag.mem { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+.tag.cap { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lavagna di Analisi</h1>
+    <p>Una lavagna che cresce: ogni argomento diventa un capitolo. Prima a cosa serve, poi il disegno, poi tocca a te. I capitoli con ✓ hanno l'esercizio guidato finito.</p>
+  </header>
+
+  <nav class="chapters" aria-label="Capitoli" id="nav">
+    <a href="#carabinieri" data-ch="carabinieri">1 · Due carabinieri</a>
+    <a href="#radici" data-ch="radici">2 · Radici n-esime</a>
+    <a href="#nepero" data-ch="nepero">3 · Il numero e</a>
+    <a href="#rapporto" data-ch="rapporto">4 · Criterio del rapporto</a>
+    <a href="#sottosuccessioni" data-ch="sottosuccessioni">5 · Sottosuccessioni</a>
+    <a href="#serie" data-ch="serie">6 · Serie numeriche</a>
+    <a href="#serie-parametro" data-ch="serie-parametro">7 · Serie con parametro</a>
+    <a href="#limiti-funzioni" data-ch="limiti-funzioni">8 · Limiti di funzioni</a>
+    <a href="#continuita-derivata" data-ch="continuita-derivata">9 · Continuità e derivata</a>
+  </nav>
+
+  <!-- ================= CAPITOLO 1 ================= -->
+  <div class="chapter" data-ch="carabinieri">
+    <section class="board">
+      <div class="eyebrow">Capitolo 1 · blocco del 12/11</div>
+      <h2>Il teorema dei due carabinieri</h2>
+      <p class="big">Serve quando una successione <b>non sta ferma</b>, perché dentro c'è un pezzo che oscilla (sin n, cos n, (−1)ⁿ), e quindi non puoi calcolare il limite direttamente.</p>
+      <p>Il trucco: non la calcoli. La <b>chiudi in mezzo</b> a due successioni facili che, per n → +∞, hanno lo stesso limite.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea in una storia</div>
+      <p>Un <span class="thief">ladro</span> cammina zigzagando. Ha un <span class="cop">carabiniere</span> a sinistra e un <span class="cop">carabiniere</span> a destra che lo tengono per le braccia.</p>
+      <p>Se i due carabinieri arrivano <b>tutti e due</b> in caserma, il ladro in mezzo ci arriva per forza. Non importa quanto zigzaga.</p>
+      <div class="note">Nel disegno il ladro è <span class="thief">sin n diviso n</span>. Trascina la barra: i punti gialli oscillano, ma restano schiacciati tra le due linee blu, che per n → +∞ tendono a 0.</div>
+      <canvas id="plot1" aria-label="Grafico: sin n su n tra meno 1 su n e 1 su n"></canvas>
+      <div class="controls">
+        <label for="n1">Quanti termini: <input type="range" id="n1" min="5" max="80" value="30"> <b id="n1v">30</b></label>
+        <label for="c1"><input type="checkbox" id="c1" checked> mostra i carabinieri</label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>ladro: sin n / n</span><span><i style="background:var(--cop)"></i>carabinieri: −1/n e 1/n</span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Come si costruiscono i carabinieri</h2>
+      <p>Esempio: <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span>. Premi "passo successivo".</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Parti da quello che sai sempre</h3>
+          <p>Il seno sta sempre tra −1 e 1, per ogni n.</p>
+          <div class="math"><span class="box cop">−1</span> ≤ <span class="box thief">sin n</span> ≤ <span class="box cop">1</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Costruisci la tua espressione</h3>
+          <p>Nella successione il seno è diviso per n. Divido <b>tutti e tre</b> i pezzi per n. Siccome n è positivo, i segni ≤ non cambiano.</p>
+          <div class="math"><span class="box cop"><span class="fr"><span>−1</span><span>n</span></span></span> ≤ <span class="box thief"><span class="fr"><span>sin n</span><span>n</span></span></span> ≤ <span class="box cop"><span class="fr"><span>1</span><span>n</span></span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Dove vanno i carabinieri?</h3>
+          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Tutti e due vanno a 0.</p>
+          <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> −1/n = 0</span> <span class="box cop"><span class="lim">lim<span>n→+∞</span></span> 1/n = 0</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 4 · Conclusione</h3>
+          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì.</p>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> sin n / n = 0</span></div>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attenzione</div>
+      <h2>Quando NON funziona</h2>
+      <p>Quando n → +∞, i due carabinieri devono andare nello <b>stesso</b> posto. Se uno va a 0 e l'altro a 5, il ladro può stare ovunque in mezzo e non concludi niente.</p>
+      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre:</p>
+      <canvas id="plot2" aria-label="Grafico: cos n tra meno 1 e 1, non converge"></canvas>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Quanto fa questo limite?</h2>
+      <div class="math"><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>3 + cos n</span><span>n</span></span></div>
+      <div class="steps" id="guided-carabinieri"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi solo il risultato. Se ti blocchi, apri prima l'aiuto, poi la soluzione.</p>
+      <div id="ex-carabinieri"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Quando lo uso:</b> c'è sin n, cos n o (−1)ⁿ, cioè un pezzo che oscilla ma resta limitato.</li>
+        <li><b>Ricetta:</b> parto da −1 ≤ sin n ≤ 1 (o cos), faccio la stessa operazione a tutti e tre i pezzi, poi guardo dove vanno i due estremi.</li>
+        <li><b>Regola d'oro:</b> per n → +∞ i due carabinieri devono avere lo <b>stesso</b> limite.</li>
+        <li><b>Attenzione ai segni:</b> se moltiplico o divido per un numero negativo, i ≤ si girano. Con n positivo non succede.</li>
+      </ul>
+      <div data-copy="carabinieri"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 2 ================= -->
+  <div class="chapter" data-ch="radici" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 2 · blocco del 12/11 · Mughetti lez. 5 pp. 51-63 e lez. 6 pp. 23-31</div>
+      <h2>Le radici n-esime</h2>
+      <p class="big">Qui la radice ha come indice <b>n stesso</b>: <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> vuol dire radice quadrata, poi cubica, poi quarta… sempre più "forte".</p>
+      <p>Serve per due motivi: negli esercizi d'esame compaiono limiti come <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>, e il <b>criterio della radice per le serie</b>, che fai subito dopo (16/11), è costruito tutto su questo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Solo due fatti da sapere</div>
+      <h2>Per n → +∞ tutte e due fanno 1</h2>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1</span><span style="font-size:1rem">per qualsiasi numero fisso a &gt; 0</span></div>
+      <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1</span><span style="font-size:1rem">anche se dentro c'è n che cresce</span></div>
+      <p><b>Perché, a intuito:</b> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> è a elevato alla 1/n. Quando n → +∞ l'esponente 1/n diventa quasi 0, e qualsiasi numero elevato a 0 fa 1. Con n dentro è una gara: n cresce, ma la radice schiaccia molto più forte, e vince la radice.</p>
+      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1.</p>
+      <canvas id="plotR" aria-label="Grafico: radice n-esima di a e radice n-esima di n che tendono a 1"></canvas>
+      <div class="controls">
+        <label for="rA">Numero a: <select id="rA"><option>2</option><option>10</option><option>100</option><option selected>2000</option></select></label>
+        <label for="rN">Fino a n = <input type="range" id="rN" min="10" max="200" value="60"> <b id="rNv">60</b></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>radice n-esima di a</span><span><i style="background:var(--cop)"></i>radice n-esima di n</span><span>linea tratteggiata: 1</span></div>
+      <div class="scroll"><table class="vals" id="rTab"></table></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'esercizio del prof · lez. 6 p. 23 · prima guardiamo i numeri</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></h2>
+      <p class="big">Prima di fare conti, capiamo <b>cosa succede</b>. Muovi la barra e guarda i numeri veri.</p>
+      <div class="controls"><label for="pN">n = <input type="range" id="pN" min="1" max="30" value="1"> <b id="pNv">1</b></label></div>
+      <div class="scroll"><table class="vals" id="pTab"></table></div>
+      <div class="note" id="pNote"></div>
+      <p><b>Cosa noti:</b> quando n cresce, 3ⁿ diventa enormemente più grande di 2ⁿ. Il 2ⁿ conta sempre meno, quasi zero. Quindi dentro la radice è come se ci fosse solo 3ⁿ, e <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3. Per questo il risultato si avvicina a 3.</p>
+      <p>Questa è l'<b>intuizione</b>. All'esame però "è quasi solo 3ⁿ" non basta: bisogna dimostrarlo. Lo si fa con i carabinieri, qui sotto.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Spiegazione lenta · un passo alla volta</div>
+      <h2>Perché fa 3: la dimostrazione</h2>
+      <p>Premi "passo successivo". Ogni passo dice <b>cosa</b> faccio e <b>perché</b> posso farlo.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · L'obiettivo</h3>
+          <p>Non so calcolare <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> direttamente. Allora cerco due cose facili, una <span class="cop">più piccola</span> e una <span class="cop">più grande</span>, che lo chiudono in mezzo (carabinieri, capitolo 1).</p>
+          <div class="math"><span class="box cop">?</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ <span class="box cop">?</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Il carabiniere sotto: tolgo 2ⁿ</h3>
+          <p>Se a una somma di numeri positivi <b>tolgo</b> un pezzo, diventa più piccola. Tolgo 2ⁿ e resta solo 3ⁿ.</p>
+          <div class="math"><span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span></div>
+          <p>Con i numeri, n = 2: 9 ≤ 4 + 9 = 13. Vero.</p>
+          <div class="warn"><b>Ma perché non 2ⁿ, che è il più piccolo?</b> Anche 2ⁿ ≤ 2ⁿ + 3ⁿ è vero (4 ≤ 13). Ma la radice n-esima di 2ⁿ fa 2, mentre il carabiniere sopra per n → +∞ tende a 3: limiti diversi, e non concludi niente. Il carabiniere sotto non deve essere "il più piccolo dei due pezzi": deve essere più piccolo della <b>somma</b> e avere lo <b>stesso limite</b> del carabiniere sopra. Per questo si tiene il pezzo più grande, 3ⁿ.</div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Il carabiniere sopra: al posto di 2ⁿ metto 3ⁿ</h3>
+          <p>2ⁿ è più piccolo di 3ⁿ. Se sostituisco 2ⁿ con il più grande 3ⁿ, la somma diventa più grande.</p>
+          <div class="math"><span class="box thief">2ⁿ + 3ⁿ</span> ≤ 3ⁿ + 3ⁿ = <span class="box cop">2 · 3ⁿ</span></div>
+          <p>Con i numeri, n = 2: 13 ≤ 9 + 9 = 18. Vero. Perché proprio 3ⁿ? Perché così ho due pezzi uguali, e diventa facilissimo fare la radice.</p>
+        </div>
+        <div class="step" hidden><h3>Passo 4 · Metto insieme i due carabinieri</h3>
+          <div class="math"><span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ <span class="box cop">2 · 3ⁿ</span></div>
+          <p>Ora faccio la radice n-esima di tutti e tre i pezzi. Si può fare: la radice di un numero più grande è più grande, quindi i ≤ restano uguali.</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span></span> ≤ <span class="box thief"><span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></span> ≤ <span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 5 · Il carabiniere sotto vale 3</h3>
+          <p>La radice n-esima smonta la potenza n, come <span class="rt"><sup></sup>√<span class="ov">3²</span></span> = 3 per la radice quadrata. Quindi:</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3</span></div>
+          <p>Vale 3 per ogni n, quindi anche <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3.</p>
+        </div>
+        <div class="step" hidden><h3>Passo 6 · Il carabiniere sopra: spezzo la radice</h3>
+          <p>La radice di un prodotto è il prodotto delle radici:</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3</span></div>
+          <p>Dal fatto numero 1 di questo capitolo: <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> = 1. Quindi:</p>
+          <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3 = 1 · 3 = 3</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 7 · Conclusione con i carabinieri</h3>
+          <p>Per n → +∞ il carabiniere sotto ha limite 3 e il carabiniere sopra ha limite 3. Stesso limite, quindi anche quello in mezzo:</p>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = 3</span></div>
+          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3.</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Ora tocca a te · stesso esercizio, lo rifai tu</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></h2>
+      <p>Rifai i passi che hai appena visto. Se ti blocchi, torna alla spiegazione lenta qui sopra.</p>
+      <div class="steps" id="guided-radici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Regola veloce che ne esce</div>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">aⁿ + bⁿ</span></span> = il più grande tra a e b</span></div>
+      <p>È l'esercizio per casa del prof (lez. 6 p. 30). All'esame però va giustificato con i carabinieri, come sopra.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-radici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1 per a &gt; 0 fisso. <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1. <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n<sup>k</sup></span></span> = 1.</li>
+        <li>Somma dentro la radice: tieni il più grande, carabinieri <b>grande ≤ somma ≤ 2·grande</b>, poi fai la radice.</li>
+        <li><span class="rt"><sup>n</sup>√<span class="ov">2·3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3, e per n → +∞ fa 1 · 3 = 3.</li>
+      </ul>
+      <div data-copy="radici"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 3 ================= -->
+  <div class="chapter" data-ch="nepero" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 3 · blocco del 12/11 · Mughetti lez. 6 p. 42 · dispensa 4.6.4</div>
+      <h2>Il numero e e la forma 1<sup>∞</sup></h2>
+      <p class="big">Serve per una forma indeterminata nuova: quando n → +∞, <b>la base tende a 1 e l'esponente tende a +∞</b>. Sembra che debba fare 1, e invece no.</p>
+      <p>La dimostrazione completa del prof (lez. 6 da p. 45) è <b>facoltativa</b>, l'ha scritto lui. A te serve saper fare i conti.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con i soldi</div>
+      <p>Metti 1 € in banca al 100% di interesse all'anno.</p>
+      <p>Se te lo danno in <b>una</b> volta: 1 · 2 = 2 €. Se te lo danno in <b>n rate</b>, ognuna da 1/n, e ogni rata frutta anche sugli interessi già presi, alla fine hai</p>
+      <div class="math"><span class="box thief">(1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup></span></div>
+      <p>Più rate fai, più guadagni, ma <b>non all'infinito</b>: ti fermi a 2,718… Quel numero si chiama <b>e</b>:</p>
+      <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = e ≈ 2,718</span></div>
+      <canvas id="plotE" aria-label="Grafico: 1 più 1 su n alla n che sale verso e"></canvas>
+      <div class="controls">
+        <label for="eN">Numero di rate n: <input type="range" id="eN" min="1" max="365" value="12"> <b id="eNv">12</b></label>
+      </div>
+      <div class="readout" id="eOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Perché 1<sup>∞</sup> non fa 1</div>
+      <p>È un tiro alla fune: la base è <b>un pelo più di 1</b> e tira verso 1, l'esponente è <b>enorme</b> e tira verso infinito. Chi vince dipende da quanto sono veloci. Quindi può venire qualsiasi cosa: 1, e, e², e<sup>−1</sup>…</p>
+      <div class="warn">Esempio trappola: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>7</sup> = 1, perché l'esponente 7 è fisso. Non è una forma 1<sup>∞</sup>. Controlla sempre che per n → +∞ l'esponente tenda davvero a +∞.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta per 1<sup>∞</sup></div>
+      <h2>Tre passi</h2>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Riconosci la forma</h3>
+          <p>Per n → +∞: la base tende a 1 e l'esponente tende a +∞. Scrivi la base come <b>1 + un pezzo piccolo</b>. Chiamo il pezzo piccolo <span class="thief">u</span>.</p>
+          <div class="math">(1 + <span class="box thief">u</span>)<sup><span class="box cop">esponente</span></sup></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Moltiplica il pezzo piccolo per l'esponente</h3>
+          <p>Calcola il limite per n → +∞ di <span class="thief">u</span> × <span class="cop">esponente</span>. Chiamo il risultato L.</p>
+          <div class="math"><span class="lim">lim<span>n→+∞</span></span> <span class="box thief">u</span> · <span class="box cop">esponente</span> = L</div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Il risultato è e elevato a L</h3>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> (1 + u)<sup>esponente</sup> = e<sup>L</sup></span></div>
+          <p>Prova: in (1 + 1/n)<sup>n</sup> il pezzo è 1/n, l'esponente è n, 1/n · n = 1, quindi e<sup>1</sup> = e. Torna!</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+      <div class="note">Regola rapida: <b><span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup></b>. Per esempio <span class="lim">lim<span>n→+∞</span></span> (1 + 3/n)<sup>n</sup> = e³ e <span class="lim">lim<span>n→+∞</span></span> (1 − 2/n)<sup>n</sup> = e<sup>−2</sup>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Perché la ricetta funziona · facile, 3 passi</div>
+      <h2>Da dove esce "e elevato a L"</h2>
+      <p>Cosa studiare: questo ragionamento è corto, <b>capiscilo</b> e non serve impararlo a memoria. La dimostrazione che e esiste (lez. 6 da p. 45) è lunga e il prof l'ha scritta <b>facoltativa</b>: quella si salta.</p>
+      <p>L'unica cosa da sapere a memoria è la definizione: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>n</sup> = e. L'idea è: "1 + un pezzo piccolo, elevato a <b>1 diviso quel pezzo</b>, fa e".</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · La regola nascosta dentro la definizione</h3>
+          <p>In (1 + 1/n)<sup>n</sup> il pezzo piccolo è 1/n, e l'esponente n è esattamente <b>1 diviso il pezzo piccolo</b>. Questo funziona con qualsiasi pezzo piccolo, non solo con 1/n. Prova con il pezzo 5/n:</p>
+          <div class="scroll"><table class="vals">
+            <tr><th>n</th><th>10</th><th>50</th><th>500</th><th>5000</th></tr>
+            <tr><th>(1 + 5/n)<sup>n/5</sup></th><td>2,250</td><td>2,594</td><td>2,705</td><td>2,717</td></tr>
+          </table></div>
+          <p>Il pezzo è 5/n, l'esponente è n/5 = 1 diviso il pezzo. E infatti si avvicina a e = 2,718.</p>
+          <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> (1 + u)<sup>1/u</sup> = e</span><span style="font-size:1rem">se <span class="lim">lim<span>n→+∞</span></span> u = 0</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Il trucco: faccio comparire 1/u nell'esponente</h3>
+          <p>Nel nostro esercizio l'esponente non è 1/u, è un altro numero. Allora lo riscrivo: esponente = (1/u) · (u · esponente). È vero, perché 1/u · u = 1. Con le proprietà delle potenze, (x<sup>a</sup>)<sup>b</sup> = x<sup>a·b</sup>:</p>
+          <div class="math">(1 + u)<sup>esponente</sup> = <span class="box cop">(1 + u)<sup>1/u</sup></span><sup style="font-size:.8em"><span class="box thief">u · esponente</span></sup></div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Guardo i due pezzi separatamente</h3>
+          <p>Per n → +∞: la parte <span class="cop">blu</span> tende a e (passo 1). L'esponente <span class="thief">giallo</span>, u · esponente, tende a L. Quindi tutto tende a e elevato a L.</p>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> (1 + u)<sup>esponente</sup> = e<sup>L</sup></span></div>
+          <p>Esempio: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup>. Dentro va a e, fuori c'è 10: risultato e<sup>10</sup>. È proprio il numero che trovi con la ricetta (5/n · 2n = 10).</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> (1 + 5/n)<sup>2n</sup></h2>
+      <div class="steps" id="guided-nepero"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Dove vedi "e elevato a", scrivi solo l'esponente.</p>
+      <div id="ex-nepero"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>e = <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>n</sup> ≈ 2,718. Successione crescente, tra 2 e 3.</li>
+        <li>Forma 1<sup>∞</sup>: (1 + u)<sup>esponente</sup> con <span class="lim">lim<span>n→+∞</span></span> u = 0 → risultato <b>e<sup>L</sup></b>, dove L = <span class="lim">lim<span>n→+∞</span></span> (u · esponente).</li>
+        <li>Rapida: <span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup>.</li>
+        <li>Se la base è una frazione tipo (n+3)/(n+1), riscrivila come 1 + qualcosa: (n+3)/(n+1) = 1 + 2/(n+1).</li>
+        <li>Esponente fisso (non tende a +∞)? Allora non è 1<sup>∞</sup> e il limite è 1.</li>
+      </ul>
+      <div data-copy="nepero"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 4 ================= -->
+  <div class="chapter" data-ch="rapporto" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 4 · blocco del 12/11 · dispensa 4.5.3</div>
+      <h2>Il criterio del rapporto</h2>
+      <p class="big">Serve quando ci sono <b>fattoriali e potenze</b> (n!, 5ⁿ, nⁿ) e vuoi una prova di chi vince, non solo "per gerarchia".</p>
+      <p>Ti prepara anche a domani: il criterio del rapporto per le <b>serie</b> funziona allo stesso modo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea</div>
+      <p>Confronta ogni termine con quello prima: <b>quanto diventa più grande o più piccolo a ogni passo?</b></p>
+      <p>Se da un certo punto ogni termine è, per esempio, la <b>metà</b> del precedente, la successione si dimezza ogni volta e crolla a 0. Se invece ogni termine è il <b>doppio</b>, esplode a +∞.</p>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span> = L</span></div>
+      <ul class="recap">
+        <li><b>L &lt; 1</b>: si rimpicciolisce sempre, quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0</li>
+        <li><b>L &gt; 1</b> (anche L = +∞): si ingrandisce sempre, quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞</li>
+        <li><b>L = 1</b>: il criterio <b>non dice niente</b>, usa un altro metodo</li>
+      </ul>
+      <p>Vale per successioni con termini positivi.</p>
+      <p>Nel grafico vedi il <b>rapporto</b> tra un termine e il precedente, per alcune successioni. Guarda se finisce sotto o sopra la linea 1.</p>
+      <canvas id="plotQ" aria-label="Grafico del rapporto tra termini consecutivi"></canvas>
+      <div class="controls">
+        <label for="qS">Successione: <select id="qS">
+          <option value="0">2ⁿ / n!</option>
+          <option value="1">n! / 3ⁿ</option>
+          <option value="2">n² / 2ⁿ</option>
+          <option value="3">n! / nⁿ</option>
+          <option value="4">n²</option>
+        </select></label>
+      </div>
+      <div class="readout" id="qOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il trucco algebrico che serve sempre</div>
+      <div class="math"><span class="box cop">(n+1)! = (n+1) · n!</span><span class="box cop">3<sup>n+1</sup> = 3 · 3ⁿ</span></div>
+      <p>Così nel rapporto quasi tutto si semplifica.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> 5ⁿ / n!</h2>
+      <p>Per gerarchia sai già che fa 0. Ora lo <b>dimostri</b> col rapporto.</p>
+      <div class="steps" id="guided-rapporto"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi il limite per n → +∞. Per +∞ scrivi <b>inf</b>.</p>
+      <div id="ex-rapporto"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>a<sub>n</sub> &gt; 0. Calcolo L = <span class="lim">lim<span>n→+∞</span></span> a<sub>n+1</sub>/a<sub>n</sub>. Se L &lt; 1: <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Se L &gt; 1: <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞. Se L = 1: non so.</li>
+        <li>(n+1)! = (n+1)·n!, a<sup>n+1</sup> = a·aⁿ.</li>
+        <li>Utile: <span class="lim">lim<span>n→+∞</span></span> (n/(n+1))<sup>n</sup> = 1/e, cioè circa 0,37 (capitolo 3).</li>
+        <li>Non confonderlo con il criterio del rapporto per le <b>serie</b>: stessa idea, conclusione diversa (domani).</li>
+      </ul>
+      <div data-copy="rapporto"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 5 ================= -->
+  <div class="chapter" data-ch="sottosuccessioni" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 5 · blocco del 12/11 · dispensa 4.5.4</div>
+      <h2>Sottosuccessioni e Bolzano-Weierstrass</h2>
+      <p class="big">Serve soprattutto a <b>dimostrare che un limite NON esiste</b>. All'esame la domanda tipica è: "il limite esiste?" e la risposta è no.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Cos'è</div>
+      <p>Una sottosuccessione è una successione fatta prendendo <b>solo alcuni termini</b>, sempre in avanti. Esempio: solo i termini con n pari, oppure solo quelli con n dispari.</p>
+      <p><b>Regola:</b> se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L, allora ogni sua sottosuccessione ha limite L. Se tutta la fila arriva in caserma, ci arriva anche chiunque prendi dalla fila.</p>
+      <p><b>Contronominale</b> (l'hai fatta a logica): se trovi <b>due sottosuccessioni con limiti diversi</b>, allora a<sub>n</sub> non ha limite.</p>
+      <canvas id="plotS" aria-label="Grafico: termini pari e dispari di meno 1 alla n per n su n più 1"></canvas>
+      <div class="controls">
+        <label for="sP"><input type="checkbox" id="sP" checked> mostra i pari</label>
+        <label for="sD"><input type="checkbox" id="sD" checked> mostra i dispari</label>
+      </div>
+      <div class="legend"><span><i style="background:var(--cop)"></i>n pari: limite 1</span><span><i style="background:var(--thief)"></i>n dispari: limite −1</span></div>
+      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Per n → +∞ i pari tendono a 1 e i dispari a −1: due limiti diversi, quindi <b>il limite non esiste</b>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Bolzano-Weierstrass · solo enunciato</div>
+      <div class="math left"><span class="box cop">Ogni successione <b>limitata</b> ha almeno una sottosuccessione che converge.</span></div>
+      <p>Esempio: (−1)ⁿ non converge, ma è limitata (sta tra −1 e 1), e infatti i termini pari formano 1, 1, 1, … che converge a 1.</p>
+      <p>Attenzione: BW non dice che tutta la successione converge. Dice solo che <b>una parte</b> converge.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Esiste <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ · (2 + 1/n)?</h2>
+      <div class="steps" id="guided-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Sottosuccessione: prendo alcuni termini, sempre in avanti (pari, dispari, …).</li>
+        <li><span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L ⇒ ogni sottosuccessione ha limite L.</li>
+        <li><b>Per dire che il limite non esiste:</b> trovo due sottosuccessioni con limiti diversi (di solito pari e dispari).</li>
+        <li>Bolzano-Weierstrass: limitata ⇒ esiste una sottosuccessione convergente.</li>
+      </ul>
+      <div data-copy="sottosuccessioni"></div>
+      <div class="note"><b>Con questo il blocco del 12/11 è chiuso.</b> Ultimo passo: la scheda 01 dei tuoi errori (CERVELLO/schede), poi si passa alle serie.</div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 6 ================= -->
+  <div class="chapter" data-ch="serie" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 6 · blocco del 16/11 · Mughetti lez. 7, 8, 9 · dispensa pp. 49-51 e pagine gialle</div>
+      <h2>Le serie numeriche</h2>
+      <p class="big">Una serie è una <b>somma di infiniti numeri</b>: a<sub>1</sub> + a<sub>2</sub> + a<sub>3</sub> + … per sempre.</p>
+      <p>A cosa serve: a capire se sommando infiniti pezzi ottieni un numero preciso oppure qualcosa che esplode. È una delle domande più frequenti nei temi d'esame di Analisi: "studiare il carattere della serie".</p>
+      <p>Si scrive così: <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> a<sub>n</sub>. Si legge "somma per n da 1 a più infinito di a<sub>n</sub>".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · la torta</div>
+      <p>Hai una torta. Ne mangi metà. Poi metà di quello che resta, cioè un quarto. Poi metà del resto, un ottavo. E così via per sempre.</p>
+      <div class="math">1/2 + 1/4 + 1/8 + 1/16 + …</div>
+      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Quindi questa somma infinita fa un numero preciso: 1.</p>
+      <p><b>Come si fa davvero:</b> sommo i primi n pezzi e chiamo il risultato <b>somma parziale</b> S<sub>n</sub>. Poi guardo cosa fa S<sub>n</sub> per n → +∞.</p>
+      <div class="math"><span class="box thief">S<sub>n</sub> = a<sub>1</sub> + a<sub>2</sub> + … + a<sub>n</sub></span></div>
+      <div class="when">
+        <div><b>Converge</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> è un numero finito. Quel numero si chiama <b>somma della serie</b>.</div>
+        <div><b>Diverge</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> = +∞ (oppure −∞).</div>
+        <div><b>È irregolare</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> non esiste.</div>
+        <div>Studiare il <b>carattere</b> della serie vuol dire dire quale dei tre casi è.</div>
+      </div>
+      <p>Nel grafico vedi le somme parziali S<sub>n</sub>. Prova le quattro serie:</p>
+      <canvas id="plotSer" aria-label="Grafico delle somme parziali"></canvas>
+      <div class="controls">
+        <label for="serS">Serie: <select id="serS">
+          <option value="0">1/2 + 1/4 + 1/8 + … (la torta)</option>
+          <option value="1">1 + 1/2 + 1/3 + 1/4 + … (armonica)</option>
+          <option value="2">1 + 1/4 + 1/9 + 1/16 + … (1/n²)</option>
+          <option value="3">1 − 1 + 1 − 1 + … (irregolare)</option>
+        </select></label>
+        <label for="serN">Fino a n = <input type="range" id="serN" min="5" max="200" value="40"> <b id="serNv">40</b></label>
+      </div>
+      <div class="readout" id="serOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La serie più importante <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è facile</span></div>
+      <h2>La serie geometrica</h2>
+      <p>Ogni termine è il precedente moltiplicato sempre per lo stesso numero q (la "ragione").</p>
+      <div class="math"><span class="sig"><span>+∞</span><b>Σ</b><span>n=0</span></span> qⁿ = 1 + q + q² + q³ + …</div>
+      <div class="when">
+        <div>Se <b>−1 &lt; q &lt; 1</b>: converge e la somma è <span class="box thief"><span class="fr"><span>1</span><span>1 − q</span></span></span></div>
+        <div>Se <b>q ≥ 1</b>: diverge a +∞.</div>
+        <div>Se <b>q ≤ −1</b>: è irregolare.</div>
+        <div>La torta è q = 1/2, partendo da n = 1: 1/(1 − 1/2) − 1 = 2 − 1 = 1. Torna!</div>
+      </div>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Perché, passo 1 · Scrivo la somma parziale e la moltiplico per q</h3>
+          <div class="math left">S<sub>n</sub> = 1 + q + q² + … + qⁿ</div>
+          <div class="math left">q · S<sub>n</sub> = q + q² + … + qⁿ + q<sup>n+1</sup></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Sottraggo: quasi tutto si cancella</h3>
+          <div class="math left">S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup>, quindi S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Faccio il limite per n → +∞</h3>
+          <p>Se −1 &lt; q &lt; 1, allora <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0 (un numero più piccolo di 1 moltiplicato per sé tante volte diventa piccolissimo). Resta 1/(1 − q).</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il primo controllo, sempre <span class="tag cap">da capire</span></div>
+      <h2>La condizione necessaria</h2>
+      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Perché: se i pezzi che aggiungi non diventano piccolissimi, la somma continua a crescere.</p>
+      <p><b>Come si usa</b> (contronominale): se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> ≠ 0, la serie <b>non converge</b>. Se i termini sono positivi, diverge. È il primo controllo da fare, costa 10 secondi.</p>
+      <div class="warn"><b>Trappola:</b> <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0 <b>non basta</b> per convergere. La serie armonica 1 + 1/2 + 1/3 + … ha termini che tendono a 0, eppure diverge (guardala nel grafico sopra: cresce piano, ma senza fermarsi). Se il termine tende a 0, devi usare un criterio.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Le serie di riferimento <span class="tag mem">a memoria</span></div>
+      <h2>Armonica e armonica generalizzata</h2>
+      <div class="math"><span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>1</span><span>n<sup>p</sup></span></span></div>
+      <div class="when">
+        <div><b>p &gt; 1</b>: converge. Esempio 1/n², 1/n³, 1/n<sup>1,5</sup>.</div>
+        <div><b>p ≤ 1</b>: diverge. Esempio 1/n (p = 1, l'armonica), 1/√n (p = 1/2).</div>
+      </div>
+      <p>Perché l'armonica diverge (intuizione facile): raggruppo i termini. 1/3 + 1/4 è più di 1/4 + 1/4 = 1/2. Poi 1/5 + … + 1/8 è più di 4 · 1/8 = 1/2. E così via: aggiungo sempre almeno 1/2, infinite volte. Il resto (p qualsiasi) impara solo il risultato.</p>
+      <p>Servono come <b>metro di paragone</b>: con il confronto (qui sotto) e con il confronto asintotico (capitolo 7) riporti tante serie a queste.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I tre criteri · per serie a termini positivi <span class="tag mem">enunciati a memoria</span></div>
+      <h2>Confronto, rapporto, radice</h2>
+      <div class="steps">
+        <div class="step"><h3>Confronto · è "mezzo carabiniere"</h3>
+          <p>Se 0 ≤ a<sub>n</sub> ≤ b<sub>n</sub>:</p>
+          <ul class="recap">
+            <li>se Σ b<sub>n</sub> converge, converge anche Σ a<sub>n</sub> (la più piccola sta sotto un numero finito);</li>
+            <li>se Σ a<sub>n</sub> diverge, diverge anche Σ b<sub>n</sub> (la più grande sta sopra una cosa infinita).</li>
+          </ul>
+          <p>Esempio: 1/(n² + 5) ≤ 1/n², e Σ 1/n² converge, quindi converge anche Σ 1/(n² + 5).</p>
+        </div>
+        <div class="step"><h3>Rapporto · lo conosci dal capitolo 4</h3>
+          <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span></div>
+          <p>L &lt; 1: la serie <b>converge</b>. L &gt; 1: la serie <b>diverge</b>. L = 1: non dice niente.</p>
+          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita.</p>
+        </div>
+        <div class="step"><h3>Radice · lo conosci dal capitolo 2</h3>
+          <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a<sub>n</sub></span></span></div>
+          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Quale criterio uso? · lo schema da seguire all'esame</div>
+      <div class="steps">
+        <div class="step"><h3>1 · Calcolo <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub></h3><p>Se non è 0: finito, la serie non converge.</p></div>
+        <div class="step"><h3>2 · È una geometrica o una 1/n<sup>p</sup>?</h3><p>Uso le formule a memoria.</p></div>
+        <div class="step"><h3>3 · Ci sono fattoriali n! o potenze come 3ⁿ?</h3><p>Uso il <b>rapporto</b>: si semplifica bene.</p></div>
+        <div class="step"><h3>4 · È tutto elevato alla n, tipo (…)ⁿ?</h3><p>Uso la <b>radice</b>: la radice n-esima smonta la potenza n.</p></div>
+        <div class="step"><h3>5 · Ci sono solo potenze di n e polinomi?</h3><p>Confronto con 1/n<sup>p</sup> (meglio il confronto asintotico del capitolo 7).</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Carattere di <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>n</span><span>3ⁿ</span></span></h2>
+      <div class="steps" id="guided-serie"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Per le somme scrivi un numero (anche una frazione, tipo 3/2).</p>
+      <div id="ex-serie"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Serie = <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub>, con S<sub>n</sub> somma dei primi n termini. Converge / diverge / irregolare.</li>
+        <li>Geometrica: Σ qⁿ (da n = 0) = 1/(1 − q) se −1 &lt; q &lt; 1; diverge se q ≥ 1; irregolare se q ≤ −1.</li>
+        <li>Condizione necessaria: converge ⇒ <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Non vale il contrario (armonica).</li>
+        <li>Σ 1/n<sup>p</sup>: converge se p &gt; 1, diverge se p ≤ 1.</li>
+        <li>Criteri (a<sub>n</sub> ≥ 0): confronto; rapporto e radice con L &lt; 1 converge, L &gt; 1 diverge, L = 1 non so.</li>
+        <li>Schema: limite del termine → geometrica o 1/n<sup>p</sup> → fattoriali: rapporto → potenza n: radice → polinomi: confronto.</li>
+      </ul>
+      <div data-copy="serie"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 7 ================= -->
+  <div class="chapter" data-ch="serie-parametro" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 7 · blocco del 19/11 · Mughetti lez. 10 e 11 · dispensa pp. 40-41 (equivalenze)</div>
+      <h2>Confronto asintotico, Leibniz, serie con parametro</h2>
+      <p class="big">Tre attrezzi per le serie che compaiono di più all'esame:</p>
+      <ul class="recap">
+        <li><b>Confronto asintotico</b>: per le serie con polinomi, radici, sin, ln… dentro. Le riporti a 1/n<sup>p</sup>.</li>
+        <li><b>Leibniz</b>: per le serie con i segni che si alternano, + − + − …</li>
+        <li><b>Serie con parametro</b>: "per quali valori di x la serie converge?". Usi tutto quello che sai, caso per caso.</li>
+      </ul>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 1 <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Il confronto asintotico</h2>
+      <p><b>L'idea:</b> per n → +∞ conta solo come si comporta il termine "da lontano". Se due serie a termini positivi hanno termini che da lontano sono praticamente uguali (a meno di una costante), fanno la stessa fine.</p>
+      <div class="math left"><span class="box cop">Se a<sub>n</sub>, b<sub>n</sub> &gt; 0 e <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n</sub></span><span>b<sub>n</sub></span></span> = ℓ con ℓ numero finito diverso da 0, allora Σ a<sub>n</sub> e Σ b<sub>n</sub> hanno lo stesso carattere.</span></div>
+      <p>È l'equivalenza asintotica a<sub>n</sub> ~ b<sub>n</sub> che hai già visto nel blocco del 12/11. Lì ti sembrava teoria inutile: <b>qui serve davvero</b>.</p>
+      <p><b>Ricetta:</b> 1) trovo il termine dominante sopra e sotto; 2) ottengo una cosa tipo 1/n<sup>p</sup>; 3) guardo p.</p>
+      <div class="math">a<sub>n</sub> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> ~ <span class="fr"><span>n</span><span>n³</span></span> = <span class="fr"><span>1</span><span>n²</span></span> → p = 2 &gt; 1 → converge</div>
+      <p>Nel grafico vedi il rapporto a<sub>n</sub>/b<sub>n</sub>: per n → +∞ si stabilizza su un numero (non 0, non ∞). Quello è il segnale che le due serie fanno la stessa fine.</p>
+      <canvas id="plotAs" aria-label="Rapporto tra termini equivalenti"></canvas>
+      <div class="controls"><label for="asS">Esempio: <select id="asS">
+        <option value="0">(n + 3)/(n³ + 1) confrontato con 1/n²</option>
+        <option value="1">sin(1/n) confrontato con 1/n</option>
+        <option value="2">ln(1 + 1/n²) confrontato con 1/n²</option>
+        <option value="3">1 − cos(1/n) confrontato con 1/n²</option>
+      </select></label></div>
+      <div class="readout" id="asOut"></div>
+      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 2 <span class="tag mem">enunciato a memoria</span></div>
+      <h2>Serie a segni alterni: Leibniz</h2>
+      <p>Sono le serie dove i segni si alternano: Σ (−1)ⁿ b<sub>n</sub> con b<sub>n</sub> ≥ 0. Esempio: 1 − 1/2 + 1/3 − 1/4 + …</p>
+      <div class="math left"><span class="box cop">Se b<sub>n</sub> è decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0, allora Σ (−1)ⁿ b<sub>n</sub> converge.</span></div>
+      <p><b>L'idea:</b> fai un passo avanti, uno indietro più corto, uno avanti ancora più corto… Ti avvicini sempre di più a un punto fisso. Guardalo:</p>
+      <canvas id="plotLeib" aria-label="Somme parziali di una serie a segni alterni"></canvas>
+      <p>Le somme parziali di 1 − 1/2 + 1/3 − … fanno zig-zag, ma il zig-zag si stringe intorno a 0,693.</p>
+      <div class="warn"><b>Attenzione:</b> Σ 1/n diverge, ma Σ (−1)ⁿ/n converge. I segni alterni cambiano tutto. E se b<sub>n</sub> non tende a 0, la serie non converge (condizione necessaria del capitolo 6).</div>
+      <p><b>Convergenza assoluta</b> <span class="tag mem">a memoria</span>: se Σ |a<sub>n</sub>| converge, allora converge anche Σ a<sub>n</sub>. Utile quando i segni sono "a caso", per esempio con sin n: metti il valore assoluto e usi i criteri per serie positive.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 3 · lo schema</div>
+      <h2>Serie con parametro</h2>
+      <p>La domanda è: "per quali valori di x (o di α) la serie converge?". Non c'è un criterio nuovo: usi quelli che sai, e <b>dividi in casi</b>.</p>
+      <div class="steps">
+        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p></div>
+        <div class="step"><h3>2 · I casi di confine li faccio a mano</h3><p>Dove L = 1 il criterio non dice niente: sostituisco quei valori di x (di solito x = 1 e x = −1) e studio le due serie che escono.</p></div>
+        <div class="step"><h3>3 · Scrivo la risposta finale come insieme</h3><p>Per esempio: la serie converge per −1 ≤ x &lt; 1.</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Per quali x converge <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>xⁿ</span><span>n</span></span> ?</h2>
+      <div class="steps" id="guided-serie-parametro"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-serie-parametro"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Confronto asintotico: a<sub>n</sub>, b<sub>n</sub> &gt; 0, <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub>/b<sub>n</sub> = ℓ finito e ≠ 0 ⇒ stesso carattere. Ricetta: termine dominante → 1/n<sup>p</sup>.</li>
+        <li>Equivalenze: sin(1/n) ~ 1/n, ln(1 + 1/n) ~ 1/n, e<sup>1/n</sup> − 1 ~ 1/n, 1 − cos(1/n) ~ 1/(2n²).</li>
+        <li>Leibniz: Σ (−1)ⁿ b<sub>n</sub>, b<sub>n</sub> ≥ 0 decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0 ⇒ converge.</li>
+        <li>Convergenza assoluta: Σ |a<sub>n</sub>| converge ⇒ Σ a<sub>n</sub> converge.</li>
+        <li>Parametro: rapporto/radice con |x| → casi |x| &lt; 1 e |x| &gt; 1 → confini a mano → insieme finale.</li>
+      </ul>
+      <div data-copy="serie-parametro"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 8 ================= -->
+  <div class="chapter" data-ch="limiti-funzioni" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 8 · blocco del 23/11 · Albano lezioni 20 e 22 ottobre · dispensa pp. 60-72, 79-86</div>
+      <h2>I limiti di funzioni</h2>
+      <p class="big">Finora avevi successioni: n era un numero intero e andava solo a +∞. Adesso hai funzioni f(x): x è un numero reale qualsiasi e può avvicinarsi <b>a un numero</b>, per esempio x → 2.</p>
+      <div class="math"><span class="lim">lim<span>x→x₀</span></span> f(x) = L</div>
+      <p>Si legge: "quando x si avvicina a x₀, f(x) si avvicina a L". A cosa serve: a capire cosa fa una funzione vicino a un punto dove non puoi semplicemente sostituire (un buco, una divisione per 0), e cosa fa all'infinito. Ti serve per continuità, derivate e studio di funzione: è la base di tutto il resto del corso.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · guardare vicino, non sopra</div>
+      <p>Il limite <b>non</b> chiede quanto vale f in x₀. Chiede dove va f(x) quando x è <b>vicinissimo</b> a x₀, da sinistra e da destra. La funzione in x₀ può anche non esistere.</p>
+      <canvas id="plotLF" aria-label="Grafico di una funzione vicino a un punto"></canvas>
+      <div class="controls">
+        <label for="lfS">Funzione: <select id="lfS">
+          <option value="0">(x² − 1)/(x − 1), vicino a x₀ = 1</option>
+          <option value="1">sin(x)/x, vicino a x₀ = 0</option>
+          <option value="2">1/x, vicino a x₀ = 0</option>
+          <option value="3">|x|/x, vicino a x₀ = 0</option>
+        </select></label>
+        <label for="lfD">Distanza da x₀: <input type="range" id="lfD" min="1" max="100" value="60"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--cop)"></i>punto a sinistra di x₀</span><span><i style="background:var(--thief)"></i>punto a destra di x₀</span></div>
+      <div class="readout" id="lfOut"></div>
+      <div class="note">Avvicina i punti trascinando la barra verso sinistra. Nel primo esempio la funzione in x = 1 non esiste (0/0), ma da tutte e due le parti si va verso 2: il limite è 2.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Destra e sinistra <span class="tag cap">da capire</span></div>
+      <h2>Limite destro e sinistro</h2>
+      <div class="when">
+        <div><span class="lim">lim<span>x→x₀⁻</span></span> f(x): arrivo da <b>sinistra</b> (x più piccolo di x₀).</div>
+        <div><span class="lim">lim<span>x→x₀⁺</span></span> f(x): arrivo da <b>destra</b> (x più grande di x₀).</div>
+      </div>
+      <p><b>Il limite esiste solo se destro e sinistro sono uguali.</b> Esempio 1/x vicino a 0: da sinistra va a −∞, da destra a +∞, quindi <span class="lim">lim<span>x→0</span></span> 1/x non esiste. Con |x|/x: da sinistra vale sempre −1, da destra sempre 1, quindi non esiste.</p>
+      <p>È la stessa idea delle sottosuccessioni del capitolo 5: due strade con risultati diversi ⇒ il limite non esiste.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Come si calcola · lo schema</div>
+      <h2>Quattro mosse, in quest'ordine</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1) = 10.</p></div>
+        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p></div>
+        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p></div>
+        <div class="step"><h3>4 · Se ci sono sin, cos, ln, e<sup>x</sup>: limiti notevoli</h3><p>Li trovi nel riquadro qui sotto. Più avanti (capitolo 11) avrai anche De L'Hôpital e Taylor.</p></div>
+      </div>
+      <p>Le forme indeterminate sono le stesse delle successioni: 0/0, ∞/∞, ∞ − ∞, 0 · ∞, 1<sup>∞</sup>, 0<sup>0</sup>, ∞<sup>0</sup>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I limiti notevoli <span class="tag mem">a memoria</span></div>
+      <h2>Tutti per x → 0</h2>
+      <div class="when">
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>1 − cos x</span><span>x²</span></span> = <span class="fr"><span>1</span><span>2</span></span></div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>ln(1 + x)</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>eˣ − 1</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>(1 + x)<sup>a</sup> − 1</span><span>x</span></span> = a</div>
+        <div><span class="lim">lim<span>x→±∞</span></span> (1 + <span class="fr"><span>1</span><span>x</span></span>)<sup>x</sup> = e</div>
+      </div>
+      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x.</p>
+      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x = <span class="lim">lim<span>x→0</span></span> 5 · sin(5x)/(5x) = 5 · 1 = 5.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>x→2</span></span> <span class="fr"><span>x² − 4</span><span>x − 2</span></span></h2>
+      <div class="steps" id="guided-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi il risultato. Per +∞ scrivi <b>inf</b>, per −∞ scrivi <b>-inf</b>, frazioni tipo 1/2.</p>
+      <div id="ex-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><span class="lim">lim<span>x→x₀</span></span> f(x) = L: vicino a x₀ (non in x₀) f(x) si avvicina a L.</li>
+        <li>Il limite esiste ⇔ limite destro = limite sinistro.</li>
+        <li>Schema: sostituisco → 0/0 con polinomi: scompongo (x − x₀) → x → ±∞: termine dominante → notevoli.</li>
+        <li>Notevoli per x → 0: sin x/x = 1; (1 − cos x)/x² = 1/2; ln(1 + x)/x = 1; (eˣ − 1)/x = 1; ((1 + x)<sup>a</sup> − 1)/x = a.</li>
+        <li>Al posto di x posso mettere qualsiasi cosa che tende a 0, uguale sopra e sotto.</li>
+      </ul>
+      <div data-copy="limiti-funzioni"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 9 ================= -->
+  <div class="chapter" data-ch="continuita-derivata" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 9 · blocco del 26/11 · Albano lezioni 23 e 27 ottobre · dispensa pp. 73-78, 86-92</div>
+      <h2>Continuità e derivata</h2>
+      <p class="big">Due domande su una funzione vicino a un punto x₀:</p>
+      <ul class="recap">
+        <li><b>Continuità:</b> il grafico in x₀ è "attaccato" o c'è un buco, un salto?</li>
+        <li><b>Derivata:</b> quanto è ripido il grafico in x₀? Quanto cambia f se sposto x di pochissimo?</li>
+      </ul>
+      <p>A cosa serve: la continuità ti dà due teoremi che all'esame si usano spesso (zeri e Weierstrass). La derivata è lo strumento per lo studio di funzione (capitolo 12): crescenza, massimi, minimi.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Continuità <span class="tag mem">definizione a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Disegnare senza staccare la penna</h2>
+      <div class="math left"><span class="box cop">f è continua in x₀ se <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀)</span></div>
+      <p>Dentro ci sono tre richieste: 1) f(x₀) esiste; 2) il limite per x → x₀ esiste (destro = sinistro); 3) sono uguali. Se una salta, in x₀ c'è una <b>discontinuità</b>. Guarda i tre tipi:</p>
+      <canvas id="plotDC" aria-label="Tipi di discontinuità"></canvas>
+      <div class="controls"><label for="dcS">Funzione: <select id="dcS">
+        <option value="0">continua</option>
+        <option value="1">salto (prima specie)</option>
+        <option value="2">eliminabile (terza specie)</option>
+        <option value="3">infinita (seconda specie)</option>
+      </select></label></div>
+      <div class="readout" id="dcOut"></div>
+      <div class="note">Nomi dei tipi (servono all'esame): <b>prima specie</b> = limite destro e sinistro finiti ma diversi (salto). <b>Seconda specie</b> = almeno uno dei due è infinito o non esiste. <b>Eliminabile</b> (terza specie) = il limite per x → x₀ esiste finito, ma è diverso da f(x₀) oppure f(x₀) non esiste: basta "ridefinire" f in x₀ e torna continua.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I due teoremi delle funzioni continue <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Teorema degli zeri e Weierstrass</h2>
+      <div class="math left"><span class="box cop"><b>Zeri.</b> Se f è continua su [a, b] e f(a), f(b) hanno segni opposti, allora esiste c in (a, b) con f(c) = 0.</span></div>
+      <p><b>Perché è vero (facile):</b> parti sotto l'asse x e arrivi sopra senza staccare la penna. Per forza attraversi l'asse da qualche parte. Serve a dire "l'equazione f(x) = 0 ha una soluzione" senza trovarla.</p>
+      <div class="math left"><span class="box thief"><b>Weierstrass.</b> Se f è continua su un intervallo chiuso e limitato [a, b], allora f ha massimo e minimo su [a, b].</span></div>
+      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0: l'intervallo non è chiuso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La derivata · prima guardiamo i numeri</div>
+      <h2>Dalla secante alla tangente</h2>
+      <p>Prendo il punto (x₀, f(x₀)) e un secondo punto vicino, spostato di h: (x₀ + h, f(x₀ + h)). La retta che li unisce è la <b>secante</b>. La sua pendenza è</p>
+      <div class="math"><span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> <span style="font-size:1rem">(rapporto incrementale: quanto sale diviso quanto vado avanti)</span></div>
+      <p>Ora rimpicciolisci h con la barra: la secante (arancione) si appoggia sulla tangente (blu tratteggiata) e la pendenza si stabilizza su un numero.</p>
+      <canvas id="plotDV" aria-label="Secante che diventa tangente"></canvas>
+      <div class="controls">
+        <label for="dvS">Funzione: <select id="dvS">
+          <option value="0">f(x) = x², in x₀ = 1</option>
+          <option value="1">f(x) = sin x, in x₀ = 0</option>
+          <option value="2">f(x) = |x|, in x₀ = 0</option>
+        </select></label>
+        <label for="dvH">h: <input type="range" id="dvH" min="-100" max="100" value="80"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>secante</span><span><i style="background:var(--cop)"></i>tangente</span></div>
+      <div class="readout" id="dvOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La definizione <span class="tag mem">a memoria</span> <span class="tag cap">il perché è facile: l'hai appena visto</span></div>
+      <h2>Derivata e retta tangente</h2>
+      <div class="math left"><span class="box cop">f′(x₀) = <span class="lim">lim<span>h→0</span></span> <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> &nbsp; (se esiste ed è finito, f è <b>derivabile</b> in x₀)</span></div>
+      <p>f′(x₀) è la pendenza della tangente in x₀. La tangente è la retta che passa per (x₀, f(x₀)) con quella pendenza:</p>
+      <div class="math"><span class="box thief">y = f(x₀) + f′(x₀) · (x − x₀)</span></div>
+      <p>Perché è così (facile): una retta con pendenza m che passa per (x₀, y₀) è y = y₀ + m(x − x₀). Qui y₀ = f(x₀) e m = f′(x₀).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Derivabile e continua <span class="tag cap">dimostrazione corta: capiscila</span></div>
+      <h2>Derivabile ⇒ continua (ma non il contrario)</h2>
+      <p><b>Teorema:</b> se f è derivabile in x₀, allora è continua in x₀. La dimostrazione sta in una riga, ed è di quelle che si chiedono:</p>
+      <div class="math left">f(x₀ + h) − f(x₀) = <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> · h &nbsp;→&nbsp; f′(x₀) · 0 = 0 &nbsp; per h → 0</div>
+      <p>Quindi f(x₀ + h) tende a f(x₀) per h → 0: è proprio la continuità.</p>
+      <div class="warn"><b>Il contrario è falso.</b> |x| è continua in 0 ma non derivabile: nel grafico sopra, con h &gt; 0 la secante ha pendenza 1, con h &lt; 0 ha pendenza −1. Destra e sinistra diverse, il limite per h → 0 non esiste.</div>
+      <p><b>Punti dove f è continua ma non derivabile</b> <span class="tag mem">nomi a memoria</span>:</p>
+      <div class="when">
+        <div><b>Punto angoloso:</b> derivata destra e sinistra finite ma diverse. Esempio |x| in 0.</div>
+        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0.</div>
+        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0.</div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Derivata di f(x) = x² in x₀ = 3, con la definizione</h2>
+      <div class="steps" id="guided-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Continua in x₀: <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀).</li>
+        <li>Discontinuità: prima specie = salto (limiti destro e sinistro finiti e diversi); seconda specie = un limite infinito o inesistente; eliminabile = limite finito ma ≠ f(x₀).</li>
+        <li>Zeri: f continua su [a, b], f(a) · f(b) &lt; 0 ⇒ esiste c in (a, b) con f(c) = 0.</li>
+        <li>Weierstrass: f continua su [a, b] chiuso e limitato ⇒ ha massimo e minimo.</li>
+        <li>f′(x₀) = <span class="lim">lim<span>h→0</span></span> [f(x₀ + h) − f(x₀)]/h. Tangente: y = f(x₀) + f′(x₀)(x − x₀).</li>
+        <li>Derivabile ⇒ continua. Non vale il contrario (|x| in 0). Angoloso, cuspide, flesso a tangente verticale.</li>
+      </ul>
+      <div data-copy="continuita-derivata"></div>
+    </section>
+  </div>
+
+  <footer>Lavagna del tutor di Analisi T-1 · fonti: lavagne di Mughetti e Albano, dispensa Unibo (Arcozzi-Galeotti) · esame 25 gennaio 2027</footer>
+</div>
+
+<script>
+
+(function(){
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const store = {
+    get(k){ try { return JSON.parse(localStorage.getItem(k)) || {}; } catch(e){ return {}; } },
+    set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  function markDone(ch){ const a = document.querySelector('#nav a[data-ch="'+ch+'"]'); if (a && store.get('lavagna-'+ch).done && !a.querySelector('.tick')) a.insertAdjacentHTML('beforeend',' <span class="tick">✓</span>'); }
+
+  /* ---------------- grafici ---------------- */
+  // o: {n0, N, series:[{f, color, line}], hlines:[{y,color,dash}], zero}
+  function plot(cv, o){
+    if (!cv || !cv.offsetParent) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = cv.clientWidth, H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    const g = cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    const n0 = o.n0 || 1, N = o.N, pad = {l:44, r:12, t:14, b:26};
+    let ys = [];
+    o.series.forEach(s => { for (let n=n0;n<=N;n++){ const v=s.f(n); if (isFinite(v)) ys.push(v); } });
+    (o.hlines||[]).forEach(h => ys.push(h.y));
+    if (o.zero !== false) ys.push(0);
+    let ymin = Math.min(...ys), ymax = Math.max(...ys);
+    const m = (ymax-ymin)*0.08 || 0.5; ymin -= m; ymax += m;
+    const X = n => pad.l + (n-n0)/Math.max(N-n0,1)*(W-pad.l-pad.r);
+    const Y = y => pad.t + (ymax-y)/(ymax-ymin)*(H-pad.t-pad.b);
+    const ink = css('--muted');
+    g.font = '12px ' + css('--text'); g.fillStyle = ink; g.strokeStyle = css('--line'); g.lineWidth = 1;
+    niceTicks(ymin, ymax, 5).forEach(t => { g.beginPath(); g.moveTo(pad.l, Y(t)); g.lineTo(W-pad.r, Y(t)); g.stroke(); g.fillText(fmt(t), 4, Y(t)+4); });
+    if (ymin < 0 && ymax > 0){ g.strokeStyle = ink; g.globalAlpha = .6; g.beginPath(); g.moveTo(pad.l, Y(0)); g.lineTo(W-pad.r, Y(0)); g.stroke(); g.globalAlpha = 1; }
+    g.fillStyle = ink; g.fillText('n = '+n0, pad.l, H-8); const lbl='n = '+N; g.fillText(lbl, W-pad.r-g.measureText(lbl).width, H-8);
+    (o.hlines||[]).forEach(h => { g.strokeStyle = css(h.color||'--ink'); g.lineWidth = 1.5; g.setLineDash([6,5]); g.beginPath(); g.moveTo(pad.l, Y(h.y)); g.lineTo(W-pad.r, Y(h.y)); g.stroke(); g.setLineDash([]);
+      if (h.label){ g.fillStyle = css(h.color||'--ink'); g.fillText(h.label, W-pad.r-g.measureText(h.label).width-2, Y(h.y)-6); } });
+    const r = (N-n0)>60 ? 2.5 : 4;
+    o.series.forEach(s => {
+      const col = css(s.color);
+      if (s.line){ g.strokeStyle = col; g.lineWidth = 2.5; g.beginPath(); let st=false;
+        for (let n=n0;n<=N;n++){ const v=s.f(n); if(!isFinite(v)) continue; const x=X(n), y=Y(v); st?g.lineTo(x,y):(g.moveTo(x,y),st=true);} g.stroke(); return; }
+      g.fillStyle = col;
+      for (let n=n0;n<=N;n++){ const v=s.f(n); if(!isFinite(v)) continue; g.beginPath(); g.arc(X(n), Y(v), r, 0, 7); g.fill(); }
+    });
+  }
+  function niceTicks(a,b,k){ const span=b-a, step0=span/k, p=Math.pow(10,Math.floor(Math.log10(step0))); const s=[1,2,5,10].map(x=>x*p).find(x=>x>=step0); const out=[]; for(let t=Math.ceil(a/s)*s;t<=b+1e-12;t+=s) out.push(+t.toFixed(10)); return out; }
+  function fmt(t){ return Math.abs(t)<1e-9 ? '0' : (+t.toFixed(3)).toString().replace('.', ','); }
+  const LIM = '<span class="lim">lim<span>n→+∞</span></span>';
+  const it = (x, d=4) => x.toFixed(d).replace('.', ',');
+
+
+  const SUM = (from, to='+∞') => '<span class="sig"><span>'+to+'</span><b>Σ</b><span>n='+from+'</span></span>';
+  const LIMX = to => '<span class="lim">lim<span>x→'+to+'</span></span>';
+  const FR = (a,b) => '<span class="fr"><span>'+a+'</span><span>'+b+'</span></span>';
+  // grafico di funzioni: o = {xmin,xmax,ymin,ymax, fns:[{f,color,dash,width}], points:[{x,y,color,open}], vlines:[{x,color,label}], hlines:[{y,color,label}], area:{f,a,b,color}}
+  function plotF(cv, o){
+    if (!cv || !cv.offsetParent) return;
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    const g = cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    const pad = {l:40, r:12, t:12, b:24};
+    const X = x => pad.l + (x-o.xmin)/(o.xmax-o.xmin)*(W-pad.l-pad.r);
+    const Y = y => pad.t + (o.ymax-y)/(o.ymax-o.ymin)*(H-pad.t-pad.b);
+    const ink = css('--muted');
+    g.font = '12px ' + css('--text'); g.lineWidth = 1;
+    g.strokeStyle = css('--line'); g.fillStyle = ink;
+    niceTicks(o.ymin, o.ymax, 5).forEach(t => { g.beginPath(); g.moveTo(pad.l, Y(t)); g.lineTo(W-pad.r, Y(t)); g.stroke(); g.fillText(fmt(t), 4, Y(t)+4); });
+    niceTicks(o.xmin, o.xmax, 6).forEach(t => { g.beginPath(); g.moveTo(X(t), pad.t); g.lineTo(X(t), H-pad.b); g.stroke(); const s=fmt(t); g.fillText(s, X(t)-g.measureText(s).width/2, H-8); });
+    g.strokeStyle = ink; g.globalAlpha = .7;
+    if (o.ymin<0 && o.ymax>0){ g.beginPath(); g.moveTo(pad.l, Y(0)); g.lineTo(W-pad.r, Y(0)); g.stroke(); }
+    if (o.xmin<0 && o.xmax>0){ g.beginPath(); g.moveTo(X(0), pad.t); g.lineTo(X(0), H-pad.b); g.stroke(); }
+    g.globalAlpha = 1;
+    const steps = Math.max(200, W*2);
+    if (o.area){ const A=o.area; g.fillStyle = css(A.color||'--thief'); g.globalAlpha = .25; g.beginPath(); g.moveTo(X(A.a), Y(0));
+      for (let i=0;i<=steps;i++){ const x=A.a+(A.b-A.a)*i/steps; g.lineTo(X(x), Y(Math.max(o.ymin, Math.min(o.ymax, A.f(x))))); }
+      g.lineTo(X(A.b), Y(0)); g.closePath(); g.fill(); g.globalAlpha = 1; }
+    (o.hlines||[]).forEach(h => { g.strokeStyle = css(h.color||'--ink'); g.lineWidth = 1.5; g.setLineDash([6,5]); g.beginPath(); g.moveTo(pad.l, Y(h.y)); g.lineTo(W-pad.r, Y(h.y)); g.stroke(); g.setLineDash([]); if (h.label){ g.fillStyle=css(h.color||'--ink'); g.fillText(h.label, W-pad.r-g.measureText(h.label).width-2, Y(h.y)-6);} });
+    (o.vlines||[]).forEach(v => { g.strokeStyle = css(v.color||'--ink'); g.lineWidth = 1.5; g.setLineDash([6,5]); g.beginPath(); g.moveTo(X(v.x), pad.t); g.lineTo(X(v.x), H-pad.b); g.stroke(); g.setLineDash([]); if (v.label){ g.fillStyle=css(v.color||'--ink'); g.fillText(v.label, X(v.x)+4, pad.t+12);} });
+    (o.fns||[]).forEach(F => {
+      g.strokeStyle = css(F.color||'--thief'); g.lineWidth = F.width||2.5; if (F.dash) g.setLineDash([6,5]);
+      g.beginPath(); let on=false, py=null;
+      for (let i=0;i<=steps;i++){ const x=o.xmin+(o.xmax-o.xmin)*i/steps, y=F.f(x);
+        if (!isFinite(y) || (py!==null && Math.abs(y-py) > (o.ymax-o.ymin)*2)) { on=false; py=null; continue; }
+        const yy = Math.max(o.ymin-(o.ymax-o.ymin), Math.min(o.ymax+(o.ymax-o.ymin), y));
+        on ? g.lineTo(X(x), Y(yy)) : (g.moveTo(X(x), Y(yy)), on=true); py=y; }
+      g.stroke(); g.setLineDash([]);
+    });
+    (o.points||[]).forEach(p => { const c=css(p.color||'--ink'); g.beginPath(); g.arc(X(p.x), Y(p.y), 5, 0, 7);
+      if (p.open){ g.fillStyle=css('--soft'); g.fill(); g.strokeStyle=c; g.lineWidth=2; g.stroke(); } else { g.fillStyle=c; g.fill(); }
+      if (p.label){ g.fillStyle=c; g.fillText(p.label, X(p.x)+8, Y(p.y)-8); } });
+  }
+
+  const draws = {}, EX = {}, NAMES = {}, order = [];
+
+  /* ---------------- ricette a passi ---------------- */
+  document.querySelectorAll('[data-recipe]').forEach(box => {
+    const steps = [...box.querySelectorAll('.step')], sec = box.closest('section');
+    let shown = 1;
+    sec.querySelector('[data-next]').onclick = () => { if (shown < steps.length){ steps[shown].hidden=false; steps[shown].classList.add('reveal'); shown++; } };
+    sec.querySelector('[data-reset]').onclick = () => { steps.forEach((s,i)=>s.hidden=i>0); shown=1; };
+  });
+
+  /* ---------------- lettura risposte ---------------- */
+  function num(s){
+    let v = String(s).trim().toLowerCase().replace(/\s/g,'').replace(',', '.').replace('−','-');
+    if (v==='') return NaN;
+    if (/^\+?(inf|infinito|∞|\+inf)$/.test(v)) return Infinity;
+    if (/^-(inf|infinito|∞)$/.test(v)) return -Infinity;
+    if (/^-?\d+(\.\d+)?\/\d+(\.\d+)?$/.test(v)){ const [a,b]=v.split('/'); return +a/+b; }
+    return Number(v);
+  }
+  const same = (a,b) => (a===b) || (isFinite(a) && isFinite(b) && Math.abs(a-b) < 1e-6);
+  const say = (el, ok, txt) => { el.textContent = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
+
+  /* ---------------- esercizi guidati ---------------- */
+  // step: {h, html, type:'nums'|'choice'|'num', ans, opts, ok, bad}
+  function guided(ch, key, steps, done){
+    const box = $('guided-'+ch), res = store.get(key);
+    const els = steps.map((s,i) => {
+      const d = document.createElement('div'); d.className = 'step'; d.hidden = i>0;
+      let body = '';
+      if (s.type==='choice') body = '<div class="choice">'+s.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else body = '<div class="math left">'+s.html+'</div><div class="row"><button data-check>Controlla</button></div>';
+      d.innerHTML = '<h3>'+s.h+'</h3>'+(s.type==='choice' && s.html ? '<div class="math left">'+s.html+'</div>' : '')+body+'<span class="feedback"></span>';
+      box.appendChild(d); return d;
+    });
+    const fin = document.createElement('div'); fin.className = 'note reveal'; fin.hidden = true; fin.innerHTML = done; box.appendChild(fin);
+    const id = i => 'g'+(i+1);
+    const pass = i => { res[id(i)] = res[id(i)]==='errore' ? 'ok-dopo' : (res[id(i)]||'ok'); store.set(key,res); if (i+1<els.length) els[i+1].hidden=false; else { fin.hidden=false; res.done=true; store.set(key,res); requestAnimationFrame(()=>draws[ch] && draws[ch]()); markDone(ch); } };
+    const fail = i => { if (!/^ok/.test(res[id(i)]||'')) res[id(i)]='errore'; store.set(key,res); };
+    steps.forEach((s,i) => {
+      const d = els[i], fb = d.querySelector('.feedback');
+      if (s.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===s.ans){ b.classList.add('right'); say(fb,true,s.ok); pass(i); } else { b.classList.add('wrong'); say(fb,false,s.bad); fail(i); }
+        });
+      } else {
+        d.querySelector('[data-check]').onclick = () => {
+          const ins = [...d.querySelectorAll('input')], vals = ins.map(x=>num(x.value));
+          const ans = Array.isArray(s.ans) ? s.ans : [s.ans];
+          if (vals.every((v,k)=>same(v,ans[k]))){ say(fb,true,s.ok); pass(i); } else { say(fb,false,s.bad); fail(i); }
+        };
+      }
+      if (/^ok/.test(res[id(i)]||'')){ if (i+1<els.length) els[i+1].hidden=false; else { fin.hidden=false; res.done=true; store.set(key,res); } }
+    });
+  }
+  const inp = (lbl, w) => '<input type="text" inputmode="decimal" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
+
+  /* ---------------- esercizi da solo ---------------- */
+  // e: {id, q, type:'num'|'exp'|'choice', a, opts, hint, sol, lbl (etichetta della casella, default 'limite')}
+  function exercises(ch, key, list){
+    const box = $('ex-'+ch), res = store.get(key);
+    list.forEach((e,i) => {
+      const d = document.createElement('div'); d.className = 'ex';
+      let ans;
+      if (e.type==='choice') ans = '<div class="choice">'+e.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else ans = '<div class="row">'+(e.type==='exp' ? 'limite = e<sup>'+inp('esponente','3.5em')+'</sup>' : (e.lbl||'limite')+' = '+inp('risultato'))+'<button data-c>Controlla</button></div>';
+      d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+'</b><span class="badge"></span></div><div class="math left">'+e.q+'</div>'+ans
+        +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
+        +'<p class="note" data-hint hidden>'+e.hint+'</p><p class="note" data-sol hidden>'+e.sol+'</p>';
+      box.appendChild(d);
+      const fb = d.querySelector('.feedback'), bd = d.querySelector('.badge');
+      const badge = () => { const r=res[e.id];
+        if (r==='ok'){ bd.textContent='giusto al primo colpo'; bd.className='badge done'; }
+        else if (r==='ok-dopo'){ bd.textContent='giusto dopo errore o aiuto'; bd.className='badge done'; }
+        else if (r==='errore'){ bd.textContent='da rifare'; bd.className='badge'; }
+        else if (r==='soluzione vista'){ bd.textContent='soluzione vista'; bd.className='badge'; }
+        else { bd.textContent='da fare'; bd.className='badge'; } };
+      badge();
+      const right = () => { res[e.id] = (res[e.id]==='errore' || res[e.id]==='soluzione vista' || res[e.id+'_aiuto']) ? 'ok-dopo' : (res[e.id]||'ok'); say(fb,true,'Giusto!'); store.set(key,res); badge(); };
+      const wrong = msg => { if (!/^ok/.test(res[e.id]||'')) res[e.id]='errore'; say(fb,false,msg); store.set(key,res); badge(); };
+      if (e.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===e.a){ b.classList.add('right'); right(); } else { b.classList.add('wrong'); wrong('Non è questa. Prova con l\'aiuto.'); }
+        });
+      } else {
+        d.querySelector('[data-c]').onclick = () => { const v = num(d.querySelector('input').value);
+          if (isNaN(v)) { say(fb,false,'Scrivi un numero (per +∞ scrivi inf).'); return; }
+          same(v,e.a) ? right() : wrong('Non è questo. Prova con l\'aiuto.'); };
+      }
+      d.querySelector('[data-h]').onclick = () => { d.querySelector('[data-hint]').hidden=false; res[e.id+'_aiuto']=true; store.set(key,res); };
+      d.querySelector('[data-s]').onclick = () => { d.querySelector('[data-sol]').hidden=false; if (!/^ok/.test(res[e.id]||'')){ res[e.id]='soluzione vista'; store.set(key,res); badge(); } };
+    });
+  }
+
+
+  /* ===== capitolo 1: Due carabinieri ===== */
+  order.push('carabinieri'); NAMES['carabinieri'] = '1 Due carabinieri';
+  draws.carabinieri = () => {
+    plot($('plot1'), { N:+$('n1').value, series:[ ...( $('c1').checked ? [{f:n=>-1/n, color:'--cop', line:true},{f:n=>1/n, color:'--cop', line:true}] : []), {f:n=>Math.sin(n)/n, color:'--thief'} ] });
+    plot($('plot2'), { N:40, series:[{f:()=>-1, color:'--cop', line:true},{f:()=>1, color:'--cop', line:true},{f:n=>Math.cos(n), color:'--thief'}] });
+    plot($('plot3'), { N:40, series:[{f:n=>2/n, color:'--cop', line:true},{f:n=>4/n, color:'--cop', line:true},{f:n=>(3+Math.cos(n))/n, color:'--thief'}] });
+  };
+  $('n1').addEventListener('input', () => { $('n1v').textContent = $('n1').value; draws.carabinieri(); });
+  $('c1').addEventListener('change', () => draws.carabinieri());
+
+  guided('carabinieri', 'lavagna-carabinieri', [
+    { h:'Passo 1 · Parti da −1 ≤ cos n ≤ 1 e aggiungi 3 a tutti e tre i pezzi', type:'nums', ans:[2,4],
+      html: inp('numero a sinistra')+' ≤ <span class="box thief">3 + cos n</span> ≤ '+inp('numero a destra'),
+      ok:'Giusto: −1+3 = 2 e 1+3 = 4.', bad:'Non ancora. Fai −1 + 3 e poi 1 + 3.' },
+    { h:'Passo 2 · Ora dividi tutto per n. Quale riga è giusta?', type:'choice', ans:1,
+      opts:['3/n ≤ (3 + cos n)/n ≤ 5/n','2/n ≤ (3 + cos n)/n ≤ 4/n','2 ≤ (3 + cos n)/n ≤ 4'],
+      ok:'Esatto: divido 2, 3+cos n e 4 per n.', bad:'Ricontrolla: i numeri del passo 1 erano 2 e 4, e vanno divisi per n tutti e tre i pezzi.' },
+    { h:'Passo 3 · Per n → +∞, dove vanno i carabinieri 2/n e 4/n? Quindi quanto fa il limite?', type:'nums', ans:[0],
+      html:LIM+' (3 + cos n)/n = '+inp('valore del limite'), ok:'Perfetto!', bad:'Pensa: 2 diviso un numero enorme quanto fa, più o meno?' }
+  ], '<b>Fatto!</b> '+LIM+' 2/n = 0 e '+LIM+' 4/n = 0, stesso limite, quindi '+LIM+' (3 + cos n)/n = 0. Il ladro giallo è schiacciato tra 2/n e 4/n.<canvas id="plot3" style="margin-top:10px" aria-label="Grafico: 3 più cos n su n tra 2 su n e 4 su n"></canvas>');
+
+  EX['carabinieri'] = [
+      { id:'e1', type:'num', q:LIM+' (2 + sin n) / n²', a:0, hint:'Parti da −1 ≤ sin n ≤ 1, aggiungi 2, poi dividi per n².', sol:'1 ≤ 2 + sin n ≤ 3, quindi 1/n² ≤ (2 + sin n)/n² ≤ 3/n². Per n → +∞ entrambi tendono a 0: limite 0.' },
+      { id:'e2', type:'num', q:LIM+' (−1)ⁿ / n', a:0, hint:'(−1)ⁿ vale −1 oppure 1: quindi −1 ≤ (−1)ⁿ ≤ 1. Poi dividi per n.', sol:'−1/n ≤ (−1)ⁿ/n ≤ 1/n, e per n → +∞ entrambi tendono a 0: limite 0.' },
+      { id:'e3', type:'num', q:LIM+' (n + sin n) / n', a:1, hint:'Aggiungi n: n − 1 ≤ n + sin n ≤ n + 1. Poi dividi per n. Per n → +∞, dove vanno (n−1)/n e (n+1)/n?', sol:'Per n → +∞: (n−1)/n = 1 − 1/n tende a 1 e (n+1)/n = 1 + 1/n tende a 1. Stesso limite: 1. Non sempre fa 0!' },
+      { id:'e4', type:'num', q:LIM+' (5 cos n) / n', a:0, hint:'Moltiplica −1 ≤ cos n ≤ 1 per 5 (positivo, i segni restano), poi dividi per n.', sol:'−5/n ≤ 5 cos n / n ≤ 5/n, e per n → +∞ entrambi tendono a 0: limite 0.' }
+    ];
+
+  /* ===== capitolo 2: Radici n-esime ===== */
+  order.push('radici'); NAMES['radici'] = '2 Radici n-esime';
+  draws.radici = () => {
+    const a = +$('rA').value, N = +$('rN').value;
+    plot($('plotR'), { n0:5, N, zero:false, series:[{f:n=>Math.pow(a,1/n), color:'--thief'},{f:n=>Math.pow(n,1/n), color:'--cop'}], hlines:[{y:1, color:'--ink', label:'1'}] });
+    const ns = [1,2,5,10,50,100,1000];
+    $('rTab').innerHTML = '<tr><th>n</th>'+ns.map(n=>'<th>'+n+'</th>').join('')+'</tr>'
+      + '<tr><th>radice n-esima di '+a+'</th>'+ns.map(n=>'<td>'+it(Math.pow(a,1/n),3)+'</td>').join('')+'</tr>'
+      + '<tr><th>radice n-esima di n</th>'+ns.map(n=>'<td>'+it(Math.pow(n,1/n),3)+'</td>').join('')+'</tr>';
+  };
+  const big = x => x < 1e6 ? Math.round(x).toLocaleString('it-IT') : x.toExponential(2).replace('.', ',').replace('e+', ' · 10^');
+  const drawP = () => {
+    const n = +$('pN').value, a = Math.pow(2,n), b = Math.pow(3,n), s = a+b, peso = a/s*100;
+    $('pTab').innerHTML = '<tr><th>n</th><th>2ⁿ</th><th>3ⁿ</th><th>2ⁿ + 3ⁿ</th><th>radice n-esima</th></tr>'
+      + '<tr><td>'+n+'</td><td>'+big(a)+'</td><td>'+big(b)+'</td><td>'+big(s)+'</td><td><b>'+it(Math.pow(s,1/n),4)+'</b></td></tr>';
+    $('pNote').innerHTML = 'Con n = '+n+', il pezzo 2ⁿ è solo il <b>'+it(peso,peso<1?3:1)+'%</b> della somma. La radice n-esima della somma vale <b>'+it(Math.pow(s,1/n),4)+'</b>.';
+  };
+  $('pN').addEventListener('input', () => { $('pNv').textContent = $('pN').value; drawP(); });
+  drawP();
+  $('rA').addEventListener('change', () => draws.radici());
+  $('rN').addEventListener('input', () => { $('rNv').textContent = $('rN').value; draws.radici(); });
+
+  guided('radici', 'lavagna-radici', [
+    { h:'Passo 1 · Carabiniere sotto: togli il più piccolo. Carabiniere sopra: al posto di 2ⁿ metti un altro 3ⁿ', type:'nums', ans:[2],
+      html:'<span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ 3ⁿ + 3ⁿ = '+inp('quante volte 3 alla n','3.5em')+' · 3ⁿ',
+      ok:'Sì: 3ⁿ + 3ⁿ = 2 · 3ⁿ.', bad:'Quanti 3ⁿ hai sommato? Uno più uno…' },
+    { h:'Passo 2 · Fai la radice n-esima di tutti e tre i pezzi. Quanto fa la radice n-esima di 3ⁿ?', type:'nums', ans:[3],
+      html: R('n','3ⁿ')+' = '+inp('radice di 3 alla n'),
+      ok:'Giusto: la radice n-esima smonta la potenza n.', bad:'La radice n-esima e la potenza n si annullano a vicenda.' },
+    { h:'Passo 3 · E il carabiniere sopra, la radice n-esima di 2 · 3ⁿ?', type:'choice', ans:0,
+      html:'',
+      opts:[R('n','2')+' · 3, che per n → +∞ tende a 1 · 3 = 3','2 · 3 = 6','tende a +∞'],
+      ok:'Esatto: la radice si divide sul prodotto, e '+LIM+' '+R('n','2')+' = 1 (fatto numero 1).', bad:'Spezza: radice di 2·3ⁿ = (radice n-esima di 2) · (radice n-esima di 3ⁿ). Il primo pezzo, per n → +∞, dove va?' },
+    { h:'Passo 4 · Per n → +∞ i due carabinieri tendono entrambi a 3. Quanto fa il limite?', type:'nums', ans:[3],
+      html:LIM+' '+R('n','2ⁿ+3ⁿ')+' = '+inp('valore del limite'), ok:'Perfetto!', bad:'Carabiniere sotto 3, carabiniere sopra 3…' }
+  ], '<b>Fatto!</b> 3 ≤ '+R('n','2ⁿ+3ⁿ')+' ≤ '+R('n','2')+' · 3, e per n → +∞ tutti e due gli estremi tendono a 3. Quindi '+LIM+' '+R('n','2ⁿ+3ⁿ')+' = 3: vince il più grande.');
+
+  EX['radici'] = [
+      { id:'e1', type:'num', q:LIM+' '+R('n','5ⁿ + 4ⁿ'), a:5, hint:'Comanda il più grande: 5ⁿ ≤ 5ⁿ + 4ⁿ ≤ 2 · 5ⁿ.', sol:'5 ≤ '+R('n','5ⁿ+4ⁿ')+' ≤ '+R('n','2')+' · 5, che per n → +∞ tende a 5. Limite 5.' },
+      { id:'e2', type:'num', q:LIM+' '+R('n','n³'), a:1, hint:R('n','n³')+' = '+R('n','n')+' · '+R('n','n')+' · '+R('n','n')+'. Per n → +∞ ognuno tende a…', sol:'Ogni pezzo ha limite 1, quindi 1 · 1 · 1 = 1. Limite 1.' },
+      { id:'e3', type:'num', q:LIM+' '+R('n','3n'), a:1, hint:'Spezza: '+R('n','3')+' · '+R('n','n')+'.', sol:'Per n → +∞ entrambi i pezzi hanno limite 1 (fatto 1 e fatto 2): limite 1.' },
+      { id:'e4', type:'num', q:LIM+' '+R('n','7ⁿ + n'), a:7, hint:'n è piccolissimo rispetto a 7ⁿ: da un certo n in poi 7ⁿ ≤ 7ⁿ + n ≤ 2 · 7ⁿ.', sol:'Carabinieri 7 e '+R('n','2')+' · 7, che per n → +∞ tendono entrambi a 7. Limite 7.' },
+      { id:'e5', type:'num', q:LIM+' <span class="fr"><span>3<sup>n+1</sup> + 5<sup>n+1</sup></span><span>3ⁿ + 5ⁿ</span></span> <span style="font-size:1rem">(esercizio per casa del prof)</span>', a:5,
+        hint:'Qui non c\'è radice. Raccogli 5ⁿ sopra e sotto. Ricorda 5<sup>n+1</sup> = 5 · 5ⁿ e '+LIM+' (3/5)ⁿ = 0.', sol:'Sopra: 5ⁿ (3·(3/5)ⁿ + 5). Sotto: 5ⁿ ((3/5)ⁿ + 1). Si semplifica 5ⁿ: (0 + 5)/(0 + 1) = 5.' }
+    ];
+
+  /* ===== capitolo 3: Il numero e ===== */
+  order.push('nepero'); NAMES['nepero'] = '3 Il numero e';
+  draws.nepero = () => {
+    const N = +$('eN').value;
+    plot($('plotE'), { N:Math.max(N,2), zero:false, series:[{f:n=>Math.pow(1+1/n,n), color:'--thief'}], hlines:[{y:Math.E, color:'--cop', label:'e = 2,718…'},{y:2, color:'--muted', label:'2'}] });
+    $('eOut').innerHTML = 'Con <b>'+N+'</b> rate: (1 + 1/'+N+')<sup>'+N+'</sup> = <b>'+it(Math.pow(1+1/N,N),4)+'</b> €';
+  };
+  $('eN').addEventListener('input', () => { $('eNv').textContent = $('eN').value; draws.nepero(); });
+
+  guided('nepero', 'lavagna-nepero', [
+    { h:'Passo 1 · È una forma 1^∞? Quanto fa il limite della base?', type:'nums', ans:[1],
+      html:LIM+' (1 + 5/n) = '+inp('limite della base'), ok:'Sì: per n → +∞ la base tende a 1 e l\'esponente 2n tende a +∞. È una forma 1^∞.', bad:'5 diviso un numero enorme è quasi 0. Quindi 1 + quasi 0…' },
+    { h:'Passo 2 · Il pezzo piccolo u è 5/n e l\'esponente è 2n. Quanto fa u · esponente?', type:'nums', ans:[10],
+      html:'<span class="box thief">5/n</span> · <span class="box cop">2n</span> = '+inp('prodotto'), ok:'Giusto: le n si semplificano, resta 10.', bad:'Moltiplica: 5 · 2 = ? e n/n = 1.' },
+    { h:'Passo 3 · Quindi il limite è e elevato a…', type:'nums', ans:[10],
+      html:'e<sup>'+inp('esponente','3.5em')+'</sup>', ok:'Perfetto!', bad:'Il risultato è e elevato al numero del passo 2.' }
+  ], '<b>Fatto!</b> '+LIM+' (1 + 5/n)<sup>2n</sup> = e<sup>10</sup>. Ricetta: pezzo piccolo × esponente, poi e elevato a quello.');
+
+  EX['nepero'] = [
+      { id:'e1', type:'exp', q:LIM+' (1 + 2/n)<sup>n</sup>', a:2, hint:'Regola rapida: '+LIM+' (1 + a/n)<sup>n</sup> = e<sup>a</sup>.', sol:'u = 2/n, esponente n, prodotto 2: e².' },
+      { id:'e2', type:'exp', q:LIM+' (1 + 1/n)<sup>5n</sup>', a:5, hint:'u = 1/n, esponente 5n. Moltiplica.', sol:'1/n · 5n = 5: e⁵.' },
+      { id:'e3', type:'exp', q:LIM+' (1 − 1/n)<sup>n</sup>', a:-1, hint:'Il pezzo piccolo è −1/n, col segno meno.', sol:'−1/n · n = −1: e<sup>−1</sup> = 1/e.' },
+      { id:'e4', type:'exp', q:LIM+' <span class="fr"><span>n + 3</span><span>n + 1</span></span><sup>n</sup>', a:2, hint:'Riscrivi la base: (n+3)/(n+1) = 1 + 2/(n+1). Poi u · esponente = 2n/(n+1).', sol:LIM+' 2n/(n+1) = 2, quindi il limite è e².' },
+      { id:'e5', type:'num', q:LIM+' (1 + 1/n)<sup>7</sup> <span style="font-size:1rem">(attento!)</span>', a:1, hint:'Per n → +∞ l\'esponente tende a +∞?', sol:'No, l\'esponente è 7 fisso. Non è 1^∞: la base tende a 1, e 1<sup>7</sup> = 1.' }
+    ];
+
+  /* ===== capitolo 4: Criterio del rapporto ===== */
+  order.push('rapporto'); NAMES['rapporto'] = '4 Criterio del rapporto';
+  const Q = [
+    { r:n=>2/(n+1), L:'0', verdict:'L = 0 &lt; 1, quindi '+LIM+' 2ⁿ/n! = 0' },
+    { r:n=>(n+1)/3, L:'+∞', verdict:'L = +∞ &gt; 1, quindi '+LIM+' n!/3ⁿ = +∞' },
+    { r:n=>Math.pow((n+1)/n,2)/2, L:'1/2', verdict:'L = 1/2 &lt; 1, quindi '+LIM+' n²/2ⁿ = 0' },
+    { r:n=>Math.pow(n/(n+1),n), L:'1/e ≈ 0,37', verdict:'L = 1/e &lt; 1, quindi '+LIM+' n!/nⁿ = 0 (era l\'errore G5!)' },
+    { r:n=>Math.pow((n+1)/n,2), L:'1', verdict:'L = 1: il criterio non dice niente. (Lo sai per altra via: '+LIM+' n² = +∞.)' }
+  ];
+  draws.rapporto = () => {
+    const q = Q[+$('qS').value];
+    plot($('plotQ'), { N:40, series:[{f:q.r, color:'--thief'}], hlines:[{y:1, color:'--bad', label:'1'}] });
+    $('qOut').innerHTML = 'Per n → +∞ il rapporto tende a <b>'+q.L+'</b>. '+q.verdict;
+  };
+  $('qS').addEventListener('change', () => draws.rapporto());
+
+  guided('rapporto', 'lavagna-rapporto', [
+    { h:'Passo 1 · Scrivi a<sub>n+1</sub>: al posto di n metti n+1', type:'choice', ans:2,
+      html:'a<sub>n</sub> = 5ⁿ / n!',
+      opts:['5ⁿ / (n! + 1)','5<sup>n+1</sup> / n!','5<sup>n+1</sup> / (n+1)!'],
+      ok:'Esatto: n diventa n+1 dappertutto.', bad:'Devi sostituire n+1 sia nell\'esponente sia nel fattoriale.' },
+    { h:'Passo 2 · Semplifica il rapporto a<sub>n+1</sub> / a<sub>n</sub>', type:'choice', ans:1,
+      html:'<span class="fr"><span>5<sup>n+1</sup> / (n+1)!</span><span>5ⁿ / n!</span></span> = <span class="fr"><span>5 · 5ⁿ</span><span>(n+1) · n!</span></span> · <span class="fr"><span>n!</span><span>5ⁿ</span></span>',
+      opts:['(n+1) / 5','5 / (n+1)','5n'],
+      ok:'Giusto: 5ⁿ e n! si semplificano, resta 5/(n+1).', bad:'Cancella 5ⁿ con 5ⁿ e n! con n!. Cosa resta sopra e sotto?' },
+    { h:'Passo 3 · Quanto fa il limite di 5/(n+1)? Questo è L', type:'nums', ans:[0],
+      html:'L = '+LIM+' 5/(n+1) = '+inp('valore di L'), ok:'Sì, L = 0.', bad:'5 diviso un numero enorme…' },
+    { h:'Passo 4 · L = 0 è minore di 1. Quindi '+LIM+' 5ⁿ/n! fa…', type:'choice', ans:0,
+      opts:['0','+∞','non si può dire'],
+      ok:'Perfetto! L &lt; 1 vuol dire che si rimpicciolisce sempre: il limite è 0.', bad:'Ricontrolla la regola: se L &lt; 1 il limite di a<sub>n</sub> è…?' }
+  ], '<b>Fatto!</b> '+LIM+' 5ⁿ/n! = 0, adesso dimostrato: '+LIM+' 5/(n+1) = 0 &lt; 1.');
+
+  EX['rapporto'] = [
+      { id:'e1', type:'num', q:LIM+' n! / 4ⁿ', a:Infinity, hint:'Rapporto: (n+1)!/n! = n+1 e 4ⁿ/4<sup>n+1</sup> = 1/4.', sol:'L = '+LIM+' (n+1)/4 = +∞ &gt; 1, quindi '+LIM+' n!/4ⁿ = +∞.' },
+      { id:'e2', type:'num', q:LIM+' n³ / 2ⁿ', a:0, hint:'Rapporto = ((n+1)/n)³ · 1/2. Per n → +∞ dove va (n+1)/n?', sol:LIM+' (n+1)/n = 1, quindi L = 1/2 &lt; 1: limite 0.' },
+      { id:'e3', type:'num', q:LIM+' n! / nⁿ <span style="font-size:1rem">(era un tuo errore)</span>', a:0, hint:'Rapporto = (n+1)! / (n+1)<sup>n+1</sup> · nⁿ / n! = nⁿ/(n+1)ⁿ = (n/(n+1))ⁿ. Ricorda il capitolo 3.', sol:'(n/(n+1))ⁿ → 1/e ≈ 0,37 &lt; 1: limite 0. nⁿ batte n!.' },
+      { id:'e4', type:'num', q:'Per a<sub>n</sub> = 1/n, quanto vale L, il limite del rapporto?', a:1, hint:'(1/(n+1)) / (1/n) = n/(n+1).', sol:'L = 1: il criterio non dice niente, anche se sai che '+LIM+' 1/n = 0. È il caso dubbio.' }
+    ];
+
+  /* ===== capitolo 5: Sottosuccessioni ===== */
+  order.push('sottosuccessioni'); NAMES['sottosuccessioni'] = '5 Sottosuccessioni';
+  draws.sottosuccessioni = () => {
+    const P = $('sP').checked, D = $('sD').checked;
+    const s = [];
+    if (P) s.push({f:n=> n%2===0 ? n/(n+1) : NaN, color:'--cop'});
+    if (D) s.push({f:n=> n%2===1 ? -n/(n+1) : NaN, color:'--thief'});
+    if (!s.length) s.push({f:()=>NaN, color:'--ink'});
+    plot($('plotS'), { N:40, series:s, hlines:[{y:1, color:'--cop', label:'1'},{y:-1, color:'--thief', label:'−1'}] });
+  };
+  $('sP').addEventListener('change', () => draws.sottosuccessioni());
+  $('sD').addEventListener('change', () => draws.sottosuccessioni());
+
+  guided('sottosuccessioni', 'lavagna-sottosuccessioni', [
+    { h:'Passo 1 · Prendi solo gli n pari: (−1)ⁿ = 1. Quanto fa il limite di 2 + 1/n?', type:'nums', ans:[2],
+      html:'n pari: '+LIM+' (2 + 1/n) = '+inp('limite dei pari'), ok:'Sì, i pari hanno limite 2.', bad:'Per n → +∞, 1/n tende a 0, quindi 2 + quasi 0…' },
+    { h:'Passo 2 · Ora solo gli n dispari: (−1)ⁿ = −1. Quanto fa il limite di −(2 + 1/n)?', type:'nums', ans:[-2],
+      html:'n dispari: '+LIM+' −(2 + 1/n) = '+inp('limite dei dispari'), ok:'Sì, i dispari hanno limite −2.', bad:'È come prima ma con il segno meno davanti.' },
+    { h:'Passo 3 · Cosa concludi?', type:'choice', ans:2,
+      opts:['Il limite è 0, la media tra 2 e −2','Il limite è 2','Il limite non esiste: due sottosuccessioni con limiti diversi'],
+      ok:'Perfetto! Pari: limite 2. Dispari: limite −2. Il limite non esiste.', bad:'Non si fa la media. Rileggi la contronominale.' }
+  ], '<b>Fatto!</b> Questa è esattamente la frase da scrivere all\'esame: "la sottosuccessione dei pari tende a 2, quella dei dispari a −2, quindi il limite non esiste".');
+
+  EX['sottosuccessioni'] = [
+      { id:'e1', type:'choice', q:LIM+' cos(nπ)', a:2, opts:['1','0','non esiste'], hint:'cos(nπ) per n pari vale 1, per n dispari vale −1.', sol:'Pari: limite 1. Dispari: limite −1. Limiti diversi, quindi il limite non esiste.' },
+      { id:'e2', type:'choice', q:LIM+' (−1)ⁿ / n', a:0, opts:['0','non esiste','1'], hint:'Pari: 1/n. Dispari: −1/n. Per n → +∞ dove vanno?', sol:'Per n → +∞ tutte e due tendono a 0: il limite è 0 (l\'hai fatto anche coi carabinieri).' },
+      { id:'e3', type:'choice', q:LIM+' (−1)ⁿ + 1/n', a:1, opts:['0','non esiste','1'], hint:'Pari: 1 + 1/n. Dispari: −1 + 1/n.', sol:'Pari: limite 1. Dispari: limite −1. Il limite non esiste.' },
+      { id:'e4', type:'choice', q:'a<sub>n</sub> = sin n sta sempre tra −1 e 1. Cosa garantisce Bolzano-Weierstrass?', a:1,
+        opts:['Che sin n converge','Che esiste almeno una sottosuccessione di sin n che converge','Niente, perché sin n oscilla'], hint:'BW parla solo di una parte della successione.', sol:'sin n è limitata, quindi ha almeno una sottosuccessione convergente. Tutta la successione invece non converge.' }
+    ];
+
+  /* ===== capitolo 6: Serie numeriche ===== */
+  order.push('serie'); NAMES['serie'] = '6 Serie numeriche';
+  const SER = [
+    { a:n=>1/Math.pow(2,n), lim:1, txt:'Le somme salgono ma si fermano a 1: la serie <b>converge</b> e la somma è 1.' },
+    { a:n=>1/n, lim:null, txt:'Le somme crescono sempre, piano piano, senza fermarsi: la serie <b>diverge</b>. Eppure i termini 1/n tendono a 0!' },
+    { a:n=>1/(n*n), lim:Math.PI*Math.PI/6, txt:'Le somme si fermano a circa 1,645: la serie <b>converge</b>. (La somma esatta è π²/6, non serve saperla.)' },
+    { a:n=>(n%2===1)?1:-1, lim:null, txt:'Le somme saltano tra 1 e 0 per sempre: la serie è <b>irregolare</b>.' }
+  ];
+  draws.serie = () => {
+    const k = +$('serS').value, N = +$('serN').value, s = SER[k];
+    const S = [0]; for (let n=1;n<=N;n++) S[n] = S[n-1] + s.a(n);
+    plot($('plotSer'), { N, series:[{f:n=>S[n], color:'--thief'}], hlines: s.lim!==null ? [{y:s.lim, color:'--cop', label:'somma = '+it(s.lim,3)}] : [] });
+    $('serOut').innerHTML = 'S<sub>'+N+'</sub> = <b>'+it(S[N],4)+'</b>. '+s.txt;
+  };
+  $('serS').addEventListener('change', () => draws.serie());
+  $('serN').addEventListener('input', () => { $('serNv').textContent = $('serN').value; draws.serie(); });
+
+  guided('serie', 'lavagna-serie', [
+    { h:'Passo 1 · Primo controllo: quanto fa il limite del termine generale?', type:'nums', ans:[0],
+      html: LIM+' '+FR('n','3ⁿ')+' = '+inp('limite del termine'),
+      ok:'Giusto: 3ⁿ batte n (gerarchia degli infiniti), quindi il termine tende a 0. La condizione necessaria è rispettata, ma non basta: serve un criterio.', bad:'Gerarchia: chi cresce più in fretta tra n e 3ⁿ?' },
+    { h:'Passo 2 · Quale criterio usi?', type:'choice', ans:1,
+      opts:['Confronto con 1/n','Rapporto, perché c\'è 3ⁿ','Radice, perché c\'è la n all\'esponente di tutto'],
+      ok:'Esatto: con le potenze tipo 3ⁿ il rapporto si semplifica bene. (Anche la radice funzionerebbe, ma il rapporto è più comodo.)', bad:'Guarda lo schema: c\'è una potenza 3ⁿ ma non è "tutto elevato alla n".' },
+    { h:'Passo 3 · Semplifica il rapporto a<sub>n+1</sub> / a<sub>n</sub>', type:'choice', ans:0,
+      html: FR('(n+1) / 3<sup>n+1</sup>','n / 3ⁿ')+' = '+FR('n+1','3<sup>n+1</sup>')+' · '+FR('3ⁿ','n'),
+      opts:[FR('n+1','3n'), FR('3(n+1)','n'), FR('n+1','n')],
+      ok:'Giusto: 3ⁿ / 3<sup>n+1</sup> = 1/3.', bad:'Ricorda 3<sup>n+1</sup> = 3 · 3ⁿ. Cosa resta dopo aver semplificato 3ⁿ?' },
+    { h:'Passo 4 · Quanto vale L?', type:'nums', ans:[1/3],
+      html: 'L = '+LIM+' '+FR('n+1','3n')+' = '+inp('valore di L'),
+      ok:'Sì, L = 1/3.', bad:'Termine dominante: n/(3n). Scrivi la frazione, tipo 1/5.' },
+    { h:'Passo 5 · Conclusione', type:'choice', ans:0,
+      opts:['L = 1/3 &lt; 1: la serie converge','L = 1/3 &lt; 1: la serie diverge','Non si può dire'],
+      ok:'Perfetto!', bad:'Ripassa la regola del rapporto: L &lt; 1 → ?' }
+  ], '<b>Fatto!</b> Per il criterio del rapporto, '+LIM+' a<sub>n+1</sub>/a<sub>n</sub> = 1/3 &lt; 1, quindi '+SUM(1)+' n/3ⁿ converge. Questa frase è proprio quella da scrivere all\'esame.');
+
+  const CV = ['converge','diverge','è irregolare'];
+  EX['serie'] = [
+    { id:'e1', type:'num', q:SUM(0)+' (1/3)ⁿ = ?', a:1.5, hint:'Geometrica con q = 1/3, parte da n = 0: somma 1/(1 − q).', sol:'1/(1 − 1/3) = 1/(2/3) = 3/2.' },
+    { id:'e2', type:'choice', q:SUM(1)+' '+FR('n + 1','n'), a:1, opts:CV, hint:'Primo controllo: quanto fa il limite del termine per n → +∞?', sol:LIM+' (n+1)/n = 1 ≠ 0: la condizione necessaria non vale, termini positivi, quindi diverge.' },
+    { id:'e3', type:'choice', q:SUM(1)+' '+FR('1','n³'), a:0, opts:CV, hint:'È una 1/n<sup>p</sup>. Quanto vale p?', sol:'p = 3 &gt; 1: converge.' },
+    { id:'e4', type:'choice', q:SUM(1)+' '+FR('1','√n'), a:1, opts:CV, hint:'√n = n<sup>1/2</sup>. Quanto vale p?', sol:'p = 1/2 ≤ 1: diverge.' },
+    { id:'e5', type:'choice', q:SUM(1)+' '+FR('2ⁿ','n!'), a:0, opts:CV, hint:'C\'è un fattoriale: rapporto. (n+1)! = (n+1) · n!.', sol:'Rapporto = 2/(n+1), e '+LIM+' 2/(n+1) = 0 &lt; 1: converge.' },
+    { id:'e6', type:'choice', q:SUM(1)+' ('+FR('n','2n + 1')+')ⁿ', a:0, opts:CV, hint:'È tutto elevato alla n: radice. La radice n-esima smonta la potenza.', sol:'Radice n-esima = n/(2n+1), e '+LIM+' n/(2n+1) = 1/2 &lt; 1: converge.' },
+    { id:'e7', type:'choice', q:SUM(1)+' '+FR('1','n² + 5'), a:0, opts:CV, hint:'Confronto: 1/(n² + 5) è più piccolo di quale serie che conosci?', sol:'1/(n² + 5) ≤ 1/n², e Σ 1/n² converge (p = 2): converge.' },
+    { id:'e8', type:'choice', q:SUM(0)+' (5/4)ⁿ', a:1, opts:CV, hint:'Geometrica: quanto vale q? È minore di 1?', sol:'q = 5/4 ≥ 1: diverge.' }
+  ];
+
+  /* ===== capitolo 7: Serie con parametro e Leibniz ===== */
+  order.push('serie-parametro'); NAMES['serie-parametro'] = '7 Serie con parametro';
+  const AS = [
+    { r:n=>((n+3)/(n*n*n+1))/(1/(n*n)), l:'1', t:'Il rapporto tende a 1: Σ (n+3)/(n³+1) si comporta come Σ 1/n², che converge.' },
+    { r:n=>Math.sin(1/n)/(1/n), l:'1', t:'Il rapporto tende a 1: Σ sin(1/n) si comporta come Σ 1/n, che diverge.' },
+    { r:n=>Math.log(1+1/(n*n))/(1/(n*n)), l:'1', t:'Il rapporto tende a 1: Σ ln(1 + 1/n²) si comporta come Σ 1/n², che converge.' },
+    { r:n=>(1-Math.cos(1/n))/(1/(n*n)), l:'1/2', t:'Il rapporto tende a 1/2 (finito e diverso da 0): Σ (1 − cos(1/n)) si comporta come Σ 1/n², che converge.' }
+  ];
+  draws['serie-parametro'] = () => {
+    const a = AS[+$('asS').value];
+    plot($('plotAs'), { N:40, zero:false, series:[{f:a.r, color:'--thief'}], hlines:[{y:a.l==='1/2'?0.5:1, color:'--cop', label:'ℓ = '+a.l}] });
+    $('asOut').innerHTML = a.t;
+    const S=[0]; for (let n=1;n<=40;n++) S[n]=S[n-1]+(n%2===1?1:-1)/n;
+    plot($('plotLeib'), { N:40, zero:false, series:[{f:n=>S[n], color:'--thief', line:true},{f:n=>S[n], color:'--thief'}], hlines:[{y:Math.log(2), color:'--cop', label:'0,693…'}] });
+  };
+  $('asS').addEventListener('change', () => draws['serie-parametro']());
+
+  guided('serie-parametro', 'lavagna-serie-parametro', [
+    { h:'Passo 1 · Rapporto con il valore assoluto: |a<sub>n+1</sub>| / |a<sub>n</sub>| = |x| · n/(n+1). Quanto fa il limite per n → +∞?', type:'choice', ans:1,
+      opts:['L = 1','L = |x|','L = x²'],
+      ok:'Giusto: '+LIM+' n/(n+1) = 1, quindi resta |x|.', bad:'|x|<sup>n+1</sup>/|x|ⁿ = |x|, e '+LIM+' n/(n+1) = …' },
+    { h:'Passo 2 · Cosa dice il criterio?', type:'choice', ans:0,
+      opts:['Se |x| &lt; 1 converge (anche assolutamente), se |x| &gt; 1 non converge','Converge sempre','Se |x| &lt; 1 diverge'],
+      ok:'Esatto. Restano da fare a mano i confini x = 1 e x = −1, dove L = 1.', bad:'L &lt; 1 → converge, L &gt; 1 → no. Qui L = |x|.' },
+    { h:'Passo 3 · Caso x = 1: la serie diventa Σ 1/n. Che fine fa?', type:'choice', ans:1,
+      opts:['Converge','Diverge: è l\'armonica','È irregolare'],
+      ok:'Sì: armonica, p = 1, diverge.', bad:'Σ 1/n è la serie armonica.' },
+    { h:'Passo 4 · Caso x = −1: la serie diventa Σ (−1)ⁿ/n. Che fine fa?', type:'choice', ans:0,
+      opts:['Converge per Leibniz: 1/n decresce e tende a 0','Diverge come l\'armonica','Non si può dire'],
+      ok:'Perfetto: segni alterni e 1/n decrescente con limite 0.', bad:'Segni alterni: quale criterio?' },
+    { h:'Passo 5 · Risposta finale: per quali x converge?', type:'choice', ans:2,
+      opts:['−1 &lt; x &lt; 1','−1 &lt; x ≤ 1','−1 ≤ x &lt; 1'],
+      ok:'Perfetto! x = −1 incluso (Leibniz), x = 1 escluso (armonica).', bad:'Rimetti insieme: |x| &lt; 1 sì, x = 1 no, x = −1 sì.' }
+  ], '<b>Fatto!</b> '+SUM(1)+' xⁿ/n converge per −1 ≤ x &lt; 1. Questo è lo schema di quasi tutti gli esercizi con parametro: criterio con |x|, poi i confini a mano.');
+
+  const CV2 = ['converge','diverge','non converge (irregolare)'];
+  EX['serie-parametro'] = [
+    { id:'e1', type:'choice', q:SUM(1)+' '+FR('n + 3','n³ + 1'), a:0, opts:CV2, hint:'Termine dominante sopra e sotto: n/n³.', sol:'~ 1/n², p = 2 &gt; 1: converge.' },
+    { id:'e2', type:'choice', q:SUM(1)+' '+FR('2n + 1','n² + 4'), a:1, opts:CV2, hint:'Termine dominante: 2n/n² = 2/n. La costante 2 non conta.', sol:'~ 2/n, si comporta come l\'armonica: diverge.' },
+    { id:'e3', type:'choice', q:SUM(1)+' sin(1/n²)', a:0, opts:CV2, hint:'Per n → +∞, 1/n² tende a 0, e sin(piccolo) ~ piccolo.', sol:'sin(1/n²) ~ 1/n², p = 2: converge.' },
+    { id:'e4', type:'choice', q:SUM(1)+' '+FR('(−1)ⁿ','√n'), a:0, opts:CV2, hint:'Segni alterni. 1/√n è decrescente? Tende a 0?', sol:'Sì e sì: converge per Leibniz. (Senza i segni, Σ 1/√n divergerebbe.)' },
+    { id:'e5', type:'choice', q:SUM(1)+' (−1)ⁿ · '+FR('n','n + 1'), a:2, opts:CV2, hint:'Primo controllo: il termine tende a 0? n/(n+1) per n → +∞ tende a…', sol:'n/(n+1) tende a 1, quindi i termini fanno quasi ±1 e non tendono a 0: la serie non converge, le somme oscillano.' },
+    { id:'e6', type:'choice', q:SUM(1)+' 1 − cos(1/n)', a:0, opts:CV2, hint:'Equivalenza: 1 − cos(piccolo) ~ (piccolo)²/2.', sol:'~ 1/(2n²), si comporta come Σ 1/n²: converge.' },
+    { id:'e7', type:'choice', q:'Per quali α converge '+SUM(1)+' '+FR('1','n<sup>α − 1</sup>')+' ?', a:1, opts:['α &gt; 1','α &gt; 2','α ≥ 2'], hint:'È una 1/n<sup>p</sup> con p = α − 1. Serve p &gt; 1.', sol:'α − 1 &gt; 1, cioè α &gt; 2.' },
+    { id:'e8', type:'choice', q:'Per quali x converge '+SUM(0)+' xⁿ ?', a:0, opts:['−1 &lt; x &lt; 1','−1 ≤ x ≤ 1','x &gt; 0'], hint:'È la geometrica del capitolo 6 con q = x.', sol:'Geometrica: converge solo per −1 &lt; x &lt; 1. Per x = 1 diverge, per x = −1 è irregolare.' }
+  ];
+
+  /* ===== capitolo 8: Limiti di funzioni ===== */
+  order.push('limiti-funzioni'); NAMES['limiti-funzioni'] = '8 Limiti di funzioni';
+  const LF = [
+    { f:x=>(x*x-1)/(x-1), x0:1, xr:[-1,3], yr:[-0.5,4.5], hole:{y:2}, txt:'Da sinistra e da destra si va verso 2. In x = 1 la funzione non esiste (pallino vuoto), ma il limite c\'è: '+LIMX('1')+' (x² − 1)/(x − 1) = 2.' },
+    { f:x=>Math.sin(x)/x, x0:0, xr:[-8,8], yr:[-0.5,1.3], hole:{y:1}, extra:[{f:x=>x, color:'--muted', dash:true, width:1.5}], txt:'Da tutte e due le parti si va verso 1: '+LIMX('0')+' sin(x)/x = 1. La linea tratteggiata è y = x: vicino a 0 è quasi uguale a sin x.' },
+    { f:x=>1/x, x0:0, xr:[-3,3], yr:[-8,8], txt:'Da sinistra si scende a −∞, da destra si sale a +∞. Destro e sinistro diversi: '+LIMX('0')+' 1/x non esiste.' },
+    { f:x=>x===0?NaN:Math.abs(x)/x, x0:0, xr:[-3,3], yr:[-2,2], txt:'Da sinistra vale sempre −1, da destra sempre 1. Destro e sinistro diversi: il limite non esiste.' }
+  ];
+  draws['limiti-funzioni'] = () => {
+    const c = LF[+$('lfS').value], d = (+$('lfD').value)/100 * (c.xr[1]-c.x0) * 0.9;
+    const xl = c.x0 - d, xr = c.x0 + d, yl = c.f(xl), yr = c.f(xr);
+    const pts = [{x:xl, y:Math.max(c.yr[0], Math.min(c.yr[1], yl)), color:'--cop'}, {x:xr, y:Math.max(c.yr[0], Math.min(c.yr[1], yr)), color:'--thief'}];
+    if (c.hole) pts.push({x:c.x0, y:c.hole.y, color:'--ink', open:true});
+    plotF($('plotLF'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[...(c.extra||[]), {f:c.f, color:'--ink', width:2}], points:pts, vlines:[{x:c.x0, color:'--muted', label:'x₀'}] });
+    $('lfOut').innerHTML = 'f('+it(xl,3)+') = <b class="cop">'+it(yl,3)+'</b> · f('+it(xr,3)+') = <b class="thief">'+it(yr,3)+'</b><br><span style="font-size:1rem">'+c.txt+'</span>';
+  };
+  $('lfS').addEventListener('change', () => draws['limiti-funzioni']());
+  $('lfD').addEventListener('input', () => draws['limiti-funzioni']());
+
+  guided('limiti-funzioni', 'lavagna-limiti-funzioni', [
+    { h:'Passo 1 · Sostituisco x = 2. Cosa esce?', type:'choice', ans:1,
+      opts:['4/0, quindi infinito','0/0, forma indeterminata','0'],
+      ok:'Giusto: 2² − 4 = 0 e 2 − 2 = 0. Forma 0/0: serve semplificare.', bad:'Calcola sopra: 2² − 4. Sotto: 2 − 2.' },
+    { h:'Passo 2 · Scompongo il numeratore: x² − 4 = ?', type:'choice', ans:0,
+      opts:['(x − 2)(x + 2)','(x − 2)²','(x − 4)(x + 1)'],
+      ok:'Sì: differenza di quadrati. E infatti c\'è il fattore (x − 2), come previsto.', bad:'Differenza di quadrati: a² − b² = (a − b)(a + b).' },
+    { h:'Passo 3 · Semplifico (x − 2) sopra e sotto. Cosa resta?', type:'choice', ans:2,
+      opts:['x − 2','1/(x + 2)','x + 2'],
+      ok:'Esatto. Posso semplificare perché x è vicino a 2 ma non uguale a 2, quindi x − 2 ≠ 0.', bad:'(x − 2)(x + 2) / (x − 2) = ?' },
+    { h:'Passo 4 · Ora risostituisco x = 2. Quanto fa il limite?', type:'nums', ans:[4],
+      html: LIMX('2')+' (x + 2) = '+inp('risultato'),
+      ok:'Perfetto!', bad:'2 + 2…' }
+  ], '<b>Fatto!</b> '+LIMX('2')+' (x² − 4)/(x − 2) = '+LIMX('2')+' (x + 2) = 4. Con 0/0 e polinomi la mossa è sempre questa: trova il fattore (x − x₀), semplificalo, risostituisci.');
+
+  EX['limiti-funzioni'] = [
+    { id:'e1', type:'num', q:LIMX('3')+' (x² + 1)', a:10, hint:'Prima mossa: sostituisci.', sol:'9 + 1 = 10. Nessuna forma indeterminata.' },
+    { id:'e2', type:'num', q:LIMX('1')+' '+FR('x² − 1','x² − x'), a:2, hint:'0/0. Sopra (x − 1)(x + 1), sotto x(x − 1).', sol:'Semplifico (x − 1): resta (x + 1)/x, che in x = 1 vale 2.' },
+    { id:'e3', type:'num', q:LIMX('+∞')+' '+FR('3x² + x','x² − 5'), a:3, hint:'Termine dominante sopra e sotto.', sol:'3x²/x² = 3.' },
+    { id:'e4', type:'num', q:LIMX('0')+' '+FR('sin(5x)','x'), a:5, hint:'Moltiplica e dividi per 5, così sotto c\'è 5x come dentro il seno.', sol:'5 · sin(5x)/(5x), e '+LIMX('0')+' sin(5x)/(5x) = 1: risultato 5.' },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('1 − cos x','x²'), a:0.5, hint:'È un limite notevole, direttamente.', sol:'1/2.' },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + 3x)','x'), a:3, hint:'Moltiplica e dividi per 3.', sol:'3 · ln(1 + 3x)/(3x) → 3 · 1 = 3.' },
+    { id:'e7', type:'num', q:LIMX('0⁺')+' '+FR('1','x'), a:Infinity, hint:'Da destra x è un numero positivo piccolissimo. 1 diviso un positivo piccolissimo…', sol:'+∞ (scrivi inf). Da sinistra sarebbe −∞.' },
+    { id:'e8', type:'num', q:LIMX('0')+' '+FR('e<sup>2x</sup> − 1','x'), a:2, hint:'Notevole (eˣ − 1)/x, con 2x al posto di x: moltiplica e dividi per 2.', sol:'2 · (e<sup>2x</sup> − 1)/(2x) → 2.' },
+    { id:'e9', type:'choice', q:LIMX('0')+' '+FR('|x|','x'), a:2, opts:['1','0','non esiste'], hint:'Calcola il limite destro e quello sinistro.', sol:'Da destra 1, da sinistra −1: diversi, il limite non esiste.' }
+  ];
+
+  /* ===== capitolo 9: Continuità e derivata ===== */
+  order.push('continuita-derivata'); NAMES['continuita-derivata'] = '9 Continuità e derivata';
+  const LIMH = '<span class="lim">lim<span>h→0</span></span>';
+  const DC = [
+    { fns:[x=>x*x/2+0.5], pts:[{x:1,y:1}], t:'Limite sinistro per x → 1⁻ = 1 · limite destro per x → 1⁺ = 1 · f(1) = 1. Tutto uguale: <b>continua</b>.' },
+    { fns:[x=>x<1?x:NaN, x=>x>=1?x+1:NaN], pts:[{x:1,y:1,open:true},{x:1,y:2}], t:'Limite sinistro per x → 1⁻ = 1 · limite destro per x → 1⁺ = 2. Finiti ma diversi: <b>salto, prima specie</b>.' },
+    { fns:[x=>x], pts:[{x:1,y:1,open:true},{x:1,y:2.2}], t:'Limite per x → 1 = 1 (destro e sinistro uguali), ma f(1) = 2,2. Limite ≠ valore: <b>eliminabile</b>. Se ridefinisco f(1) = 1, torna continua.' },
+    { fns:[x=>1/(x-1)], pts:[], t:'Limite sinistro per x → 1⁻ = −∞ · limite destro per x → 1⁺ = +∞. Infiniti: <b>seconda specie</b>.' }
+  ];
+  const DV = [
+    { f:x=>x*x, x0:1, m:2, xr:[-1,3], yr:[-1.5,6], t:'Il rapporto tende a 2 per h → 0: f′(1) = 2.' },
+    { f:Math.sin, x0:0, m:1, xr:[-3,3], yr:[-1.6,1.6], t:'Il rapporto tende a 1 per h → 0: f′(0) = 1. (È il limite notevole sin h / h del capitolo 8!)' },
+    { f:Math.abs, x0:0, m:null, xr:[-2,2], yr:[-1,2], t:'Con h &gt; 0 il rapporto vale sempre 1, con h &lt; 0 vale sempre −1. Destra e sinistra diverse: il limite per h → 0 non esiste, |x| <b>non è derivabile</b> in 0 (punto angoloso).' }
+  ];
+  draws['continuita-derivata'] = () => {
+    const d = DC[+$('dcS').value];
+    plotF($('plotDC'), { xmin:-1, xmax:3, ymin:-3, ymax:4, fns:d.fns.map(f=>({f, color:'--ink', width:2.5})), points:d.pts.map(p=>({...p, color:'--thief'})), vlines:[{x:1, color:'--muted', label:'x₀ = 1'}] });
+    $('dcOut').innerHTML = '<span style="font-size:1rem">'+d.t+'</span>';
+    const c = DV[+$('dvS').value]; let h = (+$('dvH').value)/100 * 1.5; if (Math.abs(h) < 0.01) h = 0.01;
+    const y0 = c.f(c.x0), y1 = c.f(c.x0+h), m = (y1-y0)/h;
+    const fns = [{f:c.f, color:'--ink', width:2}, {f:x=>y0+m*(x-c.x0), color:'--thief', width:2}];
+    if (c.m!==null) fns.push({f:x=>y0+c.m*(x-c.x0), color:'--cop', dash:true, width:1.5});
+    plotF($('plotDV'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns, points:[{x:c.x0,y:y0,color:'--cop'},{x:c.x0+h,y:y1,color:'--thief'}] });
+    $('dvOut').innerHTML = 'h = '+it(h,3)+' · '+FR('f(x₀ + h) − f(x₀)','h')+' = <b class="thief">'+it(m,4)+'</b><br><span style="font-size:1rem">'+c.t+'</span>';
+  };
+  $('dcS').addEventListener('change', () => draws['continuita-derivata']());
+  $('dvS').addEventListener('change', () => draws['continuita-derivata']());
+  $('dvH').addEventListener('input', () => draws['continuita-derivata']());
+
+  guided('continuita-derivata', 'lavagna-continuita-derivata', [
+    { h:'Passo 1 · f(3 + h) = (3 + h)² = 9 + 6h + h². Quanto fa f(3 + h) − f(3)?', type:'choice', ans:1,
+      opts:['9 + 6h + h²','6h + h²','6h'],
+      ok:'Giusto: f(3) = 9, e il 9 se ne va.', bad:'f(3) = 3² = 9. Togli 9 da 9 + 6h + h².' },
+    { h:'Passo 2 · Divido per h: (6h + h²)/h = ?', type:'choice', ans:0,
+      opts:['6 + h','6h','6 + h²'],
+      ok:'Sì: raccolgo h sopra, h(6 + h)/h = 6 + h. Posso semplificare perché h ≠ 0 (h si avvicina a 0 ma non è 0).', bad:'Raccogli h sopra: h(6 + h).' },
+    { h:'Passo 3 · Faccio il limite per h → 0.', type:'nums', ans:[6],
+      html:'f′(3) = '+LIMH+' (6 + h) = '+inp('f′(3)'),
+      ok:'Perfetto: f′(3) = 6. La tangente in x₀ = 3 ha pendenza 6.', bad:'Metti h = 0 in 6 + h.' },
+    { h:'Passo 4 · Retta tangente: y = f(3) + f′(3)(x − 3) = 9 + 6(x − 3). Scrivila come y = 6x + q.', type:'nums', ans:[-9],
+      html:'y = 6x + '+inp('q'),
+      ok:'Esatto: 9 + 6x − 18 = 6x − 9.', bad:'9 + 6x − 18 = 6x + …' }
+  ], '<b>Fatto!</b> f′(3) = '+LIMH+' (6 + h) = 6, tangente y = 6x − 9. Schema della definizione: scrivi f(x₀ + h) − f(x₀), semplifica, dividi per h, fai il limite per h → 0.');
+
+  const DISC = ['continua','salto (prima specie)','seconda specie','eliminabile'];
+  EX['continuita-derivata'] = [
+    { id:'e1', type:'num', lbl:'a', q:'f(x) = x² + 1 se x ≤ 1, f(x) = a · x se x &gt; 1. Per quale a è continua in x = 1?', a:2, hint:'Limite sinistro per x → 1⁻: 1² + 1. Limite destro per x → 1⁺: a · 1. Devono essere uguali.', sol:'Sinistro 2, destro a: serve a = 2.' },
+    { id:'e2', type:'choice', q:'f(x) = '+FR('x² − 4','x − 2')+' in x = 2', a:3, opts:DISC, hint:'In x = 2 non esiste (0/0). Il limite per x → 2 esiste? Lo hai calcolato nel capitolo 8.', sol:'Il limite per x → 2 vale 4 (finito), ma f(2) non esiste: eliminabile.' },
+    { id:'e3', type:'choice', q:'f(x) = 1 se x ≥ 0, f(x) = −1 se x &lt; 0, in x = 0', a:1, opts:DISC, hint:'Limite destro e sinistro per x → 0: sono finiti? Uguali?', sol:'Destro 1, sinistro −1: finiti e diversi, salto.' },
+    { id:'e4', type:'choice', q:'f(x) = '+FR('1','x²')+' in x = 0', a:2, opts:DISC, hint:'Cosa fa 1/x² per x → 0, da destra e da sinistra?', sol:'Va a +∞ da tutte e due le parti: limite infinito, seconda specie.' },
+    { id:'e5', type:'num', lbl:'f′(5)', q:'f(x) = x². Calcola f′(5) con la definizione.', a:10, hint:'Come nel guidato: f(5 + h) − f(5) = 10h + h². Dividi per h.', sol:'(10h + h²)/h = 10 + h, '+LIMH+' (10 + h) = 10.' },
+    { id:'e6', type:'num', lbl:'f′(x₀)', q:'f(x) = 3x + 2. Quanto vale f′(x₀) in un punto qualsiasi?', a:3, hint:'f(x₀ + h) − f(x₀) = 3h. Il grafico è una retta: quale pendenza?', sol:'3h/h = 3 per ogni h: f′(x₀) = 3. La tangente a una retta è la retta stessa.' },
+    { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:'y = 1 + 2x − 2 = 2x − 1: q = −1.' },
+    { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:'Destra 1, sinistra −1: punto angoloso. È continua, ma non derivabile.' },
+    { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:'f(0) = −1 &lt; 0, f(1) = 1 &gt; 0, f continua: per il teorema degli zeri esiste c in (0, 1) con f(c) = 0.' }
+  ];
+
+  Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));
+
+  /* ---------------- copia risultati per il tutor ---------------- */
+  const LAB = { ok:'giusto', 'ok-dopo':'giusto dopo errore o aiuto', errore:'sbagliato', 'soluzione vista':'guardato la soluzione' };
+  const plain = h => { const t=document.createElement('div'); t.innerHTML=h; return t.textContent.replace(/\s+/g,' ').trim(); };
+  document.querySelectorAll('[data-copy]').forEach(box => {
+    const ch = box.dataset.copy;
+    box.innerHTML = '<div class="row"><button>Copia i miei risultati per il tutor</button><span class="feedback"></span></div><textarea hidden readonly style="width:100%;min-height:110px;font:inherit;margin-top:8px"></textarea>';
+    const btn = box.querySelector('button'), fb = box.querySelector('.feedback'), ta = box.querySelector('textarea');
+    btn.onclick = () => {
+      const res = store.get('lavagna-'+ch), lines = ['Lavagna Analisi, capitolo '+NAMES[ch]+':'];
+      Object.keys(res).filter(k=>/^g\d+$/.test(k)).sort().forEach(k => lines.push('Guidato passo '+k.slice(1)+': '+(LAB[res[k]]||res[k])));
+      EX[ch].forEach((e,i) => lines.push('Esercizio '+(i+1)+' ('+plain(e.q)+'): '+(LAB[res[e.id]]||'non fatto')+(res[e.id+'_aiuto']?', aperto aiuto':'')));
+      const txt = lines.join('\n'); ta.value = txt;
+      const fallback = () => { ta.hidden=false; ta.select(); say(fb,true,'Seleziona il testo qui sotto e copialo nella chat.'); };
+      try { navigator.clipboard.writeText(txt).then(()=>say(fb,true,'Copiato: incollalo nella chat del tutor.'), fallback); } catch(e){ fallback(); }
+    };
+  });
+
+  /* ---------------- capitoli (navigazione) ---------------- */
+  document.querySelectorAll('.chapter').forEach((c,i) => {
+    if (i < order.length-1){ const nx=document.createElement('div'); nx.className='next';
+      nx.innerHTML='<a href="#'+order[i+1]+'"><button class="primary" tabindex="-1">Capitolo successivo: '+NAMES[order[i+1]].slice(2)+' →</button></a>'; c.appendChild(nx); }
+  });
+  function show(){
+    let ch = (location.hash||'').slice(1); if (!order.includes(ch)) ch = order[0];
+    document.querySelectorAll('.chapter').forEach(c => c.hidden = c.dataset.ch !== ch);
+    document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.ch === ch));
+    requestAnimationFrame(() => draws[ch] && draws[ch]());
+  }
+  window.addEventListener('hashchange', () => { show(); window.scrollTo(0,0); });
+  const redraw = () => { const c = document.querySelector('.chapter:not([hidden])'); if (c && draws[c.dataset.ch]) draws[c.dataset.ch](); };
+  window.addEventListener('resize', redraw);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', redraw);
+  new MutationObserver(redraw).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+  order.forEach(markDone);
+  show();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+  <div class="chapter" data-ch="limiti-funzioni">
+    <section class="board">
+      <div class="eyebrow">Capitolo 8 · blocco del 23/11 · Albano lezioni 20 e 22 ottobre · dispensa pp. 60-72, 79-86</div>
+      <h2>I limiti di funzioni</h2>
+      <p class="big">Finora avevi successioni: n era un numero intero e andava solo a +∞. Adesso hai funzioni f(x): x è un numero reale qualsiasi e può avvicinarsi <b>a un numero</b>, per esempio x → 2.</p>
+      <div class="math"><span class="lim">lim<span>x→x₀</span></span> f(x) = L</div>
+      <p>Si legge: "quando x si avvicina a x₀, f(x) si avvicina a L". A cosa serve: a capire cosa fa una funzione vicino a un punto dove non puoi semplicemente sostituire (un buco, una divisione per 0), e cosa fa all'infinito. Ti serve per continuità, derivate e studio di funzione: è la base di tutto il resto del corso.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · guardare vicino, non sopra</div>
+      <p>Il limite <b>non</b> chiede quanto vale f in x₀. Chiede dove va f(x) quando x è <b>vicinissimo</b> a x₀, da sinistra e da destra. La funzione in x₀ può anche non esistere.</p>
+      <canvas id="plotLF" aria-label="Grafico di una funzione vicino a un punto"></canvas>
+      <div class="controls">
+        <label for="lfS">Funzione: <select id="lfS">
+          <option value="0">(x² − 1)/(x − 1), vicino a x₀ = 1</option>
+          <option value="1">sin(x)/x, vicino a x₀ = 0</option>
+          <option value="2">1/x, vicino a x₀ = 0</option>
+          <option value="3">|x|/x, vicino a x₀ = 0</option>
+        </select></label>
+        <label for="lfD">Distanza da x₀: <input type="range" id="lfD" min="1" max="100" value="60"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--cop)"></i>punto a sinistra di x₀</span><span><i style="background:var(--thief)"></i>punto a destra di x₀</span></div>
+      <div class="readout" id="lfOut"></div>
+      <div class="note">Avvicina i punti trascinando la barra verso sinistra. Nel primo esempio la funzione in x = 1 non esiste (0/0), ma da tutte e due le parti si va verso 2: il limite è 2.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Destra e sinistra <span class="tag cap">da capire</span></div>
+      <h2>Limite destro e sinistro</h2>
+      <div class="when">
+        <div><span class="lim">lim<span>x→x₀⁻</span></span> f(x): arrivo da <b>sinistra</b> (x più piccolo di x₀).</div>
+        <div><span class="lim">lim<span>x→x₀⁺</span></span> f(x): arrivo da <b>destra</b> (x più grande di x₀).</div>
+      </div>
+      <p><b>Il limite esiste solo se destro e sinistro sono uguali.</b> Esempio 1/x vicino a 0: da sinistra va a −∞, da destra a +∞, quindi <span class="lim">lim<span>x→0</span></span> 1/x non esiste. Con |x|/x: da sinistra vale sempre −1, da destra sempre 1, quindi non esiste.</p>
+      <p>È la stessa idea delle sottosuccessioni del capitolo 5: due strade con risultati diversi ⇒ il limite non esiste.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Come si calcola · lo schema</div>
+      <h2>Quattro mosse, in quest'ordine</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1) = 10.</p></div>
+        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p></div>
+        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p></div>
+        <div class="step"><h3>4 · Se ci sono sin, cos, ln, e<sup>x</sup>: limiti notevoli</h3><p>Li trovi nel riquadro qui sotto. Più avanti (capitolo 11) avrai anche De L'Hôpital e Taylor.</p></div>
+      </div>
+      <p>Le forme indeterminate sono le stesse delle successioni: 0/0, ∞/∞, ∞ − ∞, 0 · ∞, 1<sup>∞</sup>, 0<sup>0</sup>, ∞<sup>0</sup>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I limiti notevoli <span class="tag mem">a memoria</span></div>
+      <h2>Tutti per x → 0</h2>
+      <div class="when">
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>1 − cos x</span><span>x²</span></span> = <span class="fr"><span>1</span><span>2</span></span></div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>ln(1 + x)</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>eˣ − 1</span><span>x</span></span> = 1</div>
+        <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>(1 + x)<sup>a</sup> − 1</span><span>x</span></span> = a</div>
+        <div><span class="lim">lim<span>x→±∞</span></span> (1 + <span class="fr"><span>1</span><span>x</span></span>)<sup>x</sup> = e</div>
+      </div>
+      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x.</p>
+      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x = <span class="lim">lim<span>x→0</span></span> 5 · sin(5x)/(5x) = 5 · 1 = 5.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>x→2</span></span> <span class="fr"><span>x² − 4</span><span>x − 2</span></span></h2>
+      <div class="steps" id="guided-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi il risultato. Per +∞ scrivi <b>inf</b>, per −∞ scrivi <b>-inf</b>, frazioni tipo 1/2.</p>
+      <div id="ex-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><span class="lim">lim<span>x→x₀</span></span> f(x) = L: vicino a x₀ (non in x₀) f(x) si avvicina a L.</li>
+        <li>Il limite esiste ⇔ limite destro = limite sinistro.</li>
+        <li>Schema: sostituisco → 0/0 con polinomi: scompongo (x − x₀) → x → ±∞: termine dominante → notevoli.</li>
+        <li>Notevoli per x → 0: sin x/x = 1; (1 − cos x)/x² = 1/2; ln(1 + x)/x = 1; (eˣ − 1)/x = 1; ((1 + x)<sup>a</sup> − 1)/x = a.</li>
+        <li>Al posto di x posso mettere qualsiasi cosa che tende a 0, uguale sopra e sotto.</li>
+      </ul>
+      <div data-copy="limiti-funzioni"></div>
+    </section>
+  </div>

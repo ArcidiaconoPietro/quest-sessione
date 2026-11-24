@@ -1,0 +1,144 @@
+  <div class="chapter" data-ch="serie">
+    <section class="board">
+      <div class="eyebrow">Capitolo 6 · blocco del 16/11 · Mughetti lez. 7, 8, 9 · dispensa pp. 49-51 e pagine gialle</div>
+      <h2>Le serie numeriche</h2>
+      <p class="big">Una serie è una <b>somma di infiniti numeri</b>: a<sub>1</sub> + a<sub>2</sub> + a<sub>3</sub> + … per sempre.</p>
+      <p>A cosa serve: a capire se sommando infiniti pezzi ottieni un numero preciso oppure qualcosa che esplode. È una delle domande più frequenti nei temi d'esame di Analisi: "studiare il carattere della serie".</p>
+      <p>Si scrive così: <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> a<sub>n</sub>. Si legge "somma per n da 1 a più infinito di a<sub>n</sub>".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea · la torta</div>
+      <p>Hai una torta. Ne mangi metà. Poi metà di quello che resta, cioè un quarto. Poi metà del resto, un ottavo. E così via per sempre.</p>
+      <div class="math">1/2 + 1/4 + 1/8 + 1/16 + …</div>
+      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Quindi questa somma infinita fa un numero preciso: 1.</p>
+      <p><b>Come si fa davvero:</b> sommo i primi n pezzi e chiamo il risultato <b>somma parziale</b> S<sub>n</sub>. Poi guardo cosa fa S<sub>n</sub> per n → +∞.</p>
+      <div class="math"><span class="box thief">S<sub>n</sub> = a<sub>1</sub> + a<sub>2</sub> + … + a<sub>n</sub></span></div>
+      <div class="when">
+        <div><b>Converge</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> è un numero finito. Quel numero si chiama <b>somma della serie</b>.</div>
+        <div><b>Diverge</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> = +∞ (oppure −∞).</div>
+        <div><b>È irregolare</b> se <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub> non esiste.</div>
+        <div>Studiare il <b>carattere</b> della serie vuol dire dire quale dei tre casi è.</div>
+      </div>
+      <p>Nel grafico vedi le somme parziali S<sub>n</sub>. Prova le quattro serie:</p>
+      <canvas id="plotSer" aria-label="Grafico delle somme parziali"></canvas>
+      <div class="controls">
+        <label for="serS">Serie: <select id="serS">
+          <option value="0">1/2 + 1/4 + 1/8 + … (la torta)</option>
+          <option value="1">1 + 1/2 + 1/3 + 1/4 + … (armonica)</option>
+          <option value="2">1 + 1/4 + 1/9 + 1/16 + … (1/n²)</option>
+          <option value="3">1 − 1 + 1 − 1 + … (irregolare)</option>
+        </select></label>
+        <label for="serN">Fino a n = <input type="range" id="serN" min="5" max="200" value="40"> <b id="serNv">40</b></label>
+      </div>
+      <div class="readout" id="serOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La serie più importante <span class="tag mem">formula a memoria</span> <span class="tag cap">il perché è facile</span></div>
+      <h2>La serie geometrica</h2>
+      <p>Ogni termine è il precedente moltiplicato sempre per lo stesso numero q (la "ragione").</p>
+      <div class="math"><span class="sig"><span>+∞</span><b>Σ</b><span>n=0</span></span> qⁿ = 1 + q + q² + q³ + …</div>
+      <div class="when">
+        <div>Se <b>−1 &lt; q &lt; 1</b>: converge e la somma è <span class="box thief"><span class="fr"><span>1</span><span>1 − q</span></span></span></div>
+        <div>Se <b>q ≥ 1</b>: diverge a +∞.</div>
+        <div>Se <b>q ≤ −1</b>: è irregolare.</div>
+        <div>La torta è q = 1/2, partendo da n = 1: 1/(1 − 1/2) − 1 = 2 − 1 = 1. Torna!</div>
+      </div>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Perché, passo 1 · Scrivo la somma parziale e la moltiplico per q</h3>
+          <div class="math left">S<sub>n</sub> = 1 + q + q² + … + qⁿ</div>
+          <div class="math left">q · S<sub>n</sub> = q + q² + … + qⁿ + q<sup>n+1</sup></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Sottraggo: quasi tutto si cancella</h3>
+          <div class="math left">S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup>, quindi S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Faccio il limite per n → +∞</h3>
+          <p>Se −1 &lt; q &lt; 1, allora <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0 (un numero più piccolo di 1 moltiplicato per sé tante volte diventa piccolissimo). Resta 1/(1 − q).</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il primo controllo, sempre <span class="tag cap">da capire</span></div>
+      <h2>La condizione necessaria</h2>
+      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Perché: se i pezzi che aggiungi non diventano piccolissimi, la somma continua a crescere.</p>
+      <p><b>Come si usa</b> (contronominale): se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> ≠ 0, la serie <b>non converge</b>. Se i termini sono positivi, diverge. È il primo controllo da fare, costa 10 secondi.</p>
+      <div class="warn"><b>Trappola:</b> <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0 <b>non basta</b> per convergere. La serie armonica 1 + 1/2 + 1/3 + … ha termini che tendono a 0, eppure diverge (guardala nel grafico sopra: cresce piano, ma senza fermarsi). Se il termine tende a 0, devi usare un criterio.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Le serie di riferimento <span class="tag mem">a memoria</span></div>
+      <h2>Armonica e armonica generalizzata</h2>
+      <div class="math"><span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>1</span><span>n<sup>p</sup></span></span></div>
+      <div class="when">
+        <div><b>p &gt; 1</b>: converge. Esempio 1/n², 1/n³, 1/n<sup>1,5</sup>.</div>
+        <div><b>p ≤ 1</b>: diverge. Esempio 1/n (p = 1, l'armonica), 1/√n (p = 1/2).</div>
+      </div>
+      <p>Perché l'armonica diverge (intuizione facile): raggruppo i termini. 1/3 + 1/4 è più di 1/4 + 1/4 = 1/2. Poi 1/5 + … + 1/8 è più di 4 · 1/8 = 1/2. E così via: aggiungo sempre almeno 1/2, infinite volte. Il resto (p qualsiasi) impara solo il risultato.</p>
+      <p>Servono come <b>metro di paragone</b>: con il confronto (qui sotto) e con il confronto asintotico (capitolo 7) riporti tante serie a queste.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I tre criteri · per serie a termini positivi <span class="tag mem">enunciati a memoria</span></div>
+      <h2>Confronto, rapporto, radice</h2>
+      <div class="steps">
+        <div class="step"><h3>Confronto · è "mezzo carabiniere"</h3>
+          <p>Se 0 ≤ a<sub>n</sub> ≤ b<sub>n</sub>:</p>
+          <ul class="recap">
+            <li>se Σ b<sub>n</sub> converge, converge anche Σ a<sub>n</sub> (la più piccola sta sotto un numero finito);</li>
+            <li>se Σ a<sub>n</sub> diverge, diverge anche Σ b<sub>n</sub> (la più grande sta sopra una cosa infinita).</li>
+          </ul>
+          <p>Esempio: 1/(n² + 5) ≤ 1/n², e Σ 1/n² converge, quindi converge anche Σ 1/(n² + 5).</p>
+        </div>
+        <div class="step"><h3>Rapporto · lo conosci dal capitolo 4</h3>
+          <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span></div>
+          <p>L &lt; 1: la serie <b>converge</b>. L &gt; 1: la serie <b>diverge</b>. L = 1: non dice niente.</p>
+          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita.</p>
+        </div>
+        <div class="step"><h3>Radice · lo conosci dal capitolo 2</h3>
+          <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a<sub>n</sub></span></span></div>
+          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Quale criterio uso? · lo schema da seguire all'esame</div>
+      <div class="steps">
+        <div class="step"><h3>1 · Calcolo <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub></h3><p>Se non è 0: finito, la serie non converge.</p></div>
+        <div class="step"><h3>2 · È una geometrica o una 1/n<sup>p</sup>?</h3><p>Uso le formule a memoria.</p></div>
+        <div class="step"><h3>3 · Ci sono fattoriali n! o potenze come 3ⁿ?</h3><p>Uso il <b>rapporto</b>: si semplifica bene.</p></div>
+        <div class="step"><h3>4 · È tutto elevato alla n, tipo (…)ⁿ?</h3><p>Uso la <b>radice</b>: la radice n-esima smonta la potenza n.</p></div>
+        <div class="step"><h3>5 · Ci sono solo potenze di n e polinomi?</h3><p>Confronto con 1/n<sup>p</sup> (meglio il confronto asintotico del capitolo 7).</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Carattere di <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>n</span><span>3ⁿ</span></span></h2>
+      <div class="steps" id="guided-serie"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Per le somme scrivi un numero (anche una frazione, tipo 3/2).</p>
+      <div id="ex-serie"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Serie = <span class="lim">lim<span>n→+∞</span></span> S<sub>n</sub>, con S<sub>n</sub> somma dei primi n termini. Converge / diverge / irregolare.</li>
+        <li>Geometrica: Σ qⁿ (da n = 0) = 1/(1 − q) se −1 &lt; q &lt; 1; diverge se q ≥ 1; irregolare se q ≤ −1.</li>
+        <li>Condizione necessaria: converge ⇒ <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Non vale il contrario (armonica).</li>
+        <li>Σ 1/n<sup>p</sup>: converge se p &gt; 1, diverge se p ≤ 1.</li>
+        <li>Criteri (a<sub>n</sub> ≥ 0): confronto; rapporto e radice con L &lt; 1 converge, L &gt; 1 diverge, L = 1 non so.</li>
+        <li>Schema: limite del termine → geometrica o 1/n<sup>p</sup> → fattoriali: rapporto → potenza n: radice → polinomi: confronto.</li>
+      </ul>
+      <div data-copy="serie"></div>
+    </section>
+  </div>

@@ -1,0 +1,110 @@
+  <div class="chapter" data-ch="radici" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 2 · blocco del 12/11 · Mughetti lez. 5 pp. 51-63 e lez. 6 pp. 23-31</div>
+      <h2>Le radici n-esime</h2>
+      <p class="big">Qui la radice ha come indice <b>n stesso</b>: <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> vuol dire radice quadrata, poi cubica, poi quarta… sempre più "forte".</p>
+      <p>Serve per due motivi: negli esercizi d'esame compaiono limiti come <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>, e il <b>criterio della radice per le serie</b>, che fai subito dopo (16/11), è costruito tutto su questo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Solo due fatti da sapere</div>
+      <h2>Per n → +∞ tutte e due fanno 1</h2>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1</span><span style="font-size:1rem">per qualsiasi numero fisso a &gt; 0</span></div>
+      <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1</span><span style="font-size:1rem">anche se dentro c'è n che cresce</span></div>
+      <p><b>Perché, a intuito:</b> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> è a elevato alla 1/n. Quando n → +∞ l'esponente 1/n diventa quasi 0, e qualsiasi numero elevato a 0 fa 1. Con n dentro è una gara: n cresce, ma la radice schiaccia molto più forte, e vince la radice.</p>
+      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1.</p>
+      <canvas id="plotR" aria-label="Grafico: radice n-esima di a e radice n-esima di n che tendono a 1"></canvas>
+      <div class="controls">
+        <label for="rA">Numero a: <select id="rA"><option>2</option><option>10</option><option>100</option><option selected>2000</option></select></label>
+        <label for="rN">Fino a n = <input type="range" id="rN" min="10" max="200" value="60"> <b id="rNv">60</b></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>radice n-esima di a</span><span><i style="background:var(--cop)"></i>radice n-esima di n</span><span>linea tratteggiata: 1</span></div>
+      <div class="scroll"><table class="vals" id="rTab"></table></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'esercizio del prof · lez. 6 p. 23 · prima guardiamo i numeri</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></h2>
+      <p class="big">Prima di fare conti, capiamo <b>cosa succede</b>. Muovi la barra e guarda i numeri veri.</p>
+      <div class="controls"><label for="pN">n = <input type="range" id="pN" min="1" max="30" value="1"> <b id="pNv">1</b></label></div>
+      <div class="scroll"><table class="vals" id="pTab"></table></div>
+      <div class="note" id="pNote"></div>
+      <p><b>Cosa noti:</b> quando n cresce, 3ⁿ diventa enormemente più grande di 2ⁿ. Il 2ⁿ conta sempre meno, quasi zero. Quindi dentro la radice è come se ci fosse solo 3ⁿ, e <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3. Per questo il risultato si avvicina a 3.</p>
+      <p>Questa è l'<b>intuizione</b>. All'esame però "è quasi solo 3ⁿ" non basta: bisogna dimostrarlo. Lo si fa con i carabinieri, qui sotto.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Spiegazione lenta · un passo alla volta</div>
+      <h2>Perché fa 3: la dimostrazione</h2>
+      <p>Premi "passo successivo". Ogni passo dice <b>cosa</b> faccio e <b>perché</b> posso farlo.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · L'obiettivo</h3>
+          <p>Non so calcolare <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> direttamente. Allora cerco due cose facili, una <span class="cop">più piccola</span> e una <span class="cop">più grande</span>, che lo chiudono in mezzo (carabinieri, capitolo 1).</p>
+          <div class="math"><span class="box cop">?</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ <span class="box cop">?</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Il carabiniere sotto: tolgo 2ⁿ</h3>
+          <p>Se a una somma di numeri positivi <b>tolgo</b> un pezzo, diventa più piccola. Tolgo 2ⁿ e resta solo 3ⁿ.</p>
+          <div class="math"><span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span></div>
+          <p>Con i numeri, n = 2: 9 ≤ 4 + 9 = 13. Vero.</p>
+          <div class="warn"><b>Ma perché non 2ⁿ, che è il più piccolo?</b> Anche 2ⁿ ≤ 2ⁿ + 3ⁿ è vero (4 ≤ 13). Ma la radice n-esima di 2ⁿ fa 2, mentre il carabiniere sopra per n → +∞ tende a 3: limiti diversi, e non concludi niente. Il carabiniere sotto non deve essere "il più piccolo dei due pezzi": deve essere più piccolo della <b>somma</b> e avere lo <b>stesso limite</b> del carabiniere sopra. Per questo si tiene il pezzo più grande, 3ⁿ.</div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Il carabiniere sopra: al posto di 2ⁿ metto 3ⁿ</h3>
+          <p>2ⁿ è più piccolo di 3ⁿ. Se sostituisco 2ⁿ con il più grande 3ⁿ, la somma diventa più grande.</p>
+          <div class="math"><span class="box thief">2ⁿ + 3ⁿ</span> ≤ 3ⁿ + 3ⁿ = <span class="box cop">2 · 3ⁿ</span></div>
+          <p>Con i numeri, n = 2: 13 ≤ 9 + 9 = 18. Vero. Perché proprio 3ⁿ? Perché così ho due pezzi uguali, e diventa facilissimo fare la radice.</p>
+        </div>
+        <div class="step" hidden><h3>Passo 4 · Metto insieme i due carabinieri</h3>
+          <div class="math"><span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ <span class="box cop">2 · 3ⁿ</span></div>
+          <p>Ora faccio la radice n-esima di tutti e tre i pezzi. Si può fare: la radice di un numero più grande è più grande, quindi i ≤ restano uguali.</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span></span> ≤ <span class="box thief"><span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></span> ≤ <span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 5 · Il carabiniere sotto vale 3</h3>
+          <p>La radice n-esima smonta la potenza n, come <span class="rt"><sup></sup>√<span class="ov">3²</span></span> = 3 per la radice quadrata. Quindi:</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3</span></div>
+          <p>Vale 3 per ogni n, quindi anche <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 3.</p>
+        </div>
+        <div class="step" hidden><h3>Passo 6 · Il carabiniere sopra: spezzo la radice</h3>
+          <p>La radice di un prodotto è il prodotto delle radici:</p>
+          <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3</span></div>
+          <p>Dal fatto numero 1 di questo capitolo: <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> = 1. Quindi:</p>
+          <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3 = 1 · 3 = 3</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 7 · Conclusione con i carabinieri</h3>
+          <p>Per n → +∞ il carabiniere sotto ha limite 3 e il carabiniere sopra ha limite 3. Stesso limite, quindi anche quello in mezzo:</p>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = 3</span></div>
+          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3.</p>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Ora tocca a te · stesso esercizio, lo rifai tu</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span></h2>
+      <p>Rifai i passi che hai appena visto. Se ti blocchi, torna alla spiegazione lenta qui sopra.</p>
+      <div class="steps" id="guided-radici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Regola veloce che ne esce</div>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">aⁿ + bⁿ</span></span> = il più grande tra a e b</span></div>
+      <p>È l'esercizio per casa del prof (lez. 6 p. 30). All'esame però va giustificato con i carabinieri, come sopra.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-radici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1 per a &gt; 0 fisso. <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1. <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n<sup>k</sup></span></span> = 1.</li>
+        <li>Somma dentro la radice: tieni il più grande, carabinieri <b>grande ≤ somma ≤ 2·grande</b>, poi fai la radice.</li>
+        <li><span class="rt"><sup>n</sup>√<span class="ov">2·3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3, e per n → +∞ fa 1 · 3 = 3.</li>
+      </ul>
+      <div data-copy="radici"></div>
+    </section>
+  </div>

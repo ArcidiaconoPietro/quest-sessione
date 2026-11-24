@@ -1,0 +1,106 @@
+  <div class="chapter" data-ch="continuita-derivata">
+    <section class="board">
+      <div class="eyebrow">Capitolo 9 · blocco del 26/11 · Albano lezioni 23 e 27 ottobre · dispensa pp. 73-78, 86-92</div>
+      <h2>Continuità e derivata</h2>
+      <p class="big">Due domande su una funzione vicino a un punto x₀:</p>
+      <ul class="recap">
+        <li><b>Continuità:</b> il grafico in x₀ è "attaccato" o c'è un buco, un salto?</li>
+        <li><b>Derivata:</b> quanto è ripido il grafico in x₀? Quanto cambia f se sposto x di pochissimo?</li>
+      </ul>
+      <p>A cosa serve: la continuità ti dà due teoremi che all'esame si usano spesso (zeri e Weierstrass). La derivata è lo strumento per lo studio di funzione (capitolo 12): crescenza, massimi, minimi.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Continuità <span class="tag mem">definizione a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Disegnare senza staccare la penna</h2>
+      <div class="math left"><span class="box cop">f è continua in x₀ se <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀)</span></div>
+      <p>Dentro ci sono tre richieste: 1) f(x₀) esiste; 2) il limite per x → x₀ esiste (destro = sinistro); 3) sono uguali. Se una salta, in x₀ c'è una <b>discontinuità</b>. Guarda i tre tipi:</p>
+      <canvas id="plotDC" aria-label="Tipi di discontinuità"></canvas>
+      <div class="controls"><label for="dcS">Funzione: <select id="dcS">
+        <option value="0">continua</option>
+        <option value="1">salto (prima specie)</option>
+        <option value="2">eliminabile (terza specie)</option>
+        <option value="3">infinita (seconda specie)</option>
+      </select></label></div>
+      <div class="readout" id="dcOut"></div>
+      <div class="note">Nomi dei tipi (servono all'esame): <b>prima specie</b> = limite destro e sinistro finiti ma diversi (salto). <b>Seconda specie</b> = almeno uno dei due è infinito o non esiste. <b>Eliminabile</b> (terza specie) = il limite per x → x₀ esiste finito, ma è diverso da f(x₀) oppure f(x₀) non esiste: basta "ridefinire" f in x₀ e torna continua.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I due teoremi delle funzioni continue <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Teorema degli zeri e Weierstrass</h2>
+      <div class="math left"><span class="box cop"><b>Zeri.</b> Se f è continua su [a, b] e f(a), f(b) hanno segni opposti, allora esiste c in (a, b) con f(c) = 0.</span></div>
+      <p><b>Perché è vero (facile):</b> parti sotto l'asse x e arrivi sopra senza staccare la penna. Per forza attraversi l'asse da qualche parte. Serve a dire "l'equazione f(x) = 0 ha una soluzione" senza trovarla.</p>
+      <div class="math left"><span class="box thief"><b>Weierstrass.</b> Se f è continua su un intervallo chiuso e limitato [a, b], allora f ha massimo e minimo su [a, b].</span></div>
+      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0: l'intervallo non è chiuso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La derivata · prima guardiamo i numeri</div>
+      <h2>Dalla secante alla tangente</h2>
+      <p>Prendo il punto (x₀, f(x₀)) e un secondo punto vicino, spostato di h: (x₀ + h, f(x₀ + h)). La retta che li unisce è la <b>secante</b>. La sua pendenza è</p>
+      <div class="math"><span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> <span style="font-size:1rem">(rapporto incrementale: quanto sale diviso quanto vado avanti)</span></div>
+      <p>Ora rimpicciolisci h con la barra: la secante (arancione) si appoggia sulla tangente (blu tratteggiata) e la pendenza si stabilizza su un numero.</p>
+      <canvas id="plotDV" aria-label="Secante che diventa tangente"></canvas>
+      <div class="controls">
+        <label for="dvS">Funzione: <select id="dvS">
+          <option value="0">f(x) = x², in x₀ = 1</option>
+          <option value="1">f(x) = sin x, in x₀ = 0</option>
+          <option value="2">f(x) = |x|, in x₀ = 0</option>
+        </select></label>
+        <label for="dvH">h: <input type="range" id="dvH" min="-100" max="100" value="80"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>secante</span><span><i style="background:var(--cop)"></i>tangente</span></div>
+      <div class="readout" id="dvOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La definizione <span class="tag mem">a memoria</span> <span class="tag cap">il perché è facile: l'hai appena visto</span></div>
+      <h2>Derivata e retta tangente</h2>
+      <div class="math left"><span class="box cop">f′(x₀) = <span class="lim">lim<span>h→0</span></span> <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> &nbsp; (se esiste ed è finito, f è <b>derivabile</b> in x₀)</span></div>
+      <p>f′(x₀) è la pendenza della tangente in x₀. La tangente è la retta che passa per (x₀, f(x₀)) con quella pendenza:</p>
+      <div class="math"><span class="box thief">y = f(x₀) + f′(x₀) · (x − x₀)</span></div>
+      <p>Perché è così (facile): una retta con pendenza m che passa per (x₀, y₀) è y = y₀ + m(x − x₀). Qui y₀ = f(x₀) e m = f′(x₀).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Derivabile e continua <span class="tag cap">dimostrazione corta: capiscila</span></div>
+      <h2>Derivabile ⇒ continua (ma non il contrario)</h2>
+      <p><b>Teorema:</b> se f è derivabile in x₀, allora è continua in x₀. La dimostrazione sta in una riga, ed è di quelle che si chiedono:</p>
+      <div class="math left">f(x₀ + h) − f(x₀) = <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> · h &nbsp;→&nbsp; f′(x₀) · 0 = 0 &nbsp; per h → 0</div>
+      <p>Quindi f(x₀ + h) tende a f(x₀) per h → 0: è proprio la continuità.</p>
+      <div class="warn"><b>Il contrario è falso.</b> |x| è continua in 0 ma non derivabile: nel grafico sopra, con h &gt; 0 la secante ha pendenza 1, con h &lt; 0 ha pendenza −1. Destra e sinistra diverse, il limite per h → 0 non esiste.</div>
+      <p><b>Punti dove f è continua ma non derivabile</b> <span class="tag mem">nomi a memoria</span>:</p>
+      <div class="when">
+        <div><b>Punto angoloso:</b> derivata destra e sinistra finite ma diverse. Esempio |x| in 0.</div>
+        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0.</div>
+        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0.</div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Derivata di f(x) = x² in x₀ = 3, con la definizione</h2>
+      <div class="steps" id="guided-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Continua in x₀: <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀).</li>
+        <li>Discontinuità: prima specie = salto (limiti destro e sinistro finiti e diversi); seconda specie = un limite infinito o inesistente; eliminabile = limite finito ma ≠ f(x₀).</li>
+        <li>Zeri: f continua su [a, b], f(a) · f(b) &lt; 0 ⇒ esiste c in (a, b) con f(c) = 0.</li>
+        <li>Weierstrass: f continua su [a, b] chiuso e limitato ⇒ ha massimo e minimo.</li>
+        <li>f′(x₀) = <span class="lim">lim<span>h→0</span></span> [f(x₀ + h) − f(x₀)]/h. Tangente: y = f(x₀) + f′(x₀)(x − x₀).</li>
+        <li>Derivabile ⇒ continua. Non vale il contrario (|x| in 0). Angoloso, cuspide, flesso a tangente verticale.</li>
+      </ul>
+      <div data-copy="continuita-derivata"></div>
+    </section>
+  </div>
