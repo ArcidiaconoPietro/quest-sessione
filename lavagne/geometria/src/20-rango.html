@@ -1,0 +1,178 @@
+  <!-- ================= CAPITOLO 2 · RANGO E DIMENSIONE ================= -->
+  <div class="chapter" data-ch="rango" data-title="2 · Rango e dimensione" data-date="24/11" data-full="Rango, dimensione, estrazione e completamento" data-src="Libro pp. 54-55, 65-70 · Foglio 5" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 2 · giorno 24/11 · libro pp. 54-55 e 65-70</div>
+      <h2>Contare le direzioni: dimensione e rango</h2>
+      <p class="big">La <b>dimensione</b> di uno spazio dice quante direzioni indipendenti ha, cioè quanti numeri liberi servono per descrivere un suo elemento. Una retta per l'origine ha dimensione 1, un piano per l'origine 2, R³ ha dimensione 3.</p>
+      <p>Il <b>rango</b> di una matrice dice quante delle sue colonne sono "davvero diverse" (indipendenti). Con queste due parole rispondi a quasi tutte le domande d'esame su sottospazi e sistemi: "quanto vale dim W?", "quante soluzioni?", "sono una base?".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>In R² tre vettori sono sempre troppi</h2>
+      <p>dim R² = 2: due vettori indipendenti bastano già a raggiungere tutto il piano. Un terzo vettore <span class="cw">w</span> si scrive <b>sempre</b> con i primi due, quindi tre vettori di R² sono sempre dipendenti. Muovi w e guarda i due numeri che lo costruiscono.</p>
+      <canvas id="cv-tre" aria-label="Tre vettori nel piano: w scritto come combinazione di u e v"></canvas>
+      <div class="controls">
+        <label>w, prima componente <input type="range" id="tr-x" min="-4" max="4" step="0.5" value="3"> <b id="tr-xv"></b></label>
+        <label>w, seconda componente <input type="range" id="tr-y" min="-3" max="3" step="0.5" value="2"> <b id="tr-yv"></b></label>
+      </div>
+      <p class="readout" id="tr-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Dimensione (Teorema 2.3.16 e Def. 2.3.17, p. 66)</b>
+        <p>Tutte le basi di uno stesso spazio vettoriale V hanno lo <b>stesso numero</b> di vettori. Questo numero si chiama <b>dim V</b>.</p>
+        <span class="why mem">a memoria: l'enunciato</span>
+        <p style="font-size:.92rem;color:var(--muted)">La dimostrazione è lunga: impara bene cosa dice e usalo.</p>
+        <p>Da sapere: dim Kⁿ = n · dim M(m, n, K) = m·n · dim Kₙ[x] = n + 1 (base 1, x, …, xⁿ) · dim {0} = 0.</p>
+      </div>
+      <div class="def"><b>Scorciatoie quando conosci già dim V = n (Prop. 2.3.23 e 2.3.20)</b>
+        <ul class="recap">
+          <li>n vettori <b>indipendenti</b> in V sono già una base (non serve controllare che generino).</li>
+          <li>n vettori che <b>generano</b> V sono già una base.</li>
+          <li>Più di n vettori sono <b>sempre dipendenti</b>; meno di n non generano mai V.</li>
+        </ul>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché bastano n vettori indipendenti?</summary><p>Se non generassero V, potrei aggiungere un vettore fuori dal loro Span e restare indipendente: avrei n + 1 vettori indipendenti, cioè una base con più di n elementi, contro il teorema sopra.</p></details>
+      </div>
+      <div class="def"><b>Sottospazi (Prop. 2.3.25)</b>
+        <p>Se U ⊆ V è un sottospazio, allora dim U ≤ dim V. Se in più dim U = dim V, allora U = V.</p>
+      </div>
+      <div class="def"><b>Rango (Def. 3.2.7 e Cor. 3.2.10)</b>
+        <p>Per A ∈ M(m, n, K): <b>rk A = dim Span(colonne di A)</b>. In pratica: rk A = <b>numero di pivot</b> dopo Gauss. Inoltre rk A = rango per righe = rk(<sup>t</sup>A), e rk A ≤ min(m, n).</p>
+        <span class="why mem">a memoria: righe = colonne</span>
+        <p>Ricordi la frase della vecchia chat "rango = dimensione dello span delle colonne"? Adesso che sai cos'è lo Span e cos'è la dimensione, è proprio questa definizione.</p>
+      </div>
+      <div class="def"><b>Soluzioni di un sistema omogeneo</b>
+        <p>Se A ∈ M(m, n, K), lo spazio delle soluzioni S = {x ∈ Kⁿ : A·x = 0} ha <b>dim S = n − rk A</b> (n = numero di incognite = colonne di A).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché n − rk A?</summary><p>Dopo Gauss ci sono rk A incognite con il pivot, che ricavi; le altre n − rk A sono libere. Ogni incognita libera dà un vettore della base (come nella ricetta del capitolo 1).</p></details>
+      </div>
+      <div class="def"><b>Forma parametrica e cartesiana (pp. 54-55)</b>
+        <p><b>Parametrica</b>: W = Span(v₁, …, v<sub>k</sub>), cioè "ecco chi genera W". <b>Cartesiana</b>: W = {x ∈ Kⁿ : equazioni lineari omogenee}. Se le equazioni sono indipendenti: <b>numero di equazioni = n − dim W</b>. Un piano in R³ ha 1 equazione, una retta in R³ ne ha 2.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Estrarre una base da una lista di generatori</h2>
+      <p>Esempio: W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1), (1, 3, 2)) ⊆ R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Metti i vettori in colonna</h3><p class="math">${M([[1,2,0,1],[2,4,1,3],[1,2,1,2]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1, R3 ← R3 − R1, poi R3 ← R3 − R2:</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
+        <div class="step"><h3>Passo 3 · Guarda dove sono i pivot</h3><p>I pivot sono nelle colonne 1 e 3. Quindi rk = 2 e <b>dim W = 2</b>.</p></div>
+        <div class="step"><h3>Passo 4 · Prendi le colonne ORIGINALI con il pivot</h3><p>Una base di W è (1, 2, 1), (0, 1, 1): la 1ª e la 3ª colonna <b>della matrice di partenza</b>, non quelle ridotte. Gauss cambia i vettori ma non cambia quali colonne sono indipendenti.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Completare a una base di Kⁿ</h2>
+      <p>Esempio: completa (1, 1, 0), (0, 1, 1) a base di R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Accoda la base canonica</h3><p>Colonne: i tuoi vettori, poi e₁, e₂, e₃.</p><p class="math">${M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1, poi R3 ← R3 − R2: i pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
+        <div class="step"><h3>Passo 3 · Prendi le colonne con il pivot</h3><p>I tuoi due vettori (colonne 1, 2) più e₁ (colonna 3): <b>(1, 1, 0), (0, 1, 1), (1, 0, 0)</b> è una base di R³. Sono 3 indipendenti in uno spazio di dimensione 3: basta così.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Da parametrica a cartesiana</h2>
+      <p>Esempio: W = Span((1, 0, 1), (0, 1, 1)) ⊆ R³. Voglio l'equazione di W.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Scrivi il vettore generico di W</h3><p>(x, y, z) ∈ W vuol dire (x, y, z) = a·(1, 0, 1) + b·(0, 1, 1) per qualche a, b ∈ R. Cioè x = a, y = b, z = a + b.</p></div>
+        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Sostituisci a = x e b = y nell'ultima: z = x + y.</p></div>
+        <div class="step"><h3>Passo 3 · Scrivila "= 0" e controlla</h3><p class="math">W = {(x, y, z) ∈ R³ : x + y − z = 0}</p><p>Controllo: (1, 0, 1) dà 1 + 0 − 1 = 0, (0, 1, 1) dà 0 + 1 − 1 = 0. Giusto. dim W = 2 e 3 − 2 = 1 equazione: torna.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Rango, base estratta, dimensione delle soluzioni</h2>
+      <p>Scegli un esempio o scrivi la tua matrice. Il laboratorio ti dice rk A, quali colonne originali formano una base di Span(colonne) e quanto vale la dimensione delle soluzioni di A·x = 0.</p>
+      <div id="lab-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1)) ⊆ R³</h2>
+      <p>Trova dim W, una base di W e la sua equazione cartesiana.</p>
+      <div class="steps" id="guided-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>dim V</b> = numero di vettori di una base (sempre lo stesso). dim Kⁿ = n, dim M(m, n, K) = m·n, dim Kₙ[x] = n + 1.</li>
+        <li>In uno spazio di dimensione n: n indipendenti ⇒ base; n generatori ⇒ base; più di n ⇒ dipendenti.</li>
+        <li><b>rk A</b> = numero di pivot = dim Span(colonne) = rango per righe. rk A ≤ min(m, n).</li>
+        <li>Sistema omogeneo con n incognite: <b>dim soluzioni = n − rk A</b>.</li>
+        <li><b>Estrazione:</b> colonne, Gauss, tieni le colonne ORIGINALI con il pivot. <b>Completamento:</b> accoda e₁, …, e<sub>n</sub>, Gauss, tieni le colonne con il pivot.</li>
+        <li><b>Cartesiana</b>: numero di equazioni = n − dim W. Da Span a equazioni: scrivi x = a·v₁ + b·v₂ ed elimina i parametri.</li>
+      </ul>
+      <div data-copy="rango"></div>
+    </section>
+    <div class="next"><a href="#spazi">← Capitolo 1</a><a href="#grassmann">Capitolo 3 · Somma e Grassmann →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises, lab } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="rango"] .step p, [data-ch="rango"] .def p').forEach(p => { p.innerHTML = fixM(p.innerHTML); });
+
+  const B = Board($('cv-tre'), {xmin:-5,xmax:5,ymin:-3.5,ymax:3.5});
+  const tre = () => {
+    const x=+$('tr-x').value, y=+$('tr-y').value; $('tr-xv').textContent=it(x,1); $('tr-yv').textContent=it(y,1);
+    const u=[2,0.5], v=[0.5,1.5], det=u[0]*v[1]-u[1]*v[0], a=(x*v[1]-y*v[0])/det, b=(u[0]*y-u[1]*x)/det;
+    if (!B.fit()) return; B.grid();
+    const au=[a*u[0],a*u[1]], bv=[b*v[0],b*v[1]];
+    B.seg(au[0],au[1],x,y,'--v',1.5,[5,5]); B.seg(bv[0],bv[1],x,y,'--u',1.5,[5,5]);
+    B.arrow(0,0,...au,'--u','',2); B.arrow(0,0,...bv,'--v','',2);
+    B.arrow(0,0,...u,'--u','u'); B.arrow(0,0,...v,'--v','v'); B.arrow(0,0,x,y,'--w','w',3.5);
+    $('tr-out').innerHTML = 'u = (2; 0,5), v = (0,5; 1,5), w = ('+it(x,1)+'; '+it(y,1)+')<br>w = <b>'+it(a,2)+'</b>·u + <b>'+it(b,2)+'</b>·v. Quindi '+it(a,2)+'·u + '+it(b,2)+'·v − 1·w = 0: i tre vettori sono dipendenti.';
+  };
+  ['tr-x','tr-y'].forEach(i=>$(i).addEventListener('input', tre)); onDraw('rango', tre);
+
+  lab('lab-rango', { show:['cols','kernel'], presets:[
+    { name:'Estrazione: 4 vettori di R³', rows:[[1,2,0,1],[2,4,1,3],[1,2,1,2]] },
+    { name:'Sistema 2 equazioni, 4 incognite', rows:[[1,1,0,2],[0,1,1,-1]] },
+    { name:'Matrice 3×3 di rango 2', rows:[[1,2,3],[2,4,6],[1,0,1]] },
+    { name:'Matrice 3×3 di rango 3', rows:[[2,1,-1],[1,1,0],[3,2,0]] }
+  ]});
+
+  guided('rango', [
+    { h:'Passo 1 · Metti i tre vettori in colonna e fai Gauss: quanti pivot? (puoi usare il laboratorio)', type:'nums', ans:[2],
+      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì: (2, 4, 2) = 2·(1, 2, 1) è di troppo, rk = 2.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
+    { h:'Passo 2 · Quindi dim W = ?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'), ok:'Giusto: dim W = rk = 2. W è un piano per l\'origine.', bad:'dim W = rk della matrice dei generatori.' },
+    { h:'Passo 3 · Quale coppia è una base di W?', type:'choice', ans:1,
+      opts:['(1, 2, 1), (2, 4, 2)','(1, 2, 1), (0, 1, 1)','(2, 4, 2) da solo'], ok:'Esatto: sono le colonne originali con il pivot (1ª e 3ª).', bad:'Servono 2 vettori indipendenti: (1, 2, 1) e (2, 4, 2) sono uno multiplo dell\'altro.' },
+    { h:'Passo 4 · Equazione: (x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) dà x = a, y = 2a + b, z = a + b. Elimina a e b e completa', type:'nums', ans:[1],
+      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto: b = z − x, quindi y = 2x + z − x = x + z, cioè x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
+  ], '<b>Fatto!</b> dim W = 2, base (1, 2, 1), (0, 1, 1), equazione cartesiana x − y + z = 0. Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 e (0, 1, 1) → 0 − 1 + 1 = 0.');
+
+  exercises('rango', [
+    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'2·3 = 6 caselle, quindi 6 matrici nella base canonica: dim = 6.' },
+    { id:'e2', type:'num', label:'dim =', q:'dim R₃[x] (polinomi a coefficienti reali di grado ≤ 3)', a:4, hint:'Base: 1, x, x², x³.', sol:'Quattro elementi: 1, x, x², x³. dim = 3 + 1 = 4. Errore tipico: rispondere 3.' },
+    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 − 2·R1 = 0, poi R3 − R1 = (0, −2, −2): due pivot, rk A = 2.' },
+    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'5 − 2 = 3.' },
+    { id:'e5', type:'choice', q:'Quattro vettori di R³…', opts:['sono sempre dipendenti','possono essere una base di R³','sono indipendenti se nessuno è nullo'], a:0, hint:'dim R³ = 3. Quanti vettori indipendenti può avere al massimo?', sol:'In uno spazio di dimensione 3 più di 3 vettori sono sempre dipendenti.' },
+    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'rk = 2, quindi dim W = 3 − 2 = 1: è la retta Span((1, 1, −2)).' },
+    { id:'e7', type:'choice', q:'Con quale vettore completi (1, 1, 0), (0, 1, 1) a base di R³?', opts:['(1, 2, 1)','(1, 0, 0)','(2, 2, 0)'], a:1,
+      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 0, 0) non sta nello Span dei due (ricetta del completamento sopra). Tre indipendenti in R³: base.' },
+    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'x = a e y = a, quindi x = y, cioè x − y = 0. z = b è libero.' }
+  ]);
+})();
+</script>

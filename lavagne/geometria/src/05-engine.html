@@ -1,0 +1,327 @@
+<script>
+/* ===================== MOTORE DELLA LAVAGNA ===================== */
+window.Lav = (function(){
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const store = {
+    get(k){ try { return JSON.parse(localStorage.getItem('geo-'+k)) || {}; } catch(e){ return {}; } },
+    set(k,v){ try { localStorage.setItem('geo-'+k, JSON.stringify(v)); } catch(e){} }
+  };
+  const draws = {};          // ch -> [funzioni di disegno]
+  const exList = {};         // ch -> esercizi (per il riepilogo)
+  const onDraw = (ch, fn) => { (draws[ch] = draws[ch] || []).push(fn); };
+  const redraw = ch => (draws[ch]||[]).forEach(f => { try { f(); } catch(e){ console.error(e); } });
+
+  /* ---------- numeri: frazioni esatte ---------- */
+  const gcd = (a,b) => { a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; };
+  class F {
+    constructor(n,d=1){ if (d<0){ n=-n; d=-d; } const g=gcd(n,d); this.n=n/g; this.d=d/g; }
+    static of(x){ if (x instanceof F) return x; if (Number.isInteger(x)) return new F(x,1); const d=1e6; return new F(Math.round(x*d), d); }
+    add(o){ o=F.of(o); return new F(this.n*o.d+o.n*this.d, this.d*o.d); }
+    sub(o){ o=F.of(o); return new F(this.n*o.d-o.n*this.d, this.d*o.d); }
+    mul(o){ o=F.of(o); return new F(this.n*o.n, this.d*o.d); }
+    div(o){ o=F.of(o); return new F(this.n*o.d, this.d*o.n); }
+    neg(){ return new F(-this.n, this.d); }
+    get zero(){ return this.n===0; }
+    val(){ return this.n/this.d; }
+    toString(){ const s = this.d===1 ? String(Math.abs(this.n)) : Math.abs(this.n)+'/'+this.d; return (this.n<0?'−':'')+s; }
+  }
+  const it = (x,k=2) => { if (Math.abs(x)<1e-9) return '0'; const r = +x.toFixed(k); return String(r).replace('-','−').replace('.', ','); };
+
+  /* ---------- lettura risposte ---------- */
+  function num(s){
+    let v = String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').replace(/−/g,'-');
+    if (v==='') return NaN;
+    if (/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(v)){ const [a,b]=v.split('/'); return +a/+b; }
+    return Number(v);
+  }
+  const same = (a,b) => isFinite(a) && isFinite(b) && Math.abs(a-b) < 1e-6;
+  const say = (el, ok, txt) => { el.innerHTML = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
+  const inp = (lbl, w) => '<input type="text" inputmode="text" autocomplete="off" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  const M = (rows) => { const c = rows[0].length; return '<span class="mx c'+c+'">'+rows.flat().map(x=>'<span>'+x+'</span>').join('')+'</span>'; };
+  const V = (...xs) => M(xs.map(x=>[x]));
+
+  /* ---------- piano cartesiano su canvas ---------- */
+  function Board(cv, o){
+    const b = { cv, o: Object.assign({xmin:-5,xmax:5,ymin:-4,ymax:4}, o) };
+    b.fit = () => {
+      const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+      if (!r.width) return false;
+      cv.width = Math.round(r.width*dpr); cv.height = Math.round(r.height*dpr);
+      const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+      b.ctx = ctx; b.W = r.width; b.H = r.height;
+      // stessa scala su x e y: si allarga il lato che avanza
+      const o2 = b.o, sx = b.W/(o2.xmax-o2.xmin), sy = b.H/(o2.ymax-o2.ymin);
+      b.s = Math.min(sx, sy);
+      const cx = (o2.xmin+o2.xmax)/2, cy = (o2.ymin+o2.ymax)/2;
+      b.X = x => b.W/2 + (x-cx)*b.s; b.Y = y => b.H/2 - (y-cy)*b.s;
+      b.inv = (px,py) => [ (px-b.W/2)/b.s + cx, -(py-b.H/2)/b.s + cy ];
+      b.x0 = cx - b.W/2/b.s; b.x1 = cx + b.W/2/b.s; b.y0 = cy - b.H/2/b.s; b.y1 = cy + b.H/2/b.s;
+      ctx.clearRect(0,0,b.W,b.H); return true;
+    };
+    b.grid = () => { const c=b.ctx; c.strokeStyle=css('--grid'); c.lineWidth=1; c.beginPath();
+      for (let x=Math.ceil(b.x0); x<=b.x1; x++){ c.moveTo(b.X(x),0); c.lineTo(b.X(x),b.H); }
+      for (let y=Math.ceil(b.y0); y<=b.y1; y++){ c.moveTo(0,b.Y(y)); c.lineTo(b.W,b.Y(y)); }
+      c.stroke();
+      c.strokeStyle=css('--muted'); c.lineWidth=1.2; c.beginPath(); c.moveTo(0,b.Y(0)); c.lineTo(b.W,b.Y(0)); c.moveTo(b.X(0),0); c.lineTo(b.X(0),b.H); c.stroke();
+      c.fillStyle=css('--muted'); c.font='12px '+css('--text'); c.fillText('x', b.W-12, b.Y(0)-6); c.fillText('y', b.X(0)+6, 12); };
+    b.seg = (x1,y1,x2,y2,col,w=2,dash) => { const c=b.ctx; c.save(); c.strokeStyle=css(col); c.lineWidth=w; if(dash) c.setLineDash(dash); c.beginPath(); c.moveTo(b.X(x1),b.Y(y1)); c.lineTo(b.X(x2),b.Y(y2)); c.stroke(); c.restore(); };
+    b.through = (dx,dy,col,w=2,dash,px=0,py=0) => { const L = 50, n = Math.hypot(dx,dy)||1; b.seg(px-dx/n*L, py-dy/n*L, px+dx/n*L, py+dy/n*L, col, w, dash); };
+    b.arrow = (x1,y1,x2,y2,col,label,w=3) => { const c=b.ctx, X1=b.X(x1),Y1=b.Y(y1),X2=b.X(x2),Y2=b.Y(y2), a=Math.atan2(Y2-Y1,X2-X1), L=Math.hypot(X2-X1,Y2-Y1);
+      c.save(); c.strokeStyle=c.fillStyle=css(col); c.lineWidth=w; c.lineCap='round';
+      if (L>2){ c.beginPath(); c.moveTo(X1,Y1); c.lineTo(X2-Math.cos(a)*Math.min(8,L/2),Y2-Math.sin(a)*Math.min(8,L/2)); c.stroke();
+        c.beginPath(); c.moveTo(X2,Y2); c.lineTo(X2-12*Math.cos(a-0.4),Y2-12*Math.sin(a-0.4)); c.lineTo(X2-12*Math.cos(a+0.4),Y2-12*Math.sin(a+0.4)); c.closePath(); c.fill(); }
+      if (label){ c.font='700 14px '+css('--text'); const ox = Math.cos(a)>=0 ? 6 : -6-c.measureText(label).width; c.fillText(label, X2+ox, Y2+(Math.sin(a)>0?16:-6)); }
+      c.restore(); };
+    b.dot = (x,y,col,r=4) => { const c=b.ctx; c.fillStyle=css(col); c.beginPath(); c.arc(b.X(x),b.Y(y),r,0,7); c.fill(); };
+    b.poly = (pts,col,alpha=.18) => { const c=b.ctx; c.save(); c.fillStyle=css(col); c.globalAlpha=alpha; c.beginPath(); pts.forEach(([x,y],i)=> i?c.lineTo(b.X(x),b.Y(y)):c.moveTo(b.X(x),b.Y(y))); c.closePath(); c.fill(); c.globalAlpha=1; c.strokeStyle=css(col); c.lineWidth=1.5; c.stroke(); c.restore(); };
+    b.text = (x,y,s,col='--ink',size=13) => { const c=b.ctx; c.fillStyle=css(col); c.font='700 '+size+'px '+css('--text'); c.fillText(s, b.X(x)+4, b.Y(y)-6); };
+    b.curve = (f,t0,t1,col,w=2,n=160) => { const c=b.ctx; c.save(); c.strokeStyle=css(col); c.lineWidth=w; c.beginPath(); for(let i=0;i<=n;i++){ const t=t0+(t1-t0)*i/n, [x,y]=f(t); i?c.lineTo(b.X(x),b.Y(y)):c.moveTo(b.X(x),b.Y(y)); } c.stroke(); c.restore(); };
+    return b;
+  }
+
+  /* ---------- ricette a passi ---------- */
+  function recipes(){
+    document.querySelectorAll('[data-recipe]').forEach(box => {
+      const steps = [...box.querySelectorAll(':scope > .step')], sec = box.closest('section');
+      let shown = 1; steps.forEach((s,i)=>s.hidden=i>0);
+      const nx = sec.querySelector('[data-next]'), rs = sec.querySelector('[data-reset]');
+      const upd = () => { nx.disabled = shown>=steps.length; };
+      nx.onclick = () => { if (shown < steps.length){ steps[shown].hidden=false; steps[shown].classList.add('reveal'); shown++; upd(); } };
+      rs.onclick = () => { steps.forEach((s,i)=>s.hidden=i>0); shown=1; upd(); };
+      upd();
+    });
+  }
+
+  /* ---------- esercizio guidato ---------- */
+  // step: {h, html, type:'nums'|'choice', ans, opts, ok, bad}
+  function guided(ch, steps, done){
+    const box = $('guided-'+ch), key='g-'+ch, res = store.get(key);
+    const els = steps.map((s,i) => {
+      const d = document.createElement('div'); d.className = 'step'; d.hidden = i>0;
+      let body = '';
+      if (s.type==='choice') body = (s.html ? '<div class="math left">'+s.html+'</div>' : '')+'<div class="choice">'+s.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else body = '<div class="math left">'+s.html+'</div><div class="row"><button data-check>Controlla</button></div>';
+      d.innerHTML = '<h3>'+s.h+'</h3>'+body+'<span class="feedback"></span>';
+      box.appendChild(d); return d;
+    });
+    const fin = document.createElement('div'); fin.className = 'note reveal'; fin.hidden = true; fin.innerHTML = done; box.appendChild(fin);
+    const id = i => 'g'+(i+1);
+    const pass = i => { res[id(i)] = res[id(i)]==='errore' ? 'ok-dopo' : (res[id(i)]||'ok'); store.set(key,res); if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; nav(); };
+    const fail = i => { if (!/^ok/.test(res[id(i)]||'')) res[id(i)]='errore'; store.set(key,res); };
+    steps.forEach((s,i) => {
+      const d = els[i], fb = d.querySelector('.feedback');
+      if (s.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===s.ans){ b.classList.add('right'); say(fb,true,s.ok); pass(i); } else { b.classList.add('wrong'); say(fb,false,s.bad); fail(i); }
+        });
+      } else {
+        d.querySelector('[data-check]').onclick = () => {
+          const vals = [...d.querySelectorAll('input')].map(x=>num(x.value));
+          const ans = Array.isArray(s.ans) ? s.ans : [s.ans];
+          if (vals.some(isNaN)) { say(fb,false,'Riempi tutte le caselle con un numero (le frazioni scrivile così: 1/2).'); return; }
+          if (vals.every((v,k)=>same(v,ans[k]))){ say(fb,true,s.ok); pass(i); } else { say(fb,false,s.bad); fail(i); }
+        };
+      }
+      if (/^ok/.test(res[id(i)]||'')){ if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; }
+    });
+  }
+
+  /* ---------- esercizi da solo ---------- */
+  // e: {id, q, type:'num'|'nums'|'choice', a, opts, labels, hint, sol, src}
+  function exercises(ch, list){
+    exList[ch] = list;
+    const box = $('ex-'+ch), key='e-'+ch, res = store.get(key);
+    list.forEach((e,i) => {
+      const d = document.createElement('div'); d.className = 'ex';
+      let ans;
+      if (e.type==='choice') ans = '<div class="choice">'+e.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else if (e.type==='nums') ans = '<div class="row">'+e.labels.map(l=>'<span>'+l+' '+inp(l)+'</span>').join('')+'<button data-c>Controlla</button></div>';
+      else ans = '<div class="row">'+(e.label||'risultato =')+' '+inp('risultato')+'<button data-c>Controlla</button></div>';
+      d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+(e.src?' <span class="badge">'+e.src+'</span>':'')+'</b><span class="badge" data-b></span></div><div class="math left">'+e.q+'</div>'+ans
+        +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
+        +'<div class="note" data-hint hidden>'+e.hint+'</div><div class="note" data-sol hidden>'+e.sol+'</div>';
+      box.appendChild(d);
+      const fb = d.querySelector('.feedback'), bd = d.querySelector('[data-b]');
+      const badge = () => { const r=res[e.id];
+        const map = { ok:['giusto al primo colpo',1], 'ok-dopo':['giusto dopo errore o aiuto',1], errore:['da rifare',0], 'soluzione vista':['soluzione vista',0] };
+        const [t,ok] = map[r] || ['da fare',0]; bd.textContent=t; bd.className='badge'+(ok?' done':''); };
+      badge();
+      const right = () => { res[e.id] = (res[e.id]==='errore' || res[e.id]==='soluzione vista' || res[e.id+'_aiuto']) ? 'ok-dopo' : (res[e.id]||'ok'); say(fb,true,'Giusto!'); store.set(key,res); badge(); nav(); };
+      const wrong = msg => { if (!/^ok/.test(res[e.id]||'')) res[e.id]='errore'; say(fb,false,msg); store.set(key,res); badge(); };
+      if (e.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===e.a){ b.classList.add('right'); right(); } else { b.classList.add('wrong'); wrong('Non è questa. Prova con l\'aiuto.'); }
+        });
+      } else {
+        d.querySelector('[data-c]').onclick = () => {
+          const vals = [...d.querySelectorAll('input')].map(x=>num(x.value)), ans = Array.isArray(e.a)?e.a:[e.a];
+          if (vals.some(isNaN)) { say(fb,false,'Scrivi un numero in ogni casella (frazioni così: 1/2).'); return; }
+          vals.every((v,k)=>same(v,ans[k])) ? right() : wrong('Non è questo. Prova con l\'aiuto.'); };
+      }
+      d.querySelector('[data-h]').onclick = () => { d.querySelector('[data-hint]').hidden=false; res[e.id+'_aiuto']=true; store.set(key,res); };
+      d.querySelector('[data-s]').onclick = () => { d.querySelector('[data-sol]').hidden=false; if (!/^ok/.test(res[e.id]||'')){ res[e.id]='soluzione vista'; store.set(key,res); badge(); } };
+    });
+  }
+
+  /* ---------- laboratorio di Gauss (frazioni esatte) ---------- */
+  // opts: {presets:[{name, rows, aug}], jordan:bool, show:['rank','det','system','inverse','cols']}
+  function lab(id, opts){
+    const root = $(id); root.classList.add('lab');
+    root.innerHTML = '<div class="controls"><label>Esempio <select data-p>'+opts.presets.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('')+'</select></label>'
+      +'<label>righe <select data-r>'+[1,2,3,4].map(n=>'<option>'+n+'</option>').join('')+'</select></label>'
+      +'<label>colonne <select data-c>'+[1,2,3,4,5,6].map(n=>'<option>'+n+'</option>').join('')+'</select></label></div>'
+      +'<p style="font-size:.92rem;color:var(--muted)">Puoi cambiare i numeri nelle caselle (anche frazioni, es. 1/2). Poi premi "Fai Gauss".</p>'
+      +'<div class="scroll"><div class="grid" data-g></div></div>'
+      +'<div class="row"><button class="primary" data-go>Fai Gauss</button><button data-one>Un passo alla volta</button></div>'
+      +'<div class="log" data-log></div><div class="note readout" data-out hidden></div>';
+    const q = s => root.querySelector(s);
+    let aug = null, moves = [], shown = 0;
+    const build = (rows, a) => {
+      aug = a; const R = rows.length, C = rows[0].length; q('[data-r]').value=R; q('[data-c]').value=C;
+      const g = q('[data-g]'); g.style.gridTemplateColumns = 'repeat('+C+', auto)';
+      g.innerHTML = rows.flat().map((x,k)=>'<input type="text" aria-label="riga '+(Math.floor(k/C)+1)+' colonna '+(k%C+1)+'" value="'+x+'"'+(aug && k%C===aug?' class="sep"':'')+'>').join('');
+      q('[data-log]').innerHTML=''; q('[data-out]').hidden=true; moves=[]; shown=0;
+    };
+    const read = () => { const R=+q('[data-r]').value, C=+q('[data-c]').value, ins=[...q('[data-g]').querySelectorAll('input')];
+      const m=[]; for(let i=0;i<R;i++){ m.push([]); for(let j=0;j<C;j++){ const v=num(ins[i*C+j].value); if(isNaN(v)) return null; const s=ins[i*C+j].value.replace(/\s/g,'').replace('−','-');
+        m[i].push(/^-?\d+\/-?\d+$/.test(s) ? new F(+s.split('/')[0], +s.split('/')[1]) : F.of(v)); } } return m; };
+    const table = (m, piv) => '<table class="m"><tbody>'+m.map((r,i)=>'<tr>'+r.map((x,j)=>'<td class="'+((piv&&piv.some(p=>p[0]===i&&p[1]===j))?'piv ':'')+(aug&&j===aug?'sepc':'')+'">'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+    const gauss = m => {
+      const R=m.length, C=m[0].length, lim = aug||C, out=[{t:'Matrice di partenza', m:m.map(r=>r.slice())}];
+      let r=0, swaps=0; const piv=[];
+      for (let c=0; c<lim && r<R; c++){
+        let p=-1; for(let i=r;i<R;i++) if(!m[i][c].zero){ p=i; break; }
+        if (p<0) continue;
+        if (p!==r){ [m[p],m[r]]=[m[r],m[p]]; swaps++; out.push({t:'Scambio R'+(r+1)+' ↔ R'+(p+1)+' (serve un pivot ≠ 0)', m:m.map(x=>x.slice())}); }
+        for (let i=r+1;i<R;i++){ if (m[i][c].zero) continue; const k=m[i][c].div(m[r][c]);
+          m[i]=m[i].map((x,j)=>x.sub(k.mul(m[r][j]))); out.push({t:'R'+(i+1)+' ← R'+(i+1)+(k.n<0?' + ':' − ')+(k.d===1&&Math.abs(k.n)===1?'':(k.d===1?Math.abs(k.n):'('+Math.abs(k.n)+'/'+k.d+')')+'·')+'R'+(r+1), m:m.map(x=>x.slice())}); }
+        piv.push([r,c]); r++;
+      }
+      // righe con pivot nella colonna dei termini noti
+      let augPiv = null;
+      if (aug){ for(let i=r;i<R;i++){ for(let j=aug;j<C;j++) if(!m[i][j].zero){ augPiv=[i,j]; break; } if(augPiv) break; } }
+      let det=null; if (!aug && R===C){ det = piv.length<R ? new F(0) : piv.reduce((a,[i,j])=>a.mul(m[i][j]), new F(swaps%2?-1:1)); }
+      if (opts.jordan){
+        for (let k=piv.length-1;k>=0;k--){ const [pr,pc]=piv[k];
+          if (!(m[pr][pc].n===1&&m[pr][pc].d===1)){ const s=m[pr][pc]; m[pr]=m[pr].map(x=>x.div(s)); out.push({t:'R'+(pr+1)+' ← R'+(pr+1)+' · (1/'+s+')  (pivot uguale a 1)', m:m.map(x=>x.slice())}); }
+          for (let i=0;i<pr;i++){ if (m[i][pc].zero) continue; const kk=m[i][pc]; m[i]=m[i].map((x,j)=>x.sub(kk.mul(m[pr][j]))); out.push({t:'R'+(i+1)+' ← R'+(i+1)+' − ('+kk+')·R'+(pr+1)+'  (zero sopra il pivot)', m:m.map(x=>x.slice())}); }
+        }
+      }
+      return {out, piv, det, swaps, augPiv, R, C};
+    };
+    const summary = (g) => {
+      const n = aug||g.C, rk = g.piv.length, s=[];
+      s.push('<b>Pivot:</b> '+rk+' → <b>rk A = '+rk+'</b>'+(aug?' (A = parte a sinistra della riga verticale)':'')+'. Colonne con pivot: '+(g.piv.map(p=>'C'+(p[1]+1)).join(', ')||'nessuna')+'.');
+      if (opts.show.includes('cols')) s.push('Una base di Span(colonne) = le colonne <b>originali</b> '+(g.piv.map(p=>'C'+(p[1]+1)).join(', ')||'—')+'. dim Span(colonne) = '+rk+'.');
+      if (opts.show.includes('kernel')) s.push('Sistema omogeneo A·x = 0 in K<sup>'+n+'</sup>: dimensione delle soluzioni = n − rk A = '+n+' − '+rk+' = <b>'+(n-rk)+'</b>.');
+      if (opts.show.includes('det') && g.det) s.push('Matrice quadrata: <b>det A = '+g.det+'</b> = prodotto dei pivot'+(g.swaps?' cambiato di segno '+g.swaps+' volta/e (uno per ogni scambio)':'')+'. '+(g.det.zero?'det = 0: A non è invertibile.':'det ≠ 0: A è invertibile.'));
+      if (opts.show.includes('det') && !g.det && !aug) s.push('Il determinante esiste solo per matrici quadrate.');
+      if (aug){ const rkC = rk + (g.augPiv?1:0);
+        s.push('<b>rk(A | b) = '+rkC+'</b>. '+(g.augPiv ? 'C\'è un pivot nella colonna dei termini noti (riga del tipo 0 = numero ≠ 0): <b>nessuna soluzione</b> (Rouché-Capelli: rk A ≠ rk(A | b)).'
+          : (rk===n ? 'rk A = rk(A | b) = n = '+n+': <b>una sola soluzione</b>.' : 'rk A = rk(A | b) = '+rk+' &lt; n = '+n+': <b>infinite soluzioni</b>, con n − rk = '+(n-rk)+' parametri liberi.'))); }
+      return s.map(x=>'<p>'+x+'</p>').join('');
+    };
+    const render = upto => { const L=q('[data-log]'); L.innerHTML = moves.out.slice(0,upto).map((x,k)=>'<div class="move reveal"><b>'+x.t+'</b>'+table(x.m, k===moves.out.length-1?moves.piv:null)+'</div>').join('');
+      const o=q('[data-out]'); o.hidden = upto<moves.out.length; if(!o.hidden) o.innerHTML = summary(moves); };
+    const run = all => { if (!moves.out || (all && shown===0) || shown>=moves.out.length || shown===0){ const m=read(); if(!m){ q('[data-log]').innerHTML='<p class="feedback bad">Controlla le caselle: c\'è qualcosa che non è un numero.</p>'; return; } moves=gauss(m); shown=0; }
+      shown = all ? moves.out.length : Math.min(shown+1, moves.out.length); render(shown); };
+    q('[data-go]').onclick = () => { shown=0; moves={}; run(true); };
+    q('[data-one]').onclick = () => run(false);
+    q('[data-p]').onchange = () => { const p=opts.presets[+q('[data-p]').value]; build(p.rows, p.aug||null); };
+    const resize = () => { const R=+q('[data-r]').value, C=+q('[data-c]').value, cur=[...q('[data-g]').querySelectorAll('input')].map(x=>x.value), oc=Math.round(cur.length/Math.max(1,q('[data-g]').style.gridTemplateColumns.match(/\d+/)?.[0]||1));
+      const oldC = +(q('[data-g]').style.gridTemplateColumns.match(/\d+/)||[1])[0]; const rows=[]; for(let i=0;i<R;i++){ rows.push([]); for(let j=0;j<C;j++) rows[i].push(j<oldC && i*oldC+j<cur.length ? cur[i*oldC+j] : '0'); } build(rows, aug && aug<C ? aug : null); };
+    q('[data-r]').onchange = resize; q('[data-c]').onchange = resize;
+    const p0 = opts.presets[0]; build(p0.rows, p0.aug||null);
+    q('[data-g]').addEventListener('input', () => { moves={}; shown=0; q('[data-out]').hidden=true; q('[data-log]').innerHTML=''; });
+  }
+
+  /* ---------- trasformazione del piano x ↦ A·x ---------- */
+  // opts: {presets:[{name,m:[a,b,c,d]}], eigen, test, circle, area}
+  function transform(ch, cvId, ctlId, outId, opts){
+    const cv=$(cvId), ctl=$(ctlId), out=$(outId);
+    const sl = (k,lab) => '<label>'+lab+' <input type="range" id="'+cvId+'-'+k+'" min="-3" max="3" step="0.5"> <b id="'+cvId+'-'+k+'v"></b></label>';
+    ctl.innerHTML = '<label>Esempio <select id="'+cvId+'-p">'+opts.presets.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('')+'</select></label>'
+      + sl('a','a') + sl('b','b') + sl('c','c') + sl('d','d')
+      + (opts.test ? '<label>giro il vettore v <input type="range" id="'+cvId+'-t" min="0" max="180" step="1" value="30"></label>' : '');
+    const g = k => $(cvId+'-'+k);
+    const setP = i => { const m=opts.presets[i].m; ['a','b','c','d'].forEach((k,j)=>{ g(k).value=m[j]; }); draw(); };
+    const B = Board(cv, {xmin:-4.5,xmax:4.5,ymin:-3.6,ymax:3.6});
+    function eig(a,b,c,d){ const tr=a+d, de=a*d-b*c, D=tr*tr-4*de; if (D < -1e-9) return []; const s=Math.sqrt(Math.max(0,D)); const ls = D<1e-9 ? [tr/2] : [(tr+s)/2,(tr-s)/2];
+      return ls.map(l => { let v; if (Math.abs(b)>1e-9) v=[b, l-a]; else if (Math.abs(c)>1e-9) v=[l-d, c]; else v = Math.abs(a-l)<1e-9 ? (Math.abs(d-l)<1e-9 ? null : [1,0]) : [0,1]; return {l, v}; }); }
+    function draw(){
+      const [a,b,c,d] = ['a','b','c','d'].map(k=>+g(k).value);
+      ['a','b','c','d'].forEach(k=>$(cvId+'-'+k+'v').textContent=it(+g(k).value,1));
+      if (!B.fit()) return; B.grid();
+      const A = (x,y) => [a*x+b*y, c*x+d*y];
+      // griglia trasformata
+      const ctx=B.ctx; ctx.save(); ctx.globalAlpha=.55;
+      for (let i=-6;i<=6;i++){ const p=A(i,-8), q2=A(i,8); B.seg(p[0],p[1],q2[0],q2[1],'--muted',1); const r=A(-8,i), s=A(8,i); B.seg(r[0],r[1],s[0],s[1],'--muted',1); }
+      ctx.restore();
+      if (opts.area!==false) B.poly([[0,0],A(1,0),A(1,1),A(0,1)], '--w', .22);
+      if (opts.circle){ B.curve(t=>[Math.cos(t),Math.sin(t)],0,6.3,'--muted',1.5); B.curve(t=>A(Math.cos(t),Math.sin(t)),0,6.3,'--w',2.5); }
+      let es=[];
+      if (opts.eigen){ es = eig(a,b,c,d); es.forEach(e=>{ if(e.v) B.through(e.v[0],e.v[1],'--ok',2,[7,6]); }); }
+      B.arrow(0,0,...A(1,0),'--u','A·e₁'); B.arrow(0,0,...A(0,1),'--v','A·e₂');
+      const det=a*d-b*c; let txt = 'A = '+M([[it(a,1),it(b,1)],[it(c,1),it(d,1)]])+' &nbsp; det A = '+it(a,1)+'·'+it(d,1)+' − '+it(b,1)+'·'+it(c,1)+' = <b>'+it(det,2)+'</b>. ';
+      if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
+      else txt += '<br>Il quadratino 1×1 diventa il parallelogramma viola, di area |det A| = '+it(Math.abs(det),2)+(det<0?'; det &lt; 0: il disegno si è anche <b>ribaltato</b> (e₁ ed e₂ si sono scambiati di verso).':'.');
+      if (opts.eigen){ txt += '<br>'+(es.length ? es.map(e=> e.v ? 'Autovalore λ = <b>'+it(e.l,3)+'</b>: la retta verde tratteggiata Span('+it(e.v[0],2)+', '+it(e.v[1],2)+') viene mandata in sé stessa.' : 'λ = '+it(e.l,3)+': A = λ·I, ogni vettore è autovettore.').join('<br>') : 'Nessun autovalore reale: p<sub>A</sub>(λ) non ha radici in R (nessuna retta resta ferma, es. una rotazione).'); }
+      if (opts.test){ const t=+$(cvId+'-t').value*Math.PI/180, v=[2*Math.cos(t),2*Math.sin(t)], Av=A(...v), cr=v[0]*Av[1]-v[1]*Av[0], par = Math.abs(cr) < 0.12*Math.hypot(...Av)*2+1e-9 && Math.hypot(...Av)>1e-9;
+        B.arrow(0,0,...v,'--ink','v',2.5); B.arrow(0,0,...Av,par?'--ok':'--bad','A·v',3);
+        txt += '<br>'+(Math.hypot(...Av)<1e-9 ? 'A·v = 0: v è nel nucleo (autovettore con λ = 0).' : par ? '<b style="color:var(--ok)">A·v è sulla stessa retta di v</b>: v è un autovettore, A·v ≈ '+it((v[0]*Av[0]+v[1]*Av[1])/4,2)+'·v.' : 'A·v (rosso) non è sulla retta di v: qui v non è un autovettore. Gira v finché A·v diventa verde.'); }
+      out.innerHTML = txt;
+    }
+    ['a','b','c','d'].forEach(k=>g(k).addEventListener('input', draw));
+    if (opts.test) $(cvId+'-t').addEventListener('input', draw);
+    $(cvId+'-p').onchange = () => setP(+$(cvId+'-p').value);
+    setP(0); onDraw(ch, draw);
+  }
+
+  /* ---------- navigazione, indice, copia risultati ---------- */
+  const LAB = { ok:'giusto', 'ok-dopo':'giusto dopo errore o aiuto', errore:'sbagliato', 'soluzione vista':'guardato la soluzione' };
+  const plain = h => { const t=document.createElement('div'); t.innerHTML=h; return t.textContent.replace(/\s+/g,' ').trim(); };
+  const chapters = () => [...document.querySelectorAll('.chapter')].filter(c=>c.dataset.ch!=='indice');
+  const doneCount = ch => { const r=store.get('e-'+ch), L=exList[ch]||[]; return [L.filter(e=>/^ok/.test(r[e.id]||'')).length, L.length]; };
+  function nav(){
+    const cur = (location.hash||'#indice').slice(1);
+    const all = [...document.querySelectorAll('.chapter')];
+    $('nav').innerHTML = all.map(c=>{ const ch=c.dataset.ch, [k,n]=doneCount(ch); return '<a href="#'+ch+'" class="'+(ch===cur?'on':'')+'">'+c.dataset.title+(n&&k===n?' <span class="tick">✓</span>':'')+'</a>'; }).join('');
+    const hl=$('home-list'); if (hl) hl.innerHTML = chapters().map(c=>{ const [k,n]=doneCount(c.dataset.ch); return '<a href="#'+c.dataset.ch+'"><span class="d">'+(c.dataset.date||'')+'</span><span><b>'+c.dataset.full+'</b><small>'+(c.dataset.src||'')+'</small></span><span class="s'+(n&&k===n?' ok':'')+'">'+(n? k+'/'+n+' esercizi':'')+'</span></a>'; }).join('');
+  }
+  function show(){
+    let cur = (location.hash||'#indice').slice(1);
+    const all = [...document.querySelectorAll('.chapter')];
+    if (!all.some(c=>c.dataset.ch===cur)) cur='indice';
+    all.forEach(c=>c.hidden = c.dataset.ch!==cur);
+    nav(); requestAnimationFrame(()=>redraw(cur));
+  }
+  function copies(){
+    document.querySelectorAll('[data-copy]').forEach(box => {
+      const ch = box.dataset.copy, title = box.closest('.chapter').dataset.full;
+      box.innerHTML = '<div class="row"><button class="primary">Copia i miei risultati per il tutor</button><span class="feedback"></span></div><textarea hidden readonly aria-label="risultati da copiare" style="width:100%;min-height:120px;font:inherit;margin-top:8px"></textarea>';
+      const btn = box.querySelector('button'), fb = box.querySelector('.feedback'), ta = box.querySelector('textarea');
+      btn.onclick = () => {
+        const g = store.get('g-'+ch), e = store.get('e-'+ch), lines = ['Lavagna Geometria, capitolo "'+title+'":'];
+        const gk = Object.keys(g).filter(k=>/^g\d+$/.test(k)).sort((a,b)=>a.slice(1)-b.slice(1));
+        lines.push('Esercizio guidato: '+(gk.length ? gk.map(k=>'passo '+k.slice(1)+' '+(LAB[g[k]]||g[k])).join('; ') : 'non fatto'));
+        (exList[ch]||[]).forEach((x,i) => lines.push('Esercizio '+(i+1)+' ('+plain(x.q).slice(0,90)+'): '+(LAB[e[x.id]]||'non fatto')+(e[x.id+'_aiuto']?', aperto aiuto':'')));
+        const txt = lines.join('\n'); ta.value = txt; ta.hidden = false;
+        const fallback = () => { ta.focus(); ta.select(); say(fb, true, 'Testo selezionato: copialo e incollalo in chat.'); };
+        try { navigator.clipboard.writeText(txt).then(()=>say(fb,true,'Copiato! Incollalo in chat al tutor.'), fallback); } catch(err){ fallback(); }
+      };
+    });
+  }
+  function init(){
+    recipes(); copies();
+    window.addEventListener('hashchange', show);
+    let rt; window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(()=>redraw((location.hash||'#indice').slice(1)),120); });
+    try { new MutationObserver(()=>redraw((location.hash||'#indice').slice(1))).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>redraw((location.hash||'#indice').slice(1))); } catch(e){}
+    show();
+  }
+  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lab, transform, init };
+})();
+</script>

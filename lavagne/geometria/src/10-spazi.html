@@ -1,0 +1,229 @@
+  <!-- ================= CAPITOLO 1 · SPAZI VETTORIALI ================= -->
+  <div class="chapter" data-ch="spazi" data-title="1 · Spazi vettoriali" data-date="20/11" data-full="Spazi vettoriali, sottospazi, span, basi" data-src="Libro pp. 43-54, 56-57, 60-64, 73-74 · Foglio 4" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 1 · giorno 20/11 · libro pp. 43-54, 56-57, 60-64, 73-74</div>
+      <h2>Spazi vettoriali: cose che si sommano e si allungano</h2>
+      <p class="big">Serve a usare <b>un solo linguaggio</b> per cose che sembrano diverse: le frecce nel piano, le soluzioni di un sistema omogeneo, i polinomi, le matrici. Hanno tutte due operazioni: le puoi <b>sommare</b> e le puoi <b>moltiplicare per un numero</b>.</p>
+      <p>Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Combinazioni lineari e Span</h2>
+      <p>Hai due frecce del piano R²: <span class="cu">u = (2, 1)</span> e <span class="cv">v = (−1, 2)</span>. Con due numeri reali λ e μ costruisci la freccia <span class="cw">λ·u + μ·v</span>: si chiama <b>combinazione lineare</b> di u e v.</p>
+      <p>Muovi λ e μ: la punta viola arriva <b>ovunque</b> nel piano. L'insieme di tutte le combinazioni lineari si chiama <b>Span(u, v)</b>, e qui Span(u, v) = R².</p>
+      <canvas id="cv-span" aria-label="Piano con i vettori u, v e la combinazione lambda u più mu v"></canvas>
+      <div class="controls">
+        <label>λ <input type="range" id="sp-l" min="-2" max="2" step="0.1" value="1.5"> <b id="sp-lv">1,5</b></label>
+        <label>μ <input type="range" id="sp-m" min="-2" max="2" step="0.1" value="0.8"> <b id="sp-mv">0,8</b></label>
+        <label><input type="checkbox" id="sp-dep"> rendi v = −0,5·u (sulla stessa retta)</label>
+      </div>
+      <p class="readout" id="sp-out"></p>
+      <div class="note">Spunta la casella: ora v è un multiplo di u. Per quanto muovi λ e μ, la punta viola resta sulla <b>retta verde</b>. Span(u, v) è solo una retta, perché v non aggiunge nessuna direzione nuova: u e v sono <b>dipendenti</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni, scritte per intero</div>
+      <h2>Le parole del capitolo</h2>
+      <div class="def"><b>Campo K</b>
+        <p>Un insieme di numeri in cui puoi fare + − × ÷ (tranne dividere per 0) con le regole solite. Nel corso K è quasi sempre R, a volte C o Q. Z <b>non</b> è un campo: 1/2 non è un intero.</p>
+        <p style="font-size:.92rem;color:var(--muted)">La vecchia chat ti aveva detto "anello commutativo": lascia stare la parola anello, non serve.</p>
+      </div>
+      <div class="def"><b>Spazio vettoriale su K (p. 45)</b>
+        <p>Un insieme V con una <b>somma</b> v + w ∈ V (per v, w ∈ V) e un <b>prodotto per scalare</b> λ·v ∈ V (per λ ∈ K, v ∈ V), che rispettano le regole dei conti normali: si può cambiare l'ordine, raggruppare, esiste lo zero 0 ∈ V, ogni v ha l'opposto −v, 1·v = v, λ·(v + w) = λ·v + λ·w, e così via.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Devo imparare le 8 regole a memoria?</summary><p>No. Sono le regole che usi da sempre con i numeri. All'esame non ti chiedono di elencarle: ti chiedono di riconoscere se un insieme è un sottospazio (sotto).</p></details>
+        <p>Esempi da sapere: <b>Kⁿ</b> (n-uple di numeri), <b>M(m, n, K)</b> (matrici m × n), <b>K[x]</b> (polinomi), <b>Kₙ[x]</b> (polinomi di grado ≤ n), le funzioni F(X, R).</p>
+      </div>
+      <div class="def"><b>Sottospazio vettoriale (p. 48)</b>
+        <p>W ⊆ V è un sottospazio se valgono <b>tutte e tre</b>:</p>
+        <ol style="margin:0;padding-left:1.3em">
+          <li><b>0 ∈ W</b> (lo zero di V sta in W);</li>
+          <li>per ogni u, w ∈ W vale <b>u + w ∈ W</b> (chiuso per somma);</li>
+          <li>per ogni λ ∈ K e w ∈ W vale <b>λ·w ∈ W</b> (chiuso per prodotto per scalare).</li>
+        </ol>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché proprio queste tre?</summary><p>Un sottospazio deve essere uno spazio vettoriale "da solo": devi poter fare i conti senza mai uscire da W. Le regole dei conti valgono già perché valgono in V; resta solo da controllare che somma, multipli e zero non escano da W.</p></details>
+      </div>
+      <div class="def"><b>Combinazione lineare e Span (p. 51)</b>
+        <p>Dati v₁, …, v<sub>k</sub> ∈ V, una combinazione lineare è λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> con λ₁, …, λ<sub>k</sub> ∈ K. <b>Span(v₁, …, v<sub>k</sub>)</b> è l'insieme di tutte le combinazioni lineari. È sempre un sottospazio di V (Prop. 2.2.4).</p>
+      </div>
+      <div class="def"><b>Vettori indipendenti (p. 60)</b>
+        <p>v₁, …, v<sub>k</sub> ∈ V sono <b>indipendenti</b> se l'unico modo di ottenere zero è con tutti i coefficienti nulli:</p>
+        <p class="math">λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 &nbsp;⇒&nbsp; λ₁ = … = λ<sub>k</sub> = 0</p>
+        <p>Altrimenti sono <b>dipendenti</b>: vuol dire che uno di loro è combinazione lineare degli altri (Prop. 2.3.1), cioè è "di troppo".</p>
+      </div>
+      <div class="def"><b>Base (p. 62)</b>
+        <p>v₁, …, v<sub>n</sub> ∈ V sono una base di V se sono <b>indipendenti</b> e <b>generano</b> V, cioè Span(v₁, …, v<sub>n</sub>) = V. Esempio: la <b>base canonica</b> di Kⁿ è e₁ = (1, 0, …, 0), …, e<sub>n</sub> = (0, …, 0, 1).</p>
+        <p>Con una base, ogni v ∈ V si scrive in <b>un solo modo</b> come v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>. I numeri λ₁, …, λ<sub>n</sub> sono le <b>coordinate</b> di v rispetto alla base.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché le coordinate sono uniche?</summary><p>Se v = Σ λᵢ·vᵢ = Σ μᵢ·vᵢ, sottrai: Σ (λᵢ − μᵢ)·vᵢ = 0. I vettori sono indipendenti, quindi ogni λᵢ − μᵢ = 0, cioè λᵢ = μᵢ.</p></details>
+      </div>
+      <div class="def"><b>Trasposta e matrici simmetriche (pp. 56-57, 73-74)</b>
+        <p>La trasposta di A ∈ M(m, n, K) è <sup>t</sup>A ∈ M(n, m, K): le righe diventano colonne, (<sup>t</sup>A)<sub>ij</sub> = a<sub>ji</sub>. Esempio: <sup>t</sup>${M([[1,2,3],[4,5,6]])}$ = ${M([[1,4],[2,5],[3,6]])}$.</p>
+        <p>Regole: <sup>t</sup>(A + B) = <sup>t</sup>A + <sup>t</sup>B, <sup>t</sup>(λ·A) = λ·<sup>t</sup>A, <b><sup>t</sup>(A·B) = <sup>t</sup>B · <sup>t</sup>A</b> (si inverte l'ordine).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Come ricordo che l'ordine si gira?</summary><p>Guarda le misure. A è m × n, B è n × p, quindi A·B è m × p e <sup>t</sup>(A·B) è p × m. <sup>t</sup>B è p × n e <sup>t</sup>A è n × m: il prodotto <sup>t</sup>B·<sup>t</sup>A è p × m e torna. <sup>t</sup>A·<sup>t</sup>B in generale non si può neanche fare.</p></details>
+        <p>A ∈ M(n, n, K) è <b>simmetrica</b> se <sup>t</sup>A = A (è uguale "a specchio" rispetto alla diagonale) e <b>antisimmetrica</b> se <sup>t</sup>A = −A. Le simmetriche S(n) e le antisimmetriche A(n) sono sottospazi di M(n, n, K).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il disegno del sottospazio</div>
+      <h2>Perché una retta che non passa per 0 non va bene</h2>
+      <p>La retta r = {(x, y) ∈ R² : y = m·x + q}. Prendo due punti <span class="cu">P</span> e <span class="cv">Q</span> della retta e li sommo. Con q ≠ 0 la somma <span class="cw">P + Q</span> esce dalla retta, e anche 0 = (0, 0) non sta sulla retta.</p>
+      <canvas id="cv-sub" aria-label="Retta y uguale m x più q con due punti e la loro somma"></canvas>
+      <div class="controls">
+        <label>m <input type="range" id="sb-m" min="-2" max="2" step="0.25" value="0.5"> <b id="sb-mv"></b></label>
+        <label>q <input type="range" id="sb-q" min="-2" max="2" step="0.5" value="1"> <b id="sb-qv"></b></label>
+      </div>
+      <p class="readout" id="sb-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>"Questo insieme è un sottospazio?"</h2>
+      <p>Esempio: W = {(x, y, z) ∈ R³ : x + y = 2z} e U = {(x, y, z) ∈ R³ : x + y = 2}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Lo zero c'è?</h3><p>Metti x = y = z = 0. In W: 0 + 0 = 2·0, vero. In U: 0 + 0 = 2, falso. Quindi <b>U non è un sottospazio</b> e per U hai già finito.</p></div>
+        <div class="step"><h3>Passo 2 · Guarda la forma delle condizioni</h3><p>Se W è descritto da <b>equazioni lineari omogenee</b> (incognite solo alla prima potenza, niente prodotti tra incognite, niente termine noto) allora W è l'insieme delle soluzioni di un sistema omogeneo: <b>è un sottospazio</b> (Prop. 2.2.2). x + y − 2z = 0 è di questo tipo: W è un sottospazio.</p></div>
+        <div class="step"><h3>Passo 3 · Se ci sono quadrati, prodotti, ≥, valori assoluti</h3><p>Di solito <b>non</b> è un sottospazio: cerca un controesempio. Esempio: {(x, y) ∈ R² : x·y = 0}. (1, 0) e (0, 1) ci stanno, ma (1, 0) + (0, 1) = (1, 1) e 1·1 = 1 ≠ 0. Non è chiuso per somma.</p></div>
+        <div class="step"><h3>Passo 4 · Se è scritto come Span(…)</h3><p>Allora è sempre un sottospazio (Prop. 2.2.4). Esempio: {(t, 2t, −t) : t ∈ R} = Span((1, 2, −1)).</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Trovare una base di W dato con equazioni</h2>
+      <p>Esempio: W = {(x, y, z, t) ∈ R⁴ : x − y + 2t = 0}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi il vettore generico di W</h3><p class="math">(x, y, z, t) = (y − 2t, y, z, t)</p></div>
+        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p class="math">(y − 2t, y, z, t) = y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
+        <div class="step"><h3>Passo 4 · Ecco la base</h3><p>(1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) generano W (passo 3) e sono indipendenti (ognuno ha un 1 nel posto del suo parametro, dove gli altri hanno 0). Sono una base di W e <b>dim W = 3</b> = 4 incognite − 1 equazione.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio · vettori indipendenti?</div>
+      <h2>Metti i vettori in colonna e fai Gauss</h2>
+      <p>Ricetta: scrivi v₁, …, v<sub>k</sub> ∈ Kⁿ come <b>colonne</b> di una matrice n × k e riduci a scala. Sono indipendenti se e solo se ci sono <b>k pivot</b>, cioè rk = k. Le colonne senza pivot sono quelle "di troppo".</p>
+      <div id="lab-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>W = {(x, y, z) ∈ R³ : x − 2y + z = 0}</h2>
+      <p>È un sottospazio? Se sì, trova una base e la dimensione.</p>
+      <div class="steps" id="guided-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Come all'esame: prima prova, poi se ti blocchi apri l'aiuto, solo alla fine la soluzione.</p>
+      <div id="ex-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Sottospazio W ⊆ V:</b> 0 ∈ W, chiuso per somma, chiuso per prodotto per scalare.</li>
+        <li><b>Trucco quiz:</b> equazioni lineari omogenee ⇒ sì. Termine noto ≠ 0 ⇒ no (manca lo 0). Quadrati, prodotti tra incognite, disuguaglianze ⇒ quasi sempre no, trova il controesempio.</li>
+        <li><b>Span(v₁, …, v<sub>k</sub>)</b> = tutte le combinazioni λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub>. È sempre un sottospazio.</li>
+        <li><b>Indipendenti:</b> λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 solo con tutti i λ = 0. In pratica: vettori in colonna, Gauss, k pivot.</li>
+        <li><b>Base</b> = indipendenti + generano. Base da equazioni: ricava, parametri, spezza.</li>
+        <li><b><sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A</b>. Simmetrica: <sup>t</sup>A = A.</li>
+      </ul>
+      <div data-copy="spazi"></div>
+    </section>
+    <div class="next"><a href="#indice">← Indice</a><a href="#rango">Capitolo 2 · Rango e dimensione →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, V, Board, onDraw, guided, exercises, lab } = Lav;
+  // simboli ${M(...)}$ nel testo: li sostituisco con le matrici vere
+  document.querySelectorAll('[data-ch="spazi"] .def p').forEach(p => { p.innerHTML = p.innerHTML.replace(/\$\{M\((\[.*?\])\)\}\$/g, (_,s)=>M(JSON.parse(s))); });
+
+  const B1 = Board($('cv-span'), {xmin:-5,xmax:5,ymin:-3.5,ymax:4});
+  const span = () => {
+    const l=+$('sp-l').value, m=+$('sp-m').value, dep=$('sp-dep').checked;
+    $('sp-lv').textContent=it(l,1); $('sp-mv').textContent=it(m,1);
+    const u=[2,1], v= dep ? [-1,-0.5] : [-1,2];
+    const lu=[l*u[0],l*u[1]], mv=[m*v[0],m*v[1]], w=[lu[0]+mv[0], lu[1]+mv[1]];
+    if (!B1.fit()) return; B1.grid();
+    if (dep) B1.through(u[0],u[1],'--ok',6);
+    B1.seg(lu[0],lu[1],w[0],w[1],'--v',1.5,[5,5]); B1.seg(mv[0],mv[1],w[0],w[1],'--u',1.5,[5,5]);
+    B1.arrow(0,0,...lu,'--u','λ·u',2); B1.arrow(0,0,...mv,'--v','μ·v',2);
+    B1.arrow(0,0,...u,'--u','u'); B1.arrow(0,0,...v,'--v','v'); B1.arrow(0,0,...w,'--w','λ·u + μ·v',3.5);
+    $('sp-out').innerHTML = it(l,1)+'·('+u.join(', ')+') + '+it(m,1)+'·('+v.map(x=>it(x,1)).join(', ')+') = <b>('+it(w[0],2)+', '+it(w[1],2)+')</b>'+(dep?' · Span(u, v) = retta verde':' · Span(u, v) = R²');
+  };
+  ['sp-l','sp-m','sp-dep'].forEach(i=>$(i).addEventListener('input', span)); onDraw('spazi', span);
+
+  const B2 = Board($('cv-sub'), {xmin:-5,xmax:5,ymin:-4,ymax:5});
+  const sub = () => {
+    const m=+$('sb-m').value, q=+$('sb-q').value; $('sb-mv').textContent=it(m,2); $('sb-qv').textContent=it(q,1);
+    if (!B2.fit()) return; B2.grid();
+    const f=x=>m*x+q, P=[-2,f(-2)], Q=[1.5,f(1.5)], S=[P[0]+Q[0], P[1]+Q[1]];
+    B2.seg(-20,f(-20),20,f(20),'--ok',2.5);
+    B2.arrow(0,0,...P,'--u','P'); B2.arrow(0,0,...Q,'--v','Q'); B2.arrow(0,0,...S,'--w','P + Q',3);
+    B2.dot(0,0, q===0?'--ok':'--bad',6);
+    const onS = Math.abs(S[1]-f(S[0]))<1e-9;
+    $('sb-out').innerHTML = q===0 ? '<span style="color:var(--ok);font-weight:700">q = 0: la retta passa per 0 e P + Q resta sulla retta.</span> È un sottospazio di R² (è Span(1, m)).'
+      : '<span style="color:var(--bad);font-weight:700">q = '+it(q,1)+' ≠ 0:</span> 0 = (0, 0) non è sulla retta e P + Q '+(onS?'':'esce dalla retta')+'. Non è un sottospazio (è un sottospazio <i>affine</i>, lo hai visto con i sistemi).';
+  };
+  ['sb-m','sb-q'].forEach(i=>$(i).addEventListener('input', sub)); onDraw('spazi', sub);
+
+  lab('lab-spazi', { show:['cols'], presets:[
+    { name:'(1,2,3), (2,4,6) in R³', rows:[[1,2],[2,4],[3,6]] },
+    { name:'(1,0,1), (0,1,1), (1,1,2) in R³', rows:[[1,0,1],[0,1,1],[1,1,2]] },
+    { name:'(1,1,0), (0,1,1), (1,0,1) in R³', rows:[[1,0,1],[1,1,0],[0,1,1]] },
+    { name:'(1,2), (3,1), (0,5) in R²', rows:[[1,3,0],[2,1,5]] }
+  ]});
+
+  guided('spazi', [
+    { h:'Passo 1 · Lo zero c\'è? Calcola x − 2y + z con x = y = z = 0', type:'nums', ans:[0],
+      html:'0 − 2·0 + 0 = '+inp('valore'), ok:'Sì: fa 0, quindi 0 = (0, 0, 0) ∈ W.', bad:'Sostituisci 0 al posto di tutte le lettere.' },
+    { h:'Passo 2 · Che tipo di condizione è x − 2y + z = 0?', type:'choice', ans:1,
+      opts:['Ha un quadrato, quindi non è un sottospazio','Lineare omogenea: è un sistema omogeneo, quindi W è un sottospazio','Ha un termine noto, quindi non è un sottospazio'],
+      ok:'Esatto: incognite alla prima potenza, nessun termine noto. Le soluzioni di un sistema omogeneo sono un sottospazio.', bad:'Guarda bene: ci sono potenze? C\'è un numero da solo dopo l\'uguale?' },
+    { h:'Passo 3 · Ricava z in funzione di x e y', type:'choice', ans:2,
+      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: porti x e −2y dall\'altra parte cambiando segno.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
+    { h:'Passo 4 · Spezza (x, y, −x + 2y) per parametri: completa i due vettori', type:'nums', ans:[-1,2],
+      html:'(x, y, −x + 2y) = x·(1, 0, '+inp('terza componente del primo','3.5em')+') + y·(0, 1, '+inp('terza componente del secondo','3.5em')+')',
+      ok:'Perfetto: (1, 0, −1) e (0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
+    { h:'Passo 5 · Quanto vale dim W?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'),
+      ok:'Sì: 2 vettori nella base. Torna anche col conto 3 incognite − 1 equazione = 2.', bad:'Conta i vettori della base del passo 4.' }
+  ], '<b>Fatto!</b> W è un sottospazio di R³, una base è (1, 0, −1), (0, 1, 2) e dim W = 2. Geometricamente W è un <b>piano</b> per l\'origine dentro R³.');
+
+  exercises('spazi', [
+    { id:'e1', type:'choice', src:'tipo quiz', q:'Per quali k ∈ R l\'insieme S<sub>k</sub> = {(x, y) ∈ R² : x + (k − 1)·y² = k² − 1} è un sottospazio di R²?',
+      opts:['k = 1','k = −1','k = ±1','per nessun k'], a:0,
+      hint:'Servono due cose insieme: niente quadrato (il coefficiente di y² deve essere 0) e niente termine noto (k² − 1 = 0).',
+      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1 il termine noto è 1 − 1 = 0, quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1 resta x − 2y² = 0, che ha un quadrato: (2, 1) ci sta (2 − 2·1 = 0), ma 2·(2, 1) = (4, 2) no (4 − 2·4 = −4 ≠ 0). Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
+    { id:'e2', type:'choice', src:'tipo quiz', q:'Quale di questi è un sottospazio di M(2, 2, R)?',
+      opts:['{A : a₁₁ + a₂₂ = 0}','{A : det A = 0}','{A : a₁₂ = 1}','{A : a₁₁ ≥ 0}'], a:0,
+      hint:'Cerca la condizione lineare omogenea. det A = a₁₁a₂₂ − a₁₂a₂₁ ha prodotti tra le entrate.',
+      sol:'a₁₁ + a₂₂ = 0 è lineare omogenea: sottospazio. det A = 0 no: ${M([[1,0],[0,0]])}$ e ${M([[0,0],[0,1]])}$ hanno det 0 ma la somma è I con det 1. a₁₂ = 1 non contiene la matrice nulla. a₁₁ ≥ 0 non è chiuso per λ = −1.' },
+    { id:'e3', type:'choice', q:'I vettori (1, 2, 3) e (2, 4, 6) di R³ sono indipendenti?',
+      opts:['Sì, perché sono diversi','No, perché (2, 4, 6) = 2·(1, 2, 3)','Sì, perché nessuno dei due è il vettore nullo'], a:1,
+      hint:'Uno dei due è multiplo dell\'altro?', sol:'2·(1, 2, 3) − 1·(2, 4, 6) = 0 con coefficienti non nulli: sono dipendenti.' },
+    { id:'e4', type:'num', label:'dim =', q:'dim Span((1, 0, 1), (0, 1, 1), (1, 1, 2)) ⊆ R³',
+      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'(1, 1, 2) = (1, 0, 1) + (0, 1, 1), quindi è di troppo. I primi due sono indipendenti (non sono multipli). dim = 2.' },
+    { id:'e5', type:'nums', labels:['a =','b ='], q:'Scrivi (3, 5) ∈ R² come a·(1, 1) + b·(1, 2). Quanto valgono a e b?',
+      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'Dalla differenza b = 2, poi a = 3 − 2 = 1. Infatti 1·(1, 1) + 2·(1, 2) = (3, 5). (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
+    { id:'e6', type:'choice', src:'Foglio 4 · quiz 3', q:'Se A·B = C, allora <sup>t</sup>C è uguale a…',
+      opts:['<sup>t</sup>B · <sup>t</sup>A','<sup>t</sup>A · <sup>t</sup>B','<sup>t</sup>A · B'], a:0,
+      hint:'La trasposta di un prodotto inverte l\'ordine. Controlla con le misure.', sol:'<sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A.' },
+    { id:'e7', type:'choice', q:'Quale di queste matrici è simmetrica?',
+      opts:['${M([[1,4],[-4,1]])}$','${M([[0,1,-2],[1,3,7],[-2,7,5]])}$','${M([[1,7,0],[0,1,0],[0,7,1]])}$'], a:1,
+      hint:'Simmetrica: a<sub>ij</sub> = a<sub>ji</sub>. Confronta il numero in riga 1 colonna 2 con quello in riga 2 colonna 1, e così via.', sol:'Nella seconda: a₁₂ = a₂₁ = 1, a₁₃ = a₃₁ = −2, a₂₃ = a₃₂ = 7. Nella prima 4 ≠ −4; nella terza a₁₂ = 7 ma a₂₁ = 0.' },
+    { id:'e8', type:'choice', q:'W = {(x, y) ∈ R² : x·y = 0} è un sottospazio di R²?',
+      opts:['Sì, contiene lo 0','No: (1, 0) e (0, 1) stanno in W ma la loro somma no','Sì, perché è chiuso per prodotto per scalare'], a:1,
+      hint:'Contenere lo 0 non basta: servono tutte e tre le condizioni.', sol:'(1, 0) + (0, 1) = (1, 1) e 1·1 = 1 ≠ 0. W è l\'unione dei due assi: non è chiuso per somma.' }
+  ].map(e => Object.assign(e, { q:e.q.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), sol:e.sol.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), opts:e.opts && e.opts.map(o=>o.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s)))) })));
+})();
+</script>

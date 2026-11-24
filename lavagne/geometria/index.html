@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Lavagna di Geometria</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una colonna di lettura stretta che scorre come una lavagna; un capitolo alla volta, indice in alto.
+   Stessa famiglia visiva della Lavagna di Analisi, ma su carta quadrettata blu: Geometria = vettori e griglie. */
+:root {
+  --bg: #edf0f6;
+  --board: #ffffff;
+  --ink: #1b2233;
+  --muted: #5a6478;
+  --line: #d4dae6;
+  --grid: #e6eaf2;
+  --u: #2f62c9;        /* blu: primo vettore, colonna 1, e1 */
+  --v: #c46a12;        /* arancio: secondo vettore, colonna 2, e2 */
+  --w: #7a3fb8;        /* viola: risultato, combinazione */
+  --ok: #1f8a4c;
+  --bad: #c2412f;
+  --soft: #e5eaf3;
+  --chalk: "Caveat", "Comic Sans MS", cursive;
+  --text: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131826; --board: #1b2234; --ink: #e9edf6; --muted: #a2acc2; --line: #323c55; --grid: #252e44;
+    --u: #86aaff; --v: #ffb366; --w: #c79bff; --ok: #5fd08f; --bad: #ff8b78; --soft: #242d42;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131826; --board: #1b2234; --ink: #e9edf6; --muted: #a2acc2; --line: #323c55; --grid: #252e44;
+  --u: #86aaff; --v: #ffb366; --w: #c79bff; --ok: #5fd08f; --bad: #ff8b78; --soft: #242d42;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 60px;
+}
+.wrap { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.chapter { display: flex; flex-direction: column; gap: 22px; }
+header h1 { font-family: var(--chalk); font-size: 2.6rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+header p { margin: 4px 0 0; color: var(--muted); }
+nav.chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.chapters a {
+  font-size: .88rem; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--muted); background: var(--board);
+}
+nav.chapters a.on { background: var(--ink); color: var(--board); border-color: var(--ink); }
+nav.chapters a .tick { color: var(--ok); font-weight: 700; }
+nav.chapters a.on .tick { color: inherit; }
+section.board {
+  background: var(--board); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px clamp(16px, 4vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h2 { font-family: var(--chalk); font-size: 2rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+h3 { margin: 0; font-size: 1.02rem; }
+p { margin: 0; }
+.big { font-size: 1.15rem; }
+.cu { color: var(--u); font-weight: 700; }
+.cv { color: var(--v); font-weight: 700; }
+.cw { color: var(--w); font-weight: 700; }
+.math { font-size: 1.25rem; display: flex; align-items: center; justify-content: center; gap: .5em; flex-wrap: wrap; padding: 6px 0; text-align: center; }
+.math.left { justify-content: flex-start; text-align: left; }
+.fr { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.2; }
+.fr > span { padding: 0 .25em; }
+.fr > span + span { border-top: 2px solid currentColor; }
+/* matrici e vettori colonna */
+.mx { display: inline-grid; grid-auto-flow: row; gap: 0 .7em; padding: 2px .45em; vertical-align: middle; position: relative; font-variant-numeric: tabular-nums; text-align: center; line-height: 1.35; }
+.mx::before, .mx::after { content: ""; position: absolute; top: 0; bottom: 0; width: .35em; border: 2px solid currentColor; }
+.mx::before { left: 0; border-right: 0; border-radius: 4px 0 0 4px; }
+.mx::after { right: 0; border-left: 0; border-radius: 0 4px 4px 0; }
+.mx.c1 { grid-template-columns: auto; } .mx.c2 { grid-template-columns: repeat(2, auto); } .mx.c3 { grid-template-columns: repeat(3, auto); } .mx.c4 { grid-template-columns: repeat(4, auto); } .mx.c5 { grid-template-columns: repeat(5, auto); }
+.box { border-radius: 8px; padding: 2px 8px; }
+.box.u { background: color-mix(in srgb, var(--u) 14%, transparent); }
+.box.v { background: color-mix(in srgb, var(--v) 16%, transparent); }
+.box.w { background: color-mix(in srgb, var(--w) 14%, transparent); }
+.note { background: var(--soft); border-radius: 10px; padding: 12px 14px; }
+.warn { border: 2px dashed var(--bad); border-radius: 10px; padding: 12px 14px; }
+.def { border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.def > b:first-child { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.why { font-size: .78rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; align-self: flex-start; }
+.why.easy { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.why.mem { background: color-mix(in srgb, var(--v) 20%, transparent); color: var(--v); }
+details.whybox { border-left: 3px solid var(--ok); padding-left: 12px; }
+details.whybox summary { cursor: pointer; color: var(--ok); font-weight: 700; font-size: .95rem; }
+details.whybox > *:not(summary) { margin-top: 6px; }
+canvas { width: 100%; height: 320px; display: block; border-radius: 10px; background: var(--soft); touch-action: none; }
+canvas.tall { height: 380px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: .95rem; }
+input[type=range] { width: 150px; max-width: 100%; accent-color: var(--w); }
+select { font: inherit; font-size: .95rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); max-width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .9rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+button {
+  font: inherit; font-size: .95rem; cursor: pointer; border-radius: 10px; padding: 8px 14px;
+  border: 1px solid var(--line); background: var(--board); color: var(--ink);
+}
+button.primary { background: var(--ink); color: var(--board); border-color: var(--ink); }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--w); outline-offset: 2px; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; }
+input[type=text] {
+  font: inherit; font-size: 1.05rem; width: 4.6em; padding: 4px 8px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink); text-align: center;
+}
+.feedback { font-size: .95rem; min-height: 1.4em; }
+.feedback.ok { color: var(--ok); font-weight: 700; }
+.feedback.bad { color: var(--bad); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ex { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.ex:first-child { border-top: 0; padding-top: 0; }
+.ex .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.badge { font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.badge.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); font-weight: 700; }
+ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.choice { display: flex; flex-direction: column; gap: 8px; }
+.choice button { text-align: left; }
+.choice button.right { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.choice button.wrong { border-color: var(--bad); color: var(--bad); }
+.scroll { overflow-x: auto; }
+.readout { font-size: 1.08rem; font-variant-numeric: tabular-nums; }
+/* laboratorio matrici */
+.lab { display: flex; flex-direction: column; gap: 12px; }
+.lab .grid { display: inline-grid; gap: 6px; }
+.lab .grid input { width: 3.4em; font-family: var(--mono); font-size: .98rem; }
+.lab .grid .sep { border-left: 2px solid var(--muted); }
+.lab .log { display: flex; flex-direction: column; gap: 10px; }
+.lab .move { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.lab .move b { font-family: var(--mono); font-size: .92rem; min-width: 10em; }
+.lab table.m { border-collapse: collapse; font-family: var(--mono); font-size: .95rem; font-variant-numeric: tabular-nums; }
+.lab table.m td { padding: 2px 9px; text-align: right; }
+.lab table.m td.piv { background: color-mix(in srgb, var(--w) 22%, transparent); border-radius: 6px; font-weight: 700; }
+.lab table.m td.sepc { border-left: 2px solid var(--muted); }
+.lab table.m { border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 4px; }
+.home-list { display: flex; flex-direction: column; gap: 0; }
+.home-list a { display: grid; grid-template-columns: 4.2em 1fr auto; gap: 10px; align-items: baseline; padding: 10px 2px; border-top: 1px solid var(--line); color: inherit; text-decoration: none; }
+.home-list a:first-child { border-top: 0; }
+.home-list a:hover b { text-decoration: underline; }
+.home-list .d { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .92rem; }
+.home-list .s { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+.home-list .s.ok { color: var(--ok); font-weight: 700; }
+.home-list small { display: block; color: var(--muted); }
+.next { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.next a { color: var(--u); }
+footer { color: var(--muted); font-size: .9rem; text-align: center; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: up .35s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lavagna di Geometria</h1>
+    <p>Geometria e Algebra T · esame lunedì 11 gennaio 2027. Un capitolo per argomento, nell'ordine del tuo calendario: a cosa serve, il disegno, la ricetta, poi tocca a te.</p>
+  </header>
+
+  <nav class="chapters" aria-label="Capitoli" id="nav"></nav>
+
+  <!-- ================= INDICE ================= -->
+  <div class="chapter" data-ch="indice" data-title="Indice">
+    <section class="board">
+      <div class="eyebrow">Come si usa</div>
+      <h2>Una lavagna per tutto il corso</h2>
+      <p>Apri il capitolo del giorno (la data è quella della cartella in STUDIO GIORNO PER GIORNO). In ogni capitolo trovi, in ordine: <b>a cosa serve</b>, un <b>disegno che puoi muovere</b>, le <b>definizioni</b> scritte per intero, la <b>ricetta</b> a passi, un <b>esercizio guidato</b>, gli <b>esercizi da solo</b> e cosa scrivere sul quaderno.</p>
+      <p>Accanto a ogni formula c'è un'etichetta: <span class="why easy">perché: facile</span> vuol dire che il motivo si capisce in due righe (aprilo e leggilo). <span class="why mem">a memoria</span> vuol dire che il motivo è lungo: segnala sul quaderno e imparala così.</p>
+      <div class="note">Alla fine di ogni capitolo premi <b>"Copia i miei risultati per il tutor"</b> e incolla il testo in chat: il tutor aggiorna il tuo registro e sa cosa ripassare.</div>
+    </section>
+    <section class="board">
+      <div class="eyebrow">Capitoli</div>
+      <div class="home-list" id="home-list"></div>
+    </section>
+  </div>
+<script>
+/* ===================== MOTORE DELLA LAVAGNA ===================== */
+window.Lav = (function(){
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const store = {
+    get(k){ try { return JSON.parse(localStorage.getItem('geo-'+k)) || {}; } catch(e){ return {}; } },
+    set(k,v){ try { localStorage.setItem('geo-'+k, JSON.stringify(v)); } catch(e){} }
+  };
+  const draws = {};          // ch -> [funzioni di disegno]
+  const exList = {};         // ch -> esercizi (per il riepilogo)
+  const onDraw = (ch, fn) => { (draws[ch] = draws[ch] || []).push(fn); };
+  const redraw = ch => (draws[ch]||[]).forEach(f => { try { f(); } catch(e){ console.error(e); } });
+
+  /* ---------- numeri: frazioni esatte ---------- */
+  const gcd = (a,b) => { a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; };
+  class F {
+    constructor(n,d=1){ if (d<0){ n=-n; d=-d; } const g=gcd(n,d); this.n=n/g; this.d=d/g; }
+    static of(x){ if (x instanceof F) return x; if (Number.isInteger(x)) return new F(x,1); const d=1e6; return new F(Math.round(x*d), d); }
+    add(o){ o=F.of(o); return new F(this.n*o.d+o.n*this.d, this.d*o.d); }
+    sub(o){ o=F.of(o); return new F(this.n*o.d-o.n*this.d, this.d*o.d); }
+    mul(o){ o=F.of(o); return new F(this.n*o.n, this.d*o.d); }
+    div(o){ o=F.of(o); return new F(this.n*o.d, this.d*o.n); }
+    neg(){ return new F(-this.n, this.d); }
+    get zero(){ return this.n===0; }
+    val(){ return this.n/this.d; }
+    toString(){ const s = this.d===1 ? String(Math.abs(this.n)) : Math.abs(this.n)+'/'+this.d; return (this.n<0?'−':'')+s; }
+  }
+  const it = (x,k=2) => { if (Math.abs(x)<1e-9) return '0'; const r = +x.toFixed(k); return String(r).replace('-','−').replace('.', ','); };
+
+  /* ---------- lettura risposte ---------- */
+  function num(s){
+    let v = String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').replace(/−/g,'-');
+    if (v==='') return NaN;
+    if (/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(v)){ const [a,b]=v.split('/'); return +a/+b; }
+    return Number(v);
+  }
+  const same = (a,b) => isFinite(a) && isFinite(b) && Math.abs(a-b) < 1e-6;
+  const say = (el, ok, txt) => { el.innerHTML = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
+  const inp = (lbl, w) => '<input type="text" inputmode="text" autocomplete="off" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  const M = (rows) => { const c = rows[0].length; return '<span class="mx c'+c+'">'+rows.flat().map(x=>'<span>'+x+'</span>').join('')+'</span>'; };
+  const V = (...xs) => M(xs.map(x=>[x]));
+
+  /* ---------- piano cartesiano su canvas ---------- */
+  function Board(cv, o){
+    const b = { cv, o: Object.assign({xmin:-5,xmax:5,ymin:-4,ymax:4}, o) };
+    b.fit = () => {
+      const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+      if (!r.width) return false;
+      cv.width = Math.round(r.width*dpr); cv.height = Math.round(r.height*dpr);
+      const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+      b.ctx = ctx; b.W = r.width; b.H = r.height;
+      // stessa scala su x e y: si allarga il lato che avanza
+      const o2 = b.o, sx = b.W/(o2.xmax-o2.xmin), sy = b.H/(o2.ymax-o2.ymin);
+      b.s = Math.min(sx, sy);
+      const cx = (o2.xmin+o2.xmax)/2, cy = (o2.ymin+o2.ymax)/2;
+      b.X = x => b.W/2 + (x-cx)*b.s; b.Y = y => b.H/2 - (y-cy)*b.s;
+      b.inv = (px,py) => [ (px-b.W/2)/b.s + cx, -(py-b.H/2)/b.s + cy ];
+      b.x0 = cx - b.W/2/b.s; b.x1 = cx + b.W/2/b.s; b.y0 = cy - b.H/2/b.s; b.y1 = cy + b.H/2/b.s;
+      ctx.clearRect(0,0,b.W,b.H); return true;
+    };
+    b.grid = () => { const c=b.ctx; c.strokeStyle=css('--grid'); c.lineWidth=1; c.beginPath();
+      for (let x=Math.ceil(b.x0); x<=b.x1; x++){ c.moveTo(b.X(x),0); c.lineTo(b.X(x),b.H); }
+      for (let y=Math.ceil(b.y0); y<=b.y1; y++){ c.moveTo(0,b.Y(y)); c.lineTo(b.W,b.Y(y)); }
+      c.stroke();
+      c.strokeStyle=css('--muted'); c.lineWidth=1.2; c.beginPath(); c.moveTo(0,b.Y(0)); c.lineTo(b.W,b.Y(0)); c.moveTo(b.X(0),0); c.lineTo(b.X(0),b.H); c.stroke();
+      c.fillStyle=css('--muted'); c.font='12px '+css('--text'); c.fillText('x', b.W-12, b.Y(0)-6); c.fillText('y', b.X(0)+6, 12); };
+    b.seg = (x1,y1,x2,y2,col,w=2,dash) => { const c=b.ctx; c.save(); c.strokeStyle=css(col); c.lineWidth=w; if(dash) c.setLineDash(dash); c.beginPath(); c.moveTo(b.X(x1),b.Y(y1)); c.lineTo(b.X(x2),b.Y(y2)); c.stroke(); c.restore(); };
+    b.through = (dx,dy,col,w=2,dash,px=0,py=0) => { const L = 50, n = Math.hypot(dx,dy)||1; b.seg(px-dx/n*L, py-dy/n*L, px+dx/n*L, py+dy/n*L, col, w, dash); };
+    b.arrow = (x1,y1,x2,y2,col,label,w=3) => { const c=b.ctx, X1=b.X(x1),Y1=b.Y(y1),X2=b.X(x2),Y2=b.Y(y2), a=Math.atan2(Y2-Y1,X2-X1), L=Math.hypot(X2-X1,Y2-Y1);
+      c.save(); c.strokeStyle=c.fillStyle=css(col); c.lineWidth=w; c.lineCap='round';
+      if (L>2){ c.beginPath(); c.moveTo(X1,Y1); c.lineTo(X2-Math.cos(a)*Math.min(8,L/2),Y2-Math.sin(a)*Math.min(8,L/2)); c.stroke();
+        c.beginPath(); c.moveTo(X2,Y2); c.lineTo(X2-12*Math.cos(a-0.4),Y2-12*Math.sin(a-0.4)); c.lineTo(X2-12*Math.cos(a+0.4),Y2-12*Math.sin(a+0.4)); c.closePath(); c.fill(); }
+      if (label){ c.font='700 14px '+css('--text'); const ox = Math.cos(a)>=0 ? 6 : -6-c.measureText(label).width; c.fillText(label, X2+ox, Y2+(Math.sin(a)>0?16:-6)); }
+      c.restore(); };
+    b.dot = (x,y,col,r=4) => { const c=b.ctx; c.fillStyle=css(col); c.beginPath(); c.arc(b.X(x),b.Y(y),r,0,7); c.fill(); };
+    b.poly = (pts,col,alpha=.18) => { const c=b.ctx; c.save(); c.fillStyle=css(col); c.globalAlpha=alpha; c.beginPath(); pts.forEach(([x,y],i)=> i?c.lineTo(b.X(x),b.Y(y)):c.moveTo(b.X(x),b.Y(y))); c.closePath(); c.fill(); c.globalAlpha=1; c.strokeStyle=css(col); c.lineWidth=1.5; c.stroke(); c.restore(); };
+    b.text = (x,y,s,col='--ink',size=13) => { const c=b.ctx; c.fillStyle=css(col); c.font='700 '+size+'px '+css('--text'); c.fillText(s, b.X(x)+4, b.Y(y)-6); };
+    b.curve = (f,t0,t1,col,w=2,n=160) => { const c=b.ctx; c.save(); c.strokeStyle=css(col); c.lineWidth=w; c.beginPath(); for(let i=0;i<=n;i++){ const t=t0+(t1-t0)*i/n, [x,y]=f(t); i?c.lineTo(b.X(x),b.Y(y)):c.moveTo(b.X(x),b.Y(y)); } c.stroke(); c.restore(); };
+    return b;
+  }
+
+  /* ---------- ricette a passi ---------- */
+  function recipes(){
+    document.querySelectorAll('[data-recipe]').forEach(box => {
+      const steps = [...box.querySelectorAll(':scope > .step')], sec = box.closest('section');
+      let shown = 1; steps.forEach((s,i)=>s.hidden=i>0);
+      const nx = sec.querySelector('[data-next]'), rs = sec.querySelector('[data-reset]');
+      const upd = () => { nx.disabled = shown>=steps.length; };
+      nx.onclick = () => { if (shown < steps.length){ steps[shown].hidden=false; steps[shown].classList.add('reveal'); shown++; upd(); } };
+      rs.onclick = () => { steps.forEach((s,i)=>s.hidden=i>0); shown=1; upd(); };
+      upd();
+    });
+  }
+
+  /* ---------- esercizio guidato ---------- */
+  // step: {h, html, type:'nums'|'choice', ans, opts, ok, bad}
+  function guided(ch, steps, done){
+    const box = $('guided-'+ch), key='g-'+ch, res = store.get(key);
+    const els = steps.map((s,i) => {
+      const d = document.createElement('div'); d.className = 'step'; d.hidden = i>0;
+      let body = '';
+      if (s.type==='choice') body = (s.html ? '<div class="math left">'+s.html+'</div>' : '')+'<div class="choice">'+s.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else body = '<div class="math left">'+s.html+'</div><div class="row"><button data-check>Controlla</button></div>';
+      d.innerHTML = '<h3>'+s.h+'</h3>'+body+'<span class="feedback"></span>';
+      box.appendChild(d); return d;
+    });
+    const fin = document.createElement('div'); fin.className = 'note reveal'; fin.hidden = true; fin.innerHTML = done; box.appendChild(fin);
+    const id = i => 'g'+(i+1);
+    const pass = i => { res[id(i)] = res[id(i)]==='errore' ? 'ok-dopo' : (res[id(i)]||'ok'); store.set(key,res); if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; nav(); };
+    const fail = i => { if (!/^ok/.test(res[id(i)]||'')) res[id(i)]='errore'; store.set(key,res); };
+    steps.forEach((s,i) => {
+      const d = els[i], fb = d.querySelector('.feedback');
+      if (s.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===s.ans){ b.classList.add('right'); say(fb,true,s.ok); pass(i); } else { b.classList.add('wrong'); say(fb,false,s.bad); fail(i); }
+        });
+      } else {
+        d.querySelector('[data-check]').onclick = () => {
+          const vals = [...d.querySelectorAll('input')].map(x=>num(x.value));
+          const ans = Array.isArray(s.ans) ? s.ans : [s.ans];
+          if (vals.some(isNaN)) { say(fb,false,'Riempi tutte le caselle con un numero (le frazioni scrivile così: 1/2).'); return; }
+          if (vals.every((v,k)=>same(v,ans[k]))){ say(fb,true,s.ok); pass(i); } else { say(fb,false,s.bad); fail(i); }
+        };
+      }
+      if (/^ok/.test(res[id(i)]||'')){ if (i+1<els.length) els[i+1].hidden=false; else fin.hidden=false; }
+    });
+  }
+
+  /* ---------- esercizi da solo ---------- */
+  // e: {id, q, type:'num'|'nums'|'choice', a, opts, labels, hint, sol, src}
+  function exercises(ch, list){
+    exList[ch] = list;
+    const box = $('ex-'+ch), key='e-'+ch, res = store.get(key);
+    list.forEach((e,i) => {
+      const d = document.createElement('div'); d.className = 'ex';
+      let ans;
+      if (e.type==='choice') ans = '<div class="choice">'+e.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div>';
+      else if (e.type==='nums') ans = '<div class="row">'+e.labels.map(l=>'<span>'+l+' '+inp(l)+'</span>').join('')+'<button data-c>Controlla</button></div>';
+      else ans = '<div class="row">'+(e.label||'risultato =')+' '+inp('risultato')+'<button data-c>Controlla</button></div>';
+      d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+(e.src?' <span class="badge">'+e.src+'</span>':'')+'</b><span class="badge" data-b></span></div><div class="math left">'+e.q+'</div>'+ans
+        +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
+        +'<div class="note" data-hint hidden>'+e.hint+'</div><div class="note" data-sol hidden>'+e.sol+'</div>';
+      box.appendChild(d);
+      const fb = d.querySelector('.feedback'), bd = d.querySelector('[data-b]');
+      const badge = () => { const r=res[e.id];
+        const map = { ok:['giusto al primo colpo',1], 'ok-dopo':['giusto dopo errore o aiuto',1], errore:['da rifare',0], 'soluzione vista':['soluzione vista',0] };
+        const [t,ok] = map[r] || ['da fare',0]; bd.textContent=t; bd.className='badge'+(ok?' done':''); };
+      badge();
+      const right = () => { res[e.id] = (res[e.id]==='errore' || res[e.id]==='soluzione vista' || res[e.id+'_aiuto']) ? 'ok-dopo' : (res[e.id]||'ok'); say(fb,true,'Giusto!'); store.set(key,res); badge(); nav(); };
+      const wrong = msg => { if (!/^ok/.test(res[e.id]||'')) res[e.id]='errore'; say(fb,false,msg); store.set(key,res); badge(); };
+      if (e.type==='choice'){
+        d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+          d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+          if (+b.dataset.j===e.a){ b.classList.add('right'); right(); } else { b.classList.add('wrong'); wrong('Non è questa. Prova con l\'aiuto.'); }
+        });
+      } else {
+        d.querySelector('[data-c]').onclick = () => {
+          const vals = [...d.querySelectorAll('input')].map(x=>num(x.value)), ans = Array.isArray(e.a)?e.a:[e.a];
+          if (vals.some(isNaN)) { say(fb,false,'Scrivi un numero in ogni casella (frazioni così: 1/2).'); return; }
+          vals.every((v,k)=>same(v,ans[k])) ? right() : wrong('Non è questo. Prova con l\'aiuto.'); };
+      }
+      d.querySelector('[data-h]').onclick = () => { d.querySelector('[data-hint]').hidden=false; res[e.id+'_aiuto']=true; store.set(key,res); };
+      d.querySelector('[data-s]').onclick = () => { d.querySelector('[data-sol]').hidden=false; if (!/^ok/.test(res[e.id]||'')){ res[e.id]='soluzione vista'; store.set(key,res); badge(); } };
+    });
+  }
+
+  /* ---------- laboratorio di Gauss (frazioni esatte) ---------- */
+  // opts: {presets:[{name, rows, aug}], jordan:bool, show:['rank','det','system','inverse','cols']}
+  function lab(id, opts){
+    const root = $(id); root.classList.add('lab');
+    root.innerHTML = '<div class="controls"><label>Esempio <select data-p>'+opts.presets.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('')+'</select></label>'
+      +'<label>righe <select data-r>'+[1,2,3,4].map(n=>'<option>'+n+'</option>').join('')+'</select></label>'
+      +'<label>colonne <select data-c>'+[1,2,3,4,5,6].map(n=>'<option>'+n+'</option>').join('')+'</select></label></div>'
+      +'<p style="font-size:.92rem;color:var(--muted)">Puoi cambiare i numeri nelle caselle (anche frazioni, es. 1/2). Poi premi "Fai Gauss".</p>'
+      +'<div class="scroll"><div class="grid" data-g></div></div>'
+      +'<div class="row"><button class="primary" data-go>Fai Gauss</button><button data-one>Un passo alla volta</button></div>'
+      +'<div class="log" data-log></div><div class="note readout" data-out hidden></div>';
+    const q = s => root.querySelector(s);
+    let aug = null, moves = [], shown = 0;
+    const build = (rows, a) => {
+      aug = a; const R = rows.length, C = rows[0].length; q('[data-r]').value=R; q('[data-c]').value=C;
+      const g = q('[data-g]'); g.style.gridTemplateColumns = 'repeat('+C+', auto)';
+      g.innerHTML = rows.flat().map((x,k)=>'<input type="text" aria-label="riga '+(Math.floor(k/C)+1)+' colonna '+(k%C+1)+'" value="'+x+'"'+(aug && k%C===aug?' class="sep"':'')+'>').join('');
+      q('[data-log]').innerHTML=''; q('[data-out]').hidden=true; moves=[]; shown=0;
+    };
+    const read = () => { const R=+q('[data-r]').value, C=+q('[data-c]').value, ins=[...q('[data-g]').querySelectorAll('input')];
+      const m=[]; for(let i=0;i<R;i++){ m.push([]); for(let j=0;j<C;j++){ const v=num(ins[i*C+j].value); if(isNaN(v)) return null; const s=ins[i*C+j].value.replace(/\s/g,'').replace('−','-');
+        m[i].push(/^-?\d+\/-?\d+$/.test(s) ? new F(+s.split('/')[0], +s.split('/')[1]) : F.of(v)); } } return m; };
+    const table = (m, piv) => '<table class="m"><tbody>'+m.map((r,i)=>'<tr>'+r.map((x,j)=>'<td class="'+((piv&&piv.some(p=>p[0]===i&&p[1]===j))?'piv ':'')+(aug&&j===aug?'sepc':'')+'">'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+    const gauss = m => {
+      const R=m.length, C=m[0].length, lim = aug||C, out=[{t:'Matrice di partenza', m:m.map(r=>r.slice())}];
+      let r=0, swaps=0; const piv=[];
+      for (let c=0; c<lim && r<R; c++){
+        let p=-1; for(let i=r;i<R;i++) if(!m[i][c].zero){ p=i; break; }
+        if (p<0) continue;
+        if (p!==r){ [m[p],m[r]]=[m[r],m[p]]; swaps++; out.push({t:'Scambio R'+(r+1)+' ↔ R'+(p+1)+' (serve un pivot ≠ 0)', m:m.map(x=>x.slice())}); }
+        for (let i=r+1;i<R;i++){ if (m[i][c].zero) continue; const k=m[i][c].div(m[r][c]);
+          m[i]=m[i].map((x,j)=>x.sub(k.mul(m[r][j]))); out.push({t:'R'+(i+1)+' ← R'+(i+1)+(k.n<0?' + ':' − ')+(k.d===1&&Math.abs(k.n)===1?'':(k.d===1?Math.abs(k.n):'('+Math.abs(k.n)+'/'+k.d+')')+'·')+'R'+(r+1), m:m.map(x=>x.slice())}); }
+        piv.push([r,c]); r++;
+      }
+      // righe con pivot nella colonna dei termini noti
+      let augPiv = null;
+      if (aug){ for(let i=r;i<R;i++){ for(let j=aug;j<C;j++) if(!m[i][j].zero){ augPiv=[i,j]; break; } if(augPiv) break; } }
+      let det=null; if (!aug && R===C){ det = piv.length<R ? new F(0) : piv.reduce((a,[i,j])=>a.mul(m[i][j]), new F(swaps%2?-1:1)); }
+      if (opts.jordan){
+        for (let k=piv.length-1;k>=0;k--){ const [pr,pc]=piv[k];
+          if (!(m[pr][pc].n===1&&m[pr][pc].d===1)){ const s=m[pr][pc]; m[pr]=m[pr].map(x=>x.div(s)); out.push({t:'R'+(pr+1)+' ← R'+(pr+1)+' · (1/'+s+')  (pivot uguale a 1)', m:m.map(x=>x.slice())}); }
+          for (let i=0;i<pr;i++){ if (m[i][pc].zero) continue; const kk=m[i][pc]; m[i]=m[i].map((x,j)=>x.sub(kk.mul(m[pr][j]))); out.push({t:'R'+(i+1)+' ← R'+(i+1)+' − ('+kk+')·R'+(pr+1)+'  (zero sopra il pivot)', m:m.map(x=>x.slice())}); }
+        }
+      }
+      return {out, piv, det, swaps, augPiv, R, C};
+    };
+    const summary = (g) => {
+      const n = aug||g.C, rk = g.piv.length, s=[];
+      s.push('<b>Pivot:</b> '+rk+' → <b>rk A = '+rk+'</b>'+(aug?' (A = parte a sinistra della riga verticale)':'')+'. Colonne con pivot: '+(g.piv.map(p=>'C'+(p[1]+1)).join(', ')||'nessuna')+'.');
+      if (opts.show.includes('cols')) s.push('Una base di Span(colonne) = le colonne <b>originali</b> '+(g.piv.map(p=>'C'+(p[1]+1)).join(', ')||'—')+'. dim Span(colonne) = '+rk+'.');
+      if (opts.show.includes('kernel')) s.push('Sistema omogeneo A·x = 0 in K<sup>'+n+'</sup>: dimensione delle soluzioni = n − rk A = '+n+' − '+rk+' = <b>'+(n-rk)+'</b>.');
+      if (opts.show.includes('det') && g.det) s.push('Matrice quadrata: <b>det A = '+g.det+'</b> = prodotto dei pivot'+(g.swaps?' cambiato di segno '+g.swaps+' volta/e (uno per ogni scambio)':'')+'. '+(g.det.zero?'det = 0: A non è invertibile.':'det ≠ 0: A è invertibile.'));
+      if (opts.show.includes('det') && !g.det && !aug) s.push('Il determinante esiste solo per matrici quadrate.');
+      if (aug){ const rkC = rk + (g.augPiv?1:0);
+        s.push('<b>rk(A | b) = '+rkC+'</b>. '+(g.augPiv ? 'C\'è un pivot nella colonna dei termini noti (riga del tipo 0 = numero ≠ 0): <b>nessuna soluzione</b> (Rouché-Capelli: rk A ≠ rk(A | b)).'
+          : (rk===n ? 'rk A = rk(A | b) = n = '+n+': <b>una sola soluzione</b>.' : 'rk A = rk(A | b) = '+rk+' &lt; n = '+n+': <b>infinite soluzioni</b>, con n − rk = '+(n-rk)+' parametri liberi.'))); }
+      return s.map(x=>'<p>'+x+'</p>').join('');
+    };
+    const render = upto => { const L=q('[data-log]'); L.innerHTML = moves.out.slice(0,upto).map((x,k)=>'<div class="move reveal"><b>'+x.t+'</b>'+table(x.m, k===moves.out.length-1?moves.piv:null)+'</div>').join('');
+      const o=q('[data-out]'); o.hidden = upto<moves.out.length; if(!o.hidden) o.innerHTML = summary(moves); };
+    const run = all => { if (!moves.out || (all && shown===0) || shown>=moves.out.length || shown===0){ const m=read(); if(!m){ q('[data-log]').innerHTML='<p class="feedback bad">Controlla le caselle: c\'è qualcosa che non è un numero.</p>'; return; } moves=gauss(m); shown=0; }
+      shown = all ? moves.out.length : Math.min(shown+1, moves.out.length); render(shown); };
+    q('[data-go]').onclick = () => { shown=0; moves={}; run(true); };
+    q('[data-one]').onclick = () => run(false);
+    q('[data-p]').onchange = () => { const p=opts.presets[+q('[data-p]').value]; build(p.rows, p.aug||null); };
+    const resize = () => { const R=+q('[data-r]').value, C=+q('[data-c]').value, cur=[...q('[data-g]').querySelectorAll('input')].map(x=>x.value), oc=Math.round(cur.length/Math.max(1,q('[data-g]').style.gridTemplateColumns.match(/\d+/)?.[0]||1));
+      const oldC = +(q('[data-g]').style.gridTemplateColumns.match(/\d+/)||[1])[0]; const rows=[]; for(let i=0;i<R;i++){ rows.push([]); for(let j=0;j<C;j++) rows[i].push(j<oldC && i*oldC+j<cur.length ? cur[i*oldC+j] : '0'); } build(rows, aug && aug<C ? aug : null); };
+    q('[data-r]').onchange = resize; q('[data-c]').onchange = resize;
+    const p0 = opts.presets[0]; build(p0.rows, p0.aug||null);
+    q('[data-g]').addEventListener('input', () => { moves={}; shown=0; q('[data-out]').hidden=true; q('[data-log]').innerHTML=''; });
+  }
+
+  /* ---------- trasformazione del piano x ↦ A·x ---------- */
+  // opts: {presets:[{name,m:[a,b,c,d]}], eigen, test, circle, area}
+  function transform(ch, cvId, ctlId, outId, opts){
+    const cv=$(cvId), ctl=$(ctlId), out=$(outId);
+    const sl = (k,lab) => '<label>'+lab+' <input type="range" id="'+cvId+'-'+k+'" min="-3" max="3" step="0.5"> <b id="'+cvId+'-'+k+'v"></b></label>';
+    ctl.innerHTML = '<label>Esempio <select id="'+cvId+'-p">'+opts.presets.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('')+'</select></label>'
+      + sl('a','a') + sl('b','b') + sl('c','c') + sl('d','d')
+      + (opts.test ? '<label>giro il vettore v <input type="range" id="'+cvId+'-t" min="0" max="180" step="1" value="30"></label>' : '');
+    const g = k => $(cvId+'-'+k);
+    const setP = i => { const m=opts.presets[i].m; ['a','b','c','d'].forEach((k,j)=>{ g(k).value=m[j]; }); draw(); };
+    const B = Board(cv, {xmin:-4.5,xmax:4.5,ymin:-3.6,ymax:3.6});
+    function eig(a,b,c,d){ const tr=a+d, de=a*d-b*c, D=tr*tr-4*de; if (D < -1e-9) return []; const s=Math.sqrt(Math.max(0,D)); const ls = D<1e-9 ? [tr/2] : [(tr+s)/2,(tr-s)/2];
+      return ls.map(l => { let v; if (Math.abs(b)>1e-9) v=[b, l-a]; else if (Math.abs(c)>1e-9) v=[l-d, c]; else v = Math.abs(a-l)<1e-9 ? (Math.abs(d-l)<1e-9 ? null : [1,0]) : [0,1]; return {l, v}; }); }
+    function draw(){
+      const [a,b,c,d] = ['a','b','c','d'].map(k=>+g(k).value);
+      ['a','b','c','d'].forEach(k=>$(cvId+'-'+k+'v').textContent=it(+g(k).value,1));
+      if (!B.fit()) return; B.grid();
+      const A = (x,y) => [a*x+b*y, c*x+d*y];
+      // griglia trasformata
+      const ctx=B.ctx; ctx.save(); ctx.globalAlpha=.55;
+      for (let i=-6;i<=6;i++){ const p=A(i,-8), q2=A(i,8); B.seg(p[0],p[1],q2[0],q2[1],'--muted',1); const r=A(-8,i), s=A(8,i); B.seg(r[0],r[1],s[0],s[1],'--muted',1); }
+      ctx.restore();
+      if (opts.area!==false) B.poly([[0,0],A(1,0),A(1,1),A(0,1)], '--w', .22);
+      if (opts.circle){ B.curve(t=>[Math.cos(t),Math.sin(t)],0,6.3,'--muted',1.5); B.curve(t=>A(Math.cos(t),Math.sin(t)),0,6.3,'--w',2.5); }
+      let es=[];
+      if (opts.eigen){ es = eig(a,b,c,d); es.forEach(e=>{ if(e.v) B.through(e.v[0],e.v[1],'--ok',2,[7,6]); }); }
+      B.arrow(0,0,...A(1,0),'--u','A·e₁'); B.arrow(0,0,...A(0,1),'--v','A·e₂');
+      const det=a*d-b*c; let txt = 'A = '+M([[it(a,1),it(b,1)],[it(c,1),it(d,1)]])+' &nbsp; det A = '+it(a,1)+'·'+it(d,1)+' − '+it(b,1)+'·'+it(c,1)+' = <b>'+it(det,2)+'</b>. ';
+      if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
+      else txt += '<br>Il quadratino 1×1 diventa il parallelogramma viola, di area |det A| = '+it(Math.abs(det),2)+(det<0?'; det &lt; 0: il disegno si è anche <b>ribaltato</b> (e₁ ed e₂ si sono scambiati di verso).':'.');
+      if (opts.eigen){ txt += '<br>'+(es.length ? es.map(e=> e.v ? 'Autovalore λ = <b>'+it(e.l,3)+'</b>: la retta verde tratteggiata Span('+it(e.v[0],2)+', '+it(e.v[1],2)+') viene mandata in sé stessa.' : 'λ = '+it(e.l,3)+': A = λ·I, ogni vettore è autovettore.').join('<br>') : 'Nessun autovalore reale: p<sub>A</sub>(λ) non ha radici in R (nessuna retta resta ferma, es. una rotazione).'); }
+      if (opts.test){ const t=+$(cvId+'-t').value*Math.PI/180, v=[2*Math.cos(t),2*Math.sin(t)], Av=A(...v), cr=v[0]*Av[1]-v[1]*Av[0], par = Math.abs(cr) < 0.12*Math.hypot(...Av)*2+1e-9 && Math.hypot(...Av)>1e-9;
+        B.arrow(0,0,...v,'--ink','v',2.5); B.arrow(0,0,...Av,par?'--ok':'--bad','A·v',3);
+        txt += '<br>'+(Math.hypot(...Av)<1e-9 ? 'A·v = 0: v è nel nucleo (autovettore con λ = 0).' : par ? '<b style="color:var(--ok)">A·v è sulla stessa retta di v</b>: v è un autovettore, A·v ≈ '+it((v[0]*Av[0]+v[1]*Av[1])/4,2)+'·v.' : 'A·v (rosso) non è sulla retta di v: qui v non è un autovettore. Gira v finché A·v diventa verde.'); }
+      out.innerHTML = txt;
+    }
+    ['a','b','c','d'].forEach(k=>g(k).addEventListener('input', draw));
+    if (opts.test) $(cvId+'-t').addEventListener('input', draw);
+    $(cvId+'-p').onchange = () => setP(+$(cvId+'-p').value);
+    setP(0); onDraw(ch, draw);
+  }
+
+  /* ---------- navigazione, indice, copia risultati ---------- */
+  const LAB = { ok:'giusto', 'ok-dopo':'giusto dopo errore o aiuto', errore:'sbagliato', 'soluzione vista':'guardato la soluzione' };
+  const plain = h => { const t=document.createElement('div'); t.innerHTML=h; return t.textContent.replace(/\s+/g,' ').trim(); };
+  const chapters = () => [...document.querySelectorAll('.chapter')].filter(c=>c.dataset.ch!=='indice');
+  const doneCount = ch => { const r=store.get('e-'+ch), L=exList[ch]||[]; return [L.filter(e=>/^ok/.test(r[e.id]||'')).length, L.length]; };
+  function nav(){
+    const cur = (location.hash||'#indice').slice(1);
+    const all = [...document.querySelectorAll('.chapter')];
+    $('nav').innerHTML = all.map(c=>{ const ch=c.dataset.ch, [k,n]=doneCount(ch); return '<a href="#'+ch+'" class="'+(ch===cur?'on':'')+'">'+c.dataset.title+(n&&k===n?' <span class="tick">✓</span>':'')+'</a>'; }).join('');
+    const hl=$('home-list'); if (hl) hl.innerHTML = chapters().map(c=>{ const [k,n]=doneCount(c.dataset.ch); return '<a href="#'+c.dataset.ch+'"><span class="d">'+(c.dataset.date||'')+'</span><span><b>'+c.dataset.full+'</b><small>'+(c.dataset.src||'')+'</small></span><span class="s'+(n&&k===n?' ok':'')+'">'+(n? k+'/'+n+' esercizi':'')+'</span></a>'; }).join('');
+  }
+  function show(){
+    let cur = (location.hash||'#indice').slice(1);
+    const all = [...document.querySelectorAll('.chapter')];
+    if (!all.some(c=>c.dataset.ch===cur)) cur='indice';
+    all.forEach(c=>c.hidden = c.dataset.ch!==cur);
+    nav(); requestAnimationFrame(()=>redraw(cur));
+  }
+  function copies(){
+    document.querySelectorAll('[data-copy]').forEach(box => {
+      const ch = box.dataset.copy, title = box.closest('.chapter').dataset.full;
+      box.innerHTML = '<div class="row"><button class="primary">Copia i miei risultati per il tutor</button><span class="feedback"></span></div><textarea hidden readonly aria-label="risultati da copiare" style="width:100%;min-height:120px;font:inherit;margin-top:8px"></textarea>';
+      const btn = box.querySelector('button'), fb = box.querySelector('.feedback'), ta = box.querySelector('textarea');
+      btn.onclick = () => {
+        const g = store.get('g-'+ch), e = store.get('e-'+ch), lines = ['Lavagna Geometria, capitolo "'+title+'":'];
+        const gk = Object.keys(g).filter(k=>/^g\d+$/.test(k)).sort((a,b)=>a.slice(1)-b.slice(1));
+        lines.push('Esercizio guidato: '+(gk.length ? gk.map(k=>'passo '+k.slice(1)+' '+(LAB[g[k]]||g[k])).join('; ') : 'non fatto'));
+        (exList[ch]||[]).forEach((x,i) => lines.push('Esercizio '+(i+1)+' ('+plain(x.q).slice(0,90)+'): '+(LAB[e[x.id]]||'non fatto')+(e[x.id+'_aiuto']?', aperto aiuto':'')));
+        const txt = lines.join('\n'); ta.value = txt; ta.hidden = false;
+        const fallback = () => { ta.focus(); ta.select(); say(fb, true, 'Testo selezionato: copialo e incollalo in chat.'); };
+        try { navigator.clipboard.writeText(txt).then(()=>say(fb,true,'Copiato! Incollalo in chat al tutor.'), fallback); } catch(err){ fallback(); }
+      };
+    });
+  }
+  function init(){
+    recipes(); copies();
+    window.addEventListener('hashchange', show);
+    let rt; window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(()=>redraw((location.hash||'#indice').slice(1)),120); });
+    try { new MutationObserver(()=>redraw((location.hash||'#indice').slice(1))).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>redraw((location.hash||'#indice').slice(1))); } catch(e){}
+    show();
+  }
+  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lab, transform, init };
+})();
+</script>
+  <!-- ================= CAPITOLO 1 · SPAZI VETTORIALI ================= -->
+  <div class="chapter" data-ch="spazi" data-title="1 · Spazi vettoriali" data-date="20/11" data-full="Spazi vettoriali, sottospazi, span, basi" data-src="Libro pp. 43-54, 56-57, 60-64, 73-74 · Foglio 4" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 1 · giorno 20/11 · libro pp. 43-54, 56-57, 60-64, 73-74</div>
+      <h2>Spazi vettoriali: cose che si sommano e si allungano</h2>
+      <p class="big">Serve a usare <b>un solo linguaggio</b> per cose che sembrano diverse: le frecce nel piano, le soluzioni di un sistema omogeneo, i polinomi, le matrici. Hanno tutte due operazioni: le puoi <b>sommare</b> e le puoi <b>moltiplicare per un numero</b>.</p>
+      <p>Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Combinazioni lineari e Span</h2>
+      <p>Hai due frecce del piano R²: <span class="cu">u = (2, 1)</span> e <span class="cv">v = (−1, 2)</span>. Con due numeri reali λ e μ costruisci la freccia <span class="cw">λ·u + μ·v</span>: si chiama <b>combinazione lineare</b> di u e v.</p>
+      <p>Muovi λ e μ: la punta viola arriva <b>ovunque</b> nel piano. L'insieme di tutte le combinazioni lineari si chiama <b>Span(u, v)</b>, e qui Span(u, v) = R².</p>
+      <canvas id="cv-span" aria-label="Piano con i vettori u, v e la combinazione lambda u più mu v"></canvas>
+      <div class="controls">
+        <label>λ <input type="range" id="sp-l" min="-2" max="2" step="0.1" value="1.5"> <b id="sp-lv">1,5</b></label>
+        <label>μ <input type="range" id="sp-m" min="-2" max="2" step="0.1" value="0.8"> <b id="sp-mv">0,8</b></label>
+        <label><input type="checkbox" id="sp-dep"> rendi v = −0,5·u (sulla stessa retta)</label>
+      </div>
+      <p class="readout" id="sp-out"></p>
+      <div class="note">Spunta la casella: ora v è un multiplo di u. Per quanto muovi λ e μ, la punta viola resta sulla <b>retta verde</b>. Span(u, v) è solo una retta, perché v non aggiunge nessuna direzione nuova: u e v sono <b>dipendenti</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni, scritte per intero</div>
+      <h2>Le parole del capitolo</h2>
+      <div class="def"><b>Campo K</b>
+        <p>Un insieme di numeri in cui puoi fare + − × ÷ (tranne dividere per 0) con le regole solite. Nel corso K è quasi sempre R, a volte C o Q. Z <b>non</b> è un campo: 1/2 non è un intero.</p>
+        <p style="font-size:.92rem;color:var(--muted)">La vecchia chat ti aveva detto "anello commutativo": lascia stare la parola anello, non serve.</p>
+      </div>
+      <div class="def"><b>Spazio vettoriale su K (p. 45)</b>
+        <p>Un insieme V con una <b>somma</b> v + w ∈ V (per v, w ∈ V) e un <b>prodotto per scalare</b> λ·v ∈ V (per λ ∈ K, v ∈ V), che rispettano le regole dei conti normali: si può cambiare l'ordine, raggruppare, esiste lo zero 0 ∈ V, ogni v ha l'opposto −v, 1·v = v, λ·(v + w) = λ·v + λ·w, e così via.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Devo imparare le 8 regole a memoria?</summary><p>No. Sono le regole che usi da sempre con i numeri. All'esame non ti chiedono di elencarle: ti chiedono di riconoscere se un insieme è un sottospazio (sotto).</p></details>
+        <p>Esempi da sapere: <b>Kⁿ</b> (n-uple di numeri), <b>M(m, n, K)</b> (matrici m × n), <b>K[x]</b> (polinomi), <b>Kₙ[x]</b> (polinomi di grado ≤ n), le funzioni F(X, R).</p>
+      </div>
+      <div class="def"><b>Sottospazio vettoriale (p. 48)</b>
+        <p>W ⊆ V è un sottospazio se valgono <b>tutte e tre</b>:</p>
+        <ol style="margin:0;padding-left:1.3em">
+          <li><b>0 ∈ W</b> (lo zero di V sta in W);</li>
+          <li>per ogni u, w ∈ W vale <b>u + w ∈ W</b> (chiuso per somma);</li>
+          <li>per ogni λ ∈ K e w ∈ W vale <b>λ·w ∈ W</b> (chiuso per prodotto per scalare).</li>
+        </ol>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché proprio queste tre?</summary><p>Un sottospazio deve essere uno spazio vettoriale "da solo": devi poter fare i conti senza mai uscire da W. Le regole dei conti valgono già perché valgono in V; resta solo da controllare che somma, multipli e zero non escano da W.</p></details>
+      </div>
+      <div class="def"><b>Combinazione lineare e Span (p. 51)</b>
+        <p>Dati v₁, …, v<sub>k</sub> ∈ V, una combinazione lineare è λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> con λ₁, …, λ<sub>k</sub> ∈ K. <b>Span(v₁, …, v<sub>k</sub>)</b> è l'insieme di tutte le combinazioni lineari. È sempre un sottospazio di V (Prop. 2.2.4).</p>
+      </div>
+      <div class="def"><b>Vettori indipendenti (p. 60)</b>
+        <p>v₁, …, v<sub>k</sub> ∈ V sono <b>indipendenti</b> se l'unico modo di ottenere zero è con tutti i coefficienti nulli:</p>
+        <p class="math">λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 &nbsp;⇒&nbsp; λ₁ = … = λ<sub>k</sub> = 0</p>
+        <p>Altrimenti sono <b>dipendenti</b>: vuol dire che uno di loro è combinazione lineare degli altri (Prop. 2.3.1), cioè è "di troppo".</p>
+      </div>
+      <div class="def"><b>Base (p. 62)</b>
+        <p>v₁, …, v<sub>n</sub> ∈ V sono una base di V se sono <b>indipendenti</b> e <b>generano</b> V, cioè Span(v₁, …, v<sub>n</sub>) = V. Esempio: la <b>base canonica</b> di Kⁿ è e₁ = (1, 0, …, 0), …, e<sub>n</sub> = (0, …, 0, 1).</p>
+        <p>Con una base, ogni v ∈ V si scrive in <b>un solo modo</b> come v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>. I numeri λ₁, …, λ<sub>n</sub> sono le <b>coordinate</b> di v rispetto alla base.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché le coordinate sono uniche?</summary><p>Se v = Σ λᵢ·vᵢ = Σ μᵢ·vᵢ, sottrai: Σ (λᵢ − μᵢ)·vᵢ = 0. I vettori sono indipendenti, quindi ogni λᵢ − μᵢ = 0, cioè λᵢ = μᵢ.</p></details>
+      </div>
+      <div class="def"><b>Trasposta e matrici simmetriche (pp. 56-57, 73-74)</b>
+        <p>La trasposta di A ∈ M(m, n, K) è <sup>t</sup>A ∈ M(n, m, K): le righe diventano colonne, (<sup>t</sup>A)<sub>ij</sub> = a<sub>ji</sub>. Esempio: <sup>t</sup>${M([[1,2,3],[4,5,6]])}$ = ${M([[1,4],[2,5],[3,6]])}$.</p>
+        <p>Regole: <sup>t</sup>(A + B) = <sup>t</sup>A + <sup>t</sup>B, <sup>t</sup>(λ·A) = λ·<sup>t</sup>A, <b><sup>t</sup>(A·B) = <sup>t</sup>B · <sup>t</sup>A</b> (si inverte l'ordine).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Come ricordo che l'ordine si gira?</summary><p>Guarda le misure. A è m × n, B è n × p, quindi A·B è m × p e <sup>t</sup>(A·B) è p × m. <sup>t</sup>B è p × n e <sup>t</sup>A è n × m: il prodotto <sup>t</sup>B·<sup>t</sup>A è p × m e torna. <sup>t</sup>A·<sup>t</sup>B in generale non si può neanche fare.</p></details>
+        <p>A ∈ M(n, n, K) è <b>simmetrica</b> se <sup>t</sup>A = A (è uguale "a specchio" rispetto alla diagonale) e <b>antisimmetrica</b> se <sup>t</sup>A = −A. Le simmetriche S(n) e le antisimmetriche A(n) sono sottospazi di M(n, n, K).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il disegno del sottospazio</div>
+      <h2>Perché una retta che non passa per 0 non va bene</h2>
+      <p>La retta r = {(x, y) ∈ R² : y = m·x + q}. Prendo due punti <span class="cu">P</span> e <span class="cv">Q</span> della retta e li sommo. Con q ≠ 0 la somma <span class="cw">P + Q</span> esce dalla retta, e anche 0 = (0, 0) non sta sulla retta.</p>
+      <canvas id="cv-sub" aria-label="Retta y uguale m x più q con due punti e la loro somma"></canvas>
+      <div class="controls">
+        <label>m <input type="range" id="sb-m" min="-2" max="2" step="0.25" value="0.5"> <b id="sb-mv"></b></label>
+        <label>q <input type="range" id="sb-q" min="-2" max="2" step="0.5" value="1"> <b id="sb-qv"></b></label>
+      </div>
+      <p class="readout" id="sb-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>"Questo insieme è un sottospazio?"</h2>
+      <p>Esempio: W = {(x, y, z) ∈ R³ : x + y = 2z} e U = {(x, y, z) ∈ R³ : x + y = 2}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Lo zero c'è?</h3><p>Metti x = y = z = 0. In W: 0 + 0 = 2·0, vero. In U: 0 + 0 = 2, falso. Quindi <b>U non è un sottospazio</b> e per U hai già finito.</p></div>
+        <div class="step"><h3>Passo 2 · Guarda la forma delle condizioni</h3><p>Se W è descritto da <b>equazioni lineari omogenee</b> (incognite solo alla prima potenza, niente prodotti tra incognite, niente termine noto) allora W è l'insieme delle soluzioni di un sistema omogeneo: <b>è un sottospazio</b> (Prop. 2.2.2). x + y − 2z = 0 è di questo tipo: W è un sottospazio.</p></div>
+        <div class="step"><h3>Passo 3 · Se ci sono quadrati, prodotti, ≥, valori assoluti</h3><p>Di solito <b>non</b> è un sottospazio: cerca un controesempio. Esempio: {(x, y) ∈ R² : x·y = 0}. (1, 0) e (0, 1) ci stanno, ma (1, 0) + (0, 1) = (1, 1) e 1·1 = 1 ≠ 0. Non è chiuso per somma.</p></div>
+        <div class="step"><h3>Passo 4 · Se è scritto come Span(…)</h3><p>Allora è sempre un sottospazio (Prop. 2.2.4). Esempio: {(t, 2t, −t) : t ∈ R} = Span((1, 2, −1)).</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Trovare una base di W dato con equazioni</h2>
+      <p>Esempio: W = {(x, y, z, t) ∈ R⁴ : x − y + 2t = 0}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi il vettore generico di W</h3><p class="math">(x, y, z, t) = (y − 2t, y, z, t)</p></div>
+        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p class="math">(y − 2t, y, z, t) = y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
+        <div class="step"><h3>Passo 4 · Ecco la base</h3><p>(1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) generano W (passo 3) e sono indipendenti (ognuno ha un 1 nel posto del suo parametro, dove gli altri hanno 0). Sono una base di W e <b>dim W = 3</b> = 4 incognite − 1 equazione.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio · vettori indipendenti?</div>
+      <h2>Metti i vettori in colonna e fai Gauss</h2>
+      <p>Ricetta: scrivi v₁, …, v<sub>k</sub> ∈ Kⁿ come <b>colonne</b> di una matrice n × k e riduci a scala. Sono indipendenti se e solo se ci sono <b>k pivot</b>, cioè rk = k. Le colonne senza pivot sono quelle "di troppo".</p>
+      <div id="lab-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>W = {(x, y, z) ∈ R³ : x − 2y + z = 0}</h2>
+      <p>È un sottospazio? Se sì, trova una base e la dimensione.</p>
+      <div class="steps" id="guided-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Come all'esame: prima prova, poi se ti blocchi apri l'aiuto, solo alla fine la soluzione.</p>
+      <div id="ex-spazi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Sottospazio W ⊆ V:</b> 0 ∈ W, chiuso per somma, chiuso per prodotto per scalare.</li>
+        <li><b>Trucco quiz:</b> equazioni lineari omogenee ⇒ sì. Termine noto ≠ 0 ⇒ no (manca lo 0). Quadrati, prodotti tra incognite, disuguaglianze ⇒ quasi sempre no, trova il controesempio.</li>
+        <li><b>Span(v₁, …, v<sub>k</sub>)</b> = tutte le combinazioni λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub>. È sempre un sottospazio.</li>
+        <li><b>Indipendenti:</b> λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 solo con tutti i λ = 0. In pratica: vettori in colonna, Gauss, k pivot.</li>
+        <li><b>Base</b> = indipendenti + generano. Base da equazioni: ricava, parametri, spezza.</li>
+        <li><b><sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A</b>. Simmetrica: <sup>t</sup>A = A.</li>
+      </ul>
+      <div data-copy="spazi"></div>
+    </section>
+    <div class="next"><a href="#indice">← Indice</a><a href="#rango">Capitolo 2 · Rango e dimensione →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, V, Board, onDraw, guided, exercises, lab } = Lav;
+  // simboli ${M(...)}$ nel testo: li sostituisco con le matrici vere
+  document.querySelectorAll('[data-ch="spazi"] .def p').forEach(p => { p.innerHTML = p.innerHTML.replace(/\$\{M\((\[.*?\])\)\}\$/g, (_,s)=>M(JSON.parse(s))); });
+
+  const B1 = Board($('cv-span'), {xmin:-5,xmax:5,ymin:-3.5,ymax:4});
+  const span = () => {
+    const l=+$('sp-l').value, m=+$('sp-m').value, dep=$('sp-dep').checked;
+    $('sp-lv').textContent=it(l,1); $('sp-mv').textContent=it(m,1);
+    const u=[2,1], v= dep ? [-1,-0.5] : [-1,2];
+    const lu=[l*u[0],l*u[1]], mv=[m*v[0],m*v[1]], w=[lu[0]+mv[0], lu[1]+mv[1]];
+    if (!B1.fit()) return; B1.grid();
+    if (dep) B1.through(u[0],u[1],'--ok',6);
+    B1.seg(lu[0],lu[1],w[0],w[1],'--v',1.5,[5,5]); B1.seg(mv[0],mv[1],w[0],w[1],'--u',1.5,[5,5]);
+    B1.arrow(0,0,...lu,'--u','λ·u',2); B1.arrow(0,0,...mv,'--v','μ·v',2);
+    B1.arrow(0,0,...u,'--u','u'); B1.arrow(0,0,...v,'--v','v'); B1.arrow(0,0,...w,'--w','λ·u + μ·v',3.5);
+    $('sp-out').innerHTML = it(l,1)+'·('+u.join(', ')+') + '+it(m,1)+'·('+v.map(x=>it(x,1)).join(', ')+') = <b>('+it(w[0],2)+', '+it(w[1],2)+')</b>'+(dep?' · Span(u, v) = retta verde':' · Span(u, v) = R²');
+  };
+  ['sp-l','sp-m','sp-dep'].forEach(i=>$(i).addEventListener('input', span)); onDraw('spazi', span);
+
+  const B2 = Board($('cv-sub'), {xmin:-5,xmax:5,ymin:-4,ymax:5});
+  const sub = () => {
+    const m=+$('sb-m').value, q=+$('sb-q').value; $('sb-mv').textContent=it(m,2); $('sb-qv').textContent=it(q,1);
+    if (!B2.fit()) return; B2.grid();
+    const f=x=>m*x+q, P=[-2,f(-2)], Q=[1.5,f(1.5)], S=[P[0]+Q[0], P[1]+Q[1]];
+    B2.seg(-20,f(-20),20,f(20),'--ok',2.5);
+    B2.arrow(0,0,...P,'--u','P'); B2.arrow(0,0,...Q,'--v','Q'); B2.arrow(0,0,...S,'--w','P + Q',3);
+    B2.dot(0,0, q===0?'--ok':'--bad',6);
+    const onS = Math.abs(S[1]-f(S[0]))<1e-9;
+    $('sb-out').innerHTML = q===0 ? '<span style="color:var(--ok);font-weight:700">q = 0: la retta passa per 0 e P + Q resta sulla retta.</span> È un sottospazio di R² (è Span(1, m)).'
+      : '<span style="color:var(--bad);font-weight:700">q = '+it(q,1)+' ≠ 0:</span> 0 = (0, 0) non è sulla retta e P + Q '+(onS?'':'esce dalla retta')+'. Non è un sottospazio (è un sottospazio <i>affine</i>, lo hai visto con i sistemi).';
+  };
+  ['sb-m','sb-q'].forEach(i=>$(i).addEventListener('input', sub)); onDraw('spazi', sub);
+
+  lab('lab-spazi', { show:['cols'], presets:[
+    { name:'(1,2,3), (2,4,6) in R³', rows:[[1,2],[2,4],[3,6]] },
+    { name:'(1,0,1), (0,1,1), (1,1,2) in R³', rows:[[1,0,1],[0,1,1],[1,1,2]] },
+    { name:'(1,1,0), (0,1,1), (1,0,1) in R³', rows:[[1,0,1],[1,1,0],[0,1,1]] },
+    { name:'(1,2), (3,1), (0,5) in R²', rows:[[1,3,0],[2,1,5]] }
+  ]});
+
+  guided('spazi', [
+    { h:'Passo 1 · Lo zero c\'è? Calcola x − 2y + z con x = y = z = 0', type:'nums', ans:[0],
+      html:'0 − 2·0 + 0 = '+inp('valore'), ok:'Sì: fa 0, quindi 0 = (0, 0, 0) ∈ W.', bad:'Sostituisci 0 al posto di tutte le lettere.' },
+    { h:'Passo 2 · Che tipo di condizione è x − 2y + z = 0?', type:'choice', ans:1,
+      opts:['Ha un quadrato, quindi non è un sottospazio','Lineare omogenea: è un sistema omogeneo, quindi W è un sottospazio','Ha un termine noto, quindi non è un sottospazio'],
+      ok:'Esatto: incognite alla prima potenza, nessun termine noto. Le soluzioni di un sistema omogeneo sono un sottospazio.', bad:'Guarda bene: ci sono potenze? C\'è un numero da solo dopo l\'uguale?' },
+    { h:'Passo 3 · Ricava z in funzione di x e y', type:'choice', ans:2,
+      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: porti x e −2y dall\'altra parte cambiando segno.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
+    { h:'Passo 4 · Spezza (x, y, −x + 2y) per parametri: completa i due vettori', type:'nums', ans:[-1,2],
+      html:'(x, y, −x + 2y) = x·(1, 0, '+inp('terza componente del primo','3.5em')+') + y·(0, 1, '+inp('terza componente del secondo','3.5em')+')',
+      ok:'Perfetto: (1, 0, −1) e (0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
+    { h:'Passo 5 · Quanto vale dim W?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'),
+      ok:'Sì: 2 vettori nella base. Torna anche col conto 3 incognite − 1 equazione = 2.', bad:'Conta i vettori della base del passo 4.' }
+  ], '<b>Fatto!</b> W è un sottospazio di R³, una base è (1, 0, −1), (0, 1, 2) e dim W = 2. Geometricamente W è un <b>piano</b> per l\'origine dentro R³.');
+
+  exercises('spazi', [
+    { id:'e1', type:'choice', src:'tipo quiz', q:'Per quali k ∈ R l\'insieme S<sub>k</sub> = {(x, y) ∈ R² : x + (k − 1)·y² = k² − 1} è un sottospazio di R²?',
+      opts:['k = 1','k = −1','k = ±1','per nessun k'], a:0,
+      hint:'Servono due cose insieme: niente quadrato (il coefficiente di y² deve essere 0) e niente termine noto (k² − 1 = 0).',
+      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1 il termine noto è 1 − 1 = 0, quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1 resta x − 2y² = 0, che ha un quadrato: (2, 1) ci sta (2 − 2·1 = 0), ma 2·(2, 1) = (4, 2) no (4 − 2·4 = −4 ≠ 0). Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
+    { id:'e2', type:'choice', src:'tipo quiz', q:'Quale di questi è un sottospazio di M(2, 2, R)?',
+      opts:['{A : a₁₁ + a₂₂ = 0}','{A : det A = 0}','{A : a₁₂ = 1}','{A : a₁₁ ≥ 0}'], a:0,
+      hint:'Cerca la condizione lineare omogenea. det A = a₁₁a₂₂ − a₁₂a₂₁ ha prodotti tra le entrate.',
+      sol:'a₁₁ + a₂₂ = 0 è lineare omogenea: sottospazio. det A = 0 no: ${M([[1,0],[0,0]])}$ e ${M([[0,0],[0,1]])}$ hanno det 0 ma la somma è I con det 1. a₁₂ = 1 non contiene la matrice nulla. a₁₁ ≥ 0 non è chiuso per λ = −1.' },
+    { id:'e3', type:'choice', q:'I vettori (1, 2, 3) e (2, 4, 6) di R³ sono indipendenti?',
+      opts:['Sì, perché sono diversi','No, perché (2, 4, 6) = 2·(1, 2, 3)','Sì, perché nessuno dei due è il vettore nullo'], a:1,
+      hint:'Uno dei due è multiplo dell\'altro?', sol:'2·(1, 2, 3) − 1·(2, 4, 6) = 0 con coefficienti non nulli: sono dipendenti.' },
+    { id:'e4', type:'num', label:'dim =', q:'dim Span((1, 0, 1), (0, 1, 1), (1, 1, 2)) ⊆ R³',
+      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'(1, 1, 2) = (1, 0, 1) + (0, 1, 1), quindi è di troppo. I primi due sono indipendenti (non sono multipli). dim = 2.' },
+    { id:'e5', type:'nums', labels:['a =','b ='], q:'Scrivi (3, 5) ∈ R² come a·(1, 1) + b·(1, 2). Quanto valgono a e b?',
+      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'Dalla differenza b = 2, poi a = 3 − 2 = 1. Infatti 1·(1, 1) + 2·(1, 2) = (3, 5). (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
+    { id:'e6', type:'choice', src:'Foglio 4 · quiz 3', q:'Se A·B = C, allora <sup>t</sup>C è uguale a…',
+      opts:['<sup>t</sup>B · <sup>t</sup>A','<sup>t</sup>A · <sup>t</sup>B','<sup>t</sup>A · B'], a:0,
+      hint:'La trasposta di un prodotto inverte l\'ordine. Controlla con le misure.', sol:'<sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A.' },
+    { id:'e7', type:'choice', q:'Quale di queste matrici è simmetrica?',
+      opts:['${M([[1,4],[-4,1]])}$','${M([[0,1,-2],[1,3,7],[-2,7,5]])}$','${M([[1,7,0],[0,1,0],[0,7,1]])}$'], a:1,
+      hint:'Simmetrica: a<sub>ij</sub> = a<sub>ji</sub>. Confronta il numero in riga 1 colonna 2 con quello in riga 2 colonna 1, e così via.', sol:'Nella seconda: a₁₂ = a₂₁ = 1, a₁₃ = a₃₁ = −2, a₂₃ = a₃₂ = 7. Nella prima 4 ≠ −4; nella terza a₁₂ = 7 ma a₂₁ = 0.' },
+    { id:'e8', type:'choice', q:'W = {(x, y) ∈ R² : x·y = 0} è un sottospazio di R²?',
+      opts:['Sì, contiene lo 0','No: (1, 0) e (0, 1) stanno in W ma la loro somma no','Sì, perché è chiuso per prodotto per scalare'], a:1,
+      hint:'Contenere lo 0 non basta: servono tutte e tre le condizioni.', sol:'(1, 0) + (0, 1) = (1, 1) e 1·1 = 1 ≠ 0. W è l\'unione dei due assi: non è chiuso per somma.' }
+  ].map(e => Object.assign(e, { q:e.q.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), sol:e.sol.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), opts:e.opts && e.opts.map(o=>o.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s)))) })));
+})();
+</script>
+  <!-- ================= CAPITOLO 2 · RANGO E DIMENSIONE ================= -->
+  <div class="chapter" data-ch="rango" data-title="2 · Rango e dimensione" data-date="24/11" data-full="Rango, dimensione, estrazione e completamento" data-src="Libro pp. 54-55, 65-70 · Foglio 5" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 2 · giorno 24/11 · libro pp. 54-55 e 65-70</div>
+      <h2>Contare le direzioni: dimensione e rango</h2>
+      <p class="big">La <b>dimensione</b> di uno spazio dice quante direzioni indipendenti ha, cioè quanti numeri liberi servono per descrivere un suo elemento. Una retta per l'origine ha dimensione 1, un piano per l'origine 2, R³ ha dimensione 3.</p>
+      <p>Il <b>rango</b> di una matrice dice quante delle sue colonne sono "davvero diverse" (indipendenti). Con queste due parole rispondi a quasi tutte le domande d'esame su sottospazi e sistemi: "quanto vale dim W?", "quante soluzioni?", "sono una base?".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>In R² tre vettori sono sempre troppi</h2>
+      <p>dim R² = 2: due vettori indipendenti bastano già a raggiungere tutto il piano. Un terzo vettore <span class="cw">w</span> si scrive <b>sempre</b> con i primi due, quindi tre vettori di R² sono sempre dipendenti. Muovi w e guarda i due numeri che lo costruiscono.</p>
+      <canvas id="cv-tre" aria-label="Tre vettori nel piano: w scritto come combinazione di u e v"></canvas>
+      <div class="controls">
+        <label>w, prima componente <input type="range" id="tr-x" min="-4" max="4" step="0.5" value="3"> <b id="tr-xv"></b></label>
+        <label>w, seconda componente <input type="range" id="tr-y" min="-3" max="3" step="0.5" value="2"> <b id="tr-yv"></b></label>
+      </div>
+      <p class="readout" id="tr-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Dimensione (Teorema 2.3.16 e Def. 2.3.17, p. 66)</b>
+        <p>Tutte le basi di uno stesso spazio vettoriale V hanno lo <b>stesso numero</b> di vettori. Questo numero si chiama <b>dim V</b>.</p>
+        <span class="why mem">a memoria: l'enunciato</span>
+        <p style="font-size:.92rem;color:var(--muted)">La dimostrazione è lunga: impara bene cosa dice e usalo.</p>
+        <p>Da sapere: dim Kⁿ = n · dim M(m, n, K) = m·n · dim Kₙ[x] = n + 1 (base 1, x, …, xⁿ) · dim {0} = 0.</p>
+      </div>
+      <div class="def"><b>Scorciatoie quando conosci già dim V = n (Prop. 2.3.23 e 2.3.20)</b>
+        <ul class="recap">
+          <li>n vettori <b>indipendenti</b> in V sono già una base (non serve controllare che generino).</li>
+          <li>n vettori che <b>generano</b> V sono già una base.</li>
+          <li>Più di n vettori sono <b>sempre dipendenti</b>; meno di n non generano mai V.</li>
+        </ul>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché bastano n vettori indipendenti?</summary><p>Se non generassero V, potrei aggiungere un vettore fuori dal loro Span e restare indipendente: avrei n + 1 vettori indipendenti, cioè una base con più di n elementi, contro il teorema sopra.</p></details>
+      </div>
+      <div class="def"><b>Sottospazi (Prop. 2.3.25)</b>
+        <p>Se U ⊆ V è un sottospazio, allora dim U ≤ dim V. Se in più dim U = dim V, allora U = V.</p>
+      </div>
+      <div class="def"><b>Rango (Def. 3.2.7 e Cor. 3.2.10)</b>
+        <p>Per A ∈ M(m, n, K): <b>rk A = dim Span(colonne di A)</b>. In pratica: rk A = <b>numero di pivot</b> dopo Gauss. Inoltre rk A = rango per righe = rk(<sup>t</sup>A), e rk A ≤ min(m, n).</p>
+        <span class="why mem">a memoria: righe = colonne</span>
+        <p>Ricordi la frase della vecchia chat "rango = dimensione dello span delle colonne"? Adesso che sai cos'è lo Span e cos'è la dimensione, è proprio questa definizione.</p>
+      </div>
+      <div class="def"><b>Soluzioni di un sistema omogeneo</b>
+        <p>Se A ∈ M(m, n, K), lo spazio delle soluzioni S = {x ∈ Kⁿ : A·x = 0} ha <b>dim S = n − rk A</b> (n = numero di incognite = colonne di A).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché n − rk A?</summary><p>Dopo Gauss ci sono rk A incognite con il pivot, che ricavi; le altre n − rk A sono libere. Ogni incognita libera dà un vettore della base (come nella ricetta del capitolo 1).</p></details>
+      </div>
+      <div class="def"><b>Forma parametrica e cartesiana (pp. 54-55)</b>
+        <p><b>Parametrica</b>: W = Span(v₁, …, v<sub>k</sub>), cioè "ecco chi genera W". <b>Cartesiana</b>: W = {x ∈ Kⁿ : equazioni lineari omogenee}. Se le equazioni sono indipendenti: <b>numero di equazioni = n − dim W</b>. Un piano in R³ ha 1 equazione, una retta in R³ ne ha 2.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Estrarre una base da una lista di generatori</h2>
+      <p>Esempio: W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1), (1, 3, 2)) ⊆ R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Metti i vettori in colonna</h3><p class="math">${M([[1,2,0,1],[2,4,1,3],[1,2,1,2]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss</h3><p>R2 ← R2 − 2·R1, R3 ← R3 − R1, poi R3 ← R3 − R2:</p><p class="math">${M([[1,2,0,1],[0,0,1,1],[0,0,0,0]])}$</p></div>
+        <div class="step"><h3>Passo 3 · Guarda dove sono i pivot</h3><p>I pivot sono nelle colonne 1 e 3. Quindi rk = 2 e <b>dim W = 2</b>.</p></div>
+        <div class="step"><h3>Passo 4 · Prendi le colonne ORIGINALI con il pivot</h3><p>Una base di W è (1, 2, 1), (0, 1, 1): la 1ª e la 3ª colonna <b>della matrice di partenza</b>, non quelle ridotte. Gauss cambia i vettori ma non cambia quali colonne sono indipendenti.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Completare a una base di Kⁿ</h2>
+      <p>Esempio: completa (1, 1, 0), (0, 1, 1) a base di R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Accoda la base canonica</h3><p>Colonne: i tuoi vettori, poi e₁, e₂, e₃.</p><p class="math">${M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]])}$</p></div>
+        <div class="step"><h3>Passo 2 · Gauss e pivot</h3><p>R2 ← R2 − R1, poi R3 ← R3 − R2: i pivot finiscono nelle colonne 1, 2 e 3.</p><p class="math">${M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])}$</p></div>
+        <div class="step"><h3>Passo 3 · Prendi le colonne con il pivot</h3><p>I tuoi due vettori (colonne 1, 2) più e₁ (colonna 3): <b>(1, 1, 0), (0, 1, 1), (1, 0, 0)</b> è una base di R³. Sono 3 indipendenti in uno spazio di dimensione 3: basta così.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Da parametrica a cartesiana</h2>
+      <p>Esempio: W = Span((1, 0, 1), (0, 1, 1)) ⊆ R³. Voglio l'equazione di W.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Scrivi il vettore generico di W</h3><p>(x, y, z) ∈ W vuol dire (x, y, z) = a·(1, 0, 1) + b·(0, 1, 1) per qualche a, b ∈ R. Cioè x = a, y = b, z = a + b.</p></div>
+        <div class="step"><h3>Passo 2 · Elimina i parametri</h3><p>Sostituisci a = x e b = y nell'ultima: z = x + y.</p></div>
+        <div class="step"><h3>Passo 3 · Scrivila "= 0" e controlla</h3><p class="math">W = {(x, y, z) ∈ R³ : x + y − z = 0}</p><p>Controllo: (1, 0, 1) dà 1 + 0 − 1 = 0, (0, 1, 1) dà 0 + 1 − 1 = 0. Giusto. dim W = 2 e 3 − 2 = 1 equazione: torna.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Rango, base estratta, dimensione delle soluzioni</h2>
+      <p>Scegli un esempio o scrivi la tua matrice. Il laboratorio ti dice rk A, quali colonne originali formano una base di Span(colonne) e quanto vale la dimensione delle soluzioni di A·x = 0.</p>
+      <div id="lab-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1)) ⊆ R³</h2>
+      <p>Trova dim W, una base di W e la sua equazione cartesiana.</p>
+      <div class="steps" id="guided-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-rango"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>dim V</b> = numero di vettori di una base (sempre lo stesso). dim Kⁿ = n, dim M(m, n, K) = m·n, dim Kₙ[x] = n + 1.</li>
+        <li>In uno spazio di dimensione n: n indipendenti ⇒ base; n generatori ⇒ base; più di n ⇒ dipendenti.</li>
+        <li><b>rk A</b> = numero di pivot = dim Span(colonne) = rango per righe. rk A ≤ min(m, n).</li>
+        <li>Sistema omogeneo con n incognite: <b>dim soluzioni = n − rk A</b>.</li>
+        <li><b>Estrazione:</b> colonne, Gauss, tieni le colonne ORIGINALI con il pivot. <b>Completamento:</b> accoda e₁, …, e<sub>n</sub>, Gauss, tieni le colonne con il pivot.</li>
+        <li><b>Cartesiana</b>: numero di equazioni = n − dim W. Da Span a equazioni: scrivi x = a·v₁ + b·v₂ ed elimina i parametri.</li>
+      </ul>
+      <div data-copy="rango"></div>
+    </section>
+    <div class="next"><a href="#spazi">← Capitolo 1</a><a href="#grassmann">Capitolo 3 · Somma e Grassmann →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises, lab } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="rango"] .step p, [data-ch="rango"] .def p').forEach(p => { p.innerHTML = fixM(p.innerHTML); });
+
+  const B = Board($('cv-tre'), {xmin:-5,xmax:5,ymin:-3.5,ymax:3.5});
+  const tre = () => {
+    const x=+$('tr-x').value, y=+$('tr-y').value; $('tr-xv').textContent=it(x,1); $('tr-yv').textContent=it(y,1);
+    const u=[2,0.5], v=[0.5,1.5], det=u[0]*v[1]-u[1]*v[0], a=(x*v[1]-y*v[0])/det, b=(u[0]*y-u[1]*x)/det;
+    if (!B.fit()) return; B.grid();
+    const au=[a*u[0],a*u[1]], bv=[b*v[0],b*v[1]];
+    B.seg(au[0],au[1],x,y,'--v',1.5,[5,5]); B.seg(bv[0],bv[1],x,y,'--u',1.5,[5,5]);
+    B.arrow(0,0,...au,'--u','',2); B.arrow(0,0,...bv,'--v','',2);
+    B.arrow(0,0,...u,'--u','u'); B.arrow(0,0,...v,'--v','v'); B.arrow(0,0,x,y,'--w','w',3.5);
+    $('tr-out').innerHTML = 'u = (2; 0,5), v = (0,5; 1,5), w = ('+it(x,1)+'; '+it(y,1)+')<br>w = <b>'+it(a,2)+'</b>·u + <b>'+it(b,2)+'</b>·v. Quindi '+it(a,2)+'·u + '+it(b,2)+'·v − 1·w = 0: i tre vettori sono dipendenti.';
+  };
+  ['tr-x','tr-y'].forEach(i=>$(i).addEventListener('input', tre)); onDraw('rango', tre);
+
+  lab('lab-rango', { show:['cols','kernel'], presets:[
+    { name:'Estrazione: 4 vettori di R³', rows:[[1,2,0,1],[2,4,1,3],[1,2,1,2]] },
+    { name:'Sistema 2 equazioni, 4 incognite', rows:[[1,1,0,2],[0,1,1,-1]] },
+    { name:'Matrice 3×3 di rango 2', rows:[[1,2,3],[2,4,6],[1,0,1]] },
+    { name:'Matrice 3×3 di rango 3', rows:[[2,1,-1],[1,1,0],[3,2,0]] }
+  ]});
+
+  guided('rango', [
+    { h:'Passo 1 · Metti i tre vettori in colonna e fai Gauss: quanti pivot? (puoi usare il laboratorio)', type:'nums', ans:[2],
+      html:M([[1,2,0],[2,4,1],[1,2,1]])+' &nbsp; rk = '+inp('rango'), ok:'Sì: (2, 4, 2) = 2·(1, 2, 1) è di troppo, rk = 2.', bad:'Guarda la seconda colonna: è un multiplo della prima?' },
+    { h:'Passo 2 · Quindi dim W = ?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'), ok:'Giusto: dim W = rk = 2. W è un piano per l\'origine.', bad:'dim W = rk della matrice dei generatori.' },
+    { h:'Passo 3 · Quale coppia è una base di W?', type:'choice', ans:1,
+      opts:['(1, 2, 1), (2, 4, 2)','(1, 2, 1), (0, 1, 1)','(2, 4, 2) da solo'], ok:'Esatto: sono le colonne originali con il pivot (1ª e 3ª).', bad:'Servono 2 vettori indipendenti: (1, 2, 1) e (2, 4, 2) sono uno multiplo dell\'altro.' },
+    { h:'Passo 4 · Equazione: (x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) dà x = a, y = 2a + b, z = a + b. Elimina a e b e completa', type:'nums', ans:[1],
+      html:'x − y + '+inp('coefficiente di z','3.5em')+'·z = 0', ok:'Perfetto: b = z − x, quindi y = 2x + z − x = x + z, cioè x − y + z = 0.', bad:'Da z = a + b e a = x ricavi b = z − x. Sostituisci in y = 2a + b.' }
+  ], '<b>Fatto!</b> dim W = 2, base (1, 2, 1), (0, 1, 1), equazione cartesiana x − y + z = 0. Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 e (0, 1, 1) → 0 − 1 + 1 = 0.');
+
+  exercises('rango', [
+    { id:'e1', type:'num', label:'dim =', q:'dim M(2, 3, R) (matrici 2 × 3 a entrate reali)', a:6, hint:'Una base sono le matrici con un solo 1 e il resto 0. Quante caselle ci sono?', sol:'2·3 = 6 caselle, quindi 6 matrici nella base canonica: dim = 6.' },
+    { id:'e2', type:'num', label:'dim =', q:'dim R₃[x] (polinomi a coefficienti reali di grado ≤ 3)', a:4, hint:'Base: 1, x, x², x³.', sol:'Quattro elementi: 1, x, x², x³. dim = 3 + 1 = 4. Errore tipico: rispondere 3.' },
+    { id:'e3', type:'num', label:'rk A =', q:'A = '+M([[1,2,3],[2,4,6],[1,0,1]]), a:2, hint:'La seconda riga è il doppio della prima. Restano due righe "diverse"?', sol:'R2 − 2·R1 = 0, poi R3 − R1 = (0, −2, −2): due pivot, rk A = 2.' },
+    { id:'e4', type:'num', label:'dim S =', q:'Un sistema lineare omogeneo di 2 equazioni in 5 incognite ha matrice di rango 2. Quanto vale la dimensione dello spazio S ⊆ R⁵ delle soluzioni?', a:3, hint:'dim S = n − rk A, con n = numero di incognite.', sol:'5 − 2 = 3.' },
+    { id:'e5', type:'choice', q:'Quattro vettori di R³…', opts:['sono sempre dipendenti','possono essere una base di R³','sono indipendenti se nessuno è nullo'], a:0, hint:'dim R³ = 3. Quanti vettori indipendenti può avere al massimo?', sol:'In uno spazio di dimensione 3 più di 3 vettori sono sempre dipendenti.' },
+    { id:'e6', type:'num', label:'dim W =', q:'W = {(x, y, z) ∈ R³ : x + y + z = 0, x − y = 0}', a:1, hint:'Due equazioni indipendenti (non sono una multipla dell\'altra) in 3 incognite.', sol:'rk = 2, quindi dim W = 3 − 2 = 1: è la retta Span((1, 1, −2)).' },
+    { id:'e7', type:'choice', q:'Con quale vettore completi (1, 1, 0), (0, 1, 1) a base di R³?', opts:['(1, 2, 1)','(1, 0, 0)','(2, 2, 0)'], a:1,
+      hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 0, 0) non sta nello Span dei due (ricetta del completamento sopra). Tre indipendenti in R³: base.' },
+    { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'x = a e y = a, quindi x = y, cioè x − y = 0. z = b è libero.' }
+  ]);
+})();
+</script>
+  <footer>Lavagna di Geometria · tutor di Geometria e Algebra T · i tuoi risultati restano salvati solo in questo browser.</footer>
+</div>
+<script>Lav.init();</script>
+
+</body>
+</html>
