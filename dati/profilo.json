@@ -1,0 +1,99 @@
+{
+  "aggiornato": "2026-11-24T09:30",
+  "in_breve": "Capisci bene quando vedi prima a cosa serve una cosa e qualche numero concreto. Ti frenano tre abitudini: saltare giorni di fila, andare avanti senza chiudere gli esercizi e non rifare gli errori.",
+  "priorita": "chiusura",
+  "parametri": [
+    {
+      "id": "costanza",
+      "nome": "Costanza",
+      "voto": 2,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "Dal 20 al 21 novembre nessuna sessione con i tutor; ripartito il 22. Fondamenti non è ancora partito: 3 giorni del piano da recuperare.",
+      "migliora": "Ogni giorno almeno 30 minuti, anche se sei stanco: compila la scheda INIZIO STUDIO e fai solo il primo pezzo del piano. Un giorno corto vale più di un giorno saltato."
+    },
+    {
+      "id": "velocita",
+      "nome": "Velocità",
+      "voto": 3,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "Sulle cose del liceo sei rapido (logica, induzione, Gauss). Sulle cose nuove rallenti, ed è normale. Il problema è il ritmo rispetto al piano: Analisi e Fondamenti sono indietro (i giorni esatti sono nella misura qui sotto).",
+      "migliora": "Sulle cose che sai: un esercizio di verifica e avanti. Sulle cose nuove: massimo un concetto e poi subito un esercizio del prof."
+    },
+    {
+      "id": "comprensione",
+      "nome": "Comprensione",
+      "voto": 3,
+      "prima": null,
+      "fonte": "stima",
+      "perche": "Capisci bene se parti da utilità e numeri concreti (radici n-esime con lo slider). I carabinieri erano segnati come spiegati ma non li avevi capiti, e sul carabiniere di sotto c'è ancora un dubbio.",
+      "migliora": "Appena una cosa non ti torna dillo subito con \"non ho capito questo passaggio\". Prima di una formula chiedi un esempio con i numeri."
+    },
+    {
+      "id": "concentrazione",
+      "nome": "Concentrazione",
+      "voto": 3,
+      "prima": null,
+      "fonte": "stima",
+      "perche": "Il 19/11 ti sei bloccato dopo troppa teoria di fila. Molti errori di Geometria sono di distrazione (segni, |z| al posto di |z|², quadrante).",
+      "migliora": "Blocchi da 25-30 minuti con 5 minuti di pausa, telefono lontano. Mai più di un concetto nuovo senza un esercizio in mezzo."
+    },
+    {
+      "id": "precisione",
+      "nome": "Precisione nei calcoli",
+      "voto": 2,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "In Geometria 5 errori ricorrenti aperti, quasi tutti di calcolo: segni, prodotti lasciati a metà, quadrante sbagliato nella forma polare.",
+      "migliora": "Prima di dare la risposta: 30 secondi di controllo finale (segni, quadrante, rimetti il risultato nell'esercizio). Scrivi tutti i passaggi, anche quelli \"ovvi\"."
+    },
+    {
+      "id": "autonomia",
+      "nome": "Autonomia",
+      "voto": 2,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "Solo 3 argomenti sono \"lo so fare da solo\". Quasi tutto il resto è \"con aiuto\" o non ancora verificato.",
+      "migliora": "Sulla lavagna prova sempre l'esercizio da solo almeno 5 minuti prima di aprire \"aiuto\" o \"soluzione\"."
+    },
+    {
+      "id": "chiusura",
+      "nome": "Chiudere gli esercizi",
+      "voto": 1,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "Dal 22/11 hai detto \"andiamo avanti\" senza mandare i risultati: nessun capitolo della lavagna risulta verificato. Per il tutor un esercizio non mandato vale come non fatto.",
+      "migliora": "Alla fine di ogni capitolo premi \"Copia i miei risultati per il tutor\" e incollali in chat, anche se sono sbagliati. È la cosa che ti fa salire di più tutti gli altri parametri."
+    },
+    {
+      "id": "ripasso",
+      "nome": "Ripasso degli errori",
+      "voto": 1,
+      "prima": null,
+      "fonte": "misurato",
+      "perche": "0 errori ricorrenti risolti su 9. Le schede errori di Analisi e dei complessi sono ancora da fare.",
+      "migliora": "La domenica rifai la scheda errori della settimana. Un errore conta come risolto quando non lo rifai per 2 sessioni."
+    }
+  ],
+  "punti_forza": [
+    "Chiedi il perché delle formule: è il modo giusto di studiare matematica.",
+    "Radici n-esime dei complessi, Gauss e induzione: le fai da solo e giuste.",
+    "Quando vedi i numeri concreti capisci in fretta anche le dimostrazioni.",
+    "Sai dire cosa ti serve (lavagne, notazione completa): il metodo si adatta a te."
+  ],
+  "come_impari": [
+    "Prima a cosa serve, poi la definizione, poi un esempio svolto, poi UN esercizio da solo.",
+    "Numeri concreti prima della formula generale.",
+    "Lavagna interattiva invece delle formule scritte in chat.",
+    "Checklist corta e quadro chiaro di quanto manca, niente percentuali inventate."
+  ],
+  "allarmi": [
+    "Troppa teoria di fila senza esercizi: ti blocchi. Fermati e fai un esercizio del prof.",
+    "\"Andiamo avanti\" senza risposta: l'argomento resta non verificato.",
+    "Errori chiamati \"distrazioni\" e lasciati lì: tornano all'esame."
+  ],
+  "storico": [
+    { "data": "2026-11-24", "voti": { "costanza": 2, "velocita": 3, "comprensione": 3, "concentrazione": 3, "precisione": 2, "autonomia": 2, "chiusura": 1, "ripasso": 1 } }
+  ]
+}
