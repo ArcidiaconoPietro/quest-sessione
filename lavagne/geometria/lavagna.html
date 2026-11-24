@@ -94,9 +94,9 @@ details.whybox > *:not(summary) { margin-top: 6px; }
 canvas { width: 100%; height: 320px; display: block; border-radius: 10px; background: var(--soft); touch-action: none; }
 canvas.tall { height: 380px; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
-.controls label { display: flex; align-items: center; gap: 8px; font-size: .95rem; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: .95rem; max-width: 100%; min-width: 0; }
 input[type=range] { width: 150px; max-width: 100%; accent-color: var(--w); }
-select { font: inherit; font-size: .95rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); max-width: 100%; }
+select { font: inherit; font-size: .95rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); max-width: 100%; min-width: 0; flex: 0 1 auto; text-overflow: ellipsis; }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .9rem; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
 button {
@@ -398,7 +398,9 @@ window.Lav = (function(){
       if (opts.show.includes('kernel')) s.push('Sistema omogeneo A·x = 0 in K<sup>'+n+'</sup>: dimensione delle soluzioni = n − rk A = '+n+' − '+rk+' = <b>'+(n-rk)+'</b>.');
       if (opts.show.includes('det') && g.det) s.push('Matrice quadrata: <b>det A = '+g.det+'</b> = prodotto dei pivot'+(g.swaps?' cambiato di segno '+g.swaps+' volta/e (uno per ogni scambio)':'')+'. '+(g.det.zero?'det = 0: A non è invertibile.':'det ≠ 0: A è invertibile.'));
       if (opts.show.includes('det') && !g.det && !aug) s.push('Il determinante esiste solo per matrici quadrate.');
-      if (aug){ const rkC = rk + (g.augPiv?1:0);
+      if (aug && opts.show.includes('inverse')){ const sq = g.R===aug && g.C===2*aug;
+        s.push(!sq ? 'Per l\'inversa scrivi (A | I) con A quadrata n × n: n righe e 2n colonne.' : rk===aug ? '<b>rk A = '+rk+' = n</b>: A è invertibile e a destra della riga verticale leggi <b>A⁻¹</b>.' : '<b>rk A = '+rk+' &lt; '+aug+'</b>: a sinistra è comparsa una riga di zeri, A <b>non è invertibile</b> (det A = 0).'); }
+      else if (aug){ const rkC = rk + (g.augPiv?1:0);
         s.push('<b>rk(A | b) = '+rkC+'</b>. '+(g.augPiv ? 'C\'è un pivot nella colonna dei termini noti (riga del tipo 0 = numero ≠ 0): <b>nessuna soluzione</b> (Rouché-Capelli: rk A ≠ rk(A | b)).'
           : (rk===n ? 'rk A = rk(A | b) = n = '+n+': <b>una sola soluzione</b>.' : 'rk A = rk(A | b) = '+rk+' &lt; n = '+n+': <b>infinite soluzioni</b>, con n − rk = '+(n-rk)+' parametri liberi.'))); }
       return s.map(x=>'<p>'+x+'</p>').join('');
@@ -445,7 +447,7 @@ window.Lav = (function(){
       if (opts.eigen){ es = eig(a,b,c,d); es.forEach(e=>{ if(e.v) B.through(e.v[0],e.v[1],'--ok',2,[7,6]); }); }
       B.arrow(0,0,...A(1,0),'--u','A·e₁'); B.arrow(0,0,...A(0,1),'--v','A·e₂');
       const det=a*d-b*c; let txt = 'A = '+M([[it(a,1),it(b,1)],[it(c,1),it(d,1)]])+' &nbsp; det A = '+it(a,1)+'·'+it(d,1)+' − '+it(b,1)+'·'+it(c,1)+' = <b>'+it(det,2)+'</b>. ';
-      if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
+      if (opts.area===false) {} else if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
       else txt += '<br>Il quadratino 1×1 diventa il parallelogramma viola, di area |det A| = '+it(Math.abs(det),2)+(det<0?'; det &lt; 0: il disegno si è anche <b>ribaltato</b> (e₁ ed e₂ si sono scambiati di verso).':'.');
       if (opts.eigen){ txt += '<br>'+(es.length ? es.map(e=> e.v ? 'Autovalore λ = <b>'+it(e.l,3)+'</b>: la retta verde tratteggiata Span('+it(e.v[0],2)+', '+it(e.v[1],2)+') viene mandata in sé stessa.' : 'λ = '+it(e.l,3)+': A = λ·I, ogni vettore è autovettore.').join('<br>') : 'Nessun autovalore reale: p<sub>A</sub>(λ) non ha radici in R (nessuna retta resta ferma, es. una rotazione).'); }
       if (opts.test){ const t=+$(cvId+'-t').value*Math.PI/180, v=[2*Math.cos(t),2*Math.sin(t)], Av=A(...v), cr=v[0]*Av[1]-v[1]*Av[0], par = Math.abs(cr) < 0.12*Math.hypot(...Av)*2+1e-9 && Math.hypot(...Av)>1e-9;
@@ -908,6 +910,1450 @@ window.Lav = (function(){
     { id:'e7', type:'choice', q:'Con quale vettore completi (1, 1, 0), (0, 1, 1) a base di R³?', opts:['(1, 2, 1)','(1, 0, 0)','(2, 2, 0)'], a:1,
       hint:'Scarta quelli che sono combinazione dei due: (1, 2, 1) = (1, 1, 0) + (0, 1, 1) e (2, 2, 0) = 2·(1, 1, 0).', sol:'(1, 0, 0) non sta nello Span dei due (ricetta del completamento sopra). Tre indipendenti in R³: base.' },
     { id:'e8', type:'choice', q:'Equazione cartesiana di W = Span((1, 1, 0), (0, 0, 1)) ⊆ R³', opts:['x − y = 0','z = 0','x + y + z = 0'], a:0, hint:'(x, y, z) = a·(1, 1, 0) + b·(0, 0, 1) = (a, a, b). Che legame c\'è tra x e y?', sol:'x = a e y = a, quindi x = y, cioè x − y = 0. z = b è libero.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 3 · SOMMA, INTERSEZIONE, GRASSMANN, COORDINATE ================= -->
+  <div class="chapter" data-ch="grassmann" data-title="3 · Somma e Grassmann" data-date="27/11" data-full="Intersezione, somma, Grassmann, coordinate" data-src="Libro pp. 57-60, 64-65, 70-73 · esercizi pp. 75-78 · Fogli 6-7" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 3 · giorno 27/11 · libro pp. 57-60, 64-65, 70-73</div>
+      <h2>Due sottospazi insieme</h2>
+      <p class="big">Hai due sottospazi U e W dello stesso spazio V. Ti chiedi: cosa hanno <b>in comune</b> (l'intersezione U ∩ W)? Cosa ottieni <b>mettendoli insieme</b> (la somma U + W)? La formula di Grassmann lega le quattro dimensioni, così spesso ne calcoli tre e la quarta viene gratis.</p>
+      <p>Nello stesso giorno ci sono le <b>coordinate</b>: come si scrive un vettore usando una base che non è quella canonica.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Due rette per l'origine in R²</h2>
+      <p>U e W sono due rette per l'origine (dimensione 1 ciascuna). Girale. Se sono <b>diverse</b>, si toccano solo in 0 e insieme generano tutto il piano. Se <b>coincidono</b>, l'intersezione è tutta la retta e la somma è ancora la retta.</p>
+      <canvas id="cv-rette" aria-label="Due rette per l'origine U e W nel piano"></canvas>
+      <div class="controls">
+        <label>angolo di U <input type="range" id="gr-a" min="0" max="175" step="5" value="20"> <b id="gr-av"></b></label>
+        <label>angolo di W <input type="range" id="gr-b" min="0" max="175" step="5" value="110"> <b id="gr-bv"></b></label>
+      </div>
+      <p class="readout" id="gr-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Intersezione (Prop. 2.2.11)</b>
+        <p>Se U, W ⊆ V sono sottospazi, <b>U ∩ W</b> = {v ∈ V : v ∈ U e v ∈ W} è un sottospazio.</p>
+        <p>Attenzione: <b>U ∪ W in generale NON è un sottospazio</b> (Foglio 4, es. 13). I due assi di R² ne sono l'esempio: (1, 0) + (0, 1) = (1, 1) non sta su nessuno dei due.</p>
+      </div>
+      <div class="def"><b>Somma (Def. 2.2.16 e Prop. 2.2.19)</b>
+        <p><b>U + W</b> = {u + w : u ∈ U, w ∈ W}. È il più piccolo sottospazio che contiene sia U sia W.</p>
+        <p>In pratica: se U = Span(u₁, …, u<sub>h</sub>) e W = Span(w₁, …, w<sub>k</sub>), allora <b>U + W = Span(u₁, …, u<sub>h</sub>, w₁, …, w<sub>k</sub>)</b>: metti insieme i generatori.</p>
+      </div>
+      <div class="def"><b>Formula di Grassmann (Teorema 2.3.27, p. 70)</b>
+        <p class="math">dim(U + W) + dim(U ∩ W) = dim U + dim W</p>
+        <span class="why mem">a memoria: la formula</span>
+        <details class="whybox"><summary>L'idea (facile), anche se la dimostrazione è lunga</summary><p>Se conti le direzioni di U e poi quelle di W, le direzioni che stanno in tutti e due (cioè in U ∩ W) le hai contate <b>due volte</b>. Per avere le direzioni di U + W le togli una volta. È come contare gli studenti di due corsi: iscritti al primo + iscritti al secondo − iscritti a entrambi.</p></details>
+      </div>
+      <div class="def"><b>Somma diretta (Prop. 2.3.28)</b>
+        <p>La somma è <b>diretta</b>, e si scrive <b>U ⊕ W</b>, se vale una di queste (sono equivalenti):</p>
+        <ul class="recap"><li>U ∩ W = {0};</li><li>dim(U + W) = dim U + dim W;</li><li>ogni vettore di U + W si scrive in <b>un solo modo</b> come u + w.</li></ul>
+        <p>Se in più U ⊕ W = V, U e W si dicono <b>supplementari</b>.</p>
+      </div>
+      <div class="def"><b>Coordinate (pp. 64-65)</b>
+        <p>Se B = (v₁, …, v<sub>n</sub>) è una base di V e v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>, il vettore (λ₁, …, λ<sub>n</sub>) ∈ Kⁿ si chiama <b>vettore delle coordinate</b> di v rispetto a B, e si scrive [v]<sub>B</sub>. L'ordine dei vettori della base conta.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il disegno delle coordinate</div>
+      <h2>La stessa freccia, con un'altra griglia</h2>
+      <p>La base canonica disegna la griglia quadrettata. Un'altra base B = (<span class="cu">b₁</span>, <span class="cv">b₂</span>) disegna una griglia "storta". Le coordinate di <span class="cw">v</span> rispetto a B dicono quanti passi fai lungo b₁ e quanti lungo b₂ per arrivare alla punta di v.</p>
+      <canvas id="cv-coord" aria-label="Griglia della base b1 b2 e coordinate del vettore v"></canvas>
+      <div class="controls">
+        <label>direzione di b₂ <input type="range" id="co-t" min="30" max="150" step="5" value="70"> <b id="co-tv"></b></label>
+        <label>v, prima componente <input type="range" id="co-x" min="-4" max="4" step="0.5" value="3"> <b id="co-xv"></b></label>
+        <label>v, seconda componente <input type="range" id="co-y" min="-3" max="3" step="0.5" value="2"> <b id="co-yv"></b></label>
+      </div>
+      <p class="readout" id="co-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Calcolare U + W e U ∩ W</h2>
+      <p>Esempio in R⁴: U = Span((1, 0, 1, 0), (0, 1, 0, 1)) e W = {(x, y, z, t) ∈ R⁴ : x − z = 0}.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Le dimensioni di partenza</h3><p>dim U = 2 (i due generatori non sono multipli). W ha 1 equazione in 4 incognite: dim W = 4 − 1 = 3.</p></div>
+        <div class="step"><h3>Passo 2 · L'intersezione: metti il vettore generico di U nelle equazioni di W</h3><p>Il vettore generico di U è a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b). Equazione di W: x − z = a − a = 0, sempre vera. Quindi <b>U ∩ W = U</b> e dim(U ∩ W) = 2.</p></div>
+        <div class="step"><h3>Passo 3 · Grassmann dà la somma</h3><p class="math">dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 3 − 2 = 3</p><p>In effetti U ⊆ W, quindi U + W = W. La somma <b>non</b> è diretta (U ∩ W ≠ {0}).</p></div>
+        <div class="step"><h3>Regola generale</h3><ul class="recap"><li>Entrambi con equazioni: <b>U ∩ W</b> = metti tutte le equazioni insieme.</li><li>Entrambi con generatori: <b>U + W</b> = tutti i generatori in colonna, Gauss, dim = rango.</li><li>Uno con generatori e uno con equazioni: per U ∩ W sostituisci il vettore generico nelle equazioni (come sopra).</li><li>La quarta dimensione la trovi sempre con Grassmann.</li></ul></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio · dim(U + W)</div>
+      <h2>Tutti i generatori in colonna</h2>
+      <p>Le prime colonne sono i generatori di U, le altre quelli di W. Il rango è dim(U + W).</p>
+      <div id="lab-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>U = {x + y + z = 0} e W = Span((1, 1, 1)) in R³</h2>
+      <p>U è un piano, W è una retta. Calcola le quattro dimensioni e di' se R³ = U ⊕ W.</p>
+      <div class="steps" id="guided-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-grassmann"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>U ∩ W</b> è sempre un sottospazio; <b>U ∪ W</b> di solito no.</li>
+        <li><b>U + W</b> = Span(generatori di U e di W insieme).</li>
+        <li><b>Grassmann:</b> dim(U + W) + dim(U ∩ W) = dim U + dim W.</li>
+        <li><b>Somma diretta U ⊕ W</b> ⇔ U ∩ W = {0} ⇔ dim(U + W) = dim U + dim W.</li>
+        <li><b>Coordinate</b> [v]<sub>B</sub>: i numeri λ₁, …, λ<sub>n</sub> con v = λ₁·v₁ + … + λ<sub>n</sub>·v<sub>n</sub>. Si trovano risolvendo un sistema.</li>
+        <li>Trucco: U, W ⊆ V con dim U + dim W &gt; dim V ⇒ U ∩ W ≠ {0} (perché dim(U + W) ≤ dim V).</li>
+      </ul>
+      <div data-copy="grassmann"></div>
+    </section>
+    <div class="next"><a href="#rango">← Capitolo 2</a><a href="#lineari">Capitolo 4 · Applicazioni lineari →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises, lab } = Lav;
+  const B = Board($('cv-rette'), {xmin:-4,xmax:4,ymin:-3,ymax:3});
+  const rette = () => {
+    const a=+$('gr-a').value, b=+$('gr-b').value; $('gr-av').textContent=a+'°'; $('gr-bv').textContent=b+'°';
+    if (!B.fit()) return; B.grid();
+    const same = a===b, ra=a*Math.PI/180, rb=b*Math.PI/180;
+    if (!same){ const c=B.ctx; c.save(); c.globalAlpha=.08; c.fillStyle=Lav.css('--w'); c.fillRect(0,0,B.W,B.H); c.restore(); }
+    B.through(Math.cos(ra),Math.sin(ra),'--u',3); B.through(Math.cos(rb),Math.sin(rb),'--v',3, same?[8,8]:null);
+    B.text(2.6*Math.cos(ra),2.6*Math.sin(ra),'U','--u',15); B.text(2.2*Math.cos(rb),2.2*Math.sin(rb)+(same?.5:0),'W','--v',15);
+    B.dot(0,0,'--w',6);
+    $('gr-out').innerHTML = same
+      ? 'U = W. dim(U ∩ W) = 1 e dim(U + W) = 1. Grassmann: <b>1 + 1 = 1 + 1</b>. La somma non è diretta.'
+      : 'U ≠ W. U ∩ W = {0}, quindi dim(U ∩ W) = 0; U + W = R² (sfondo viola), dim = 2. Grassmann: <b>2 + 0 = 1 + 1</b>. R² = U ⊕ W.';
+  };
+  ['gr-a','gr-b'].forEach(i=>$(i).addEventListener('input', rette)); onDraw('grassmann', rette);
+
+  const C = Board($('cv-coord'), {xmin:-5,xmax:5,ymin:-3.5,ymax:3.5});
+  const coord = () => {
+    const t=+$('co-t').value*Math.PI/180, x=+$('co-x').value, y=+$('co-y').value;
+    $('co-tv').textContent=$('co-t').value+'°'; $('co-xv').textContent=it(x,1); $('co-yv').textContent=it(y,1);
+    const b1=[1.5,0], b2=[1.2*Math.cos(t),1.2*Math.sin(t)], det=b1[0]*b2[1]-b1[1]*b2[0], l=(x*b2[1]-y*b2[0])/det, m=(b1[0]*y-b1[1]*x)/det;
+    if (!C.fit()) return;
+    const c=C.ctx; c.save(); c.globalAlpha=.7;
+    for (let k=-8;k<=8;k++){ C.seg(k*b1[0]-20*b2[0],k*b1[1]-20*b2[1],k*b1[0]+20*b2[0],k*b1[1]+20*b2[1],'--line',1.5); C.seg(k*b2[0]-20*b1[0],k*b2[1]-20*b1[1],k*b2[0]+20*b1[0],k*b2[1]+20*b1[1],'--line',1.5); }
+    c.restore(); C.seg(-20,0,20,0,'--muted',1); C.seg(0,-20,0,20,'--muted',1);
+    const p=[l*b1[0],l*b1[1]];
+    C.arrow(0,0,...p,'--u','',2); C.arrow(...p,x,y,'--v','',2);
+    C.arrow(0,0,...b1,'--u','b₁'); C.arrow(0,0,...b2,'--v','b₂'); C.arrow(0,0,x,y,'--w','v',3.5);
+    $('co-out').innerHTML = 'v = ('+it(x,1)+'; '+it(y,1)+') nella base canonica. Nella base B: v = <b>'+it(l,2)+'</b>·b₁ + <b>'+it(m,2)+'</b>·b₂, cioè [v]<sub>B</sub> = ('+it(l,2)+'; '+it(m,2)+').';
+  };
+  ['co-t','co-x','co-y'].forEach(i=>$(i).addEventListener('input', coord)); onDraw('grassmann', coord);
+
+  lab('lab-grassmann', { show:['cols'], presets:[
+    { name:'U = Span(e₁, e₂), W = Span(e₂, e₃) in R³', rows:[[1,0,0,0],[0,1,1,0],[0,0,0,1]] },
+    { name:'U = Span((1,0,1,0),(0,1,0,1)), W = Span((1,1,1,1),(1,0,0,0)) in R⁴', rows:[[1,0,1,1],[0,1,1,0],[1,0,1,0],[0,1,1,0]] },
+    { name:'U = Span((1,2,0)), W = Span((2,4,0),(0,0,1)) in R³', rows:[[1,2,0],[2,4,0],[0,0,1]] }
+  ]});
+
+  guided('grassmann', [
+    { h:'Passo 1 · dim U e dim W', type:'nums', ans:[2,1], html:'dim U = '+inp('dimensione di U')+' &nbsp; dim W = '+inp('dimensione di W'),
+      ok:'Sì: U ha 1 equazione in 3 incognite (3 − 1 = 2), W è generato da un vettore non nullo.', bad:'Per U: incognite − equazioni. Per W: quanti generatori indipendenti?' },
+    { h:'Passo 2 · Il vettore generico di W è (t, t, t). Mettilo nell\'equazione di U: t + t + t = 0. Quanto vale t?', type:'nums', ans:[0],
+      html:'3t = 0 ⇒ t = '+inp('valore di t'), ok:'Giusto: l\'unico vettore comune è (0, 0, 0).', bad:'3t = 0: dividi per 3.' },
+    { h:'Passo 3 · Quindi dim(U ∩ W) = ? E con Grassmann dim(U + W) = ?', type:'nums', ans:[0,3],
+      html:'dim(U ∩ W) = '+inp('dim intersezione')+' &nbsp; dim(U + W) = '+inp('dim somma'), ok:'Perfetto: 2 + 1 − 0 = 3.', bad:'U ∩ W = {0} ha dimensione 0. Poi dim(U + W) = dim U + dim W − dim(U ∩ W).' },
+    { h:'Passo 4 · R³ = U ⊕ W?', type:'choice', ans:0,
+      opts:['Sì: U ∩ W = {0} e dim(U + W) = 3 = dim R³, quindi U + W = R³ e la somma è diretta','No, perché U è un piano e W una retta','Non si può dire senza una base'],
+      ok:'Esatto: U e W sono supplementari in R³.', bad:'Controlla le due condizioni: intersezione nulla e dim(U + W) = 3.' }
+  ], '<b>Fatto!</b> dim U = 2, dim W = 1, U ∩ W = {0}, U + W = R³: <b>R³ = U ⊕ W</b>. La retta W "buca" il piano U solo nell\'origine.');
+
+  exercises('grassmann', [
+    { id:'e1', type:'num', label:'almeno', q:'U e W sono sottospazi di R⁵, entrambi di dimensione 3. Quanto vale <b>come minimo</b> dim(U ∩ W)?', a:1,
+      hint:'dim(U + W) ≤ dim R⁵ = 5. Usa Grassmann: dim(U ∩ W) = 3 + 3 − dim(U + W).', sol:'dim(U ∩ W) = 6 − dim(U + W) ≥ 6 − 5 = 1. Quindi U ∩ W non è mai solo {0}.' },
+    { id:'e2', type:'num', label:'dim(U ∩ W) =', q:'In R³: U = Span(e₁, e₂), W = Span(e₂, e₃).', a:1, hint:'Quale vettore della base canonica sta in tutti e due?', sol:'U è il piano z = 0, W è il piano x = 0. In comune c\'è la retta Span(e₂): dimensione 1.' },
+    { id:'e3', type:'num', label:'dim(U + W) =', q:'Stessi U e W dell\'esercizio 2.', a:3, hint:'Grassmann con i numeri dell\'esercizio 2.', sol:'2 + 2 − 1 = 3: U + W = R³ (ma la somma non è diretta, perché U ∩ W ≠ {0}).' },
+    { id:'e4', type:'num', label:'dim(U ∩ W) =', q:'U e W sono due piani <b>diversi</b> per l\'origine in R³.', a:1, hint:'Due piani diversi generano tutto R³: dim(U + W) = 3.', sol:'2 + 2 − 3 = 1: si incontrano in una retta.' },
+    { id:'e5', type:'nums', labels:['λ₁ =','λ₂ ='], q:'Coordinate di v = (5, 1) rispetto alla base B = ((1, 1), (1, −1)) di R².', a:[3,2],
+      hint:'λ₁·(1, 1) + λ₂·(1, −1) = (5, 1): cioè λ₁ + λ₂ = 5 e λ₁ − λ₂ = 1. Somma le due equazioni.', sol:'2λ₁ = 6 ⇒ λ₁ = 3, poi λ₂ = 2. [v]<sub>B</sub> = (3, 2).' },
+    { id:'e6', type:'nums', labels:['a =','b =','c ='], q:'Scrivi p(x) = 3 + 2x + x² come a·1 + b·(1 + x) + c·(1 + x)². Coordinate rispetto alla base (1, 1 + x, (1 + x)²) di R₂[x].', a:[2,0,1],
+      hint:'(1 + x)² = 1 + 2x + x². Confronta prima i coefficienti di x², poi di x, poi i termini noti.', sol:'x²: c = 1. x: b + 2c = 2 ⇒ b = 0. Termine noto: a + b + c = 3 ⇒ a = 2. Coordinate (2, 0, 1).' },
+    { id:'e7', type:'choice', src:'tipo quiz', q:'Se U, W ⊆ R⁴ hanno dim U = dim W = 2 e U ∩ W = {0}, allora…', opts:['R⁴ = U ⊕ W','U + W è un piano','U = W'], a:0,
+      hint:'Grassmann: dim(U + W) = 2 + 2 − 0.', sol:'dim(U + W) = 4 = dim R⁴, quindi U + W = R⁴, e la somma è diretta perché U ∩ W = {0}.' },
+    { id:'e8', type:'choice', q:'U ∪ W è un sottospazio quando…', opts:['sempre','solo se uno dei due è contenuto nell\'altro','solo se U ∩ W = {0}'], a:1,
+      hint:'Pensa ai due assi di R²: U ∩ W = {0} ma U ∪ W non è un sottospazio.', sol:'Se U ⊆ W allora U ∪ W = W, che è un sottospazio. Altrimenti prendi u ∈ U fuori da W e w ∈ W fuori da U: u + w non sta né in U né in W.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 4 · APPLICAZIONI LINEARI ================= -->
+  <div class="chapter" data-ch="lineari" data-title="4 · Applicazioni lineari" data-date="1/12" data-full="Applicazioni lineari, nucleo, immagine, matrice associata" data-src="Libro p. 92 e pp. 115-134 (salta 4.3.4 Hom) · Fogli 7-8" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 4 · giorno 1/12 · libro p. 92 e pp. 115-134</div>
+      <h2>Funzioni che rispettano somme e multipli</h2>
+      <p class="big">Un'applicazione lineare è una funzione tra spazi vettoriali che "va d'accordo" con le due operazioni: l'immagine di una somma è la somma delle immagini, l'immagine di un multiplo è il multiplo dell'immagine.</p>
+      <p>Il motivo per cui ti interessano: <b>ogni applicazione lineare è una matrice</b>, e viceversa. Così domande come "f è iniettiva?" o "quanto è grande l'immagine?" diventano conti di rango, che sai già fare.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Cosa fa A al piano</h2>
+      <p>L<sub>A</sub>: R² → R², L<sub>A</sub>(x) = A·x. La griglia grigia è il piano dopo la trasformazione: le rette restano rette, le parallele restano parallele, l'origine sta ferma. Il quadratino diventa il parallelogramma viola.</p>
+      <p>Guarda le frecce: <span class="cu">A·e₁</span> è la <b>prima colonna</b> di A e <span class="cv">A·e₂</span> è la <b>seconda colonna</b>. Prova l'esempio "schiaccia su una retta".</p>
+      <canvas id="cv-lin" class="tall" aria-label="Trasformazione del piano data dalla matrice A"></canvas>
+      <div class="controls" id="ctl-lin"></div>
+      <p class="readout" id="out-lin"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Applicazione lineare (p. 115)</b>
+        <p>f: V → W (V, W spazi vettoriali su K) è lineare se per ogni u, v ∈ V e ogni λ ∈ K:</p>
+        <p class="math">f(u + v) = f(u) + f(v) &nbsp;&nbsp; e &nbsp;&nbsp; f(λ·v) = λ·f(v)</p>
+        <p>Conseguenza utile per i quiz: <b>f(0) = 0</b>. Se f(0) ≠ 0, f non è lineare (es. f(x, y) = (x + 1, y)). Anche prodotti tra variabili, quadrati, seni… la rendono non lineare.</p>
+      </div>
+      <div class="def"><b>Matrice ↔ applicazione (Prop. 4.1.19 e Cor. 4.1.7)</b>
+        <p>Per A ∈ M(m, n, K), L<sub>A</sub>: Kⁿ → Kᵐ, L<sub>A</sub>(x) = A·x è lineare. Ogni f: Kⁿ → Kᵐ lineare è L<sub>A</sub> per un'unica A, e <b>la colonna i di A è f(eᵢ)</b>.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché la colonna i è A·eᵢ?</summary><p>eᵢ ha un 1 al posto i e 0 altrove. Nel prodotto riga per colonna ogni riga di A "pesca" solo il suo i-esimo numero. Il risultato è la colonna i.</p></details>
+        <p>Più in generale (Prop. 4.1.18): un'applicazione lineare è decisa da cosa fa su una base. Se sai f(v₁), …, f(v<sub>n</sub>), sai tutto.</p>
+      </div>
+      <div class="def"><b>Nucleo e immagine (pp. 121-123)</b>
+        <p><b>ker f</b> = {v ∈ V : f(v) = 0} ⊆ V e <b>Im f</b> = {f(v) : v ∈ V} ⊆ W sono sottospazi.</p>
+        <p>f è <b>iniettiva ⇔ ker f = {0}</b> (Prop. 4.2.2). Per L<sub>A</sub>: ker L<sub>A</sub> sono le soluzioni di A·x = 0, e <b>Im L<sub>A</sub> = Span(colonne di A)</b>, quindi dim Im L<sub>A</sub> = rk A (Cor. 4.2.8).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché iniettiva vuol dire nucleo nullo?</summary><p>f(u) = f(v) ⇔ f(u) − f(v) = 0 ⇔ f(u − v) = 0 ⇔ u − v ∈ ker f. Se ker f = {0} allora u − v = 0, cioè u = v.</p></details>
+      </div>
+      <div class="def"><b>Teorema della dimensione (Teorema 4.2.9, p. 124)</b>
+        <p class="math">dim V = dim ker f + dim Im f</p>
+        <span class="why mem">a memoria: la formula</span>
+        <details class="whybox"><summary>L'idea</summary><p>Le direzioni di V o vengono "schiacciate a zero" (finiscono nel nucleo) o arrivano da qualche parte (fanno l'immagine). Per L<sub>A</sub> è il conto che sai già: n = (n − rk A) + rk A.</p></details>
+        <p>Conseguenze da quiz: se dim V &gt; dim W, f <b>non</b> è iniettiva. Se dim V &lt; dim W, f <b>non</b> è suriettiva. Se dim V = dim W: iniettiva ⇔ suriettiva ⇔ isomorfismo ⇔ (per L<sub>A</sub>) A invertibile.</p>
+      </div>
+      <div class="def"><b>Matrice associata (par. 4.3)</b>
+        <p>B = (v₁, …, v<sub>n</sub>) base di V, C base di W. La matrice <b>[f]<sup>B</sup><sub>C</sub></b> ha come colonna j le <b>coordinate di f(v<sub>j</sub>) rispetto a C</b>. Allora [f(v)]<sub>C</sub> = [f]<sup>B</sup><sub>C</sub> · [v]<sub>B</sub> (Prop. 4.3.4).</p>
+        <p>Rango per righe = rango per colonne (p. 92): ti serve per dire che rk A = rk(<sup>t</sup>A).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Nucleo e immagine di L<sub>A</sub></h2>
+      <p>Esempio: A = ${M([[1,1,2],[0,1,1],[1,2,3]])}$, L<sub>A</sub>: R³ → R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1, poi R3 ← R3 − R2: ${M([[1,1,2],[0,1,1],[0,0,0]])}$. Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
+        <div class="step"><h3>Passo 2 · Immagine</h3><p>Im L<sub>A</sub> = Span(colonne originali con pivot) = Span((1, 0, 1), (1, 1, 2)). dim Im = 2. Non è suriettiva (2 &lt; 3).</p></div>
+        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>y + z = 0 ⇒ y = −z. x + y + 2z = 0 ⇒ x = −y − 2z = −z. Con z = t: (−t, −t, t). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
+        <div class="step"><h3>Passo 4 · Controllo col teorema della dimensione</h3><p class="math">dim ker + dim Im = 1 + 2 = 3 = dim R³ ✓</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Matrice associata: la derivata</h2>
+      <p>f: R₂[x] → R₂[x], f(p) = p′ (derivata). Base B = C = (1, x, x²).</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(1) = 0, f(x) = 1, f(x²) = 2x.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 → (0, 0, 0); 1 → (1, 0, 0); 2x → (0, 2, 0).</p></div>
+        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4) = (5, 8, 0), cioè 5 + 8x: è proprio p′ = 5 + 8x. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Rango di A = dimensione dell'immagine</h2>
+      <p>Scrivi la matrice di L<sub>A</sub>. Il laboratorio dà rk A = dim Im L<sub>A</sub>, le colonne che generano l'immagine e dim ker L<sub>A</sub> = n − rk A.</p>
+      <div id="lab-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[1,2,1],[2,4,0]])}$, L<sub>A</sub>: R³ → R²</h2>
+      <p>Trova rk A, dim Im, dim ker e una base del nucleo. Di' se L<sub>A</sub> è iniettiva o suriettiva.</p>
+      <div class="steps" id="guided-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Lineare:</b> f(u + v) = f(u) + f(v), f(λ·v) = λ·f(v). Test veloce: f(0) = 0, niente prodotti o quadrati di variabili.</li>
+        <li><b>Colonna i di A = A·eᵢ.</b> Ogni f: Kⁿ → Kᵐ lineare è L<sub>A</sub>.</li>
+        <li><b>ker L<sub>A</sub></b> = soluzioni di A·x = 0. <b>Im L<sub>A</sub></b> = Span(colonne). dim Im = rk A.</li>
+        <li><b>Iniettiva ⇔ ker = {0}.</b> Suriettiva ⇔ Im = W ⇔ rk A = m.</li>
+        <li><b>dim V = dim ker f + dim Im f.</b></li>
+        <li><b>[f]<sup>B</sup><sub>C</sub>:</b> colonna j = coordinate di f(v<sub>j</sub>) nella base C.</li>
+      </ul>
+      <div data-copy="lineari"></div>
+    </section>
+    <div class="next"><a href="#grassmann">← Capitolo 3</a><a href="#determinante">Capitolo 5 · Determinante →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, inp, M, guided, exercises, lab, transform } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="lineari"] .step p, [data-ch="lineari"] section > p, [data-ch="lineari"] h2').forEach(p => { p.innerHTML = fixM(p.innerHTML); });
+
+  transform('lineari', 'cv-lin', 'ctl-lin', 'out-lin', { presets:[
+    { name:'Allunga in orizzontale', m:[2,0,0,1] },
+    { name:'Rotazione di 90°', m:[0,-1,1,0] },
+    { name:'Taglio (shear)', m:[1,1,0,1] },
+    { name:'Riflessione sulla bisettrice', m:[0,1,1,0] },
+    { name:'Schiaccia su una retta (det = 0)', m:[1,2,0.5,1] },
+    { name:'Proiezione sull\'asse x', m:[1,0,0,0] }
+  ]});
+
+  lab('lab-lineari', { show:['cols','kernel'], presets:[
+    { name:'A 3×3 della ricetta', rows:[[1,1,2],[0,1,1],[1,2,3]] },
+    { name:'A 2×3 dell\'esercizio guidato', rows:[[1,2,1],[2,4,0]] },
+    { name:'Foglio 4 · quiz 6', rows:[[1,2,0],[0,1,3],[1,3,3]] },
+    { name:'L_A: R⁴ → R³', rows:[[1,0,1,2],[0,1,1,1],[1,1,2,3]] }
+  ]});
+
+  guided('lineari', [
+    { h:'Passo 1 · Gauss: R2 ← R2 − 2·R1. Quanti pivot? (rk A)', type:'nums', ans:[2],
+      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì: pivot nella colonna 1 (riga 1) e nella colonna 3 (riga 2).', bad:'Conta le righe non nulle dopo Gauss.' },
+    { h:'Passo 2 · dim Im L<sub>A</sub> e dim ker L<sub>A</sub>', type:'nums', ans:[2,1],
+      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2, dim ker = 3 − 2 = 1.', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
+    { h:'Passo 3 · Base del nucleo: dalla riga 2, −2z = 0. Dalla riga 1, x + 2y + z = 0. Metti y = 1: quanto valgono x e z?', type:'nums', ans:[-2,0],
+      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto: ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
+    { h:'Passo 4 · Allora L<sub>A</sub> è…', type:'choice', ans:2,
+      opts:['iniettiva e suriettiva','iniettiva ma non suriettiva','suriettiva ma non iniettiva','né iniettiva né suriettiva'],
+      ok:'Esatto: Im ha dimensione 2 = dim R², quindi Im = R² (suriettiva); ker ≠ {0} (non iniettiva).', bad:'Iniettiva ⇔ ker = {0}. Suriettiva ⇔ dim Im = dim R² = 2.' }
+  ], '<b>Fatto!</b> rk A = 2, Im L<sub>A</sub> = R², ker L<sub>A</sub> = Span((−2, 1, 0)). Controllo: 1 + 2 = 3 = dim R³.');
+
+  exercises('lineari', [
+    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (1, 0): non è lineare.' },
+    { id:'e2', type:'choice', q:'Quale di queste è lineare da R² a R²?', opts:['f(x, y) = (x·y, x)','f(x, y) = (2x − y, 3y)','f(x, y) = (x², y)'], a:1, hint:'Cerca quella senza prodotti tra variabili e senza potenze.', sol:'(2x − y, 3y) = A·(x, y) con A = '+M([[2,-1],[0,3]])+'. Le altre hanno x·y o x².' },
+    { id:'e3', type:'choice', src:'Foglio 4 · quiz 6', q:'A = '+M([[1,2,0],[0,1,3],[1,3,3]])+'. Quale b ∈ R³ NON sta in Im L<sub>A</sub>?', opts:['(0, 1, 1)','(2, 0, 2)','(1, 0, 2)','(1, 1, 2)'], a:2,
+      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Im L<sub>A</sub> = {b : b₃ = b₁ + b₂}. (1, 0, 2): 1 + 0 = 1 ≠ 2. Gli altri rispettano la condizione.' },
+    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'4 − 3 = 1.' },
+    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'dim ker f ≥ 3 − 2 = 1, quindi ker f ≠ {0}: mai iniettiva.' },
+    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'(−1, 7).' },
+    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'dim Im f = 3 = dim R³, quindi Im f = R³: f è un isomorfismo.' },
+    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = costanti, dim 1. dim Im f = 3 − 1 = 2 (Im f = R₁[x]).' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 5 · DETERMINANTE ================= -->
+  <div class="chapter" data-ch="determinante" data-title="5 · Determinante" data-date="4/12" data-full="Determinante: Laplace, Gauss, Binet, inversa" data-src="Libro pp. 93-104 e 107-108 · esercizi pp. 111-114" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 5 · giorno 4/12 · libro pp. 93-104 e 107-108</div>
+      <h2>Un numero che dice tutto su una matrice quadrata</h2>
+      <p class="big">Il determinante det A è un solo numero, calcolato da una matrice <b>quadrata</b> A ∈ M(n, n, K). La cosa più importante che dice: <b>det A ≠ 0 ⇔ A è invertibile</b> ⇔ le colonne sono una base ⇔ rk A = n.</p>
+      <p>Geometricamente (in R²) è il fattore per cui L<sub>A</sub> moltiplica le aree, col segno meno se ribalta il piano. All'esame serve per invertibilità, rango con parametro e, dal 8/12, per autovalori.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il determinante è un'area</h2>
+      <p>Il quadratino di lato 1 (area 1) diventa il parallelogramma viola, costruito sulle due colonne di A. La sua area è |det A| = |a·d − b·c|. Muovi le entrate finché le due frecce finiscono sulla stessa retta: l'area diventa 0, cioè det A = 0.</p>
+      <canvas id="cv-det" class="tall" aria-label="Area del parallelogramma costruito sulle colonne di A"></canvas>
+      <div class="controls" id="ctl-det"></div>
+      <p class="readout" id="out-det"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Ordine 2</b>
+        <p class="math">det ${M([["a","b"],["c","d"]])}$ = a·d − b·c</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché proprio a·d − b·c?</summary><p>È l'area (con segno) del parallelogramma sulle colonne (a, c) e (b, d): il rettangolo grande meno i pezzi che avanzano. Prova nel disegno: a = 2, d = 1, b = c = 0 dà un rettangolo 2 × 1, area 2 = 2·1 − 0·0.</p></details>
+      </div>
+      <div class="def"><b>Sviluppo di Laplace (Teorema 3.3.5, p. 99)</b>
+        <p>Scegli una riga i. Allora det A = Σ<sub>j=1..n</sub> (−1)<sup>i+j</sup> · a<sub>ij</sub> · det A<sub>ij</sub>, dove A<sub>ij</sub> è la matrice che resta togliendo la riga i e la colonna j. Si può fare anche lungo una colonna.</p>
+        <p>I segni (−1)<sup>i+j</sup> fanno una scacchiera: ${M([["+","−","+"],["−","+","−"],["+","−","+"]])}$. Scegli la riga o colonna con <b>più zeri</b>.</p>
+        <span class="why mem">a memoria: la formula e la scacchiera</span>
+      </div>
+      <div class="def"><b>Come cambia con Gauss (Prop. 3.3.7 e seguenti)</b>
+        <ul class="recap">
+          <li>Scambi due righe ⇒ il determinante <b>cambia segno</b>.</li>
+          <li>Moltiplichi una riga per λ ⇒ il determinante si <b>moltiplica per λ</b>.</li>
+          <li>Aggiungi a una riga un multiplo di un'altra ⇒ il determinante <b>non cambia</b>.</li>
+          <li>Matrice triangolare ⇒ det = <b>prodotto della diagonale</b> (Prop. 3.3.3).</li>
+          <li>Una riga nulla, o due righe uguali o proporzionali ⇒ det = 0.</li>
+        </ul>
+        <p>Quindi: riduci a scala usando solo scambi e "aggiungi un multiplo"; det A = (−1)<sup>numero di scambi</sup> · prodotto dei pivot.</p>
+      </div>
+      <div class="def"><b>Le formule da quiz</b>
+        <ul class="recap">
+          <li><b>det(<sup>t</sup>A) = det A</b> (Prop. 3.3.2).</li>
+          <li><b>Binet: det(A·B) = det A · det B</b> (Teorema 3.4.7). <span class="why mem">a memoria</span></li>
+          <li><b>det(A⁻¹) = 1 / det A</b>. <span class="why easy">facile: A·A⁻¹ = I e det I = 1, poi Binet</span></li>
+          <li><b>det(λ·A) = λⁿ · det A</b> per A n × n. <span class="why easy">facile: λ moltiplica tutte le n righe</span> Trappola classica: non è λ·det A.</li>
+          <li><b>A invertibile ⇔ det A ≠ 0</b> (Prop. 3.4.11). v₁, …, v<sub>n</sub> ∈ Kⁿ sono una base ⇔ det(v₁ | … | v<sub>n</sub>) ≠ 0 (Prop. 3.3.15).</li>
+          <li>det(A + B) in generale <b>non</b> è det A + det B.</li>
+        </ul>
+      </div>
+      <div class="def"><b>Inversa 2 × 2 (dalla Prop. 3.4.12) — era una tua lacuna</b>
+        <p class="math">${M([["a","b"],["c","d"]])}$<sup>−1</sup> = <span class="fr"><span>1</span><span>a·d − b·c</span></span> · ${M([["d","−b"],["−c","a"]])}$</p>
+        <p>Scambi a e d, cambi segno a b e c, dividi per il determinante. Controllo sempre: A·A⁻¹ deve fare I.</p>
+      </div>
+      <div class="def"><b>Rango con i minori (Prop. 3.3.13)</b>
+        <p>rk A = il più grande ordine di una sottomatrice quadrata con determinante ≠ 0. Utile con un parametro: calcoli det A(k), trovi i k che lo annullano e solo per quelli fai Gauss.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Laplace su una 3 × 3</h2>
+      <p>A = ${M([[2,0,1],[1,3,2],[1,1,2]])}$. La prima riga ha uno zero: sviluppo lungo la riga 1.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Primo termine (segno +)</h3><p>a₁₁ = 2, tolgo riga 1 e colonna 1: det ${M([[3,2],[1,2]])}$ = 6 − 2 = 4. Contributo: +2·4 = 8.</p></div>
+        <div class="step"><h3>Passo 2 · Secondo termine (segno −)</h3><p>a₁₂ = 0: contributo 0, non serve calcolare il minore.</p></div>
+        <div class="step"><h3>Passo 3 · Terzo termine (segno +)</h3><p>a₁₃ = 1, tolgo riga 1 e colonna 3: det ${M([[1,3],[1,1]])}$ = 1 − 3 = −2. Contributo: +1·(−2) = −2.</p></div>
+        <div class="step"><h3>Passo 4 · Somma</h3><p class="math">det A = 8 + 0 − 2 = 6</p><p>Controllo col laboratorio qui sotto (esempio "Laplace"): con Gauss i pivot sono 2, 3, 1 e 2·3·1 = 6.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Determinante con Gauss</h2>
+      <p>Il laboratorio riduce a scala con scambi e "aggiungi un multiplo", poi moltiplica i pivot e conta gli scambi.</p>
+      <div id="lab-det"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>det ${M([[1,2,0],[3,1,2],[0,1,1]])}$</h2>
+      <p>Sviluppa lungo la prima riga.</p>
+      <div class="steps" id="guided-determinante"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-determinante"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>det ${M([["a","b"],["c","d"]])}$ = a·d − b·c. Laplace: scacchiera di segni, riga con più zeri.</li>
+        <li>Gauss: scambio ⇒ segno −; riga · λ ⇒ det · λ; aggiungi multiplo ⇒ uguale. Triangolare ⇒ prodotto diagonale.</li>
+        <li>det(<sup>t</sup>A) = det A · det(A·B) = det A · det B · det(A⁻¹) = 1/det A · <b>det(λ·A) = λⁿ·det A</b>.</li>
+        <li><b>det A ≠ 0 ⇔ A invertibile ⇔ rk A = n ⇔ colonne base.</b></li>
+        <li>Inversa 2 × 2: scambia a e d, cambia segno a b e c, dividi per a·d − b·c.</li>
+      </ul>
+      <div data-copy="determinante"></div>
+    </section>
+    <div class="next"><a href="#lineari">← Capitolo 4</a><a href="#caratteristico">Capitolo 6 · Cambio di base →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, inp, M, guided, exercises, lab, transform } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="determinante"] p, [data-ch="determinante"] h2, [data-ch="determinante"] li').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  transform('determinante', 'cv-det', 'ctl-det', 'out-det', { presets:[
+    { name:'Rettangolo 2 × 1 (det 2)', m:[2,0,0,1] },
+    { name:'Parallelogramma (det 5)', m:[2,-1,1,2] },
+    { name:'Ribalta (det −1)', m:[0,1,1,0] },
+    { name:'Colonne allineate (det 0)', m:[1,2,0.5,1] },
+    { name:'Taglio: l\'area non cambia (det 1)', m:[1,1.5,0,1] }
+  ]});
+
+  lab('lab-det', { show:['det'], presets:[
+    { name:'Laplace: la 3×3 della ricetta', rows:[[2,0,1],[1,3,2],[1,1,2]] },
+    { name:'Esercizio guidato', rows:[[1,2,0],[3,1,2],[0,1,1]] },
+    { name:'Serve uno scambio', rows:[[0,1,2],[1,0,3],[4,-3,8]] },
+    { name:'det = 0 (righe dipendenti)', rows:[[1,2,3],[4,5,6],[7,8,9]] },
+    { name:'4×4', rows:[[1,0,2,1],[2,1,0,0],[0,1,1,3],[1,0,0,1]] }
+  ]});
+
+  guided('determinante', [
+    { h:'Passo 1 · Minore di a₁₁ = 1: togli riga 1 e colonna 1. Quanto vale det '+M([[1,2],[1,1]])+'?', type:'nums', ans:[-1],
+      html:'1·1 − 2·1 = '+inp('determinante'), ok:'Giusto: −1.', bad:'a·d − b·c con a = 1, b = 2, c = 1, d = 1.' },
+    { h:'Passo 2 · Minore di a₁₂ = 2: togli riga 1 e colonna 2. Quanto vale det '+M([[3,2],[0,1]])+'?', type:'nums', ans:[3],
+      html:'3·1 − 2·0 = '+inp('determinante'), ok:'Sì: 3.', bad:'a·d − b·c con a = 3, b = 2, c = 0, d = 1.' },
+    { h:'Passo 3 · Il segno di a₁₂ nella scacchiera è −. Il terzo termine ha a₁₃ = 0. Quanto fa det A = +1·(−1) − 2·3 + 0?', type:'nums', ans:[-7],
+      html:'det A = '+inp('determinante'), ok:'Perfetto: −1 − 6 = −7.', bad:'Calcola 1·(−1) − 2·3.' },
+    { h:'Passo 4 · A è invertibile?', type:'choice', ans:0, opts:['Sì, perché det A = −7 ≠ 0','No, perché det A è negativo'],
+      ok:'Esatto: conta solo che sia diverso da 0, il segno non importa.', bad:'Invertibile ⇔ det ≠ 0. Il segno non c\'entra.' }
+  ], '<b>Fatto!</b> det A = −7, A è invertibile e rk A = 3. Puoi controllare con il laboratorio (esempio "Esercizio guidato").');
+
+  exercises('determinante', [
+    { id:'e1', type:'num', label:'det =', q:'det '+M([[3,1],[4,2]]), a:2, hint:'a·d − b·c.', sol:'3·2 − 1·4 = 2.' },
+    { id:'e2', type:'num', label:'det =', q:'det '+M([[2,5,7],[0,3,1],[0,0,-1]]), a:-6, hint:'È triangolare superiore.', sol:'Prodotto della diagonale: 2·3·(−1) = −6.' },
+    { id:'e3', type:'num', label:'det(3A) =', src:'trappola', q:'A ∈ M(3, 3, R) con det A = 2. Quanto vale det(3·A)?', a:54, hint:'det(λ·A) = λⁿ·det A con n = 3.', sol:'3³·2 = 27·2 = 54. Non 6!' },
+    { id:'e4', type:'num', label:'det(A·B) =', q:'det A = 2, det B = 5 (A, B quadrate della stessa taglia).', a:10, hint:'Binet.', sol:'2·5 = 10.' },
+    { id:'e5', type:'num', label:'det(A⁻¹) =', q:'det A = 4. (Scrivi la frazione come 1/4.)', a:0.25, hint:'det(A⁻¹) = 1 / det A.', sol:'1/4.' },
+    { id:'e6', type:'choice', q:'Per quali k ∈ R la matrice '+M([[1,'k'],['k',4]])+' NON è invertibile?', opts:['k = 2','k = ±2','k = 4','nessun k'], a:1, hint:'det = 4 − k². Quando fa 0?', sol:'4 − k² = 0 ⇔ k² = 4 ⇔ k = 2 oppure k = −2.' },
+    { id:'e7', type:'num', label:'det =', q:'det A = 5. Scambio la prima e la terza riga di A. Quanto vale il nuovo determinante?', a:-5, hint:'Uno scambio cambia il segno.', sol:'−5.' },
+    { id:'e8', type:'choice', src:'Foglio 4 · quiz 1', q:'A, B ∈ M(n, n, R). Quale affermazione è vera?', opts:['Se A² = 0 allora A = 0','Se A e B sono invertibili allora A·B è invertibile','Se A·B = 0 allora A = 0 oppure B = 0'], a:1,
+      hint:'Binet: det(A·B) = det A · det B. Per le altre cerca un controesempio 2 × 2.', sol:'det A ≠ 0 e det B ≠ 0 ⇒ det(A·B) ≠ 0. Per le altre: A = '+M([[0,1],[0,0]])+' ha A² = 0 ma A ≠ 0.' },
+    { id:'e9', type:'nums', labels:['entrata (1,1)','entrata (1,2)'], q:'Prima riga dell\'inversa di '+M([[2,1],[5,3]]), a:[3,-1], hint:'det = 2·3 − 1·5 = 1. Scambia a e d, cambia segno a b e c.', sol:'A⁻¹ = '+M([[3,-1],[-5,2]])+'. Controllo: '+M([[2,1],[5,3]])+'·'+M([[3,-1],[-5,2]])+' = I.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 6 · CAMBIO DI BASE E POLINOMIO CARATTERISTICO ================= -->
+  <div class="chapter" data-ch="caratteristico" data-title="6 · Cambio di base" data-date="8/12" data-full="Cambio di base, similitudine, traccia, polinomio caratteristico" data-src="Libro pp. 135-141 e p. 156 (Def. 5.1.22)" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 6 · giorno 8/12 · libro pp. 135-141</div>
+      <h2>La stessa funzione vista da basi diverse</h2>
+      <p class="big">Un endomorfismo f: V → V ha una matrice diversa per ogni base che scegli. Alcune basi danno matrici brutte, altre danno matrici bellissime (diagonali). Qui impari come si passa da una base all'altra e quali numeri <b>non cambiano</b> mai: determinante, traccia, rango e polinomio caratteristico.</p>
+      <p>È il ponte verso il capitolo 7: le radici del polinomio caratteristico sono gli autovalori, e servono a trovare la base "bella".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il polinomio caratteristico di una 2 × 2</h2>
+      <p>Per A ∈ M(2, 2, R) il polinomio caratteristico è una parabola: p<sub>A</sub>(λ) = λ² − (tr A)·λ + det A. Muovi le entrate di A: dove la parabola tocca l'asse orizzontale ci sono le radici, che dal capitolo 7 chiamerai <b>autovalori</b>.</p>
+      <canvas id="cv-pc" aria-label="Grafico della parabola p di lambda"></canvas>
+      <div class="controls">
+        <label>a <input type="range" id="pc-a" min="-3" max="5" step="0.5" value="4"> <b id="pc-av"></b></label>
+        <label>b <input type="range" id="pc-b" min="-3" max="3" step="0.5" value="1"> <b id="pc-bv"></b></label>
+        <label>c <input type="range" id="pc-c" min="-3" max="3" step="0.5" value="2"> <b id="pc-cv"></b></label>
+        <label>d <input type="range" id="pc-d" min="-3" max="5" step="0.5" value="3"> <b id="pc-dv"></b></label>
+      </div>
+      <p class="readout" id="pc-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Matrice di cambiamento di base (par. 4.3.5)</b>
+        <p>B = (v₁, …, v<sub>n</sub>) e C due basi di V. La matrice di cambiamento di base da B a C è <b>[id<sub>V</sub>]<sup>B</sup><sub>C</sub></b>: la colonna j contiene le <b>coordinate di v<sub>j</sub> rispetto a C</b>. Se C è la base canonica di Kⁿ, le colonne sono proprio i vettori v₁, …, v<sub>n</sub>.</p>
+        <p class="math">[v]<sub>C</sub> = [id]<sup>B</sup><sub>C</sub> · [v]<sub>B</sub> &nbsp;&nbsp;(Prop. 4.3.13)</p>
+        <p>Per tornare indietro usi l'inversa: [id]<sup>C</sup><sub>B</sub> = ([id]<sup>B</sup><sub>C</sub>)⁻¹.</p>
+      </div>
+      <div class="def"><b>Endomorfismo in un'altra base</b>
+        <p>Un <b>endomorfismo</b> è f: V → V (stesso spazio in partenza e in arrivo). Se A = [f]<sup>C</sup><sub>C</sub> e M = [id]<sup>B</sup><sub>C</sub>, allora</p>
+        <p class="math">[f]<sup>B</sup><sub>B</sub> = M⁻¹ · A · M</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Leggila da destra a sinistra</summary><p>Parti da coordinate in B. M le traduce in coordinate in C. A applica f (in C). M⁻¹ ritraduce il risultato in B. Tre passi: traduci, applica, ritraduci.</p></details>
+      </div>
+      <div class="def"><b>Matrici simili (Def. p. 137)</b>
+        <p>A, B ∈ M(n, n, K) sono <b>simili</b> (A ∼ B) se esiste M invertibile con B = M⁻¹·A·M. Vuol dire: sono la stessa f vista in due basi.</p>
+        <p>Matrici simili hanno <b>stesso rango, stesso determinante, stessa traccia, stesso polinomio caratteristico</b> (Prop. 4.4.8, Cor. 4.4.12, Prop. 5.1.24).</p>
+        <p>Attenzione: vale solo in un verso. Stessi invarianti <b>non</b> basta per dire che sono simili (esempio negli esercizi).</p>
+      </div>
+      <div class="def"><b>Traccia (p. 139)</b>
+        <p><b>tr A</b> = a₁₁ + a₂₂ + … + a<sub>nn</sub> (somma della diagonale). Vale tr(A·B) = tr(B·A) (Prop. 4.4.11).</p>
+      </div>
+      <div class="def"><b>Polinomio caratteristico (Def. 5.1.22)</b>
+        <p class="math">p<sub>A</sub>(λ) = det(A − λ·I<sub>n</sub>)</p>
+        <p>Si sottrae λ su tutta la diagonale e si fa il determinante. Ha grado n.</p>
+        <p>Per n = 2: p<sub>A</sub>(λ) = λ² − (tr A)·λ + det A.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Il conto</summary><p>det ${M([["a − λ","b"],["c","d − λ"]])}$ = (a − λ)(d − λ) − b·c = λ² − (a + d)·λ + (a·d − b·c).</p></details>
+        <p>Per una matrice <b>triangolare</b> p<sub>A</sub>(λ) = (a₁₁ − λ)·(a₂₂ − λ)·…·(a<sub>nn</sub> − λ): le radici sono i numeri sulla diagonale.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Cambiare base a un endomorfismo</h2>
+      <p>f = L<sub>A</sub>: R² → R² con A = ${M([[2,1],[1,2]])}$ (base canonica). Nuova base B = ((1, 1), (1, −1)).</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Calcola f sui vettori della nuova base</h3><p>A·(1, 1) = (3, 3). A·(1, −1) = (1, −1).</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi i risultati in coordinate B</h3><p>(3, 3) = 3·(1, 1) + 0·(1, −1) → (3, 0). (1, −1) = 0·(1, 1) + 1·(1, −1) → (0, 1).</p></div>
+        <div class="step"><h3>Passo 3 · Mettili in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[3,0],[0,1]])}$</p><p>Diagonale! Nella base B, f allunga (1, 1) di 3 e lascia fermo (1, −1). È la stessa cosa di M⁻¹·A·M con M = ${M([[1,1],[1,-1]])}$.</p></div>
+        <div class="step"><h3>Passo 4 · Controllo con gli invarianti</h3><p>tr A = 4 = 3 + 1. det A = 3 = 3·1. Torna: sono simili.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[4,1],[2,3]])}$</h2>
+      <p>Calcola traccia, determinante, polinomio caratteristico e le sue radici.</p>
+      <div class="steps" id="guided-caratteristico"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-caratteristico"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>[id]<sup>B</sup><sub>C</sub></b>: colonne = coordinate dei vettori di B rispetto a C. [v]<sub>C</sub> = [id]<sup>B</sup><sub>C</sub>·[v]<sub>B</sub>.</li>
+        <li><b>[f]<sup>B</sup><sub>B</sub> = M⁻¹·A·M</b> con M = [id]<sup>B</sup><sub>C</sub>. In pratica: calcola f(v<sub>j</sub>) e scrivilo in coordinate B.</li>
+        <li><b>Simili</b> ⇒ stessi rk, det, tr, p<sub>A</sub>. Non vale il viceversa.</li>
+        <li><b>tr A</b> = somma della diagonale. tr(A·B) = tr(B·A).</li>
+        <li><b>p<sub>A</sub>(λ) = det(A − λ·I)</b>. Per 2 × 2: λ² − tr A·λ + det A. Triangolare: prodotto di (a<sub>ii</sub> − λ).</li>
+      </ul>
+      <div data-copy="caratteristico"></div>
+    </section>
+    <div class="next"><a href="#determinante">← Capitolo 5</a><a href="#autovalori">Capitolo 7 · Autovalori →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="caratteristico"] p, [data-ch="caratteristico"] h2').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  const B = Board($('cv-pc'), {xmin:-4,xmax:7,ymin:-5,ymax:6});
+  const pc = () => {
+    const [a,b,c,d] = ['a','b','c','d'].map(k=>+$('pc-'+k).value); ['a','b','c','d'].forEach(k=>$('pc-'+k+'v').textContent=it(+$('pc-'+k).value,1));
+    const tr=a+d, de=a*d-b*c, D=tr*tr-4*de, p=l=>l*l-tr*l+de;
+    if (!B.fit()) return; B.grid();
+    B.curve(l=>[l,p(l)], B.x0, B.x1, '--w', 3);
+    const roots = D<-1e-9 ? [] : D<1e-9 ? [tr/2] : [(tr-Math.sqrt(D))/2,(tr+Math.sqrt(D))/2];
+    roots.forEach(r=>{ B.dot(r,0,'--ok',6); B.text(r,0,'λ = '+it(r,2),'--ok',13); });
+    $('pc-out').innerHTML = 'A = '+M([[it(a,1),it(b,1)],[it(c,1),it(d,1)]])+' &nbsp; tr A = '+it(tr,1)+', det A = '+it(de,2)+'<br>p<sub>A</sub>(λ) = λ² − ('+it(tr,1)+')·λ + ('+it(de,2)+'). '
+      + (roots.length===2 ? 'Due radici reali: <b>'+roots.map(r=>it(r,2)).join('</b> e <b>')+'</b>.' : roots.length===1 ? 'Una radice doppia: <b>'+it(roots[0],2)+'</b>.' : 'Nessuna radice reale (la parabola non tocca l\'asse): niente autovalori in R.');
+  };
+  ['a','b','c','d'].forEach(k=>$('pc-'+k).addEventListener('input', pc)); onDraw('caratteristico', pc);
+
+  guided('caratteristico', [
+    { h:'Passo 1 · Traccia e determinante', type:'nums', ans:[7,10], html:'tr A = '+inp('traccia')+' &nbsp; det A = '+inp('determinante'),
+      ok:'Sì: tr A = 4 + 3 = 7, det A = 4·3 − 1·2 = 10.', bad:'Traccia = somma della diagonale. det = a·d − b·c.' },
+    { h:'Passo 2 · Quale è p<sub>A</sub>(λ)?', type:'choice', ans:1, opts:['λ² + 7λ + 10','λ² − 7λ + 10','λ² − 10λ + 7'],
+      ok:'Esatto: λ² − (tr A)·λ + det A.', bad:'La formula è λ² − (tr A)·λ + det A: il segno davanti alla traccia è meno.' },
+    { h:'Passo 3 · Radici di λ² − 7λ + 10 (scrivi prima la più piccola)', type:'nums', ans:[2,5], html:'λ₁ = '+inp('radice minore')+' &nbsp; λ₂ = '+inp('radice maggiore'),
+      ok:'Perfetto: (λ − 2)(λ − 5). Due numeri con somma 7 e prodotto 10.', bad:'Cerca due numeri con somma 7 e prodotto 10, oppure usa Δ = 49 − 40 = 9.' }
+  ], '<b>Fatto!</b> p<sub>A</sub>(λ) = λ² − 7λ + 10 = (λ − 2)(λ − 5). Le radici 2 e 5 saranno gli autovalori di A (capitolo 7). Controllo: 2 + 5 = 7 = tr A e 2·5 = 10 = det A.');
+
+  exercises('caratteristico', [
+    { id:'e1', type:'num', label:'tr =', q:'tr '+M([[1,2,3],[4,5,6],[7,8,9]]), a:15, hint:'Solo la diagonale.', sol:'1 + 5 + 9 = 15.' },
+    { id:'e2', type:'choice', q:M([[1,0],[0,2]])+' e '+M([[1,0],[0,3]])+' sono simili?', opts:['Sì, sono entrambe diagonali','No: hanno traccia diversa (3 e 4)'], a:1, hint:'Le simili hanno la stessa traccia.', sol:'tr = 3 contro tr = 4: non possono essere simili.' },
+    { id:'e3', type:'num', label:'det B =', q:'A ∼ B e det A = 6.', a:6, hint:'Il determinante non cambia per similitudine.', sol:'det B = det(M⁻¹·A·M) = det A = 6 (Binet).' },
+    { id:'e4', type:'choice', src:'trappola', q:'A = '+M([[1,1],[0,1]])+' e I = '+M([[1,0],[0,1]])+' hanno stesso det, stessa traccia e stesso p(λ) = (1 − λ)². Sono simili?', opts:['Sì, gli invarianti sono uguali','No: l\'unica matrice simile a I è I stessa'], a:1,
+      hint:'Calcola M⁻¹·I·M.', sol:'M⁻¹·I·M = M⁻¹·M = I per ogni M. Quindi nessuna matrice diversa da I è simile a I. Gli invarianti uguali non bastano.' },
+    { id:'e5', type:'nums', labels:['prima componente','seconda componente'], q:'B = ((1, 2), (0, 1)) base di R². Se [v]<sub>B</sub> = (1, 1), chi è v (in coordinate canoniche)?', a:[1,3], hint:'v = 1·(1, 2) + 1·(0, 1). Oppure M·(1, 1) con M = '+M([[1,0],[2,1]])+'.', sol:'v = (1, 2) + (0, 1) = (1, 3).' },
+    { id:'e6', type:'choice', q:'Radici di p<sub>A</sub>(λ) per A = '+M([[1,4,5],[0,2,6],[0,0,2]]), opts:['1, 2, 2','1, 4, 5','1, 2, 6'], a:0, hint:'È triangolare.', sol:'p<sub>A</sub>(λ) = (1 − λ)(2 − λ)²: radici 1 (semplice) e 2 (doppia).' },
+    { id:'e7', type:'nums', labels:['tr A =','det A ='], q:'A ∈ M(2, 2, R) ha p<sub>A</sub>(λ) = λ² − 5λ + 6.', a:[5,6], hint:'Confronta con λ² − tr A·λ + det A.', sol:'tr A = 5, det A = 6 (e gli autovalori sono 2 e 3).' },
+    { id:'e8', type:'choice', q:'tr(A·B) − tr(B·A) vale…', opts:['0 sempre','dipende da A e B','det A − det B'], a:0, hint:'Prop. 4.4.11.', sol:'tr(A·B) = tr(B·A) sempre, anche se A·B ≠ B·A.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 7 · AUTOVALORI E DIAGONALIZZAZIONE ================= -->
+  <div class="chapter" data-ch="autovalori" data-title="7 · Autovalori" data-date="11/12" data-full="Autovalori, autovettori, autospazi, diagonalizzabilità" data-src="Libro cap. 5, pp. 151-170" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 7 · giorno 11/12 · libro pp. 151-170</div>
+      <h2>I vettori che non cambiano direzione</h2>
+      <p class="big">Quasi tutti i vettori, quando applichi A, cambiano direzione. Alcuni speciali restano sulla loro retta: vengono solo allungati, accorciati o ribaltati. Si chiamano <b>autovettori</b>, e il numero per cui vengono moltiplicati è l'<b>autovalore</b>.</p>
+      <p>Se trovi abbastanza autovettori da fare una base, nella base di autovettori la matrice diventa <b>diagonale</b>. All'esame è quasi sempre un esercizio aperto: "dire se A è diagonalizzabile e trovare M".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Gira v finché A·v diventa verde</h2>
+      <p>La freccia nera è v, quella colorata è A·v. Quando A·v cade sulla <b>stessa retta</b> di v diventa verde: v è un autovettore. Le rette verdi tratteggiate sono gli autospazi (in R²).</p>
+      <canvas id="cv-eig" class="tall" aria-label="Vettore v e il suo trasformato A per v"></canvas>
+      <div class="controls" id="ctl-eig"></div>
+      <p class="readout" id="out-eig"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Autovalore e autovettore (Def. 5.1.1)</b>
+        <p>A ∈ M(n, n, K). Un vettore <b>v ∈ Kⁿ con v ≠ 0</b> è un autovettore se esiste λ ∈ K con</p>
+        <p class="math">A · v = λ · v</p>
+        <p>λ è l'autovalore relativo a v. Attenzione: v = 0 <b>non</b> è mai autovettore (altrimenti ogni λ andrebbe bene). λ = 0 invece può essere autovalore: vuol dire che ker A ≠ {0}, cioè det A = 0.</p>
+      </div>
+      <div class="def"><b>Come si trovano gli autovalori (Prop. 5.1.20)</b>
+        <p class="math">λ autovalore ⇔ det(A − λ·I<sub>n</sub>) = 0 ⇔ p<sub>A</sub>(λ) = 0</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Tre passaggi</summary><p>A·v = λ·v ⇔ A·v − λ·I·v = 0 ⇔ (A − λ·I)·v = 0. Esiste v ≠ 0 che risolve questo sistema omogeneo ⇔ ker(A − λ·I) ≠ {0} ⇔ A − λ·I non è invertibile ⇔ det(A − λ·I) = 0.</p></details>
+      </div>
+      <div class="def"><b>Autospazio (Def. 5.1.7)</b>
+        <p class="math">V<sub>λ</sub> = ker(A − λ·I<sub>n</sub>) = { v ∈ Kⁿ : A·v = λ·v }</p>
+        <p>Contiene tutti gli autovettori di λ <b>più</b> il vettore 0. È un sottospazio di Kⁿ.</p>
+      </div>
+      <div class="def"><b>Molteplicità algebrica e geometrica (Def. 5.1.27 e 5.1.30)</b>
+        <p><b>ma(λ)</b> = quante volte λ è radice di p<sub>A</sub>(λ). <b>mg(λ)</b> = dim V<sub>λ</sub>.</p>
+        <p class="math">mg(λ) = n − rk(A − λ·I<sub>n</sub>) &nbsp;&nbsp;&nbsp; 1 ≤ mg(λ) ≤ ma(λ)</p>
+        <span class="why easy">mg = n − rk: facile</span>
+        <details class="whybox"><summary>Perché</summary><p>V<sub>λ</sub> è il nucleo di A − λ·I. Per il teorema della dimensione (capitolo 4), dim ker = n − rk.</p></details>
+        <span class="why mem">mg ≤ ma: a memoria</span>
+        <details class="whybox"><summary>Perché è lungo</summary><p>La dimostrazione completa una base di V<sub>λ</sub> a base di Kⁿ e calcola il polinomio caratteristico di una matrice a blocchi (Prop. 5.1.31). Basta ricordare il risultato.</p></details>
+      </div>
+      <div class="def"><b>Criterio di diagonalizzabilità (Teorema 5.2.6)</b>
+        <p>A ∈ M(n, n, K) è <b>diagonalizzabile</b> (esiste M invertibile con M⁻¹·A·M = D diagonale) se e solo se:</p>
+        <p>1) p<sub>A</sub>(λ) si scompone in fattori di grado 1 <b>in K</b> (in R: tutte le radici sono reali), e</p>
+        <p>2) per ogni autovalore λ vale <b>mg(λ) = ma(λ)</b>.</p>
+        <p>Allora M ha per colonne una base di autovettori e D ha sulla diagonale gli autovalori, <b>nello stesso ordine</b> delle colonne di M.</p>
+        <span class="why mem">perché: a memoria</span>
+        <details class="whybox"><summary>Cosa ricordare</summary><p>La dimostrazione usa che autovettori di autovalori diversi sono indipendenti (Prop. 5.2.1). Il criterio va saputo usare, non dimostrato (salvo richiesta del prof).</p></details>
+      </div>
+      <div class="def"><b>Scorciatoie</b>
+        <p>• n autovalori <b>distinti</b> in K ⇒ A diagonalizzabile (Cor. 5.2.3). Ogni λ ha ma = 1 e quindi mg = 1.</p>
+        <p>• Matrice triangolare: gli autovalori sono i numeri sulla diagonale.</p>
+        <p>• Basta controllare mg = ma solo per gli autovalori con <b>ma ≥ 2</b>: per ma = 1 è automatico.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Diagonalizzare A = ${M([[2,1],[1,2]])}$</h2>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Polinomio caratteristico</h3><p>p<sub>A</sub>(λ) = det ${M([["2 − λ",1],[1,"2 − λ"]])}$ = (2 − λ)² − 1 = λ² − 4λ + 3 = (λ − 1)(λ − 3).</p></div>
+        <div class="step"><h3>Passo 2 · Autovalori e ma</h3><p>λ₁ = 1 con ma = 1, λ₂ = 3 con ma = 1. Tutte reali, distinte: già so che A è diagonalizzabile.</p></div>
+        <div class="step"><h3>Passo 3 · Autospazio di λ = 1</h3><p>A − 1·I = ${M([[1,1],[1,1]])}$. Sistema x + y = 0 in R²: V<sub>1</sub> = Span((1, −1)).</p></div>
+        <div class="step"><h3>Passo 4 · Autospazio di λ = 3</h3><p>A − 3·I = ${M([[-1,1],[1,-1]])}$. Sistema −x + y = 0 in R²: V<sub>3</sub> = Span((1, 1)).</p></div>
+        <div class="step"><h3>Passo 5 · Scrivi M e D</h3><p>M = ${M([[1,1],[-1,1]])}$ (colonne: autovettori), D = ${M([[1,0],[0,3]])}$. Prima colonna di M ↔ primo numero di D.</p><p>Controllo veloce: tr D = 4 = tr A, det D = 3 = det A.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Autospazi con Gauss</h2>
+      <p>Inserisci A − λ·I già calcolata. Il laboratorio trova il rango e quindi mg(λ) = n − rk(A − λ·I) (lo leggi come "dimensione delle soluzioni").</p>
+      <div id="lab-eig"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[1,1,0],[0,1,0],[0,0,2]])}$ è diagonalizzabile?</h2>
+      <p>Matrice reale 3 × 3, triangolare superiore.</p>
+      <div class="steps" id="guided-autovalori"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-autovalori"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>A·v = λ·v</b> con <b>v ≠ 0</b>. λ autovalore ⇔ det(A − λ·I) = 0.</li>
+        <li><b>V<sub>λ</sub> = ker(A − λ·I)</b>, mg(λ) = dim V<sub>λ</sub> = n − rk(A − λ·I).</li>
+        <li><b>1 ≤ mg ≤ ma</b> (a memoria).</li>
+        <li><b>Diagonalizzabile</b> ⇔ radici tutte in K e mg = ma per ogni λ. n autovalori distinti ⇒ diagonalizzabile.</li>
+        <li><b>M⁻¹·A·M = D</b>: colonne di M = autovettori, diagonale di D = autovalori nello stesso ordine.</li>
+        <li>Errore tipico: v = 0 non è autovettore. Controllo: tr D = tr A, det D = det A.</li>
+      </ul>
+      <div data-copy="autovalori"></div>
+    </section>
+    <div class="next"><a href="#caratteristico">← Capitolo 6</a><a href="#scalare">Capitolo 8 · Prodotto scalare →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, inp, M, transform, lab, guided, exercises } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="autovalori"] p, [data-ch="autovalori"] h2').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  transform('autovalori', 'cv-eig', 'ctl-eig', 'out-eig', { eigen:true, test:true, area:false, presets:[
+    { name:'Simmetrica (autovalori 1 e 3)', m:[2,1,1,2] },
+    { name:'Diagonale (2 e 0,5)', m:[2,0,0,0.5] },
+    { name:'Taglio: un solo autospazio', m:[1,1,0,1] },
+    { name:'Rotazione 90°: nessuno', m:[0,-1,1,0] },
+    { name:'Autovalore negativo (ribalta)', m:[1,2,2,1] }
+  ]});
+
+  lab('lab-eig', { show:['kernel'], presets:[
+    { name:'A − 1·I della ricetta', rows:[[1,1],[1,1]] },
+    { name:'Guidato: A − 1·I', rows:[[0,1,0],[0,0,0],[0,0,1]] },
+    { name:'Guidato: A − 2·I', rows:[[-1,1,0],[0,-1,0],[0,0,0]] },
+    { name:'mg = 2: (A − 2I) di diag(2,2,5)', rows:[[0,0,0],[0,0,0],[0,0,3]] },
+    { name:'Esercizio 6: A − 2·I', rows:[[-1,0,1],[0,0,0],[1,0,-1]] }
+  ]});
+
+  guided('autovalori', [
+    { h:'Passo 1 · Autovalori (leggili sulla diagonale) con la loro ma', type:'nums', ans:[1,2,2,1], html:'λ₁ = '+inp('primo autovalore')+' con ma = '+inp('molteplicità algebrica del primo')+'<br>λ₂ = '+inp('secondo autovalore')+' con ma = '+inp('molteplicità algebrica del secondo'),
+      ok:'Sì: p<sub>A</sub>(λ) = (1 − λ)²·(2 − λ). λ = 1 con ma = 2, λ = 2 con ma = 1.', bad:'Triangolare: p<sub>A</sub>(λ) = (1 − λ)(1 − λ)(2 − λ). Conta quante volte compare ogni numero. Scrivi prima 1, poi 2.' },
+    { h:'Passo 2 · Quale autovalore devo controllare?', type:'choice', ans:0, opts:['Solo λ = 1, perché ha ma = 2','Solo λ = 2','Tutti e due allo stesso modo'],
+      ok:'Esatto: per ma = 1 vale sempre mg = 1. Il rischio è solo dove ma ≥ 2.', bad:'Se ma = 1, allora 1 ≤ mg ≤ 1, quindi mg = 1 in automatico.' },
+    { h:'Passo 3 · rk(A − 1·I) e mg(1)', type:'nums', ans:[2,1], html:'A − 1·I = '+M([[0,1,0],[0,0,0],[0,0,1]])+'<br>rk(A − 1·I) = '+inp('rango')+' &nbsp; mg(1) = 3 − rk = '+inp('mg'),
+      ok:'Sì: due righe non nulle e indipendenti, rk = 2, mg(1) = 3 − 2 = 1.', bad:'Conta le righe non nulle (sono già a scala). Poi mg = n − rk con n = 3.' },
+    { h:'Passo 4 · Conclusione', type:'choice', ans:1, opts:['Diagonalizzabile','Non diagonalizzabile: mg(1) = 1 ≠ 2 = ma(1)'],
+      ok:'Giusto. Le radici sono tutte reali, ma per λ = 1 manca un autovettore: non c\'è una base di autovettori.', bad:'Il criterio chiede mg = ma per ogni λ. Per λ = 1: mg = 1, ma = 2.' }
+  ], '<b>Fatto!</b> A non è diagonalizzabile: per λ = 1 si ha ma(1) = 2 ma mg(1) = 1. È lo stesso fenomeno del "taglio" nel disegno: un solo autospazio dove ne servirebbero due.');
+
+  exercises('autovalori', [
+    { id:'e1', type:'choice', q:'Per A = '+M([[3,0],[0,3]])+', il vettore v = 0 è un autovettore?', opts:['Sì, A·0 = 3·0','No: per definizione v ≠ 0'], a:1, hint:'Rileggi la definizione.', sol:'Gli autovettori sono non nulli per definizione. A·0 = λ·0 per ogni λ, quindi 0 non direbbe niente.' },
+    { id:'e2', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[5,4],[1,2]]), a:[1,6], hint:'tr A = 7, det A = 6: λ² − 7λ + 6.', sol:'λ² − 7λ + 6 = (λ − 1)(λ − 6): autovalori 1 e 6.' },
+    { id:'e3', type:'choice', q:'A = '+M([[5,4],[1,2]])+': un autovettore di λ = 6 è…', opts:['(4, 1)','(1, −1)','(1, 4)'], a:0, hint:'Prova A·v e guarda se è 6·v.', sol:'A·(4, 1) = (24, 6) = 6·(4, 1). (1, −1) è autovettore di λ = 1.' },
+    { id:'e4', type:'choice', q:'A = '+M([[0,-1],[1,0]])+' (rotazione di 90°) in M(2, 2, R) è diagonalizzabile?', opts:['Sì','No: p<sub>A</sub>(λ) = λ² + 1 non ha radici reali'], a:1, hint:'Calcola p<sub>A</sub>(λ).', sol:'λ² + 1 = 0 non ha soluzioni in R: manca la condizione 1). In M(2, 2, C) invece sì (autovalori i e −i).' },
+    { id:'e5', type:'choice', q:'A ∈ M(3, 3, R) ha autovalori 1, 2, 7. È diagonalizzabile?', opts:['Sì, sempre','Dipende dagli autospazi','No'], a:0, hint:'Cor. 5.2.3.', sol:'Tre autovalori distinti per una 3 × 3: ognuno ha ma = mg = 1, quindi sì.' },
+    { id:'e6', type:'num', label:'mg(2) =', src:'esame', q:'A = '+M([[1,0,1],[0,2,0],[1,0,1]])+' ha p<sub>A</sub>(λ) = −λ·(λ − 2)², quindi ma(2) = 2. Calcola mg(2) = 3 − rk(A − 2·I).', a:2, hint:'A − 2I = '+M([[-1,0,1],[0,0,0],[1,0,-1]])+': la terza riga è −1 volte la prima.', sol:'rk(A − 2I) = 1, quindi mg(2) = 3 − 1 = 2 = ma(2). Con λ = 0 (ma = 1) tutto torna: A è diagonalizzabile.' },
+    { id:'e7', type:'choice', q:'Se λ = 0 è autovalore di A, allora…', opts:['det A = 0','A = 0','tr A = 0'], a:0, hint:'det(A − 0·I) = ?', sol:'p<sub>A</sub>(0) = det A = 0. A non è invertibile.' },
+    { id:'e8', type:'choice', src:'esame', q:'A = '+M([[2,0,0],[0,2,0],[0,0,5]])+' e B = '+M([[2,1,0],[0,2,0],[0,0,5]])+'. Quale è diagonalizzabile?', opts:['Tutte e due','Solo A','Solo B','Nessuna'], a:1, hint:'Stessi autovalori (2 doppio, 5). Calcola mg(2) per entrambe.', sol:'A è già diagonale. Per B: B − 2I = '+M([[0,1,0],[0,0,0],[0,0,3]])+' ha rango 2, mg(2) = 1 ≠ 2 = ma(2): B non è diagonalizzabile.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 8 · PRODOTTO SCALARE ================= -->
+  <div class="chapter" data-ch="scalare" data-title="8 · Prodotto scalare" data-date="15/12" data-full="Prodotto scalare, norma, angoli, ortogonalità, Gram-Schmidt" data-src="Libro pp. 199-201, 205-206, 229-230, 239-253" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 8 · giorno 15/12 · libro pp. 199-253 (parti indicate)</div>
+      <h2>Lunghezze e angoli tra vettori</h2>
+      <p class="big">Finora i vettori si potevano solo sommare e moltiplicare per numeri. Il <b>prodotto scalare</b> aggiunge la geometria: quanto è lungo un vettore, che angolo fanno due vettori, quando sono perpendicolari.</p>
+      <p>Lavoriamo in Rⁿ con il prodotto scalare <b>euclideo</b> (quello standard). Servirà nel capitolo 9 per il teorema spettrale.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Prodotto scalare, angolo, proiezione</h2>
+      <p>Muovi u (blu) e w (arancione). Il segmento viola è la <b>proiezione</b> di u sulla retta di w. Quando u e w sono perpendicolari, ⟨u, w⟩ = 0 e la proiezione sparisce.</p>
+      <canvas id="cv-sc" aria-label="Due vettori u e w con la proiezione di u su w"></canvas>
+      <div class="controls">
+        <label>u₁ <input type="range" id="sc-u1" min="-3" max="3" step="0.5" value="1"> <b id="sc-u1v"></b></label>
+        <label>u₂ <input type="range" id="sc-u2" min="-3" max="3" step="0.5" value="2"> <b id="sc-u2v"></b></label>
+        <label>w₁ <input type="range" id="sc-w1" min="-3" max="3" step="0.5" value="3"> <b id="sc-w1v"></b></label>
+        <label>w₂ <input type="range" id="sc-w2" min="-3" max="3" step="0.5" value="0"> <b id="sc-w2v"></b></label>
+      </div>
+      <p class="readout" id="sc-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Prodotto scalare euclideo su Rⁿ</b>
+        <p class="math">⟨x, y⟩ = x₁·y₁ + x₂·y₂ + … + x<sub>n</sub>·y<sub>n</sub> = <sup>t</sup>x · y</p>
+        <p>È un numero (non un vettore). È simmetrico, lineare in ogni argomento e <b>definito positivo</b>: ⟨x, x⟩ &gt; 0 per ogni x ≠ 0.</p>
+      </div>
+      <div class="def"><b>Norma (lunghezza)</b>
+        <p class="math">‖x‖ = √⟨x, x⟩ = √(x₁² + … + x<sub>n</sub>²)</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>È Pitagora</summary><p>In R² la freccia (x₁, x₂) è l'ipotenusa di un triangolo rettangolo con cateti |x₁| e |x₂|. In Rⁿ si ripete Pitagora una coordinata alla volta.</p></details>
+        <p>Un vettore con ‖x‖ = 1 si dice <b>unitario</b>. Per renderlo unitario: x / ‖x‖ (si "normalizza").</p>
+      </div>
+      <div class="def"><b>Angolo tra due vettori non nulli</b>
+        <p class="math">cos θ = ⟨x, y⟩ / (‖x‖ · ‖y‖), &nbsp; θ ∈ [0, π]</p>
+        <span class="why mem">perché: a memoria</span>
+        <details class="whybox"><summary>Da dove viene</summary><p>In R² è il teorema del coseno (Carnot). In Rⁿ si usa come <b>definizione</b> dell'angolo, e funziona grazie alla disuguaglianza di Cauchy-Schwarz |⟨x, y⟩| ≤ ‖x‖·‖y‖, che garantisce un numero tra −1 e 1. Ricorda la formula.</p></details>
+        <p>Segno di ⟨x, y⟩: positivo ⇒ angolo acuto; zero ⇒ retto; negativo ⇒ ottuso.</p>
+      </div>
+      <div class="def"><b>Ortogonalità</b>
+        <p>x e y sono <b>ortogonali</b> (x ⊥ y) se ⟨x, y⟩ = 0. Vettori non nulli a due a due ortogonali sono sempre <b>linearmente indipendenti</b>.</p>
+        <p>W ⊆ Rⁿ sottospazio. Il suo <b>ortogonale</b> è W<sup>⊥</sup> = { v ∈ Rⁿ : ⟨v, w⟩ = 0 per ogni w ∈ W }.</p>
+        <p class="math">dim W<sup>⊥</sup> = n − dim W</p>
+        <p>In pratica: se W = Span(w₁, …, w<sub>k</sub>), allora W<sup>⊥</sup> è dato dal sistema ⟨v, w₁⟩ = 0, …, ⟨v, w<sub>k</sub>⟩ = 0. Esempio: W = Span((1, 1, 1)) in R³ ⇒ W<sup>⊥</sup> = { x + y + z = 0 }.</p>
+        <span class="why easy">dim: facile</span>
+        <details class="whybox"><summary>Perché</summary><p>W<sup>⊥</sup> è il nucleo della matrice k × n con righe w₁, …, w<sub>k</sub> (base di W), che ha rango k = dim W. Teorema della dimensione: n − k.</p></details>
+      </div>
+      <div class="def"><b>Proiezione ortogonale su una retta</b>
+        <p class="math">proj<sub>w</sub>(v) = ( ⟨v, w⟩ / ⟨w, w⟩ ) · w</p>
+        <p>È la "ombra" di v sulla retta Span(w). Il resto v − proj<sub>w</sub>(v) è ortogonale a w.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Il conto</summary><p>Cerco c con v − c·w ⊥ w: ⟨v − c·w, w⟩ = 0 ⇒ ⟨v, w⟩ − c·⟨w, w⟩ = 0 ⇒ c = ⟨v, w⟩ / ⟨w, w⟩.</p></details>
+      </div>
+      <div class="def"><b>Gram-Schmidt</b>
+        <p>Da una base (v₁, …, v<sub>k</sub>) ottieni una base <b>ortogonale</b> (w₁, …, w<sub>k</sub>) dello stesso spazio:</p>
+        <p class="math">w₁ = v₁ <br>w₂ = v₂ − (⟨v₂, w₁⟩/⟨w₁, w₁⟩)·w₁ <br>w₃ = v₃ − (⟨v₃, w₁⟩/⟨w₁, w₁⟩)·w₁ − (⟨v₃, w₂⟩/⟨w₂, w₂⟩)·w₂</p>
+        <p>Ogni volta togli le proiezioni sui w già trovati. Per una base <b>ortonormale</b> dividi alla fine ogni w<sub>i</sub> per ‖w<sub>i</sub>‖.</p>
+      </div>
+      <div class="def"><b>Matrici ortogonali</b>
+        <p>A ∈ M(n, n, R) è <b>ortogonale</b> se <sup>t</sup>A · A = I<sub>n</sub>, cioè A⁻¹ = <sup>t</sup>A. Equivale a: le colonne di A sono una base ortonormale di Rⁿ.</p>
+        <p>Allora det A = ±1 e A conserva lunghezze e angoli (rotazioni e riflessioni).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Base ortonormale di W = { x + y + z = 0 } ⊆ R³</h2>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Una base qualsiasi di W</h3><p>x = −y − z. Con y = 1, z = 0: v₁ = (−1, 1, 0). Con y = 0, z = 1: v₂ = (−1, 0, 1).</p></div>
+        <div class="step"><h3>Passo 2 · w₁ = v₁</h3><p>w₁ = (−1, 1, 0), ⟨w₁, w₁⟩ = 1 + 1 + 0 = 2.</p></div>
+        <div class="step"><h3>Passo 3 · Togli a v₂ la proiezione su w₁</h3><p>⟨v₂, w₁⟩ = 1 + 0 + 0 = 1. w₂ = (−1, 0, 1) − (1/2)·(−1, 1, 0) = (−1/2, −1/2, 1).</p><p>Controllo: ⟨w₂, w₁⟩ = 1/2 − 1/2 + 0 = 0. ✓</p></div>
+        <div class="step"><h3>Passo 4 · Normalizza</h3><p>‖w₁‖ = √2, ‖w₂‖ = √(1/4 + 1/4 + 1) = √(3/2).</p><p>Base ortonormale: ( (1/√2)·(−1, 1, 0), &nbsp;√(2/3)·(−1/2, −1/2, 1) ).</p><p>Trucco: puoi moltiplicare w₂ per 2 prima di normalizzare, (−1, −1, 2), e i conti vengono più puliti: (1/√6)·(−1, −1, 2).</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Gram-Schmidt su v₁ = (1, 1, 0), v₂ = (1, 0, 1)</h2>
+      <p>Trova una base ortogonale (w₁, w₂) di U = Span(v₁, v₂) ⊆ R³.</p>
+      <div class="steps" id="guided-scalare"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-scalare"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>⟨x, y⟩ = Σ x<sub>i</sub>·y<sub>i</sub></b> (un numero). ‖x‖ = √⟨x, x⟩.</li>
+        <li><b>cos θ = ⟨x, y⟩ / (‖x‖·‖y‖)</b> (a memoria). ⟨x, y⟩ = 0 ⇔ ortogonali.</li>
+        <li><b>proj<sub>w</sub>(v) = (⟨v, w⟩/⟨w, w⟩)·w</b>.</li>
+        <li><b>Gram-Schmidt</b>: w<sub>k</sub> = v<sub>k</sub> − somma delle proiezioni di v<sub>k</sub> sui w già trovati. Poi normalizza.</li>
+        <li><b>W<sup>⊥</sup></b>: sistema ⟨v, w<sub>i</sub>⟩ = 0. dim W<sup>⊥</sup> = n − dim W.</li>
+        <li><b>Ortogonale</b>: <sup>t</sup>A·A = I, A⁻¹ = <sup>t</sup>A, colonne ortonormali, det A = ±1.</li>
+      </ul>
+      <div data-copy="scalare"></div>
+    </section>
+    <div class="next"><a href="#autovalori">← Capitolo 7</a><a href="#spettrale">Capitolo 9 · Teorema spettrale →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, guided, exercises } = Lav;
+  const B = Board($('cv-sc'), {xmin:-3.6,xmax:3.6,ymin:-3.4,ymax:3.4});
+  const ks = ['u1','u2','w1','w2'];
+  const draw = () => {
+    const [u1,u2,w1,w2] = ks.map(k=>+$('sc-'+k).value); ks.forEach(k=>$('sc-'+k+'v').textContent=it(+$('sc-'+k).value,1));
+    if (!B.fit()) return; B.grid();
+    const dot=u1*w1+u2*w2, nu=Math.hypot(u1,u2), nw=Math.hypot(w1,w2);
+    let txt = 'u = ('+it(u1,1)+', '+it(u2,1)+'), w = ('+it(w1,1)+', '+it(w2,1)+')<br>⟨u, w⟩ = '+it(u1,1)+'·'+it(w1,1)+' + '+it(u2,1)+'·'+it(w2,1)+' = <b>'+it(dot,2)+'</b>';
+    if (nw>1e-9){ B.through(w1,w2,'--line',1.5,[6,6]);
+      const c=dot/(nw*nw), p=[c*w1,c*w2];
+      B.seg(u1,u2,p[0],p[1],'--muted',1.5,[4,4]);
+      txt += '<br>proj<sub>w</sub>(u) = ('+it(dot,2)+' / '+it(nw*nw,2)+')·w = ('+it(p[0],2)+', '+it(p[1],2)+')';
+    }
+    B.arrow(0,0,w1,w2,'--v','w'); B.arrow(0,0,u1,u2,'--u','u');
+    if (nw>1e-9){ const c=dot/(nw*nw); if (Math.hypot(c*w1,c*w2)>1e-9) B.arrow(0,0,c*w1,c*w2,'--w','proj',5); }
+    txt += '<br>‖u‖ = '+it(nu,3)+', ‖w‖ = '+it(nw,3);
+    if (nu>1e-9 && nw>1e-9){ const cs=Math.max(-1,Math.min(1,dot/(nu*nw))), th=Math.acos(cs)*180/Math.PI;
+      txt += '<br>cos θ = '+it(cs,3)+' → θ ≈ '+it(th,1)+'° &nbsp;'+(Math.abs(dot)<1e-9?'<b style="color:var(--ok)">u ⊥ w: angolo retto</b>':dot>0?'(acuto: ⟨u, w⟩ &gt; 0)':'(ottuso: ⟨u, w⟩ &lt; 0)'); }
+    $('sc-out').innerHTML = txt;
+  };
+  ks.forEach(k=>$('sc-'+k).addEventListener('input', draw)); onDraw('scalare', draw);
+
+  guided('scalare', [
+    { h:'Passo 1 · w₁ = v₁. Calcola ⟨w₁, w₁⟩ e ⟨v₂, w₁⟩', type:'nums', ans:[2,1], html:'⟨w₁, w₁⟩ = '+inp('w1 per w1')+' &nbsp; ⟨v₂, w₁⟩ = '+inp('v2 per w1'),
+      ok:'Sì: ⟨(1,1,0), (1,1,0)⟩ = 2 e ⟨(1,0,1), (1,1,0)⟩ = 1 + 0 + 0 = 1.', bad:'Moltiplica componente per componente e somma.' },
+    { h:'Passo 2 · w₂ = v₂ − (1/2)·w₁ (puoi scrivere 1/2)', type:'nums', ans:[0.5,-0.5,1], html:'w₂ = ( '+inp('prima')+' , '+inp('seconda')+' , '+inp('terza')+' )',
+      ok:'Perfetto: (1, 0, 1) − (1/2, 1/2, 0) = (1/2, −1/2, 1).', bad:'(1/2)·w₁ = (1/2, 1/2, 0). Sottrailo da (1, 0, 1) componente per componente.' },
+    { h:'Passo 3 · Controllo: ⟨w₂, w₁⟩ = ?', type:'nums', ans:[0], html:'⟨w₂, w₁⟩ = '+inp('prodotto'),
+      ok:'Sì, 1/2 − 1/2 + 0 = 0: sono ortogonali.', bad:'(1/2)·1 + (−1/2)·1 + 1·0.' },
+    { h:'Passo 4 · ‖w₁‖ = ?', type:'choice', ans:1, opts:['2','√2','1'],
+      ok:'Esatto: ‖w₁‖ = √⟨w₁, w₁⟩ = √2. Per normalizzare: w₁/√2.', bad:'La norma è la radice di ⟨w₁, w₁⟩.' }
+  ], '<b>Fatto!</b> Base ortogonale di U: w₁ = (1, 1, 0), w₂ = (1/2, −1/2, 1) (o, più pulito, (1, −1, 2)). Ortonormale: (1/√2)·(1, 1, 0) e (1/√6)·(1, −1, 2).');
+
+  exercises('scalare', [
+    { id:'e1', type:'num', label:'⟨x, y⟩ =', q:'x = (1, 2, 3), y = (4, −1, 0) in R³', a:2, hint:'1·4 + 2·(−1) + 3·0.', sol:'4 − 2 + 0 = 2.' },
+    { id:'e2', type:'num', label:'‖x‖ =', q:'x = (3, 4) in R²', a:5, hint:'√(9 + 16).', sol:'√25 = 5.' },
+    { id:'e3', type:'num', label:'k =', q:'Per quale k ∈ R i vettori (1, k, 2) e (3, 1, −1) sono ortogonali?', a:-1, hint:'Imponi ⟨·,·⟩ = 0.', sol:'3 + k − 2 = 0 ⇒ k = −1.' },
+    { id:'e4', type:'nums', labels:['prima','seconda'], q:'Proiezione di v = (2, 3) sulla retta Span(w), w = (1, 1)', a:[2.5,2.5], hint:'⟨v, w⟩ = 5, ⟨w, w⟩ = 2.', sol:'(5/2)·(1, 1) = (5/2, 5/2).' },
+    { id:'e5', type:'choice', q:'Angolo tra (1, 0) e (1, 1)?', opts:['π/6','π/4','π/3','π/2'], a:1, hint:'cos θ = 1/(1·√2).', sol:'cos θ = 1/√2 = √2/2 ⇒ θ = π/4.' },
+    { id:'e6', type:'num', label:'dim W<sup>⊥</sup> =', q:'W = Span((1, 1, 1)) ⊆ R³', a:2, hint:'n − dim W.', sol:'3 − 1 = 2. W<sup>⊥</sup> = { x + y + z = 0 }, un piano.' },
+    { id:'e7', type:'choice', q:'Quale matrice è ortogonale?', opts:[M([[1,1],[0,1]]), M([[0,1],[1,0]]), M([[2,0],[0,1/2]])], a:1, hint:'Le colonne devono avere norma 1 ed essere ortogonali tra loro.', sol:'Le colonne (0, 1) e (1, 0) sono unitarie e ortogonali. La prima ha una colonna di norma √2; la terza ha colonne di norma 2 e 1/2.' },
+    { id:'e8', type:'nums', labels:['prima','seconda'], q:'Normalizza x = (3, 4)', a:[0.6,0.8], hint:'Dividi per ‖x‖ = 5.', sol:'(3/5, 4/5).' },
+    { id:'e9', type:'choice', src:'trappola', q:'⟨x, y⟩ = 0 con x, y ∈ Rⁿ. Allora…', opts:['x = 0 oppure y = 0','x e y sono ortogonali (possono essere entrambi non nulli)','x = y'], a:1, hint:'Pensa a (1, 0) e (0, 1).', sol:'Non è come il prodotto di numeri: ⟨(1,0), (0,1)⟩ = 0 con entrambi non nulli.' }
+  ]);
+})();
+</script>
+  <!-- ================= CAPITOLO 9 · TEOREMA SPETTRALE ================= -->
+  <div class="chapter" data-ch="spettrale" data-title="9 · Teorema spettrale" data-date="18/12" data-full="Basi ortonormali e teorema spettrale" data-src="Libro pp. 219-221, 352-355" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 9 · giorno 18/12 · libro pp. 219-221 e 352-355</div>
+      <h2>Le matrici simmetriche sono sempre "belle"</h2>
+      <p class="big">Nel capitolo 7 hai visto che non tutte le matrici sono diagonalizzabili. Il teorema spettrale dice che le matrici reali <b>simmetriche</b> (<sup>t</sup>A = A) lo sono <b>sempre</b>, e in più gli autovettori si possono scegliere <b>perpendicolari</b> tra loro e di lunghezza 1.</p>
+      <p>Unisce i capitoli 7 (autovalori) e 8 (prodotto scalare, Gram-Schmidt). All'esame: "trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il cerchio diventa un'ellisse</h2>
+      <p>Il cerchio grigio ha raggio 1; A lo trasforma nella curva viola. Se A è simmetrica (b = c) la curva è un'<b>ellisse</b> e i suoi assi sono le rette verdi degli autovettori: <b>perpendicolari</b>. Le semi-lunghezze degli assi sono |λ₁| e |λ₂|. Prova a rendere b ≠ c: le rette verdi non sono più perpendicolari.</p>
+      <canvas id="cv-sp" class="tall" aria-label="Il cerchio unitario e la sua immagine tramite A"></canvas>
+      <div class="controls" id="ctl-sp"></div>
+      <p class="readout" id="out-sp"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Base ortonormale</b>
+        <p>(v₁, …, v<sub>n</sub>) base di Rⁿ è <b>ortonormale</b> se ⟨v<sub>i</sub>, v<sub>j</sub>⟩ = 0 per i ≠ j e ‖v<sub>i</sub>‖ = 1 per ogni i.</p>
+        <p>Vantaggio: le coordinate si trovano senza sistemi: v = ⟨v, v₁⟩·v₁ + … + ⟨v, v<sub>n</sub>⟩·v<sub>n</sub>.</p>
+        <p>La matrice M con colonne v₁, …, v<sub>n</sub> è <b>ortogonale</b>: M⁻¹ = <sup>t</sup>M (niente inversa da calcolare!).</p>
+      </div>
+      <div class="def"><b>Teorema spettrale (versione matrici reali)</b>
+        <p>Sia A ∈ M(n, n, R) <b>simmetrica</b>. Allora:</p>
+        <p>1) tutti gli autovalori di A sono <b>reali</b> (p<sub>A</sub> si scompone in R);</p>
+        <p>2) autovettori di autovalori <b>diversi</b> sono <b>ortogonali</b>;</p>
+        <p>3) esiste una base <b>ortonormale</b> di Rⁿ fatta di autovettori, cioè esiste M ortogonale con</p>
+        <p class="math"><sup>t</sup>M · A · M = M⁻¹ · A · M = D diagonale</p>
+        <p>Vale anche il viceversa: se A è diagonalizzabile con una M ortogonale, allora A è simmetrica.</p>
+        <span class="why mem">dimostrazione: a memoria / se richiesta</span>
+        <details class="whybox"><summary>Cosa si può capire facilmente</summary><p>Il punto 2) ha un conto corto: se A·v = λ·v e A·w = μ·w, allora λ·⟨v, w⟩ = ⟨A·v, w⟩ = ⟨v, A·w⟩ = μ·⟨v, w⟩ (la seconda uguaglianza usa <sup>t</sup>A = A). Con λ ≠ μ resta ⟨v, w⟩ = 0. I punti 1) e 3) hanno dimostrazioni più lunghe: imparale a memoria, salvo che il prof le chieda.</p></details>
+      </div>
+      <div class="def"><b>Conseguenza pratica</b>
+        <p>Per una simmetrica <b>non serve</b> controllare mg = ma: è sempre vero. Serve solo:</p>
+        <p>• autospazi di autovalori diversi: già ortogonali, basta normalizzare;</p>
+        <p>• dentro un autospazio con mg ≥ 2: la base che trovi col sistema di solito <b>non</b> è ortogonale, quindi usi Gram-Schmidt (capitolo 8).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>A = ${M([[1,1,1],[1,1,1],[1,1,1]])}$: trova M ortogonale</h2>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Autovalori</h3><p>rk A = 1, quindi ker A ha dimensione 3 − 1 = 2: λ = 0 con mg = 2. tr A = 3 = somma degli autovalori = 0 + 0 + λ₃ ⇒ λ₃ = 3.</p><p>p<sub>A</sub>(λ) = −λ²·(λ − 3).</p></div>
+        <div class="step"><h3>Passo 2 · Autospazio di λ = 3</h3><p>A·(1, 1, 1) = (3, 3, 3): V<sub>3</sub> = Span((1, 1, 1)). Normalizzo: (1/√3)·(1, 1, 1).</p></div>
+        <div class="step"><h3>Passo 3 · Autospazio di λ = 0</h3><p>V<sub>0</sub> = ker A = { x + y + z = 0 }. Base dal sistema: (−1, 1, 0), (−1, 0, 1). Non sono ortogonali (prodotto = 1).</p></div>
+        <div class="step"><h3>Passo 4 · Gram-Schmidt dentro V<sub>0</sub></h3><p>È proprio la ricetta del capitolo 8: (1/√2)·(−1, 1, 0) e (1/√6)·(−1, −1, 2).</p><p>Sono automaticamente ortogonali a (1, 1, 1) (teorema, punto 2).</p></div>
+        <div class="step"><h3>Passo 5 · M e D</h3><p class="math">M = ( (1/√3)(1,1,1) | (1/√2)(−1,1,0) | (1/√6)(−1,−1,2) ) &nbsp; (colonne)</p><p>D = ${M([[3,0,0],[0,0,0],[0,0,0]])}$, nello stesso ordine delle colonne. <sup>t</sup>M·A·M = D.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[2,1],[1,2]])}$: M ortogonale con <sup>t</sup>M·A·M = D</h2>
+      <div class="steps" id="guided-spettrale"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-spettrale"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>A reale simmetrica</b> ⇒ autovalori reali, autovettori di λ diversi ortogonali, esiste M ortogonale con <sup>t</sup>M·A·M = D.</li>
+        <li><b>M ortogonale</b>: colonne = base ortonormale di autovettori; M⁻¹ = <sup>t</sup>M.</li>
+        <li>Ricetta: autovalori → base di ogni V<sub>λ</sub> → Gram-Schmidt solo dentro i V<sub>λ</sub> con mg ≥ 2 → normalizza tutto → M e D nello stesso ordine.</li>
+        <li>Disegno: il cerchio unitario va in un'ellisse con assi lungo gli autovettori, semi-assi |λ<sub>i</sub>|.</li>
+      </ul>
+      <div data-copy="spettrale"></div>
+    </section>
+    <div class="next"><a href="#scalare">← Capitolo 8</a><a href="#sistemi">Ripasso · Sistemi →</a></div>
+  </div>
+<script>
+(function(){
+  const { inp, M, transform, guided, exercises } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="spettrale"] p, [data-ch="spettrale"] h2').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  transform('spettrale', 'cv-sp', 'ctl-sp', 'out-sp', { eigen:true, circle:true, area:false, presets:[
+    { name:'Simmetrica: autovalori 1 e 3', m:[2,1,1,2] },
+    { name:'Simmetrica: 2 e −1 (ribalta un asse)', m:[1,-1.5,-1.5,1] },
+    { name:'Diagonale: assi = assi cartesiani', m:[2,0,0,1] },
+    { name:'Non simmetrica (b ≠ c)', m:[2,1.5,0,1] }
+  ]});
+
+  guided('spettrale', [
+    { h:'Passo 1 · Autovalori (prima il minore)', type:'nums', ans:[1,3], html:'λ₁ = '+inp('autovalore minore')+' &nbsp; λ₂ = '+inp('autovalore maggiore'),
+      ok:'Sì: λ² − 4λ + 3 = (λ − 1)(λ − 3).', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
+    { h:'Passo 2 · Autovettori: V<sub>1</sub> = Span((1, −1)), V<sub>3</sub> = Span((1, 1)). Quanto vale ⟨(1, −1), (1, 1)⟩?', type:'nums', ans:[0], html:'⟨(1, −1), (1, 1)⟩ = '+inp('prodotto scalare'),
+      ok:'Zero: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
+    { h:'Passo 3 · Per normalizzare divido ognuno per…', type:'choice', ans:1, opts:['2','√2','1/2'],
+      ok:'Giusto: ‖(1, −1)‖ = ‖(1, 1)‖ = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
+    { h:'Passo 4 · Quale M dà <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'?', type:'choice', ans:0, opts:['(1/√2)·'+M([[1,1],[-1,1]]), '(1/√2)·'+M([[1,1],[1,-1]]), M([[1,1],[-1,1]])],
+      ok:'Esatto: prima colonna = autovettore di 1, seconda = autovettore di 3, entrambe di norma 1.', bad:'L\'ordine delle colonne deve seguire D (prima λ = 1, poi λ = 3) e le colonne devono avere norma 1.' }
+  ], '<b>Fatto!</b> M = (1/√2)·'+M([[1,1],[-1,1]])+' è ortogonale (M⁻¹ = <sup>t</sup>M) e <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'.');
+
+  exercises('spettrale', [
+    { id:'e1', type:'choice', q:'A ∈ M(4, 4, R) simmetrica. Allora A è diagonalizzabile?', opts:['Sempre','Solo se ha 4 autovalori distinti','Dipende'], a:0, hint:'Teorema spettrale.', sol:'Sempre, e addirittura con M ortogonale.' },
+    { id:'e2', type:'choice', q:'Quale matrice è diagonalizzabile con una M ortogonale?', opts:[M([[1,2],[0,3]]), M([[1,2],[2,3]]), M([[0,-1],[1,0]])], a:1, hint:'Serve la simmetria.', sol:M([[1,2],[2,3]])+' è simmetrica. La prima è diagonalizzabile (autovalori 1 e 3) ma non con M ortogonale; la terza non ha autovalori reali.' },
+    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'λ² − 25 = 0 ⇒ λ = −5 e λ = 5.' },
+    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'x = 2y: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
+    { id:'e5', type:'choice', q:'M ortogonale. Allora M⁻¹ = …', opts:['M','<sup>t</sup>M','−M'], a:1, hint:'Definizione di ortogonale.', sol:'<sup>t</sup>M·M = I ⇒ M⁻¹ = <sup>t</sup>M.' },
+    { id:'e6', type:'num', label:'mg(2) =', q:'A ∈ M(3, 3, R) simmetrica con p<sub>A</sub>(λ) = −(λ − 2)²·(λ − 7).', a:2, hint:'Per le simmetriche mg = ma sempre.', sol:'mg(2) = ma(2) = 2.' },
+    { id:'e7', type:'choice', src:'trappola', q:'Autovettori (1, 1, 0) di λ = 1 e (1, 0, k) di λ = 4 di una A simmetrica. Allora k…', opts:['può essere qualsiasi','deve essere tale che (1, 0, k) ⊥ (1, 1, 0), ma questo è impossibile: allora non può succedere','k = 0'], a:1, hint:'⟨(1, 1, 0), (1, 0, k)⟩ = 1 per ogni k.', sol:'Autovettori di autovalori diversi devono essere ortogonali, ma il prodotto vale sempre 1 ≠ 0: una A simmetrica così non esiste.' },
+    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'(1/3, 2/3, 2/3).' }
+  ]);
+})();
+</script>
+  <!-- ================= RIPASSO 1 · SISTEMI LINEARI ================= -->
+  <div class="chapter" data-ch="sistemi" data-title="R1 · Sistemi lineari" data-date="ripasso" data-full="Ripasso: sistemi lineari, Gauss, Rouché-Capelli, sistemi con parametro" data-src="Libro cap. 1-2 e Teorema di Rouché-Capelli" hidden>
+    <section class="board">
+      <div class="eyebrow">Ripasso 1 · da usare quando serve</div>
+      <h2>Sistemi lineari e Rouché-Capelli</h2>
+      <p class="big">Quasi ogni esercizio di Geometria finisce in un sistema lineare: nuclei, autospazi, intersezioni, coordinate. Qui ripassi il metodo completo e i sistemi <b>con un parametro k</b>, dove c'è la trappola che hai già incontrato: <b>dividere per un'espressione che può valere 0</b>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Due rette nel piano: 1, 0 o infinite soluzioni</h2>
+      <p>La retta blu è fissa: x + y = 2. Muovi la retta arancione a·x + b·y = c. Le soluzioni del sistema sono i punti in comune.</p>
+      <canvas id="cv-sis" aria-label="Due rette nel piano e il loro punto di intersezione"></canvas>
+      <div class="controls">
+        <label>a <input type="range" id="sis-a" min="-3" max="3" step="0.5" value="1"> <b id="sis-av"></b></label>
+        <label>b <input type="range" id="sis-b" min="-3" max="3" step="0.5" value="-1"> <b id="sis-bv"></b></label>
+        <label>c <input type="range" id="sis-c" min="-4" max="4" step="0.5" value="0"> <b id="sis-cv"></b></label>
+      </div>
+      <p class="readout" id="sis-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Forma matriciale</b>
+        <p>Un sistema di m equazioni in n incognite si scrive A·x = b con A ∈ M(m, n, K), x ∈ Kⁿ, b ∈ K<sup>m</sup>. La <b>matrice completa</b> è (A | b): A con b aggiunto come ultima colonna.</p>
+        <p>Se b = 0 il sistema è <b>omogeneo</b>: ha sempre almeno la soluzione x = 0, e le soluzioni formano il sottospazio ker A.</p>
+      </div>
+      <div class="def"><b>Teorema di Rouché-Capelli</b>
+        <p>A·x = b ha soluzione <b>se e solo se</b> rk A = rk(A | b). In quel caso le soluzioni dipendono da <b>n − rk A</b> parametri liberi.</p>
+        <p>• rk A ≠ rk(A | b) → nessuna soluzione (dopo Gauss trovi una riga 0 = numero ≠ 0).<br>• rk A = rk(A | b) = n → una sola soluzione.<br>• rk A = rk(A | b) &lt; n → infinite soluzioni, n − rk parametri.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Lettura con le colonne</summary><p>A·x = x₁·C₁ + … + x<sub>n</sub>·C<sub>n</sub>. Il sistema ha soluzione ⇔ b è combinazione delle colonne ⇔ b ∈ Span(C₁, …, C<sub>n</sub>) ⇔ aggiungere b non fa salire il rango. Il numero di parametri è dim ker A = n − rk A.</p></details>
+      </div>
+      <div class="def"><b>Sistema quadrato (n equazioni, n incognite)</b>
+        <p>det A ≠ 0 ⇔ una sola soluzione, qualunque sia b. Con det A = 0 può non esserci soluzione o essercene infinite: bisogna controllare rk(A | b).</p>
+      </div>
+      <div class="def"><b>Sistemi con parametro: la regola d'oro</b>
+        <p>Prima di dividere per un'espressione con k (per esempio k − 1), <b>separa il caso in cui vale 0</b> e studialo a parte. Nel tuo registro errori del 18/11 c'è proprio questa svista.</p>
+        <p>Metodo veloce per sistemi quadrati: calcola det A in funzione di k. I k con det A ≠ 0 danno una sola soluzione; i (pochi) k con det A = 0 si studiano uno per uno con Gauss.</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Gauss sulla matrice completa</h2>
+      <p>La riga verticale separa A da b. Il laboratorio ti dice rk A, rk(A | b) e cosa dice Rouché-Capelli.</p>
+      <div id="lab-sis"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Discuti al variare di k ∈ R</h2>
+      <p class="math">x + y + z = 1 <br>x + 2y + z = 2 <br>x + y + k·z = 3</p>
+      <div class="steps" id="guided-sistemi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-sistemi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Rouché-Capelli</b>: soluzioni ⇔ rk A = rk(A | b). Parametri liberi: n − rk A.</li>
+        <li>Quadrato: det A ≠ 0 ⇔ una sola soluzione.</li>
+        <li>Omogeneo: sempre x = 0; soluzioni = ker A.</li>
+        <li><b>Parametro</b>: mai dividere per k − 1 (o simili) senza aver prima studiato a parte k = 1.</li>
+      </ul>
+      <div data-copy="sistemi"></div>
+    </section>
+    <div class="next"><a href="#spettrale">← Capitolo 9</a><a href="#matrici">Ripasso · Matrici e inversa →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, M, Board, onDraw, lab, guided, exercises } = Lav;
+  const B = Board($('cv-sis'), {xmin:-4,xmax:4,ymin:-3,ymax:4});
+  const draw = () => {
+    const [a,b,c] = ['a','b','c'].map(k=>+$('sis-'+k).value); ['a','b','c'].forEach(k=>$('sis-'+k+'v').textContent=it(+$('sis-'+k).value,1));
+    if (!B.fit()) return; B.grid();
+    const line = (p,q,r,col) => { if (Math.abs(q)>1e-9) B.seg(-20,(r+20*p)/q,20,(r-20*p)/q,col,3); else if (Math.abs(p)>1e-9) B.seg(r/p,-20,r/p,20,col,3); };
+    line(1,1,2,'--u'); line(a,b,c,'--v');
+    const det = 1*b - 1*a; let txt = 'Sistema: x + y = 2, &nbsp;'+it(a,1)+'·x '+(b<0?'− ':'+ ')+it(Math.abs(b),1)+'·y = '+it(c,1)+'<br>A = '+M([[1,1],[it(a,1),it(b,1)]])+' &nbsp; det A = '+it(det,2)+'<br>';
+    if (Math.abs(a)<1e-9 && Math.abs(b)<1e-9){ txt += Math.abs(c)<1e-9 ? 'La seconda equazione è 0 = 0: resta solo la retta blu, infinite soluzioni (rk A = rk(A | b) = 1 &lt; 2).' : 'La seconda equazione è 0 = '+it(c,1)+': impossibile. rk A = 1, rk(A | b) = 2: <b>nessuna soluzione</b>.'; }
+    else if (Math.abs(det)>1e-9){ const x=(2*b-c)/det, y=(c-2*a)/det; B.dot(x,y,'--ok',7); B.text(x,y,' ('+it(x,2)+'; '+it(y,2)+')','--ok',13);
+      txt += 'det A ≠ 0: rk A = rk(A | b) = 2 = n. <b>Una sola soluzione</b>: (x, y) = ('+it(x,2)+', '+it(y,2)+').'; }
+    else { const k = Math.abs(a)>1e-9 ? a : b; const same = Math.abs(c-2*k)<1e-9;
+      txt += same ? 'Le rette coincidono: rk A = rk(A | b) = 1 &lt; 2. <b>Infinite soluzioni</b>, con 2 − 1 = 1 parametro.' : 'Rette parallele distinte: rk A = 1, rk(A | b) = 2. <b>Nessuna soluzione</b> (Rouché-Capelli).'; }
+    $('sis-out').innerHTML = txt;
+  };
+  ['a','b','c'].forEach(k=>$('sis-'+k).addEventListener('input', draw)); onDraw('sistemi', draw);
+
+  lab('lab-sis', { show:[], presets:[
+    { name:'Guidato con k = 3', rows:[[1,1,1,1],[1,2,1,2],[1,1,3,3]], aug:3 },
+    { name:'Guidato con k = 1', rows:[[1,1,1,1],[1,2,1,2],[1,1,1,3]], aug:3 },
+    { name:'Infinite soluzioni', rows:[[1,2,-1,3],[2,4,-2,6],[1,0,1,1]], aug:3 },
+    { name:'2 equazioni, 4 incognite', rows:[[1,1,0,1,2],[0,1,1,1,1]], aug:4 }
+  ]});
+
+  guided('sistemi', [
+    { h:'Passo 1 · Gauss: R2 ← R2 − R1 e R3 ← R3 − R1. Che riga diventa la terza?', type:'choice', ans:1, opts:['(0, 0, k | 2)','(0, 0, k − 1 | 2)','(0, 1, k − 1 | 2)'],
+      ok:'Sì: (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). La seconda riga diventa (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
+    { h:'Passo 2 · Vorrei dividere per k − 1. Prima cosa?', type:'choice', ans:2, opts:['Divido subito, tanto è un numero','Pongo k − 1 = 1','Studio a parte il caso k = 1, dove k − 1 = 0'],
+      ok:'Bravo, è la regola d\'oro. Con k = 1 la terza riga è (0, 0, 0 | 2), cioè 0 = 2.', bad:'k − 1 vale 0 quando k = 1: dividere per 0 non si può. Quel caso va studiato da solo.' },
+    { h:'Passo 3 · Caso k = 1: rk A e rk(A | b)', type:'nums', ans:[2,3], html:'rk A = '+inp('rango di A')+' &nbsp; rk(A | b) = '+inp('rango della completa'),
+      ok:'Esatto: 2 ≠ 3, quindi per k = 1 <b>nessuna soluzione</b>.', bad:'A ha due righe non nulle a scala; la completa ha anche la riga (0, 0, 0 | 2).' },
+    { h:'Passo 4 · Caso k ≠ 1, per esempio k = 3: trova (x, y, z)', type:'nums', ans:[-1,1,1], html:'x = '+inp('x')+' &nbsp; y = '+inp('y')+' &nbsp; z = '+inp('z'),
+      ok:'Perfetto: z = 2/(k − 1) = 1, y = 1, x = 1 − y − z = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
+  ], '<b>Fatto!</b> Per k = 1 nessuna soluzione; per k ≠ 1 una sola soluzione: (x, y, z) = (−2/(k − 1), 1, 2/(k − 1)). Controllo veloce: det A = k − 1, che è ≠ 0 proprio per k ≠ 1.');
+
+  exercises('sistemi', [
+    { id:'e1', type:'choice', q:'Dopo Gauss: rk A = 2 e rk(A | b) = 3.', opts:['Una soluzione','Infinite soluzioni','Nessuna soluzione'], a:2, hint:'Rouché-Capelli.', sol:'Ranghi diversi: nessuna soluzione.' },
+    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'5 − 3 = 2.' },
+    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'2x = 4 ⇒ x = 2, y = 1.' },
+    { id:'e4', type:'choice', q:'Un sistema omogeneo A·x = 0…', opts:['può non avere soluzioni','ha sempre almeno la soluzione x = 0','ha sempre infinite soluzioni'], a:1, hint:'Prova x = 0.', sol:'A·0 = 0 sempre. Infinite solo se rk A &lt; n.' },
+    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1 − k² ≠ 0 ⇔ k ≠ ±1.' },
+    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Sommando: 0 = 2. Impossibile.' },
+    { id:'e7', type:'choice', q:'Stesso sistema con k = 1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:1, hint:'Le due equazioni diventano uguali.', sol:'x + y = 1 due volte: rk A = rk(A | b) = 1, infinite soluzioni con 1 parametro.' },
+    { id:'e8', type:'choice', src:'trappola', q:'Da (k − 2)·z = k − 2 scrivo z = 1. Va bene?', opts:['Sì, sempre','Solo per k ≠ 2; per k = 2 l\'equazione è 0 = 0 e z è libero'], a:1, hint:'Cosa succede con k = 2?', sol:'Per k = 2 non si può dividere: 0·z = 0 vale per ogni z, quindi z diventa un parametro libero.' }
+  ]);
+})();
+</script>
+  <!-- ================= RIPASSO 2 · MATRICI E INVERSA ================= -->
+  <div class="chapter" data-ch="matrici" data-title="R2 · Matrici e inversa" data-date="ripasso" data-full="Ripasso: prodotto di matrici, trasposta, inversa 2 × 2 e con Gauss-Jordan" data-src="Libro cap. 1 e 2 (matrici, inversa)" hidden>
+    <section class="board">
+      <div class="eyebrow">Ripasso 2 · da usare quando serve</div>
+      <h2>Prodotto, trasposta, inversa</h2>
+      <p class="big">Nel registro c'è una lacuna precisa: la <b>formula dell'inversa 2 × 2</b>. Qui la ripassi con un calcolatore che fa ogni passaggio, poi impari l'inversa delle 3 × 3 con Gauss-Jordan.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un calcolatore</div>
+      <h2>Inversa 2 × 2 passo per passo</h2>
+      <p>Scrivi le entrate di A (anche frazioni, es. 1/2). Il calcolatore applica la formula e controlla che A·A⁻¹ = I.</p>
+      <div class="controls">
+        <label>a <input type="text" id="inv-a" value="2" inputmode="decimal" style="width:4.5em"></label>
+        <label>b <input type="text" id="inv-b" value="1" inputmode="decimal" style="width:4.5em"></label>
+        <label>c <input type="text" id="inv-c" value="5" inputmode="decimal" style="width:4.5em"></label>
+        <label>d <input type="text" id="inv-d" value="3" inputmode="decimal" style="width:4.5em"></label>
+      </div>
+      <p class="readout" id="inv-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Prodotto righe per colonne</b>
+        <p>A ∈ M(m, n, K), B ∈ M(n, p, K): A·B ∈ M(m, p, K) e (A·B)<sub>ij</sub> = riga i di A · colonna j di B = a<sub>i1</sub>·b<sub>1j</sub> + … + a<sub>in</sub>·b<sub>nj</sub>.</p>
+        <p>Si può fare solo se <b>colonne di A = righe di B</b>. In generale <b>A·B ≠ B·A</b>.</p>
+      </div>
+      <div class="def"><b>Trasposta</b>
+        <p><sup>t</sup>A scambia righe e colonne: (<sup>t</sup>A)<sub>ij</sub> = a<sub>ji</sub>. Regole: <sup>t</sup>(A·B) = <sup>t</sup>B · <sup>t</sup>A (si inverte l'ordine), det(<sup>t</sup>A) = det A, rk(<sup>t</sup>A) = rk A.</p>
+      </div>
+      <div class="def"><b>Inversa</b>
+        <p>A ∈ M(n, n, K) è <b>invertibile</b> se esiste A⁻¹ con A·A⁻¹ = A⁻¹·A = I<sub>n</sub>. Succede ⇔ det A ≠ 0 ⇔ rk A = n.</p>
+        <p>(A·B)⁻¹ = B⁻¹·A⁻¹ (ordine invertito, come per la trasposta). det(A⁻¹) = 1 / det A.</p>
+      </div>
+      <div class="def"><b>Formula dell'inversa 2 × 2</b>
+        <p class="math">A = ${M([["a","b"],["c","d"]])}$ &nbsp; ⇒ &nbsp; A⁻¹ = (1 / (a·d − b·c)) · ${M([["d","−b"],["−c","a"]])}$</p>
+        <p>Si legge: <b>scambia</b> i due numeri sulla diagonale, <b>cambia segno</b> agli altri due, <b>dividi</b> tutto per il determinante.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Verifica in una riga</summary><p>${M([["a","b"],["c","d"]])}$ · ${M([["d","−b"],["−c","a"]])}$ = ${M([["ad − bc","0"],["0","ad − bc"]])}$ = (det A)·I. Dividendo per det A si ottiene I.</p></details>
+      </div>
+      <div class="def"><b>Inversa con Gauss-Jordan (qualsiasi n)</b>
+        <p>Scrivi (A | I<sub>n</sub>). Fai mosse di riga finché a sinistra c'è I<sub>n</sub>: a destra trovi A⁻¹. Se a sinistra compare una riga di zeri, A non è invertibile.</p>
+        <span class="why mem">perché: a memoria</span>
+        <details class="whybox"><summary>L'idea in breve</summary><p>Ogni mossa di riga è una moltiplicazione a sinistra per una matrice elementare E. Se E<sub>k</sub>·…·E₁·A = I, allora E<sub>k</sub>·…·E₁ = A⁻¹, e le stesse mosse applicate a I danno proprio A⁻¹. Basta saper fare il procedimento.</p></details>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Gauss-Jordan su (A | I)</h2>
+      <p>Il laboratorio scende a scala, poi rende i pivot uguali a 1 e fa zeri anche sopra. Alla fine a destra c'è A⁻¹.</p>
+      <div id="lab-inv"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Inversa di A = ${M([[3,1],[4,2]])}$</h2>
+      <div class="steps" id="guided-matrici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-matrici"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>A·B</b>: riga per colonna; serve colonne di A = righe di B; A·B ≠ B·A in generale.</li>
+        <li><b><sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A</b>, <b>(A·B)⁻¹ = B⁻¹·A⁻¹</b>.</li>
+        <li><b>Inversa 2 × 2</b>: scambia la diagonale, cambia segno agli altri due, dividi per a·d − b·c.</li>
+        <li><b>n × n</b>: (A | I) → Gauss-Jordan → (I | A⁻¹).</li>
+        <li>Invertibile ⇔ det A ≠ 0 ⇔ rk A = n.</li>
+      </ul>
+      <div data-copy="matrici"></div>
+    </section>
+    <div class="next"><a href="#sistemi">← Ripasso sistemi</a><a href="#complessi">Ripasso · Numeri complessi →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, F, num, inp, M, onDraw, lab, guided, exercises } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="matrici"] p, [data-ch="matrici"] h2').forEach(p => { if (p.innerHTML.includes('${M(')) p.innerHTML = fixM(p.innerHTML); });
+
+  const fr = s => { const v=String(s).replace(/\s/g,'').replace('−','-'); if (/^-?\d+\/-?\d+$/.test(v)) return new F(+v.split('/')[0], +v.split('/')[1]); const x=num(v); if (isNaN(x)) return null; if (Number.isInteger(x)) return F.of(x); const k=1e6; return new F(Math.round(x*k), k); };
+  const calc = () => {
+    const [a,b,c,d] = ['a','b','c','d'].map(k=>fr($('inv-'+k).value));
+    if ([a,b,c,d].some(x=>x===null)){ $('inv-out').innerHTML='Controlla le caselle: c\'è qualcosa che non è un numero.'; return; }
+    const det = a.mul(d).sub(b.mul(c));
+    let t = 'A = '+M([[a,b],[c,d]])+'<br>Passo 1 · det A = a·d − b·c = ('+a+')·('+d+') − ('+b+')·('+c+') = <b>'+det+'</b>';
+    if (det.zero){ $('inv-out').innerHTML = t+'<br>det A = 0: <b>A non è invertibile</b> (le colonne sono proporzionali).'; return; }
+    const neg = x => new F(0).sub(x), adj=[[d,neg(b)],[neg(c),a]], inv=adj.map(r=>r.map(x=>x.div(det)));
+    t += '<br>Passo 2 · scambia la diagonale e cambia segno agli altri: '+M(adj);
+    t += '<br>Passo 3 · dividi per det A = '+det+': &nbsp; A⁻¹ = '+M(inv);
+    const P=[[a.mul(inv[0][0]).add(b.mul(inv[1][0])), a.mul(inv[0][1]).add(b.mul(inv[1][1]))],[c.mul(inv[0][0]).add(d.mul(inv[1][0])), c.mul(inv[0][1]).add(d.mul(inv[1][1]))]];
+    t += '<br>Controllo · A·A⁻¹ = '+M(P)+(P[0][0].n===1&&P[0][0].d===1&&P[1][1].n===1&&P[0][1].zero&&P[1][0].zero?' = I ✓':'');
+    $('inv-out').innerHTML = t;
+  };
+  ['a','b','c','d'].forEach(k=>$('inv-'+k).addEventListener('input', calc)); onDraw('matrici', calc);
+
+  lab('lab-inv', { jordan:true, show:['inverse'], presets:[
+    { name:'3 × 3 invertibile', rows:[[1,2,0,1,0,0],[0,1,1,0,1,0],[1,0,1,0,0,1]], aug:3 },
+    { name:'2 × 2 del guidato', rows:[[3,1,1,0],[4,2,0,1]], aug:2 },
+    { name:'Non invertibile', rows:[[1,2,3,1,0,0],[2,4,6,0,1,0],[0,1,1,0,0,1]], aug:3 },
+    { name:'Serve uno scambio', rows:[[0,1,1,0],[1,1,0,1]], aug:2 }
+  ]});
+
+  guided('matrici', [
+    { h:'Passo 1 · det A', type:'nums', ans:[2], html:'det A = '+inp('determinante'),
+      ok:'Sì: 3·2 − 1·4 = 2 ≠ 0, quindi A è invertibile.', bad:'a·d − b·c con a = 3, b = 1, c = 4, d = 2.' },
+    { h:'Passo 2 · Scambia la diagonale e cambia segno agli altri due', type:'choice', ans:0, opts:[M([[2,-1],[-4,3]]), M([[2,1],[4,3]]), M([[-3,1],[4,-2]])],
+      ok:'Esatto: 3 e 2 si scambiano, 1 e 4 cambiano segno.', bad:'La diagonale (3, 2) diventa (2, 3); gli altri due (1 e 4) cambiano solo il segno, restano al loro posto.' },
+    { h:'Passo 3 · Dividi per 2: scrivi A⁻¹ (riga per riga, frazioni ok)', type:'nums', ans:[1,-0.5,-2,1.5], html:'A⁻¹ = ( '+inp('a11')+' , '+inp('a12')+' ; '+inp('a21')+' , '+inp('a22')+' )',
+      ok:'Perfetto: A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'.', bad:'Dividi ogni numero di '+M([[2,-1],[-4,3]])+' per 2.' },
+    { h:'Passo 4 · Controllo: prima riga di A per prima colonna di A⁻¹', type:'nums', ans:[1], html:'3·1 + 1·(−2) = '+inp('risultato'),
+      ok:'1: è l\'entrata (1,1) di I. Il controllo costa 10 secondi e salva l\'esercizio.', bad:'3 − 2.' }
+  ], '<b>Fatto!</b> A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+'. Prova a scriverla nel calcolatore in alto per vedere il controllo completo A·A⁻¹ = I.');
+
+  exercises('matrici', [
+    { id:'e1', type:'choice', q:'A ∈ M(2, 3, R), B ∈ M(3, 4, R). Che taglia ha A·B?', opts:['3 × 3','2 × 4','4 × 2','non si può fare'], a:1, hint:'(m × n)·(n × p) = m × p.', sol:'2 × 4. B·A invece non si può fare (4 ≠ 2).' },
+    { id:'e2', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), a:[5,4,1,2], hint:'Riga 1 · colonna 1 = 1·3 + 2·1.', sol:M([[5,4],[1,2]])+'.' },
+    { id:'e3', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[2,1],[5,3]]), a:[3,-1,-5,2], hint:'det = 6 − 5 = 1.', sol:M([[3,-1],[-5,2]])+' (det = 1, quindi non c\'è nulla da dividere).' },
+    { id:'e4', type:'nums', labels:['(1,1) =','(1,2) =','(2,1) =','(2,2) ='], q:'Inversa di '+M([[1,2],[3,4]]), a:[-2,1,1.5,-0.5], hint:'det = 4 − 6 = −2: attenzione al segno.', sol:'(1/(−2))·'+M([[4,-2],[-3,1]])+' = '+M([[-2,1],['3/2','−1/2']])+'.' },
+    { id:'e5', type:'choice', q:'(A·B)⁻¹ = …', opts:['A⁻¹·B⁻¹','B⁻¹·A⁻¹','<sup>t</sup>A·<sup>t</sup>B'], a:1, hint:'Pensa a "togliersi calze e scarpe".', sol:'B⁻¹·A⁻¹: si annulla prima l\'ultima cosa fatta.' },
+    { id:'e6', type:'choice', q:M([[2,4],[1,2]])+' è invertibile?', opts:['Sì','No'], a:1, hint:'Calcola il determinante.', sol:'det = 4 − 4 = 0: no. La prima riga è 2 volte la seconda.' },
+    { id:'e7', type:'num', label:'det(A⁻¹) =', q:'det A = 4.', a:0.25, hint:'Binet su A·A⁻¹ = I.', sol:'det A · det A⁻¹ = det I = 1 ⇒ det A⁻¹ = 1/4.' },
+    { id:'e8', type:'choice', src:'trappola', q:'A·B = A·C con A ≠ 0. Allora B = C?', opts:['Sempre','Solo se A è invertibile'], a:1, hint:'Moltiplica a sinistra per A⁻¹… se esiste.', sol:'Con A invertibile sì (A⁻¹·A·B = A⁻¹·A·C). Altrimenti no: A = '+M([[1,0],[0,0]])+' dà A·'+M([[0,0],[0,1]])+' = A·0.' }
+  ]);
+})();
+</script>
+  <!-- ================= RIPASSO 3 · NUMERI COMPLESSI ================= -->
+  <div class="chapter" data-ch="complessi" data-title="R3 · Numeri complessi" data-date="ripasso" data-full="Ripasso: numeri complessi, forma esponenziale, quadrante, equazioni" data-src="Libro cap. 1 (numeri complessi) e Foglio 4" hidden>
+    <section class="board">
+      <div class="eyebrow">Ripasso 3 · costruito sui tuoi errori del 18/11</div>
+      <h2>Numeri complessi senza trappole</h2>
+      <p class="big">Nel quiz c'è quasi sempre una domanda sui complessi. Le radici n-esime le sai già. Gli errori del 18/11 erano: <b>prodotto</b> (i² = −1 dimenticato), <b>inverso</b> (diviso per |z| invece di |z|²), <b>quadrante</b> sbagliato nell'argomento, e<sup>iπ</sup> = −1, e le <b>equazioni di secondo grado</b> con coefficienti complessi. Qui c'è un esercizio per ognuno.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il piano di Gauss: z, z̄, 1/z e z·w</h2>
+      <p>z = a + b·i è il punto (a, b). Guarda in che <b>quadrante</b> cade prima di scrivere l'argomento. Scegli w: moltiplicare per w <b>moltiplica i moduli</b> e <b>somma gli argomenti</b>.</p>
+      <canvas id="cv-cx" aria-label="Piano complesso con z, il coniugato, l'inverso e il prodotto z per w"></canvas>
+      <div class="controls">
+        <label>a = Re z <input type="range" id="cx-a" min="-3" max="3" step="0.5" value="-1"> <b id="cx-av"></b></label>
+        <label>b = Im z <input type="range" id="cx-b" min="-3" max="3" step="0.5" value="1"> <b id="cx-bv"></b></label>
+        <label>w <select id="cx-w"><option value="0">nessuno</option><option value="1">w = i</option><option value="2">w = 1 + i</option><option value="3">w = −1</option></select></label>
+      </div>
+      <p class="readout" id="cx-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Forma algebrica e prodotto</b>
+        <p>z = a + b·i con a, b ∈ R e <b>i² = −1</b>.</p>
+        <p class="math">(a + b·i)·(c + d·i) = a·c + a·d·i + b·c·i + b·d·i² = (a·c − b·d) + (a·d + b·c)·i</p>
+        <p>Scrivi sempre <b>tutti e 4 i pezzi</b>, poi sostituisci i² = −1. È lì che nasce il segno meno.</p>
+      </div>
+      <div class="def"><b>Coniugato, modulo, inverso</b>
+        <p>z̄ = a − b·i. &nbsp; |z| = √(a² + b²). &nbsp; z·z̄ = a² + b² = |z|² (un numero reale).</p>
+        <p class="math">z⁻¹ = z̄ / |z|² = (a − b·i) / (a² + b²)</p>
+        <p>Si divide per |z|² <b>senza radice</b>.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Una riga</summary><p>z · (z̄ / |z|²) = (z·z̄) / |z|² = |z|² / |z|² = 1.</p></details>
+      </div>
+      <div class="def"><b>Forma esponenziale e quadrante</b>
+        <p>z = r·e<sup>iθ</sup> = r·(cos θ + i·sin θ) con r = |z| e θ = argomento.</p>
+        <p>Per trovare θ: <b>1)</b> guarda i segni di a e b e decidi il quadrante; <b>2)</b> trova l'angolo con cos θ = a/r e sin θ = b/r; <b>3)</b> controlla che θ stia nel quadrante giusto.</p>
+        <p>I: a &gt; 0, b &gt; 0 → θ tra 0 e π/2. &nbsp;II: a &lt; 0, b &gt; 0 → tra π/2 e π. &nbsp;III: a &lt; 0, b &lt; 0 → tra π e 3π/2. &nbsp;IV: a &gt; 0, b &lt; 0 → tra 3π/2 e 2π.</p>
+        <p>Da sapere: e<sup>i·0</sup> = 1, e<sup>iπ/2</sup> = i, <b>e<sup>iπ</sup> = −1</b>, e<sup>i3π/2</sup> = −i, e<sup>i2π</sup> = 1.</p>
+        <span class="why mem">e<sup>iθ</sup> = cos θ + i·sin θ: a memoria</span>
+        <details class="whybox"><summary>Perché a memoria</summary><p>È la formula di Eulero; la dimostrazione usa le serie di potenze (Analisi). Si usa come definizione.</p></details>
+      </div>
+      <div class="def"><b>Potenze e prodotti in forma esponenziale (De Moivre)</b>
+        <p class="math">r·e<sup>iα</sup> · s·e<sup>iβ</sup> = r·s·e<sup>i(α + β)</sup> &nbsp;&nbsp; (r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>i·nθ</sup></p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Le potenze si sommano</summary><p>e<sup>iα</sup>·e<sup>iβ</sup> = e<sup>iα + iβ</sup>, come per qualsiasi esponenziale.</p></details>
+      </div>
+      <div class="def"><b>Radici n-esime (il tuo punto forte)</b>
+        <p>Le soluzioni di zⁿ = r·e<sup>iθ</sup> sono z<sub>k</sub> = ⁿ√r · e<sup>i(θ + 2kπ)/n</sup> per k = 0, 1, …, n − 1: n punti sui vertici di un poligono regolare.</p>
+      </div>
+      <div class="def"><b>Equazioni di secondo grado in C</b>
+        <p>a·z² + b·z + c = 0 con a, b, c ∈ C (a ≠ 0): z = (−b + w) / (2a), dove w sono le <b>due radici quadrate complesse</b> di Δ = b² − 4ac.</p>
+        <p>In C non c'è mai "Δ &lt; 0 impossibile": per esempio le radici quadrate di −4 sono 2i e −2i. Se i coefficienti sono complessi, calcola le radici di Δ con la forma esponenziale oppure risolvi (x + y·i)² = Δ.</p>
+        <p>Trucco: spesso conviene riconoscere un quadrato, es. z² − 2i·z − 1 = (z − i)².</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>z = −1 − i: forma esponenziale e z⁴</h2>
+      <div class="steps" id="guided-complessi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Uno per ogni trappola</h2>
+      <div id="ex-complessi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Prodotto</b>: 4 pezzi, poi i² = −1.</li>
+        <li><b>z⁻¹ = z̄ / |z|²</b> (modulo al quadrato, senza radice).</li>
+        <li><b>Quadrante prima dell'angolo</b>: segni di a e b.</li>
+        <li><b>e<sup>iπ</sup> = −1</b>, e<sup>iπ/2</sup> = i, e<sup>i3π/2</sup> = −i. Alla fine riporta in forma algebrica.</li>
+        <li><b>(r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>inθ</sup></b>; radici n-esime: ⁿ√r·e<sup>i(θ + 2kπ)/n</sup>.</li>
+        <li><b>2° grado in C</b>: z = (−b + w)/(2a) con w² = Δ; Δ negativo va bene.</li>
+      </ul>
+      <div data-copy="complessi"></div>
+    </section>
+    <div class="next"><a href="#matrici">← Ripasso matrici</a><a href="#indice">Indice</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, Board, onDraw, guided, exercises } = Lav;
+  const B = Board($('cv-cx'), {xmin:-3.2,xmax:3.2,ymin:-3,ymax:3});
+  const piF = t => { // angolo in [0, 2π) come multiplo "bello" di π, se c'è
+    for (const d of [1,2,3,4,6,12]) { const k = t*d/Math.PI; if (Math.abs(k-Math.round(k))<1e-7){ const n=Math.round(k); if(n===0) return '0'; return (n===1?'':n)+'π'+(d===1?'':'/'+d); } }
+    return it(t,3)+' rad (≈ '+it(t*180/Math.PI,1)+'°)'; };
+  const cpx = (x,y) => it(x,3)+(y<0?' − ':' + ')+it(Math.abs(y),3)+'·i';
+  const W = [null,[0,1],[1,1],[-1,0]], WN=['','i','1 + i','−1'];
+  const draw = () => {
+    const a=+$('cx-a').value, b=+$('cx-b').value, w=W[+$('cx-w').value]; $('cx-av').textContent=it(a,1); $('cx-bv').textContent=it(b,1);
+    if (!B.fit()) return; B.grid();
+    B.curve(t=>[Math.cos(t),Math.sin(t)],0,6.3,'--line',1.2);
+    const r2=a*a+b*b, r=Math.sqrt(r2);
+    let t = 'z = '+cpx(a,b)+'<br>';
+    if (r<1e-9){ B.dot(0,0,'--u',6); $('cx-out').innerHTML = t+'z = 0: modulo 0, argomento non definito, nessun inverso.'; return; }
+    B.arrow(0,0,a,-b,'--muted','z̄',2); B.arrow(0,0,a/r2,-b/r2,'--w','1/z',2.5);
+    if (w){ const p=[a*w[0]-b*w[1], a*w[1]+b*w[0]]; B.arrow(0,0,p[0],p[1],'--ok','z·w',3); }
+    B.arrow(0,0,a,b,'--u','z',3.5);
+    const q = Math.abs(b)<1e-9 ? (a>0?'sul semiasse reale positivo':'sul semiasse reale negativo') : Math.abs(a)<1e-9 ? (b>0?'sul semiasse immaginario positivo':'sul semiasse immaginario negativo') : (a>0&&b>0?'I quadrante (θ tra 0 e π/2)':a<0&&b>0?'II quadrante (θ tra π/2 e π)':a<0?'III quadrante (θ tra π e 3π/2)':'IV quadrante (θ tra 3π/2 e 2π)');
+    let th = Math.atan2(b,a); if (th<0) th += 2*Math.PI;
+    t += 'Segni: a '+(a>0?'&gt; 0':a<0?'&lt; 0':'= 0')+', b '+(b>0?'&gt; 0':b<0?'&lt; 0':'= 0')+' → <b>'+q+'</b><br>|z| = √('+(a<0?'('+it(a,1)+')':it(a,1))+'² + '+(b<0?'('+it(b,1)+')':it(b,1))+'²) = √'+it(r2,2)+' ≈ '+it(r,3)+'; &nbsp;θ = <b>'+piF(th)+'</b><br>Forma esponenziale: z = '+it(r,3)+'·e<sup>i·'+piF(th)+'</sup>';
+    t += '<br>z̄ = '+cpx(a,-b)+'; &nbsp;1/z = z̄ / |z|² = ('+cpx(a,-b)+') / '+it(r2,2)+' = '+cpx(a/r2,-b/r2);
+    if (w){ const p=[a*w[0]-b*w[1], a*w[1]+b*w[0]], aw=Math.atan2(w[1],w[0]); t += '<br>z·w con w = '+WN[+$('cx-w').value]+': '+cpx(p[0],p[1])+'. Modulo moltiplicato per |w| = '+it(Math.hypot(...w),3)+', argomento aumentato di '+piF(aw)+'.'; }
+    $('cx-out').innerHTML = t;
+  };
+  ['cx-a','cx-b'].forEach(k=>$(k).addEventListener('input', draw)); $('cx-w').addEventListener('change', draw); onDraw('complessi', draw);
+
+  guided('complessi', [
+    { h:'Passo 1 · |z|² e |z|', type:'choice', ans:1, opts:['|z|² = 0, |z| = 0','|z|² = 2, |z| = √2','|z|² = −2'],
+      ok:'Sì: (−1)² + (−1)² = 2, |z| = √2. I quadrati sono sempre positivi.', bad:'|z|² = a² + b² con a = −1 e b = −1: (−1)² = 1.' },
+    { h:'Passo 2 · Quadrante', type:'choice', ans:2, opts:['I','II','III','IV'],
+      ok:'Esatto: a &lt; 0 e b &lt; 0, terzo quadrante, θ tra π e 3π/2.', bad:'Guarda i segni: a = −1 &lt; 0, b = −1 &lt; 0.' },
+    { h:'Passo 3 · Argomento θ', type:'choice', ans:2, opts:['π/4','3π/4','5π/4','7π/4'],
+      ok:'Giusto: cos θ = −1/√2, sin θ = −1/√2 e siamo nel III quadrante: θ = π + π/4 = 5π/4.', bad:'π/4 è nel I quadrante: la "bussola" del passo 2 dice che serve un angolo tra π e 3π/2.' },
+    { h:'Passo 4 · z⁴ in forma algebrica', type:'nums', ans:[-4,0], html:'z⁴ = (√2)⁴·e<sup>i·5π</sup> = '+inp('parte reale')+' + '+inp('parte immaginaria')+'·i',
+      ok:'Perfetto: (√2)⁴ = 4 ed e<sup>i5π</sup> = e<sup>iπ</sup> = −1, quindi z⁴ = −4.', bad:'(√2)⁴ = 4. 5π = π + 2·2π, quindi e<sup>i5π</sup> = e<sup>iπ</sup> = −1.' }
+  ], '<b>Fatto!</b> z = √2·e<sup>i5π/4</sup> e z⁴ = −4. Controllo con la forma algebrica: z² = (−1 − i)² = 1 + 2i + i² = 2i, e z⁴ = (2i)² = −4 ✓.');
+
+  exercises('complessi', [
+    { id:'e1', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'(3 + 2i)·(1 − i)', a:[5,-1], hint:'4 pezzi: 3 − 3i + 2i − 2i².', sol:'3 − 3i + 2i − 2·(−1) = 5 − i.' },
+    { id:'e2', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'Inverso di 2 − i (frazioni ok)', a:[0.4,0.2], hint:'|z|² = 4 + 1 = 5.', sol:'(2 + i)/5 = 2/5 + (1/5)·i.' },
+    { id:'e3', type:'choice', src:'errore 18/11', q:'Argomento di −√3 + i', opts:['π/6','5π/6','7π/6','11π/6'], a:1, hint:'a &lt; 0, b &gt; 0: quale quadrante?', sol:'II quadrante, cos θ = −√3/2, sin θ = 1/2: θ = 5π/6.' },
+    { id:'e4', type:'choice', src:'errore 18/11', q:'e<sup>iπ/2</sup>·e<sup>iπ</sup> = …', opts:['i','−1','−i','1'], a:2, hint:'Somma gli esponenti.', sol:'e<sup>i3π/2</sup> = −i.' },
+    { id:'e5', type:'nums', labels:['parte reale','parte immaginaria'], q:'(1 + i)⁴', a:[-4,0], hint:'1 + i = √2·e<sup>iπ/4</sup>.', sol:'(√2)⁴·e<sup>iπ</sup> = 4·(−1) = −4.' },
+    { id:'e6', type:'num', label:'|z| =', q:'z = 3 − 4i', a:5, hint:'√(9 + 16).', sol:'5.' },
+    { id:'e7', type:'choice', q:'Soluzioni di z² + 2z + 2 = 0 in C', opts:['nessuna','−1 + i e −1 − i','1 + i e 1 − i'], a:1, hint:'Δ = 4 − 8 = −4, radici quadrate ±2i.', sol:'z = (−2 ± 2i)/2 = −1 ± i.' },
+    { id:'e8', type:'choice', src:'lacuna', q:'Soluzioni di z² − 2i·z − 1 = 0', opts:['z = i (doppia)','z = 1 e z = −1','z = ±i'], a:0, hint:'Δ = (−2i)² + 4 = −4 + 4.', sol:'Δ = 0, z = 2i/2 = i. Infatti z² − 2iz − 1 = (z − i)².' },
+    { id:'e9', type:'choice', q:'Quante soluzioni ha z⁵ = 1 in C?', opts:['1','2','5'], a:2, hint:'Radici n-esime.', sol:'5: i vertici di un pentagono regolare sul cerchio di raggio 1.' }
   ]);
 })();
 </script>

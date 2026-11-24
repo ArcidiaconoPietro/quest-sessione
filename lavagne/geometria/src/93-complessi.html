@@ -1,0 +1,138 @@
+  <!-- ================= RIPASSO 3 · NUMERI COMPLESSI ================= -->
+  <div class="chapter" data-ch="complessi" data-title="R3 · Numeri complessi" data-date="ripasso" data-full="Ripasso: numeri complessi, forma esponenziale, quadrante, equazioni" data-src="Libro cap. 1 (numeri complessi) e Foglio 4" hidden>
+    <section class="board">
+      <div class="eyebrow">Ripasso 3 · costruito sui tuoi errori del 18/11</div>
+      <h2>Numeri complessi senza trappole</h2>
+      <p class="big">Nel quiz c'è quasi sempre una domanda sui complessi. Le radici n-esime le sai già. Gli errori del 18/11 erano: <b>prodotto</b> (i² = −1 dimenticato), <b>inverso</b> (diviso per |z| invece di |z|²), <b>quadrante</b> sbagliato nell'argomento, e<sup>iπ</sup> = −1, e le <b>equazioni di secondo grado</b> con coefficienti complessi. Qui c'è un esercizio per ognuno.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Il piano di Gauss: z, z̄, 1/z e z·w</h2>
+      <p>z = a + b·i è il punto (a, b). Guarda in che <b>quadrante</b> cade prima di scrivere l'argomento. Scegli w: moltiplicare per w <b>moltiplica i moduli</b> e <b>somma gli argomenti</b>.</p>
+      <canvas id="cv-cx" aria-label="Piano complesso con z, il coniugato, l'inverso e il prodotto z per w"></canvas>
+      <div class="controls">
+        <label>a = Re z <input type="range" id="cx-a" min="-3" max="3" step="0.5" value="-1"> <b id="cx-av"></b></label>
+        <label>b = Im z <input type="range" id="cx-b" min="-3" max="3" step="0.5" value="1"> <b id="cx-bv"></b></label>
+        <label>w <select id="cx-w"><option value="0">nessuno</option><option value="1">w = i</option><option value="2">w = 1 + i</option><option value="3">w = −1</option></select></label>
+      </div>
+      <p class="readout" id="cx-out"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Forma algebrica e prodotto</b>
+        <p>z = a + b·i con a, b ∈ R e <b>i² = −1</b>.</p>
+        <p class="math">(a + b·i)·(c + d·i) = a·c + a·d·i + b·c·i + b·d·i² = (a·c − b·d) + (a·d + b·c)·i</p>
+        <p>Scrivi sempre <b>tutti e 4 i pezzi</b>, poi sostituisci i² = −1. È lì che nasce il segno meno.</p>
+      </div>
+      <div class="def"><b>Coniugato, modulo, inverso</b>
+        <p>z̄ = a − b·i. &nbsp; |z| = √(a² + b²). &nbsp; z·z̄ = a² + b² = |z|² (un numero reale).</p>
+        <p class="math">z⁻¹ = z̄ / |z|² = (a − b·i) / (a² + b²)</p>
+        <p>Si divide per |z|² <b>senza radice</b>.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Una riga</summary><p>z · (z̄ / |z|²) = (z·z̄) / |z|² = |z|² / |z|² = 1.</p></details>
+      </div>
+      <div class="def"><b>Forma esponenziale e quadrante</b>
+        <p>z = r·e<sup>iθ</sup> = r·(cos θ + i·sin θ) con r = |z| e θ = argomento.</p>
+        <p>Per trovare θ: <b>1)</b> guarda i segni di a e b e decidi il quadrante; <b>2)</b> trova l'angolo con cos θ = a/r e sin θ = b/r; <b>3)</b> controlla che θ stia nel quadrante giusto.</p>
+        <p>I: a &gt; 0, b &gt; 0 → θ tra 0 e π/2. &nbsp;II: a &lt; 0, b &gt; 0 → tra π/2 e π. &nbsp;III: a &lt; 0, b &lt; 0 → tra π e 3π/2. &nbsp;IV: a &gt; 0, b &lt; 0 → tra 3π/2 e 2π.</p>
+        <p>Da sapere: e<sup>i·0</sup> = 1, e<sup>iπ/2</sup> = i, <b>e<sup>iπ</sup> = −1</b>, e<sup>i3π/2</sup> = −i, e<sup>i2π</sup> = 1.</p>
+        <span class="why mem">e<sup>iθ</sup> = cos θ + i·sin θ: a memoria</span>
+        <details class="whybox"><summary>Perché a memoria</summary><p>È la formula di Eulero; la dimostrazione usa le serie di potenze (Analisi). Si usa come definizione.</p></details>
+      </div>
+      <div class="def"><b>Potenze e prodotti in forma esponenziale (De Moivre)</b>
+        <p class="math">r·e<sup>iα</sup> · s·e<sup>iβ</sup> = r·s·e<sup>i(α + β)</sup> &nbsp;&nbsp; (r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>i·nθ</sup></p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Le potenze si sommano</summary><p>e<sup>iα</sup>·e<sup>iβ</sup> = e<sup>iα + iβ</sup>, come per qualsiasi esponenziale.</p></details>
+      </div>
+      <div class="def"><b>Radici n-esime (il tuo punto forte)</b>
+        <p>Le soluzioni di zⁿ = r·e<sup>iθ</sup> sono z<sub>k</sub> = ⁿ√r · e<sup>i(θ + 2kπ)/n</sup> per k = 0, 1, …, n − 1: n punti sui vertici di un poligono regolare.</p>
+      </div>
+      <div class="def"><b>Equazioni di secondo grado in C</b>
+        <p>a·z² + b·z + c = 0 con a, b, c ∈ C (a ≠ 0): z = (−b + w) / (2a), dove w sono le <b>due radici quadrate complesse</b> di Δ = b² − 4ac.</p>
+        <p>In C non c'è mai "Δ &lt; 0 impossibile": per esempio le radici quadrate di −4 sono 2i e −2i. Se i coefficienti sono complessi, calcola le radici di Δ con la forma esponenziale oppure risolvi (x + y·i)² = Δ.</p>
+        <p>Trucco: spesso conviene riconoscere un quadrato, es. z² − 2i·z − 1 = (z − i)².</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>z = −1 − i: forma esponenziale e z⁴</h2>
+      <div class="steps" id="guided-complessi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Uno per ogni trappola</h2>
+      <div id="ex-complessi"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Prodotto</b>: 4 pezzi, poi i² = −1.</li>
+        <li><b>z⁻¹ = z̄ / |z|²</b> (modulo al quadrato, senza radice).</li>
+        <li><b>Quadrante prima dell'angolo</b>: segni di a e b.</li>
+        <li><b>e<sup>iπ</sup> = −1</b>, e<sup>iπ/2</sup> = i, e<sup>i3π/2</sup> = −i. Alla fine riporta in forma algebrica.</li>
+        <li><b>(r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>inθ</sup></b>; radici n-esime: ⁿ√r·e<sup>i(θ + 2kπ)/n</sup>.</li>
+        <li><b>2° grado in C</b>: z = (−b + w)/(2a) con w² = Δ; Δ negativo va bene.</li>
+      </ul>
+      <div data-copy="complessi"></div>
+    </section>
+    <div class="next"><a href="#matrici">← Ripasso matrici</a><a href="#indice">Indice</a></div>
+  </div>
+<script>
+(function(){
+  const { $, it, inp, Board, onDraw, guided, exercises } = Lav;
+  const B = Board($('cv-cx'), {xmin:-3.2,xmax:3.2,ymin:-3,ymax:3});
+  const piF = t => { // angolo in [0, 2π) come multiplo "bello" di π, se c'è
+    for (const d of [1,2,3,4,6,12]) { const k = t*d/Math.PI; if (Math.abs(k-Math.round(k))<1e-7){ const n=Math.round(k); if(n===0) return '0'; return (n===1?'':n)+'π'+(d===1?'':'/'+d); } }
+    return it(t,3)+' rad (≈ '+it(t*180/Math.PI,1)+'°)'; };
+  const cpx = (x,y) => it(x,3)+(y<0?' − ':' + ')+it(Math.abs(y),3)+'·i';
+  const W = [null,[0,1],[1,1],[-1,0]], WN=['','i','1 + i','−1'];
+  const draw = () => {
+    const a=+$('cx-a').value, b=+$('cx-b').value, w=W[+$('cx-w').value]; $('cx-av').textContent=it(a,1); $('cx-bv').textContent=it(b,1);
+    if (!B.fit()) return; B.grid();
+    B.curve(t=>[Math.cos(t),Math.sin(t)],0,6.3,'--line',1.2);
+    const r2=a*a+b*b, r=Math.sqrt(r2);
+    let t = 'z = '+cpx(a,b)+'<br>';
+    if (r<1e-9){ B.dot(0,0,'--u',6); $('cx-out').innerHTML = t+'z = 0: modulo 0, argomento non definito, nessun inverso.'; return; }
+    B.arrow(0,0,a,-b,'--muted','z̄',2); B.arrow(0,0,a/r2,-b/r2,'--w','1/z',2.5);
+    if (w){ const p=[a*w[0]-b*w[1], a*w[1]+b*w[0]]; B.arrow(0,0,p[0],p[1],'--ok','z·w',3); }
+    B.arrow(0,0,a,b,'--u','z',3.5);
+    const q = Math.abs(b)<1e-9 ? (a>0?'sul semiasse reale positivo':'sul semiasse reale negativo') : Math.abs(a)<1e-9 ? (b>0?'sul semiasse immaginario positivo':'sul semiasse immaginario negativo') : (a>0&&b>0?'I quadrante (θ tra 0 e π/2)':a<0&&b>0?'II quadrante (θ tra π/2 e π)':a<0?'III quadrante (θ tra π e 3π/2)':'IV quadrante (θ tra 3π/2 e 2π)');
+    let th = Math.atan2(b,a); if (th<0) th += 2*Math.PI;
+    t += 'Segni: a '+(a>0?'&gt; 0':a<0?'&lt; 0':'= 0')+', b '+(b>0?'&gt; 0':b<0?'&lt; 0':'= 0')+' → <b>'+q+'</b><br>|z| = √('+(a<0?'('+it(a,1)+')':it(a,1))+'² + '+(b<0?'('+it(b,1)+')':it(b,1))+'²) = √'+it(r2,2)+' ≈ '+it(r,3)+'; &nbsp;θ = <b>'+piF(th)+'</b><br>Forma esponenziale: z = '+it(r,3)+'·e<sup>i·'+piF(th)+'</sup>';
+    t += '<br>z̄ = '+cpx(a,-b)+'; &nbsp;1/z = z̄ / |z|² = ('+cpx(a,-b)+') / '+it(r2,2)+' = '+cpx(a/r2,-b/r2);
+    if (w){ const p=[a*w[0]-b*w[1], a*w[1]+b*w[0]], aw=Math.atan2(w[1],w[0]); t += '<br>z·w con w = '+WN[+$('cx-w').value]+': '+cpx(p[0],p[1])+'. Modulo moltiplicato per |w| = '+it(Math.hypot(...w),3)+', argomento aumentato di '+piF(aw)+'.'; }
+    $('cx-out').innerHTML = t;
+  };
+  ['cx-a','cx-b'].forEach(k=>$(k).addEventListener('input', draw)); $('cx-w').addEventListener('change', draw); onDraw('complessi', draw);
+
+  guided('complessi', [
+    { h:'Passo 1 · |z|² e |z|', type:'choice', ans:1, opts:['|z|² = 0, |z| = 0','|z|² = 2, |z| = √2','|z|² = −2'],
+      ok:'Sì: (−1)² + (−1)² = 2, |z| = √2. I quadrati sono sempre positivi.', bad:'|z|² = a² + b² con a = −1 e b = −1: (−1)² = 1.' },
+    { h:'Passo 2 · Quadrante', type:'choice', ans:2, opts:['I','II','III','IV'],
+      ok:'Esatto: a &lt; 0 e b &lt; 0, terzo quadrante, θ tra π e 3π/2.', bad:'Guarda i segni: a = −1 &lt; 0, b = −1 &lt; 0.' },
+    { h:'Passo 3 · Argomento θ', type:'choice', ans:2, opts:['π/4','3π/4','5π/4','7π/4'],
+      ok:'Giusto: cos θ = −1/√2, sin θ = −1/√2 e siamo nel III quadrante: θ = π + π/4 = 5π/4.', bad:'π/4 è nel I quadrante: la "bussola" del passo 2 dice che serve un angolo tra π e 3π/2.' },
+    { h:'Passo 4 · z⁴ in forma algebrica', type:'nums', ans:[-4,0], html:'z⁴ = (√2)⁴·e<sup>i·5π</sup> = '+inp('parte reale')+' + '+inp('parte immaginaria')+'·i',
+      ok:'Perfetto: (√2)⁴ = 4 ed e<sup>i5π</sup> = e<sup>iπ</sup> = −1, quindi z⁴ = −4.', bad:'(√2)⁴ = 4. 5π = π + 2·2π, quindi e<sup>i5π</sup> = e<sup>iπ</sup> = −1.' }
+  ], '<b>Fatto!</b> z = √2·e<sup>i5π/4</sup> e z⁴ = −4. Controllo con la forma algebrica: z² = (−1 − i)² = 1 + 2i + i² = 2i, e z⁴ = (2i)² = −4 ✓.');
+
+  exercises('complessi', [
+    { id:'e1', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'(3 + 2i)·(1 − i)', a:[5,-1], hint:'4 pezzi: 3 − 3i + 2i − 2i².', sol:'3 − 3i + 2i − 2·(−1) = 5 − i.' },
+    { id:'e2', type:'nums', labels:['parte reale','parte immaginaria'], src:'errore 18/11', q:'Inverso di 2 − i (frazioni ok)', a:[0.4,0.2], hint:'|z|² = 4 + 1 = 5.', sol:'(2 + i)/5 = 2/5 + (1/5)·i.' },
+    { id:'e3', type:'choice', src:'errore 18/11', q:'Argomento di −√3 + i', opts:['π/6','5π/6','7π/6','11π/6'], a:1, hint:'a &lt; 0, b &gt; 0: quale quadrante?', sol:'II quadrante, cos θ = −√3/2, sin θ = 1/2: θ = 5π/6.' },
+    { id:'e4', type:'choice', src:'errore 18/11', q:'e<sup>iπ/2</sup>·e<sup>iπ</sup> = …', opts:['i','−1','−i','1'], a:2, hint:'Somma gli esponenti.', sol:'e<sup>i3π/2</sup> = −i.' },
+    { id:'e5', type:'nums', labels:['parte reale','parte immaginaria'], q:'(1 + i)⁴', a:[-4,0], hint:'1 + i = √2·e<sup>iπ/4</sup>.', sol:'(√2)⁴·e<sup>iπ</sup> = 4·(−1) = −4.' },
+    { id:'e6', type:'num', label:'|z| =', q:'z = 3 − 4i', a:5, hint:'√(9 + 16).', sol:'5.' },
+    { id:'e7', type:'choice', q:'Soluzioni di z² + 2z + 2 = 0 in C', opts:['nessuna','−1 + i e −1 − i','1 + i e 1 − i'], a:1, hint:'Δ = 4 − 8 = −4, radici quadrate ±2i.', sol:'z = (−2 ± 2i)/2 = −1 ± i.' },
+    { id:'e8', type:'choice', src:'lacuna', q:'Soluzioni di z² − 2i·z − 1 = 0', opts:['z = i (doppia)','z = 1 e z = −1','z = ±i'], a:0, hint:'Δ = (−2i)² + 4 = −4 + 4.', sol:'Δ = 0, z = 2i/2 = i. Infatti z² − 2iz − 1 = (z − i)².' },
+    { id:'e9', type:'choice', q:'Quante soluzioni ha z⁵ = 1 in C?', opts:['1','2','5'], a:2, hint:'Radici n-esime.', sol:'5: i vertici di un pentagono regolare sul cerchio di raggio 1.' }
+  ]);
+})();
+</script>

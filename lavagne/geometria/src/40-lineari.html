@@ -1,0 +1,158 @@
+  <!-- ================= CAPITOLO 4 · APPLICAZIONI LINEARI ================= -->
+  <div class="chapter" data-ch="lineari" data-title="4 · Applicazioni lineari" data-date="1/12" data-full="Applicazioni lineari, nucleo, immagine, matrice associata" data-src="Libro p. 92 e pp. 115-134 (salta 4.3.4 Hom) · Fogli 7-8" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 4 · giorno 1/12 · libro p. 92 e pp. 115-134</div>
+      <h2>Funzioni che rispettano somme e multipli</h2>
+      <p class="big">Un'applicazione lineare è una funzione tra spazi vettoriali che "va d'accordo" con le due operazioni: l'immagine di una somma è la somma delle immagini, l'immagine di un multiplo è il multiplo dell'immagine.</p>
+      <p>Il motivo per cui ti interessano: <b>ogni applicazione lineare è una matrice</b>, e viceversa. Così domande come "f è iniettiva?" o "quanto è grande l'immagine?" diventano conti di rango, che sai già fare.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea con un disegno</div>
+      <h2>Cosa fa A al piano</h2>
+      <p>L<sub>A</sub>: R² → R², L<sub>A</sub>(x) = A·x. La griglia grigia è il piano dopo la trasformazione: le rette restano rette, le parallele restano parallele, l'origine sta ferma. Il quadratino diventa il parallelogramma viola.</p>
+      <p>Guarda le frecce: <span class="cu">A·e₁</span> è la <b>prima colonna</b> di A e <span class="cv">A·e₂</span> è la <b>seconda colonna</b>. Prova l'esempio "schiaccia su una retta".</p>
+      <canvas id="cv-lin" class="tall" aria-label="Trasformazione del piano data dalla matrice A"></canvas>
+      <div class="controls" id="ctl-lin"></div>
+      <p class="readout" id="out-lin"></p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Definizioni e fatti, scritti per intero</div>
+      <h2>Le regole da sapere</h2>
+      <div class="def"><b>Applicazione lineare (p. 115)</b>
+        <p>f: V → W (V, W spazi vettoriali su K) è lineare se per ogni u, v ∈ V e ogni λ ∈ K:</p>
+        <p class="math">f(u + v) = f(u) + f(v) &nbsp;&nbsp; e &nbsp;&nbsp; f(λ·v) = λ·f(v)</p>
+        <p>Conseguenza utile per i quiz: <b>f(0) = 0</b>. Se f(0) ≠ 0, f non è lineare (es. f(x, y) = (x + 1, y)). Anche prodotti tra variabili, quadrati, seni… la rendono non lineare.</p>
+      </div>
+      <div class="def"><b>Matrice ↔ applicazione (Prop. 4.1.19 e Cor. 4.1.7)</b>
+        <p>Per A ∈ M(m, n, K), L<sub>A</sub>: Kⁿ → Kᵐ, L<sub>A</sub>(x) = A·x è lineare. Ogni f: Kⁿ → Kᵐ lineare è L<sub>A</sub> per un'unica A, e <b>la colonna i di A è f(eᵢ)</b>.</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché la colonna i è A·eᵢ?</summary><p>eᵢ ha un 1 al posto i e 0 altrove. Nel prodotto riga per colonna ogni riga di A "pesca" solo il suo i-esimo numero. Il risultato è la colonna i.</p></details>
+        <p>Più in generale (Prop. 4.1.18): un'applicazione lineare è decisa da cosa fa su una base. Se sai f(v₁), …, f(v<sub>n</sub>), sai tutto.</p>
+      </div>
+      <div class="def"><b>Nucleo e immagine (pp. 121-123)</b>
+        <p><b>ker f</b> = {v ∈ V : f(v) = 0} ⊆ V e <b>Im f</b> = {f(v) : v ∈ V} ⊆ W sono sottospazi.</p>
+        <p>f è <b>iniettiva ⇔ ker f = {0}</b> (Prop. 4.2.2). Per L<sub>A</sub>: ker L<sub>A</sub> sono le soluzioni di A·x = 0, e <b>Im L<sub>A</sub> = Span(colonne di A)</b>, quindi dim Im L<sub>A</sub> = rk A (Cor. 4.2.8).</p>
+        <span class="why easy">perché: facile</span>
+        <details class="whybox"><summary>Perché iniettiva vuol dire nucleo nullo?</summary><p>f(u) = f(v) ⇔ f(u) − f(v) = 0 ⇔ f(u − v) = 0 ⇔ u − v ∈ ker f. Se ker f = {0} allora u − v = 0, cioè u = v.</p></details>
+      </div>
+      <div class="def"><b>Teorema della dimensione (Teorema 4.2.9, p. 124)</b>
+        <p class="math">dim V = dim ker f + dim Im f</p>
+        <span class="why mem">a memoria: la formula</span>
+        <details class="whybox"><summary>L'idea</summary><p>Le direzioni di V o vengono "schiacciate a zero" (finiscono nel nucleo) o arrivano da qualche parte (fanno l'immagine). Per L<sub>A</sub> è il conto che sai già: n = (n − rk A) + rk A.</p></details>
+        <p>Conseguenze da quiz: se dim V &gt; dim W, f <b>non</b> è iniettiva. Se dim V &lt; dim W, f <b>non</b> è suriettiva. Se dim V = dim W: iniettiva ⇔ suriettiva ⇔ isomorfismo ⇔ (per L<sub>A</sub>) A invertibile.</p>
+      </div>
+      <div class="def"><b>Matrice associata (par. 4.3)</b>
+        <p>B = (v₁, …, v<sub>n</sub>) base di V, C base di W. La matrice <b>[f]<sup>B</sup><sub>C</sub></b> ha come colonna j le <b>coordinate di f(v<sub>j</sub>) rispetto a C</b>. Allora [f(v)]<sub>C</sub> = [f]<sup>B</sup><sub>C</sub> · [v]<sub>B</sub> (Prop. 4.3.4).</p>
+        <p>Rango per righe = rango per colonne (p. 92): ti serve per dire che rk A = rk(<sup>t</sup>A).</p>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Nucleo e immagine di L<sub>A</sub></h2>
+      <p>Esempio: A = ${M([[1,1,2],[0,1,1],[1,2,3]])}$, L<sub>A</sub>: R³ → R³.</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Gauss su A</h3><p>R3 ← R3 − R1, poi R3 ← R3 − R2: ${M([[1,1,2],[0,1,1],[0,0,0]])}$. Pivot nelle colonne 1 e 2: rk A = 2.</p></div>
+        <div class="step"><h3>Passo 2 · Immagine</h3><p>Im L<sub>A</sub> = Span(colonne originali con pivot) = Span((1, 0, 1), (1, 1, 2)). dim Im = 2. Non è suriettiva (2 &lt; 3).</p></div>
+        <div class="step"><h3>Passo 3 · Nucleo: risolvi A·x = 0 dalla matrice ridotta</h3><p>y + z = 0 ⇒ y = −z. x + y + 2z = 0 ⇒ x = −y − 2z = −z. Con z = t: (−t, −t, t). ker L<sub>A</sub> = Span((−1, −1, 1)), dim ker = 1. Non è iniettiva.</p></div>
+        <div class="step"><h3>Passo 4 · Controllo col teorema della dimensione</h3><p class="math">dim ker + dim Im = 1 + 2 = 3 = dim R³ ✓</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Matrice associata: la derivata</h2>
+      <p>f: R₂[x] → R₂[x], f(p) = p′ (derivata). Base B = C = (1, x, x²).</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Calcola f su ogni vettore della base</h3><p>f(1) = 0, f(x) = 1, f(x²) = 2x.</p></div>
+        <div class="step"><h3>Passo 2 · Scrivi le coordinate nella base (1, x, x²)</h3><p>0 → (0, 0, 0); 1 → (1, 0, 0); 2x → (0, 2, 0).</p></div>
+        <div class="step"><h3>Passo 3 · Mettile in colonna</h3><p class="math">[f]<sup>B</sup><sub>B</sub> = ${M([[0,1,0],[0,0,2],[0,0,0]])}$</p><p>Controllo: p = 3 + 5x + 4x² ha coordinate (3, 5, 4). Matrice per (3, 5, 4) = (5, 8, 0), cioè 5 + 8x: è proprio p′ = 5 + 8x. rk = 2, ker f = costanti (dim 1), 1 + 2 = 3 ✓.</p></div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Laboratorio</div>
+      <h2>Rango di A = dimensione dell'immagine</h2>
+      <p>Scrivi la matrice di L<sub>A</sub>. Il laboratorio dà rk A = dim Im L<sub>A</sub>, le colonne che generano l'immagine e dim ker L<sub>A</sub> = n − rk A.</p>
+      <div id="lab-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>A = ${M([[1,2,1],[2,4,0]])}$, L<sub>A</sub>: R³ → R²</h2>
+      <p>Trova rk A, dim Im, dim ker e una base del nucleo. Di' se L<sub>A</sub> è iniettiva o suriettiva.</p>
+      <div class="steps" id="guided-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-lineari"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Lineare:</b> f(u + v) = f(u) + f(v), f(λ·v) = λ·f(v). Test veloce: f(0) = 0, niente prodotti o quadrati di variabili.</li>
+        <li><b>Colonna i di A = A·eᵢ.</b> Ogni f: Kⁿ → Kᵐ lineare è L<sub>A</sub>.</li>
+        <li><b>ker L<sub>A</sub></b> = soluzioni di A·x = 0. <b>Im L<sub>A</sub></b> = Span(colonne). dim Im = rk A.</li>
+        <li><b>Iniettiva ⇔ ker = {0}.</b> Suriettiva ⇔ Im = W ⇔ rk A = m.</li>
+        <li><b>dim V = dim ker f + dim Im f.</b></li>
+        <li><b>[f]<sup>B</sup><sub>C</sub>:</b> colonna j = coordinate di f(v<sub>j</sub>) nella base C.</li>
+      </ul>
+      <div data-copy="lineari"></div>
+    </section>
+    <div class="next"><a href="#grassmann">← Capitolo 3</a><a href="#determinante">Capitolo 5 · Determinante →</a></div>
+  </div>
+<script>
+(function(){
+  const { $, inp, M, guided, exercises, lab, transform } = Lav;
+  const fixM = s => s.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,j)=>M(JSON.parse(j)));
+  document.querySelectorAll('[data-ch="lineari"] .step p, [data-ch="lineari"] section > p, [data-ch="lineari"] h2').forEach(p => { p.innerHTML = fixM(p.innerHTML); });
+
+  transform('lineari', 'cv-lin', 'ctl-lin', 'out-lin', { presets:[
+    { name:'Allunga in orizzontale', m:[2,0,0,1] },
+    { name:'Rotazione di 90°', m:[0,-1,1,0] },
+    { name:'Taglio (shear)', m:[1,1,0,1] },
+    { name:'Riflessione sulla bisettrice', m:[0,1,1,0] },
+    { name:'Schiaccia su una retta (det = 0)', m:[1,2,0.5,1] },
+    { name:'Proiezione sull\'asse x', m:[1,0,0,0] }
+  ]});
+
+  lab('lab-lineari', { show:['cols','kernel'], presets:[
+    { name:'A 3×3 della ricetta', rows:[[1,1,2],[0,1,1],[1,2,3]] },
+    { name:'A 2×3 dell\'esercizio guidato', rows:[[1,2,1],[2,4,0]] },
+    { name:'Foglio 4 · quiz 6', rows:[[1,2,0],[0,1,3],[1,3,3]] },
+    { name:'L_A: R⁴ → R³', rows:[[1,0,1,2],[0,1,1,1],[1,1,2,3]] }
+  ]});
+
+  guided('lineari', [
+    { h:'Passo 1 · Gauss: R2 ← R2 − 2·R1. Quanti pivot? (rk A)', type:'nums', ans:[2],
+      html:M([[1,2,1],[0,0,-2]])+' &nbsp; rk A = '+inp('rango'), ok:'Sì: pivot nella colonna 1 (riga 1) e nella colonna 3 (riga 2).', bad:'Conta le righe non nulle dopo Gauss.' },
+    { h:'Passo 2 · dim Im L<sub>A</sub> e dim ker L<sub>A</sub>', type:'nums', ans:[2,1],
+      html:'dim Im = '+inp('dim immagine')+' &nbsp; dim ker = '+inp('dim nucleo'), ok:'Giusto: dim Im = rk A = 2, dim ker = 3 − 2 = 1.', bad:'dim Im = rk A; dim ker = n − rk A con n = 3 (dimensione di partenza).' },
+    { h:'Passo 3 · Base del nucleo: dalla riga 2, −2z = 0. Dalla riga 1, x + 2y + z = 0. Metti y = 1: quanto valgono x e z?', type:'nums', ans:[-2,0],
+      html:'x = '+inp('x')+' &nbsp; y = 1 &nbsp; z = '+inp('z'), ok:'Perfetto: ker L<sub>A</sub> = Span((−2, 1, 0)).', bad:'Dalla seconda riga z = 0. Poi x + 2·1 + 0 = 0.' },
+    { h:'Passo 4 · Allora L<sub>A</sub> è…', type:'choice', ans:2,
+      opts:['iniettiva e suriettiva','iniettiva ma non suriettiva','suriettiva ma non iniettiva','né iniettiva né suriettiva'],
+      ok:'Esatto: Im ha dimensione 2 = dim R², quindi Im = R² (suriettiva); ker ≠ {0} (non iniettiva).', bad:'Iniettiva ⇔ ker = {0}. Suriettiva ⇔ dim Im = dim R² = 2.' }
+  ], '<b>Fatto!</b> rk A = 2, Im L<sub>A</sub> = R², ker L<sub>A</sub> = Span((−2, 1, 0)). Controllo: 1 + 2 = 3 = dim R³.');
+
+  exercises('lineari', [
+    { id:'e1', type:'choice', q:'f: R² → R², f(x, y) = (x + 1, y) è lineare?', opts:['Sì','No, perché f(0, 0) = (1, 0) ≠ (0, 0)','Sì, perché ogni componente è un polinomio di grado 1'], a:1, hint:'Calcola f(0, 0).', sol:'Una lineare manda 0 in 0. Qui f(0, 0) = (1, 0): non è lineare.' },
+    { id:'e2', type:'choice', q:'Quale di queste è lineare da R² a R²?', opts:['f(x, y) = (x·y, x)','f(x, y) = (2x − y, 3y)','f(x, y) = (x², y)'], a:1, hint:'Cerca quella senza prodotti tra variabili e senza potenze.', sol:'(2x − y, 3y) = A·(x, y) con A = '+M([[2,-1],[0,3]])+'. Le altre hanno x·y o x².' },
+    { id:'e3', type:'choice', src:'Foglio 4 · quiz 6', q:'A = '+M([[1,2,0],[0,1,3],[1,3,3]])+'. Quale b ∈ R³ NON sta in Im L<sub>A</sub>?', opts:['(0, 1, 1)','(2, 0, 2)','(1, 0, 2)','(1, 1, 2)'], a:2,
+      hint:'Riga 3 = riga 1 + riga 2. Quindi ogni b nell\'immagine deve avere b₃ = b₁ + b₂.', sol:'Im L<sub>A</sub> = {b : b₃ = b₁ + b₂}. (1, 0, 2): 1 + 0 = 1 ≠ 2. Gli altri rispettano la condizione.' },
+    { id:'e4', type:'num', label:'dim ker =', q:'L<sub>A</sub>: R⁴ → R³ con rk A = 3.', a:1, hint:'Teorema della dimensione con dim V = 4.', sol:'4 − 3 = 1.' },
+    { id:'e5', type:'choice', q:'Una f: R³ → R² lineare può essere iniettiva?', opts:['Sì, se A ha rango 2','No, mai','Sì, se f(0) = 0'], a:1, hint:'dim ker f = 3 − dim Im f, e dim Im f ≤ 2.', sol:'dim ker f ≥ 3 − 2 = 1, quindi ker f ≠ {0}: mai iniettiva.' },
+    { id:'e6', type:'nums', labels:['prima componente','seconda componente'], q:'A = '+M([[3,-1],[4,7]])+'. Quanto vale A·e₂?', a:[-1,7], hint:'A·e₂ è la seconda colonna.', sol:'(−1, 7).' },
+    { id:'e7', type:'choice', q:'f: R³ → R³ lineare con ker f = {0}. Allora…', opts:['f è anche suriettiva','f non può essere suriettiva','non si può dire'], a:0, hint:'dim Im f = 3 − 0.', sol:'dim Im f = 3 = dim R³, quindi Im f = R³: f è un isomorfismo.' },
+    { id:'e8', type:'choice', q:'f: R₂[x] → R₂[x], f(p) = p′. Quanto vale dim Im f?', opts:['1','2','3'], a:1, hint:'Il nucleo sono i polinomi con derivata zero.', sol:'ker f = costanti, dim 1. dim Im f = 3 − 1 = 2 (Im f = R₁[x]).' }
+  ]);
+})();
+</script>

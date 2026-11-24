@@ -219,7 +219,9 @@ window.Lav = (function(){
       if (opts.show.includes('kernel')) s.push('Sistema omogeneo A·x = 0 in K<sup>'+n+'</sup>: dimensione delle soluzioni = n − rk A = '+n+' − '+rk+' = <b>'+(n-rk)+'</b>.');
       if (opts.show.includes('det') && g.det) s.push('Matrice quadrata: <b>det A = '+g.det+'</b> = prodotto dei pivot'+(g.swaps?' cambiato di segno '+g.swaps+' volta/e (uno per ogni scambio)':'')+'. '+(g.det.zero?'det = 0: A non è invertibile.':'det ≠ 0: A è invertibile.'));
       if (opts.show.includes('det') && !g.det && !aug) s.push('Il determinante esiste solo per matrici quadrate.');
-      if (aug){ const rkC = rk + (g.augPiv?1:0);
+      if (aug && opts.show.includes('inverse')){ const sq = g.R===aug && g.C===2*aug;
+        s.push(!sq ? 'Per l\'inversa scrivi (A | I) con A quadrata n × n: n righe e 2n colonne.' : rk===aug ? '<b>rk A = '+rk+' = n</b>: A è invertibile e a destra della riga verticale leggi <b>A⁻¹</b>.' : '<b>rk A = '+rk+' &lt; '+aug+'</b>: a sinistra è comparsa una riga di zeri, A <b>non è invertibile</b> (det A = 0).'); }
+      else if (aug){ const rkC = rk + (g.augPiv?1:0);
         s.push('<b>rk(A | b) = '+rkC+'</b>. '+(g.augPiv ? 'C\'è un pivot nella colonna dei termini noti (riga del tipo 0 = numero ≠ 0): <b>nessuna soluzione</b> (Rouché-Capelli: rk A ≠ rk(A | b)).'
           : (rk===n ? 'rk A = rk(A | b) = n = '+n+': <b>una sola soluzione</b>.' : 'rk A = rk(A | b) = '+rk+' &lt; n = '+n+': <b>infinite soluzioni</b>, con n − rk = '+(n-rk)+' parametri liberi.'))); }
       return s.map(x=>'<p>'+x+'</p>').join('');
@@ -266,7 +268,7 @@ window.Lav = (function(){
       if (opts.eigen){ es = eig(a,b,c,d); es.forEach(e=>{ if(e.v) B.through(e.v[0],e.v[1],'--ok',2,[7,6]); }); }
       B.arrow(0,0,...A(1,0),'--u','A·e₁'); B.arrow(0,0,...A(0,1),'--v','A·e₂');
       const det=a*d-b*c; let txt = 'A = '+M([[it(a,1),it(b,1)],[it(c,1),it(d,1)]])+' &nbsp; det A = '+it(a,1)+'·'+it(d,1)+' − '+it(b,1)+'·'+it(c,1)+' = <b>'+it(det,2)+'</b>. ';
-      if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
+      if (opts.area===false) {} else if (Math.abs(det)<1e-9) txt += '<br>det A = 0: il piano viene <b>schiacciato</b> su una retta (o su un punto). Ci sono vettori v ≠ 0 con A·v = 0, cioè ker L<sub>A</sub> ≠ {0}: L<sub>A</sub> non è invertibile.';
       else txt += '<br>Il quadratino 1×1 diventa il parallelogramma viola, di area |det A| = '+it(Math.abs(det),2)+(det<0?'; det &lt; 0: il disegno si è anche <b>ribaltato</b> (e₁ ed e₂ si sono scambiati di verso).':'.');
       if (opts.eigen){ txt += '<br>'+(es.length ? es.map(e=> e.v ? 'Autovalore λ = <b>'+it(e.l,3)+'</b>: la retta verde tratteggiata Span('+it(e.v[0],2)+', '+it(e.v[1],2)+') viene mandata in sé stessa.' : 'λ = '+it(e.l,3)+': A = λ·I, ogni vettore è autovettore.').join('<br>') : 'Nessun autovalore reale: p<sub>A</sub>(λ) non ha radici in R (nessuna retta resta ferma, es. una rotazione).'); }
       if (opts.test){ const t=+$(cvId+'-t').value*Math.PI/180, v=[2*Math.cos(t),2*Math.sin(t)], Av=A(...v), cr=v[0]*Av[1]-v[1]*Av[0], par = Math.abs(cr) < 0.12*Math.hypot(...Av)*2+1e-9 && Math.hypot(...Av)>1e-9;
