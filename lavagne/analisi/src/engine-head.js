@@ -108,7 +108,8 @@
     if (/^-?\d+(\.\d+)?\/\d+(\.\d+)?$/.test(v)){ const [a,b]=v.split('/'); return +a/+b; }
     return Number(v);
   }
-  const same = (a,b) => (a===b) || (isFinite(a) && isFinite(b) && Math.abs(a-b) < 1e-6);
+  // risposte non intere: va bene anche il decimale arrotondato a 2 cifre (0,33 per 1/3)
+  const same = (a,b) => (a===b) || (isFinite(a) && isFinite(b) && (Math.abs(a-b) < 1e-6 || (!Number.isInteger(b) && Math.abs(a-b) <= 0.006*Math.max(1,Math.abs(b)))));
   const say = (el, ok, txt) => { el.textContent = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
 
   /* ---------------- esercizi guidati ---------------- */

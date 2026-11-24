@@ -69,7 +69,7 @@ p { margin: 0; }
 .math { font-size: 1.35rem; display: flex; align-items: center; justify-content: center; gap: .5em; flex-wrap: wrap; padding: 8px 0; }
 .math.left { justify-content: flex-start; }
 .fr { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.2; }
-.fr > span { padding: 0 .25em; }
+.fr > span { padding: 0 .25em; align-self: stretch; text-align: center; }
 .fr > span + span { border-top: 2px solid currentColor; }
 .rt { white-space: nowrap; }
 .rt sup { font-size: .6em; margin-right: -.3em; vertical-align: .85em; }
@@ -150,6 +150,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <a href="#serie-parametro" data-ch="serie-parametro">7 · Serie con parametro</a>
     <a href="#limiti-funzioni" data-ch="limiti-funzioni">8 · Limiti di funzioni</a>
     <a href="#continuita-derivata" data-ch="continuita-derivata">9 · Continuità e derivata</a>
+    <a href="#regole-derivazione" data-ch="regole-derivazione">10 · Regole di derivazione</a>
+    <a href="#teoremi-taylor" data-ch="teoremi-taylor">11 · Rolle, Lagrange, Taylor</a>
   </nav>
 
   <!-- ================= CAPITOLO 1 ================= -->
@@ -1002,6 +1004,192 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
   </div>
 
+  <!-- ================= CAPITOLO 10 ================= -->
+  <div class="chapter" data-ch="regole-derivazione" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 10 · blocco del 30/11 · Albano lezioni 30 ottobre e 3 novembre · dispensa pp. 92-95</div>
+      <h2>Le regole di derivazione</h2>
+      <p class="big">Nel capitolo 9 hai calcolato le derivate con la definizione, cioè il limite per h → 0 del rapporto incrementale. Funziona, ma è lento. Qui impari le scorciatoie: una tabellina di derivate base e cinque regole per combinarle.</p>
+      <p>A cosa serve: all'esame non si deriva mai con la definizione (salvo richiesta esplicita). Si usano queste regole, nello studio di funzione, nei limiti con De L'Hôpital e negli integrali (al contrario).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il grafico della derivata · prima guardiamo</div>
+      <h2>f′(x) è la pendenza di f nel punto x</h2>
+      <p>Sposta il punto: la tangente (blu) cambia pendenza. Quel numero, punto per punto, disegna una nuova funzione: la <b>derivata</b> f′ (arancione).</p>
+      <canvas id="plotRD" aria-label="Funzione e sua derivata"></canvas>
+      <div class="controls">
+        <label for="rdS">Funzione: <select id="rdS">
+          <option value="0">f(x) = x²</option>
+          <option value="1">f(x) = x³</option>
+          <option value="2">f(x) = sin x</option>
+          <option value="3">f(x) = eˣ</option>
+          <option value="4">f(x) = ln x</option>
+        </select></label>
+        <label for="rdX">x₀: <input type="range" id="rdX" min="0" max="100" value="70"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--ink)"></i>f</span><span><i style="background:var(--cop)"></i>tangente in x₀</span><span><i style="background:var(--thief)"></i>f′</span></div>
+      <div class="readout" id="rdOut"></div>
+      <div class="note">Nota: dove f sale, f′ è positiva; dove f scende, f′ è negativa; dove f ha la cima o il fondo, f′ = 0. Questo è il cuore dello studio di funzione.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La tabellina <span class="tag mem">a memoria</span></div>
+      <h2>Derivate fondamentali</h2>
+      <div class="when">
+        <div>(costante)′ = 0</div>
+        <div>(xᵃ)′ = a · x<sup>a−1</sup> &nbsp; (per esempio (x³)′ = 3x², (√x)′ = 1/(2√x))</div>
+        <div>(eˣ)′ = eˣ</div>
+        <div>(aˣ)′ = aˣ · ln a</div>
+        <div>(ln x)′ = 1/x</div>
+        <div>(sin x)′ = cos x</div>
+        <div>(cos x)′ = −sin x</div>
+        <div>(tan x)′ = 1/cos² x = 1 + tan² x</div>
+        <div>(arctan x)′ = 1/(1 + x²)</div>
+        <div>(arcsin x)′ = 1/√(1 − x²)</div>
+      </div>
+      <p><b>Perché, per le più usate</b> <span class="tag cap">facile</span>: (x²)′ = 2x l'hai visto nel capitolo 9 con la definizione. (eˣ)′ = eˣ viene dal limite notevole: [e<sup>x+h</sup> − eˣ]/h = eˣ · (eʰ − 1)/h → eˣ · 1 per h → 0. (sin x)′ in 0 vale 1 per il limite notevole sin h / h → 1 per h → 0. Le altre: <b>a memoria</b>, il conto è lungo e non serve capirlo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Le regole <span class="tag mem">a memoria</span></div>
+      <h2>Come si combinano</h2>
+      <div class="steps">
+        <div class="step"><h3>Somma e costante <span class="tag cap">facile</span></h3><p>(f + g)′ = f′ + g′ e (c · f)′ = c · f′. Ovvio: se due cose salgono, la somma sale della somma delle pendenze.</p></div>
+        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p></div>
+        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p></div>
+        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p></div>
+        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p></div>
+      </div>
+      <div class="warn"><b>Errore classico con la catena:</b> (sin(3x))′ = cos(3x) · 3, non cos(3x). Ogni volta che "dentro" non c'è solo x, moltiplica per la derivata di quello che c'è dentro.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Deriva f(x) = (3x + 1)⁵ e calcola f′(0)</h2>
+      <div class="steps" id="guided-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Calcola la derivata con le regole, poi metti il numero. Frazioni tipo 1/4 vanno bene.</p>
+      <div id="ex-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Tabellina: (xᵃ)′ = a x<sup>a−1</sup>; (eˣ)′ = eˣ; (aˣ)′ = aˣ ln a; (ln x)′ = 1/x; (sin x)′ = cos x; (cos x)′ = −sin x; (tan x)′ = 1 + tan² x; (arctan x)′ = 1/(1 + x²); (arcsin x)′ = 1/√(1 − x²).</li>
+        <li>(f g)′ = f′g + f g′ &nbsp;·&nbsp; (f/g)′ = (f′g − f g′)/g².</li>
+        <li>Catena: [f(g(x))]′ = f′(g(x)) · g′(x): da fuori a dentro, moltiplicando.</li>
+        <li>Inversa: (f<sup>−1</sup>)′(y) = 1/f′(x), con y = f(x).</li>
+      </ul>
+      <div data-copy="regole-derivazione"></div>
+    </section>
+  </div>
+
+  <!-- ================= CAPITOLO 11 ================= -->
+  <div class="chapter" data-ch="teoremi-taylor" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 11 · blocco del 3/12 · Albano lezioni 5, 6 e 10 novembre · dispensa pp. 96-102, 109-115</div>
+      <h2>Rolle, Lagrange, De L'Hôpital, Taylor</h2>
+      <p class="big">Quattro attrezzi, due "di teoria" e due "da calcolo":</p>
+      <ul class="recap">
+        <li><b>Rolle e Lagrange</b>: legano la derivata alla crescita della funzione. Servono a giustificare lo studio di funzione (capitolo 12) e sono domande di teoria tipiche.</li>
+        <li><b>De L'Hôpital e Taylor</b>: risolvono i limiti che con i limiti notevoli non riesci a fare. Taylor è lo strumento più potente per i limiti all'esame.</li>
+      </ul>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Rolle e Lagrange <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Da qualche parte la pendenza è quella media</h2>
+      <div class="math left"><span class="box cop"><b>Rolle.</b> f continua su [a, b], derivabile in (a, b), e f(a) = f(b). Allora esiste c in (a, b) con f′(c) = 0.</span></div>
+      <p><b>Idea (facile):</b> parti a una quota e torni alla stessa quota. Da qualche parte hai una cima (o un fondo), e lì la tangente è orizzontale.</p>
+      <div class="math left"><span class="box thief"><b>Lagrange.</b> f continua su [a, b], derivabile in (a, b). Allora esiste c in (a, b) con <span class="fr"><span>f(b) − f(a)</span><span>b − a</span></span> = f′(c).</span></div>
+      <p><b>Idea (facile):</b> fai 120 km in un'ora. La velocità media è 120 km/h. In almeno un istante il tachimetro ha segnato esattamente 120. Nel disegno: la secante da A a B (arancione) e, in un punto c, una tangente parallela (blu).</p>
+      <canvas id="plotLG" aria-label="Teorema di Lagrange"></canvas>
+      <div class="controls"><label for="lgB">Sposta b: <input type="range" id="lgB" min="0" max="100" value="80"></label></div>
+      <div class="readout" id="lgOut"></div>
+      <p><b>Conseguenze</b> <span class="tag mem">a memoria</span>, sono quelle che usi davvero: se f′ &gt; 0 su un intervallo, f è crescente lì; se f′ &lt; 0, è decrescente; se f′ = 0 su tutto un intervallo, f è costante.</p>
+      <div class="note"><b>Dimostrazioni.</b> Lagrange si dimostra applicando Rolle alla differenza tra f e la retta secante (che vale 0 in a e in b): è corta, <b>capiscila se Albano la chiede</b>. Rolle usa Weierstrass e il fatto che in una cima la derivata è 0 (Fermat): più lunga, <b>a memoria solo se richiesta</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">De L'Hôpital <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea per 0/0 è facile</span></div>
+      <h2>Con 0/0 o ∞/∞, derivo sopra e sotto</h2>
+      <div class="math left"><span class="box cop">Se <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f(x)</span><span>g(x)</span></span> è nella forma 0/0 oppure ∞/∞, e <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f′(x)</span><span>g′(x)</span></span> esiste, allora i due limiti sono uguali.</span></div>
+      <p><b>Perché (caso 0/0, facile):</b> vicino a x₀ ogni funzione è quasi la sua tangente. Se f(x₀) = g(x₀) = 0, allora f(x) ≈ f′(x₀)(x − x₀) e g(x) ≈ g′(x₀)(x − x₀). Dividendo, (x − x₀) si semplifica e resta f′/g′. Vale anche x₀ = ±∞.</p>
+      <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> → forma 0/0 → <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>cos x</span><span>1</span></span> = 1</div>
+      <div class="warn"><b>Tre errori classici.</b> 1) Derivi sopra e sotto <b>separatamente</b>, non con la regola del quoziente. 2) Prima controlla che sia davvero 0/0 o ∞/∞: con (x + 1)/x per x → 0 non si può (è 1/0). 3) Con 0 · ∞ o ∞ − ∞ prima riscrivi come frazione: x ln x = ln x / (1/x).</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Taylor · prima guardiamo</div>
+      <h2>Un polinomio che copia la funzione vicino a 0</h2>
+      <p>Il polinomio di grado 1 copia valore e pendenza (è la tangente). Quello di grado 2 copia anche la curvatura. Più alzi il grado, più a lungo il polinomio (arancione) sta attaccato alla funzione (nera).</p>
+      <canvas id="plotTY" aria-label="Polinomi di Taylor"></canvas>
+      <div class="controls">
+        <label for="tyS">Funzione: <select id="tyS">
+          <option value="0">eˣ</option>
+          <option value="1">sin x</option>
+          <option value="2">cos x</option>
+          <option value="3">ln(1 + x)</option>
+        </select></label>
+        <label for="tyN">Grado: <input type="range" id="tyN" min="0" max="9" value="1"></label>
+      </div>
+      <div class="readout" id="tyOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Taylor · la formula <span class="tag mem">a memoria</span></div>
+      <h2>Sviluppo di Mac Laurin (Taylor in x₀ = 0)</h2>
+      <div class="math left"><span class="box cop">f(x) = f(0) + f′(0) x + <span class="fr"><span>f″(0)</span><span>2</span></span> x² + … + <span class="fr"><span>f<sup>(n)</sup>(0)</span><span>n!</span></span> xⁿ + o(xⁿ) &nbsp; per x → 0</span></div>
+      <p><b>o-piccolo</b> <span class="tag cap">da capire</span>: o(xⁿ) vuol dire "un pezzo che, per x → 0, va a 0 più in fretta di xⁿ", cioè <span class="lim">lim<span>x→0</span></span> o(xⁿ)/xⁿ = 0. È l'errore che commetti fermandoti al grado n. Regole: o(xⁿ) + o(xⁿ) = o(xⁿ); x · o(xⁿ) = o(x<sup>n+1</sup>); un termine x<sup>m</sup> con m &gt; n si "mangia" dentro o(xⁿ).</p>
+      <p><b>Sviluppi da sapere</b> <span class="tag mem">a memoria</span> (tutti per x → 0):</p>
+      <div class="when">
+        <div>eˣ = 1 + x + x²/2 + x³/6 + … + xⁿ/n! + o(xⁿ)</div>
+        <div>sin x = x − x³/6 + x⁵/120 + o(x⁶)</div>
+        <div>cos x = 1 − x²/2 + x⁴/24 + o(x⁵)</div>
+        <div>ln(1 + x) = x − x²/2 + x³/3 + o(x³)</div>
+        <div>(1 + x)ᵃ = 1 + a x + <span class="fr"><span>a(a − 1)</span><span>2</span></span> x² + o(x²)</div>
+        <div>arctan x = x − x³/3 + o(x⁴)</div>
+      </div>
+      <p><b>Perché i coefficienti sono quelli</b> <span class="tag cap">facile per eˣ</span>: tutte le derivate di eˣ in 0 valgono 1, quindi il coefficiente di xⁿ è 1/n!. Per sin e cos le derivate in 0 girano 0, 1, 0, −1: per questo compaiono solo potenze dispari (sin) o pari (cos).</p>
+      <div class="steps">
+        <div class="step"><h3>Come si usa nei limiti</h3><p>1) Controllo la forma (di solito 0/0). 2) Sviluppo ogni pezzo fino al primo termine che non si cancella. 3) Tengo il termine più basso sopra e sotto, il resto finisce nell'o-piccolo. 4) Faccio il limite per x → 0.</p></div>
+      </div>
+      <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − (x − x³/6 + o(x³))</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x³/6 + o(x³)</span><span>x³</span></span> = <span class="fr"><span>1</span><span>6</span></span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>eˣ − 1 − x</span><span>x²</span></span> con Taylor</h2>
+      <div class="steps" id="guided-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Per +∞ scrivi <b>inf</b>, frazioni tipo 1/6.</p>
+      <div id="ex-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Rolle: f continua su [a, b], derivabile in (a, b), f(a) = f(b) ⇒ esiste c con f′(c) = 0.</li>
+        <li>Lagrange: [f(b) − f(a)]/(b − a) = f′(c). Conseguenze: f′ &gt; 0 ⇒ crescente; f′ &lt; 0 ⇒ decrescente; f′ = 0 ⇒ costante.</li>
+        <li>De L'Hôpital: solo con 0/0 o ∞/∞; derivo sopra e sotto separatamente.</li>
+        <li>Mac Laurin: f(x) = Σ f<sup>(k)</sup>(0)/k! · x<sup>k</sup> + o(xⁿ) per x → 0. o(xⁿ)/xⁿ → 0 per x → 0.</li>
+        <li>Sviluppi: eˣ, sin x, cos x, ln(1 + x), (1 + x)ᵃ, arctan x (riquadro sopra).</li>
+      </ul>
+      <div data-copy="teoremi-taylor"></div>
+    </section>
+  </div>
+
   <footer>Lavagna del tutor di Analisi T-1 · fonti: lavagne di Mughetti e Albano, dispensa Unibo (Arcozzi-Galeotti) · esame 25 gennaio 2027</footer>
 </div>
 
@@ -1116,7 +1304,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     if (/^-?\d+(\.\d+)?\/\d+(\.\d+)?$/.test(v)){ const [a,b]=v.split('/'); return +a/+b; }
     return Number(v);
   }
-  const same = (a,b) => (a===b) || (isFinite(a) && isFinite(b) && Math.abs(a-b) < 1e-6);
+  // risposte non intere: va bene anche il decimale arrotondato a 2 cifre (0,33 per 1/3)
+  const same = (a,b) => (a===b) || (isFinite(a) && isFinite(b) && (Math.abs(a-b) < 1e-6 || (!Number.isInteger(b) && Math.abs(a-b) <= 0.006*Math.max(1,Math.abs(b)))));
   const say = (el, ok, txt) => { el.textContent = txt; el.className = 'feedback '+(ok?'ok':'bad'); };
 
   /* ---------------- esercizi guidati ---------------- */
@@ -1560,6 +1749,109 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     { id:'e7', type:'num', lbl:'q', q:'Retta tangente a y = x² in x₀ = 1, scritta come y = mx + q. Quanto vale q?', a:-1, hint:'f(1) = 1, f′(1) = 2 (dal grafico sopra). y = 1 + 2(x − 1).', sol:'y = 1 + 2x − 2 = 2x − 1: q = −1.' },
     { id:'e8', type:'choice', q:'f(x) = |x| è derivabile in x = 0?', a:1, opts:['sì, f′(0) = 0','no: punto angoloso','no: non è nemmeno continua'], hint:'Rapporto incrementale con h &gt; 0 e con h &lt; 0.', sol:'Destra 1, sinistra −1: punto angoloso. È continua, ma non derivabile.' },
     { id:'e9', type:'choice', q:'L\'equazione x³ + x − 1 = 0 ha una soluzione tra 0 e 1?', a:0, opts:['sì, per il teorema degli zeri','no','non si può sapere senza risolverla'], hint:'f(x) = x³ + x − 1 è continua. Calcola f(0) e f(1).', sol:'f(0) = −1 &lt; 0, f(1) = 1 &gt; 0, f continua: per il teorema degli zeri esiste c in (0, 1) con f(c) = 0.' }
+  ];
+
+  /* ===== capitolo 10: Regole di derivazione ===== */
+  order.push('regole-derivazione'); NAMES['regole-derivazione'] = '10 Regole di derivazione';
+  const RD = [
+    { f:x=>x*x, d:x=>2*x, xr:[-2.5,2.5], yr:[-5,6], n:'2x' },
+    { f:x=>x*x*x, d:x=>3*x*x, xr:[-2,2], yr:[-6,8], n:'3x²' },
+    { f:Math.sin, d:Math.cos, xr:[-6.3,6.3], yr:[-1.6,1.6], n:'cos x' },
+    { f:Math.exp, d:Math.exp, xr:[-3,2], yr:[-1,7.5], n:'eˣ (uguale a f: il grafico arancione copre quello nero)' },
+    { f:x=>x>0?Math.log(x):NaN, d:x=>x>0?1/x:NaN, xr:[0,5], yr:[-3,4], n:'1/x', pos:true }
+  ];
+  draws['regole-derivazione'] = () => {
+    const c = RD[+$('rdS').value], t = (+$('rdX').value)/100;
+    let x0 = c.xr[0] + t*(c.xr[1]-c.xr[0]); if (c.pos && x0 < 0.15) x0 = 0.15;
+    const y0 = c.f(x0), m = c.d(x0);
+    plotF($('plotRD'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1],
+      fns:[{f:c.f, color:'--ink', width:2.5}, {f:c.d, color:'--thief', width:2}, {f:x=>y0+m*(x-x0), color:'--cop', dash:true, width:1.5}],
+      points:[{x:x0, y:y0, color:'--cop'}, {x:x0, y:Math.max(c.yr[0], Math.min(c.yr[1], m)), color:'--thief'}], vlines:[{x:x0, color:'--muted'}] });
+    $('rdOut').innerHTML = 'x₀ = '+it(x0,2)+' · pendenza della tangente = <b class="cop">'+it(m,3)+'</b> = f′(x₀) (punto arancione)<br><span style="font-size:1rem">Qui f′(x) = '+c.n+'.</span>';
+  };
+  $('rdS').addEventListener('change', () => draws['regole-derivazione']());
+  $('rdX').addEventListener('input', () => draws['regole-derivazione']());
+
+  guided('regole-derivazione', 'lavagna-regole-derivazione', [
+    { h:'Passo 1 · È una composta: chi sta fuori e chi sta dentro?', type:'choice', ans:0,
+      opts:['fuori: u⁵ · dentro: u = 3x + 1','fuori: 3x + 1 · dentro: x⁵','è un prodotto, non una composta'],
+      ok:'Giusto: prima calcoli 3x + 1, poi lo elevi alla quinta. L\'ultima operazione è quella "fuori".', bad:'Se metti un numero al posto di x, cosa fai per ultimo?' },
+    { h:'Passo 2 · Derivo il fuori, lasciando dentro com\'è: (u⁵)′ = 5u⁴. Quindi…', type:'choice', ans:1,
+      opts:['5x⁴','5(3x + 1)⁴','5(3x + 1)⁴ · x'],
+      ok:'Sì: dentro resta (3x + 1).', bad:'Al posto di u rimetti quello che c\'era dentro.' },
+    { h:'Passo 3 · Moltiplico per la derivata del dentro: (3x + 1)′ = ?', type:'nums', ans:[3],
+      html:'(3x + 1)′ = '+inp('derivata del dentro'),
+      ok:'Esatto: f′(x) = 5(3x + 1)⁴ · 3 = 15(3x + 1)⁴.', bad:'La derivata di 3x è 3, quella di 1 è 0.' },
+    { h:'Passo 4 · Calcolo f′(0) = 15 · (3 · 0 + 1)⁴.', type:'nums', ans:[15],
+      html:'f′(0) = '+inp('f′(0)'),
+      ok:'Perfetto!', bad:'(0 + 1)⁴ = 1.' }
+  ], '<b>Fatto!</b> f′(x) = 5(3x + 1)⁴ · 3 = 15(3x + 1)⁴, quindi f′(0) = 15. Schema della catena: trovo fuori e dentro, derivo il fuori lasciando dentro uguale, moltiplico per la derivata del dentro.');
+
+  EX['regole-derivazione'] = [
+    { id:'e1', type:'num', lbl:'f′(2)', q:'f(x) = x³', a:12, hint:'(xᵃ)′ = a x<sup>a−1</sup>.', sol:'f′(x) = 3x², f′(2) = 12.' },
+    { id:'e2', type:'num', lbl:'f′(1)', q:'f(x) = 5x² − 3x + 7', a:7, hint:'Somma: derivi pezzo per pezzo. La costante 7 ha derivata 0.', sol:'f′(x) = 10x − 3, f′(1) = 7.' },
+    { id:'e3', type:'num', lbl:'f′(0)', q:'f(x) = x · eˣ', a:1, hint:'Prodotto: f′g + f g′.', sol:'f′(x) = eˣ + x eˣ, f′(0) = 1 + 0 = 1.' },
+    { id:'e4', type:'num', lbl:'f′(e)', q:'f(x) = x · ln x', a:2, hint:'Prodotto: 1 · ln x + x · (1/x).', sol:'f′(x) = ln x + 1, f′(e) = 1 + 1 = 2.' },
+    { id:'e5', type:'num', lbl:'f′(1)', q:'f(x) = '+FR('x','x + 1'), a:0.25, hint:'Quoziente: (f′g − f g′)/g², con f = x e g = x + 1.', sol:'[1 · (x + 1) − x · 1]/(x + 1)² = 1/(x + 1)². In x = 1: 1/4.' },
+    { id:'e6', type:'num', lbl:'f′(0)', q:'f(x) = sin(3x)', a:3, hint:'Catena: fuori sin, dentro 3x.', sol:'f′(x) = cos(3x) · 3, f′(0) = 3.' },
+    { id:'e7', type:'num', lbl:'f′(1)', q:'f(x) = ln(x² + 1)', a:1, hint:'Catena: (ln u)′ = 1/u, poi per u′ = 2x.', sol:'f′(x) = 2x/(x² + 1), f′(1) = 2/2 = 1.' },
+    { id:'e8', type:'num', lbl:'f′(4)', q:'f(x) = √x', a:0.25, hint:'√x = x<sup>1/2</sup>: usa (xᵃ)′ con a = 1/2.', sol:'f′(x) = (1/2) x<sup>−1/2</sup> = 1/(2√x), f′(4) = 1/4.' },
+    { id:'e9', type:'choice', q:'(arctan x)′ = ?', a:2, opts:['1/cos² x','1/√(1 − x²)','1/(1 + x²)'], hint:'È nella tabellina. La prima è di tan x, la seconda di arcsin x.', sol:'1/(1 + x²).' }
+  ];
+
+  /* ===== capitolo 11: Rolle, Lagrange, De L'Hôpital, Taylor ===== */
+  order.push('teoremi-taylor'); NAMES['teoremi-taylor'] = '11 Rolle, Lagrange, Taylor';
+  const fact = n => n<2 ? 1 : n*fact(n-1);
+  const TY = [
+    { f:Math.exp, c:k=>1/fact(k), t:['1','+ x','+ x²/2','+ x³/6','+ x⁴/24','+ x⁵/120','+ x⁶/720','+ x⁷/5040','+ x⁸/40320','+ x⁹/362880'], yr:[-2,8], xr:[-4,3] },
+    { f:Math.sin, c:k=>k%2 ? (k%4===1?1:-1)/fact(k) : 0, t:['','x','','− x³/6','','+ x⁵/120','','− x⁷/5040','','+ x⁹/362880'], yr:[-2,2], xr:[-7,7] },
+    { f:Math.cos, c:k=>k%2 ? 0 : (k%4===0?1:-1)/fact(k), t:['1','','− x²/2','','+ x⁴/24','','− x⁶/720','','+ x⁸/40320',''], yr:[-2,2], xr:[-7,7] },
+    { f:x=>x>-1?Math.log(1+x):NaN, c:k=>k===0?0:(k%2?1:-1)/k, t:['','x','− x²/2','+ x³/3','− x⁴/4','+ x⁵/5','− x⁶/6','+ x⁷/7','− x⁸/8','+ x⁹/9'], yr:[-3,2], xr:[-1,2], dom:x=>x>-1 }
+  ];
+  const lgf = x => 0.3*x*x*x - x + 1, LGA = -2;
+  draws['teoremi-taylor'] = () => {
+    const b = -0.8 + (+$('lgB').value)/100 * 3.3, ya = lgf(LGA), yb = lgf(b), m = (yb-ya)/(b-LGA);
+    const cs = [Math.sqrt((m+1)/0.9), -Math.sqrt((m+1)/0.9)].filter(c => isFinite(c) && c > LGA && c < b);
+    const fns = [{f:lgf, color:'--ink', width:2.5}, {f:x=>ya+m*(x-LGA), color:'--thief', width:2}];
+    cs.forEach(c => fns.push({f:x=>lgf(c)+m*(x-c), color:'--cop', dash:true, width:1.5}));
+    plotF($('plotLG'), { xmin:-2.5, xmax:3, ymin:-2, ymax:5, fns,
+      points:[{x:LGA,y:ya,color:'--thief',label:'A'},{x:b,y:yb,color:'--thief',label:'B'}, ...cs.map(c=>({x:c,y:lgf(c),color:'--cop',label:'c'}))] });
+    $('lgOut').innerHTML = 'pendenza della secante = '+FR('f(b) − f(a)','b − a')+' = <b class="thief">'+it(m,3)+'</b> · '+(cs.length ? 'f′(c) = <b class="cop">'+it(m,3)+'</b> in c = '+cs.map(c=>it(c,2)).join(' e c = ') : '');
+    const T = TY[+$('tyS').value], n = +$('tyN').value;
+    const P = x => { let s=0; for (let k=0;k<=n;k++) s += T.c(k)*Math.pow(x,k); return (T.dom && !T.dom(x)) ? NaN : s; };
+    plotF($('plotTY'), { xmin:T.xr[0], xmax:T.xr[1], ymin:T.yr[0], ymax:T.yr[1], fns:[{f:T.f, color:'--ink', width:2.5}, {f:P, color:'--thief', width:2}] });
+    let poly = T.t.slice(0,n+1).filter(s=>s).join(' ').replace(/^\+ /,''); if (!poly) poly = '0';
+    $('tyOut').innerHTML = 'Grado '+n+': <b class="thief">'+poly+'</b><br><span style="font-size:1rem">In x = 0,5: funzione = '+it(T.f(0.5),5)+' · polinomio = '+it(P(0.5),5)+'</span>';
+  };
+  $('lgB').addEventListener('input', () => draws['teoremi-taylor']());
+  $('tyS').addEventListener('change', () => draws['teoremi-taylor']());
+  $('tyN').addEventListener('input', () => draws['teoremi-taylor']());
+
+  guided('teoremi-taylor', 'lavagna-teoremi-taylor', [
+    { h:'Passo 1 · Sostituisco x = 0. Che forma esce?', type:'choice', ans:0,
+      opts:['0/0','1/0','0'],
+      ok:'Giusto: sopra e⁰ − 1 − 0 = 0, sotto 0. Forma indeterminata.', bad:'Sopra: e⁰ − 1 − 0. Sotto: 0².' },
+    { h:'Passo 2 · Sotto c\'è x², quindi sviluppo eˣ fino a x². Quale?', type:'choice', ans:2,
+      opts:['eˣ = 1 + x + o(x)','eˣ = x + x²/2 + o(x²)','eˣ = 1 + x + x²/2 + o(x²)'],
+      ok:'Esatto.', bad:'eˣ = 1 + x + x²/2 + x³/6 + …: fermati a x².' },
+    { h:'Passo 3 · Sopra: (1 + x + x²/2 + o(x²)) − 1 − x = ?', type:'choice', ans:1,
+      opts:['x + x²/2 + o(x²)','x²/2 + o(x²)','o(x²)'],
+      ok:'Sì: 1 e x si cancellano, resta x²/2 + o(x²).', bad:'Togli 1 e togli x.' },
+    { h:'Passo 4 · Divido per x² e faccio il limite per x → 0. Ricorda: o(x²)/x² → 0.', type:'nums', ans:[0.5],
+      html:LIMX('0')+' ('+FR('1','2')+' + '+FR('o(x²)','x²')+') = '+inp('risultato'),
+      ok:'Perfetto: 1/2.', bad:'1/2 + 0 = …' }
+  ], '<b>Fatto!</b> '+LIMX('0')+' (eˣ − 1 − x)/x² = '+LIMX('0')+' (x²/2 + o(x²))/x² = 1/2. Regola d\'oro: sviluppa fino alla potenza che c\'è sotto.');
+
+  EX['teoremi-taylor'] = [
+    { id:'e1', type:'num', lbl:'c', q:'Lagrange per f(x) = x² su [0, 2]: per quale c vale f′(c) = [f(2) − f(0)]/(2 − 0)?', a:1, hint:'La pendenza media è (4 − 0)/2 = 2. Risolvi f′(c) = 2c = 2.', sol:'2c = 2, c = 1.' },
+    { id:'e2', type:'num', lbl:'c', q:'Rolle per f(x) = x² − 2x su [0, 2] (f(0) = f(2) = 0): dove f′(c) = 0?', a:1, hint:'f′(x) = 2x − 2.', sol:'2c − 2 = 0, c = 1.' },
+    { id:'e3', type:'num', q:LIMX('1')+' '+FR('ln x','x − 1'), a:1, hint:'0/0: De L\'Hôpital, derivi sopra (1/x) e sotto (1).', sol:LIMX('1')+' (1/x)/1 = 1.' },
+    { id:'e4', type:'num', q:LIMX('+∞')+' '+FR('x','eˣ'), a:0, hint:'∞/∞: De L\'Hôpital una volta.', sol:LIMX('+∞')+' 1/eˣ = 0. (L\'esponenziale batte ogni potenza.)' },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('x − sin x','x³'), a:1/6, hint:'sin x = x − x³/6 + o(x³).', sol:'Sopra x³/6 + o(x³): risultato 1/6.' },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + x) − x','x²'), a:-0.5, hint:'ln(1 + x) = x − x²/2 + o(x²).', sol:'Sopra −x²/2 + o(x²): risultato −1/2.' },
+    { id:'e7', type:'num', lbl:'coefficiente', q:'Nello sviluppo di cos x per x → 0, qual è il coefficiente di x²?', a:-0.5, hint:'cos x = 1 − x²/2 + …', sol:'−1/2. (Infatti f″(0) = −cos 0 = −1, diviso 2!.)' },
+    { id:'e8', type:'num', q:LIMX('0⁺')+' x · ln x', a:0, hint:'0 · ∞: riscrivi come ln x / (1/x), che è ∞/∞, poi De L\'Hôpital.', sol:'(1/x)/(−1/x²) = −x → 0.' },
+    { id:'e9', type:'choice', q:'Si può usare De L\'Hôpital per '+LIMX('0')+' '+FR('x + 1','x')+' ?', a:1, opts:['sì','no: non è 0/0 né ∞/∞','sì, ma solo da destra'], hint:'Sostituisci x = 0: che forma esce?', sol:'Esce 1/0, non è una forma indeterminata: De L\'Hôpital non si può usare (e darebbe 1, sbagliato). Il limite destro è +∞, il sinistro −∞.' }
   ];
 
   Object.keys(EX).forEach(ch => exercises(ch, 'lavagna-'+ch, EX[ch]));

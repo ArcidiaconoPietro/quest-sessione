@@ -1,0 +1,84 @@
+  <div class="chapter" data-ch="regole-derivazione">
+    <section class="board">
+      <div class="eyebrow">Capitolo 10 · blocco del 30/11 · Albano lezioni 30 ottobre e 3 novembre · dispensa pp. 92-95</div>
+      <h2>Le regole di derivazione</h2>
+      <p class="big">Nel capitolo 9 hai calcolato le derivate con la definizione, cioè il limite per h → 0 del rapporto incrementale. Funziona, ma è lento. Qui impari le scorciatoie: una tabellina di derivate base e cinque regole per combinarle.</p>
+      <p>A cosa serve: all'esame non si deriva mai con la definizione (salvo richiesta esplicita). Si usano queste regole, nello studio di funzione, nei limiti con De L'Hôpital e negli integrali (al contrario).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il grafico della derivata · prima guardiamo</div>
+      <h2>f′(x) è la pendenza di f nel punto x</h2>
+      <p>Sposta il punto: la tangente (blu) cambia pendenza. Quel numero, punto per punto, disegna una nuova funzione: la <b>derivata</b> f′ (arancione).</p>
+      <canvas id="plotRD" aria-label="Funzione e sua derivata"></canvas>
+      <div class="controls">
+        <label for="rdS">Funzione: <select id="rdS">
+          <option value="0">f(x) = x²</option>
+          <option value="1">f(x) = x³</option>
+          <option value="2">f(x) = sin x</option>
+          <option value="3">f(x) = eˣ</option>
+          <option value="4">f(x) = ln x</option>
+        </select></label>
+        <label for="rdX">x₀: <input type="range" id="rdX" min="0" max="100" value="70"></label>
+      </div>
+      <div class="legend"><span><i style="background:var(--ink)"></i>f</span><span><i style="background:var(--cop)"></i>tangente in x₀</span><span><i style="background:var(--thief)"></i>f′</span></div>
+      <div class="readout" id="rdOut"></div>
+      <div class="note">Nota: dove f sale, f′ è positiva; dove f scende, f′ è negativa; dove f ha la cima o il fondo, f′ = 0. Questo è il cuore dello studio di funzione.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La tabellina <span class="tag mem">a memoria</span></div>
+      <h2>Derivate fondamentali</h2>
+      <div class="when">
+        <div>(costante)′ = 0</div>
+        <div>(xᵃ)′ = a · x<sup>a−1</sup> &nbsp; (per esempio (x³)′ = 3x², (√x)′ = 1/(2√x))</div>
+        <div>(eˣ)′ = eˣ</div>
+        <div>(aˣ)′ = aˣ · ln a</div>
+        <div>(ln x)′ = 1/x</div>
+        <div>(sin x)′ = cos x</div>
+        <div>(cos x)′ = −sin x</div>
+        <div>(tan x)′ = 1/cos² x = 1 + tan² x</div>
+        <div>(arctan x)′ = 1/(1 + x²)</div>
+        <div>(arcsin x)′ = 1/√(1 − x²)</div>
+      </div>
+      <p><b>Perché, per le più usate</b> <span class="tag cap">facile</span>: (x²)′ = 2x l'hai visto nel capitolo 9 con la definizione. (eˣ)′ = eˣ viene dal limite notevole: [e<sup>x+h</sup> − eˣ]/h = eˣ · (eʰ − 1)/h → eˣ · 1 per h → 0. (sin x)′ in 0 vale 1 per il limite notevole sin h / h → 1 per h → 0. Le altre: <b>a memoria</b>, il conto è lungo e non serve capirlo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Le regole <span class="tag mem">a memoria</span></div>
+      <h2>Come si combinano</h2>
+      <div class="steps">
+        <div class="step"><h3>Somma e costante <span class="tag cap">facile</span></h3><p>(f + g)′ = f′ + g′ e (c · f)′ = c · f′. Ovvio: se due cose salgono, la somma sale della somma delle pendenze.</p></div>
+        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p></div>
+        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p></div>
+        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p></div>
+        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p></div>
+      </div>
+      <div class="warn"><b>Errore classico con la catena:</b> (sin(3x))′ = cos(3x) · 3, non cos(3x). Ogni volta che "dentro" non c'è solo x, moltiplica per la derivata di quello che c'è dentro.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Deriva f(x) = (3x + 1)⁵ e calcola f′(0)</h2>
+      <div class="steps" id="guided-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Calcola la derivata con le regole, poi metti il numero. Frazioni tipo 1/4 vanno bene.</p>
+      <div id="ex-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Tabellina: (xᵃ)′ = a x<sup>a−1</sup>; (eˣ)′ = eˣ; (aˣ)′ = aˣ ln a; (ln x)′ = 1/x; (sin x)′ = cos x; (cos x)′ = −sin x; (tan x)′ = 1 + tan² x; (arctan x)′ = 1/(1 + x²); (arcsin x)′ = 1/√(1 − x²).</li>
+        <li>(f g)′ = f′g + f g′ &nbsp;·&nbsp; (f/g)′ = (f′g − f g′)/g².</li>
+        <li>Catena: [f(g(x))]′ = f′(g(x)) · g′(x): da fuori a dentro, moltiplicando.</li>
+        <li>Inversa: (f<sup>−1</sup>)′(y) = 1/f′(x), con y = f(x).</li>
+      </ul>
+      <div data-copy="regole-derivazione"></div>
+    </section>
+  </div>
