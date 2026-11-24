@@ -264,7 +264,7 @@ body[data-role=genitore] .task .xp{display:none}
 .kpis div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px}
 .kpis b{display:block;font-size:24px;font-family:'JetBrains Mono',monospace}
 .kpis span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
-@media (max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}.tabs{grid-template-columns:repeat(5,1fr)}.tabs button{font-size:11px}.sup .hm{display:none}}
+@media (max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}.tabs{grid-template-columns:repeat(3,1fr)}.tabs button{font-size:12px}.sup .hm{display:none}}
 /* cervello */
 .brain .bmsg{font-size:14.5px;line-height:1.45;margin-bottom:12px}
 .brain .pl{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--c);margin-bottom:8px;font-size:13.5px;line-height:1.4}
@@ -283,6 +283,36 @@ body[data-role=genitore] .task .xp{display:none}
 .tile>.tb.fatto{color:var(--ok)}.tile>.tb.parziale{color:var(--mix)}
 .ferr{border-left-color:var(--c)}
 .ferr .vv{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--fire);white-space:nowrap}
+/* profilo */
+.phero{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:18px}
+.phero .av{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,#7c3aed,#0ea5e9);box-shadow:0 0 24px #7c3aed44}
+.phero p{font-size:15px;line-height:1.5}
+.phero small{display:block;color:var(--mute);font-size:12px;margin-top:6px}
+.pfocus{border-left:3px solid var(--xp);background:color-mix(in srgb,var(--xp) 8%,var(--card2));border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45;margin-top:14px}
+.pfocus b{color:var(--xp)}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;border-top:3px solid var(--pc)}
+.pcard.focus{box-shadow:0 0 0 1px var(--xp)}
+.pcard .pt{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pcard .pt b{font-size:16px}
+.pcard .pt .tag{font-size:10.5px;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:2px 7px;text-transform:uppercase;letter-spacing:.06em}
+.pcard .pt .tr{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px}
+.pbar{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}
+.pbar i{height:8px;border-radius:4px;background:var(--line)}
+.pbar i.on{background:var(--pc)}
+.pv{font-size:12px;color:var(--mute);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+.pv b{color:var(--pc)}
+.pcard .why{font-size:13px;line-height:1.45;color:var(--mute);margin-bottom:10px}
+.pcard .auto{font-size:12px;color:var(--ink);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:10px;line-height:1.4}
+.pcard .auto span{color:var(--mute)}
+.pcard .imp{font-size:13.5px;line-height:1.45;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--pc) 10%,var(--card2));border:1px solid color-mix(in srgb,var(--pc) 30%,transparent)}
+.pcard .imp small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--pc);margin-bottom:3px;font-weight:700}
+.plists{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plists ul{list-style:none}
+.plists li{font-size:13.5px;line-height:1.45;padding:8px 0;border-top:1px solid var(--line)}
+.plists li:first-child{border-top:0}
+@media (max-width:900px){.pgrid,.plists{grid-template-columns:1fr}}
+@media (max-width:560px){.phero{grid-template-columns:1fr;gap:10px}.phero .av{width:48px;height:48px;font-size:24px;border-radius:14px}}
 </style>
 </head>
 <body>
@@ -334,6 +364,7 @@ body[data-role=genitore] .task .xp{display:none}
     <button data-v="mappa">🗺️ Mappa</button>
     <button data-v="errori">🟥 Errori</button>
     <button data-v="trofei">🏆 Trofei</button>
+    <button data-v="profilo">🧬 Profilo</button>
   </div>
 
   <section class="view act" id="v-oggi">
@@ -408,6 +439,10 @@ body[data-role=genitore] .task .xp{display:none}
       <div class="filters" id="eFil"></div>
       <div id="eList"></div>
     </div>
+  </section>
+
+  <section class="view" id="v-profilo">
+    <div id="profilo"></div>
   </section>
 
   <section class="view" id="v-trofei">
@@ -750,7 +785,7 @@ function renderCatchup(){
 }
 /* ---------- cervello (dati dei tutor in CERVELLO/dati) ---------- */
 const BRAIN_SUBJ={geo:'geometria',ana:'analisi',fon:'fondamenti'};
-const BRAIN_FILES=['analisi','geometria','fondamenti','oggi'];
+const BRAIN_FILES=['analisi','geometria','fondamenti','oggi','profilo'];
 const BRAIN_K={geometria:'geo',analisi:'ana',fondamenti:'fon'};
 const SUBJ_INFO={geo:{n:'Geometria',c:'var(--geo)'},ana:{n:'Analisi',c:'var(--ana)'},fon:{n:'Fondamenti',c:'var(--fon)'}};
 let brainAutoTried=false;
@@ -843,7 +878,7 @@ async function brainSave(files,quiet){
   const ok=[],bad=[],rows=[];
   for(const [n,txt] of Object.entries(files)){
     let j;try{j=JSON.parse(txt)}catch(_){bad.push(n);continue}
-    if(!j||typeof j!=='object'||(n!=='oggi'&&j.materia&&j.materia!==n)){bad.push(n);continue}
+    if(!j||typeof j!=='object'||(BRAIN_SUBJ_FILES.includes(n)&&j.materia&&j.materia!==n)||(n==='profilo'&&!Array.isArray(j.parametri))){bad.push(n);continue}
     const old=S.brain[n];const same=old&&JSON.stringify(old)===JSON.stringify(j);
     S.brain[n]=j;ok.push(n);if(!same)rows.push({key:'brain:'+n,value:JSON.stringify(j)});
   }
@@ -852,6 +887,100 @@ async function brainSave(files,quiet){
   if(quiet&&!rows.length&&!bad.length)return;
   if(!ok.length&&!bad.length){toast('🤔 Nessun file del Cervello trovato. Scegli la cartella CERVELLO/dati.');return}
   toast(bad.length?`⚠️ File non validi: ${bad.join(', ')}${ok.length?' · ok: '+ok.join(', '):''}`:`🧠 Cervello aggiornato: ${ok.join(', ')}`);
+}
+
+
+/* ---------- profilo dello studente (CERVELLO/dati/profilo.json + misure automatiche) ---------- */
+const BRAIN_SUBJ_FILES=['analisi','geometria','fondamenti'];
+// parametri conosciuti: nome, icona e colore; profilo.json puo' aggiungerne altri
+const PROF_P={
+  costanza:{n:'Costanza',e:'📅',c:'var(--fon)'},
+  velocita:{n:'Velocità',e:'⚡',c:'var(--xp)'},
+  comprensione:{n:'Comprensione',e:'💡',c:'var(--ana)'},
+  concentrazione:{n:'Concentrazione',e:'🎧',c:'var(--geo)'},
+  precisione:{n:'Precisione nei calcoli',e:'🎯',c:'var(--fire)'},
+  autonomia:{n:'Autonomia',e:'🧗',c:'#2dd4bf'},
+  chiusura:{n:'Chiudere gli esercizi',e:'📮',c:'var(--mix)'},
+  ripasso:{n:'Ripasso degli errori',e:'🔁',c:'#f472b6'},
+};
+const VOTO_TXT=['','da costruire','debole','discreto','buono','ottimo'];
+let PROF_SEED=null;
+// profilo iniziale pubblicato col sito: si vede finche' il Cervello non carica il suo profilo.json
+fetch('dati/profilo.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.parametri)){PROF_SEED=j;renderProfilo()}}).catch(()=>{});
+const subjData=()=>BRAIN_SUBJ_FILES.map(f=>S.brain[f]).filter(Boolean);
+function allSessions(){return subjData().flatMap(b=>(Array.isArray(b.sessioni)&&b.sessioni.length?b.sessioni:(b.ultima_sessione?[b.ultima_sessione]:[])).map(x=>({...x,materia:b.materia})))}
+const sumOf=(L,k)=>L.reduce((a,x)=>a+(Number(x[k])||0),0);
+const plural=(n,a,b)=>n+' '+(n===1?a:b);
+// misure calcolate dai dati che la dashboard ha gia' (spunte di Pietro + file dei tutor)
+function profMetrics(){
+  const M={};
+  const past=DAYS.filter(d=>d.date<TODAY&&!isExam(d)&&!isFree(d)&&d.tasks.length);
+  const tutorDone=d=>{const ks=brainKeysOf(d);return ks.length>0&&ks.every(k=>{const b=S.brain[BRAIN_SUBJ[k]];return b&&b.giorni&&b.giorni[d.date]==='fatto'})};
+  const closed=past.filter(d=>dayFull(d)||tutorDone(d)).length;
+  const ses=allSessions().filter(x=>x&&x.data);
+  const wk=iso(new Date(Date.now()-7*864e5));
+  const min7=sumOf(ses.filter(x=>x.data>=wk),'minuti');
+  const daysStudied7=new Set(ses.filter(x=>x.data>=wk&&(Number(x.minuti)||0)>0).map(x=>x.data)).size;
+  M.costanza=`Giorni del piano chiusi: <b>${closed} su ${past.length}</b> · streak ${totals().st}`+(ses.length?` · ultimi 7 giorni: ${plural(daysStudied7,'giorno','giorni')} di studio, ${min7} min coi tutor`:'');
+  const beh=['ana','geo','fon'].map(k=>({k,st:brainStatus(k)})).filter(x=>x.st);
+  const tot=beh.reduce((a,x)=>a+x.st.behind,0);
+  let v=beh.length?`Indietro sul piano: <b>${plural(tot,'giorno','giorni')}</b> <span>(${beh.map(x=>SUBJ_INFO[x.k].n+' '+x.st.behind).join(', ')})</span>`:'';
+  const exT=sumOf(ses,'esercizi_tentati'), minT=sumOf(ses.filter(x=>x.esercizi_tentati),'minuti');
+  if(exT&&minT)v+=(v?' · ':'')+`circa <b>${Math.round(exT/minT*60)}</b> esercizi l'ora`;
+  M.velocita=v;
+  const args=subjData().flatMap(b=>b.argomenti||[]);
+  const started=args.filter(a=>a.stato&&a.stato!=='da_fare');
+  const s3=started.filter(a=>a.sicurezza>=3).length, s2=started.filter(a=>a.sicurezza===2).length, s1=started.length-s3-s2;
+  if(started.length){
+    M.comprensione=`Argomenti iniziati: <b>${started.length}</b> · da solo ${s3}, con aiuto ${s2}, non ancora ${s1} <span>· da ripassare ${started.filter(a=>a.stato==='da_ripassare').length}</span>`;
+    M.autonomia=`Argomenti che sai fare da solo: <b>${s3} su ${started.length}</b> iniziati`;
+  }
+  const conc=ses.filter(x=>x.concentrazione).slice(-5);
+  M.concentrazione=conc.length?`Media delle ultime ${plural(conc.length,'sessione','sessioni')}: <b>${(sumOf(conc,'concentrazione')/conc.length).toFixed(1)} / 5</b>`:'';
+  const errs=subjData().flatMap(b=>b.errori||[]);
+  const open=errs.filter(e=>!e.risolto);
+  const giusti=sumOf(ses,'esercizi_giusti');
+  M.precisione=(exT?`Esercizi giusti: <b>${giusti} su ${exT}</b> (${Math.round(giusti/exT*100)}%) · `:'')+`errori ricorrenti aperti: <b>${open.length}</b>`+(open.filter(e=>(e.volte||1)>=2).length?` <span>(${open.filter(e=>(e.volte||1)>=2).length} ripetuti 2+ volte)</span>`:'');
+  const lasc=sumOf(ses,'lasciati');
+  M.chiusura=ses.some(x=>'lasciati' in x)?`Esercizi lasciati senza risposta: <b>${lasc}</b>`+(exT?` su ${exT} proposti`:''):'';
+  const mine=S.errors||[];
+  M.ripasso=`Errori ricorrenti risolti: <b>${errs.length-open.length} su ${errs.length}</b> · errori in rosso rifatti: ${mine.filter(e=>e.fixed).length} su ${mine.length}`;
+  return M;
+}
+function renderProfilo(){
+  const el=$('#profilo');if(!el)return;
+  const pr=S.brain.profilo||PROF_SEED;const M=profMetrics();
+  if(!pr){
+    el.innerHTML=`<div class="card"><div class="h">🧬 Il tuo profilo</div><div style="font-size:14px;color:var(--mute);line-height:1.5">Il Cervello non ha ancora scritto il tuo profilo (<code>CERVELLO/dati/profilo.json</code>). Quando c'è, premi <b>📥 Aggiorna dal Cervello</b> nella scheda Missione.</div></div>`;
+    return;
+  }
+  const st=(pr.storico||[]).slice().sort((a,b)=>a.data<b.data?-1:1);
+  const prevVoti=st.length>1?st[st.length-2].voti||{}:{};
+  const params=(pr.parametri||[]).filter(p=>p&&p.id);
+  const focus=pr.priorita||(params.slice().sort((a,b)=>(a.voto||0)-(b.voto||0))[0]||{}).id;
+  const fp=params.find(p=>p.id===focus);
+  let h=`<div class="card" style="margin-bottom:18px"><div class="phero"><div class="av">🎓</div><div><div class="h" style="margin-bottom:6px">🧬 Il tuo profilo di studio</div><p>${esc(pr.in_breve||'')}</p>
+    <small>Aggiornato ${pr.aggiornato?esc(ago(pr.aggiornato))+' · '+esc(fmtT(pr.aggiornato)):'—'}${S.brain.profilo?'':' · profilo iniziale'} · voti da 1 a 5, scritti dal Cervello leggendo i registri dei tutor</small></div></div>
+    ${fp?`<div class="pfocus">🎯 <b>Da migliorare per primo: ${esc(fp.nome||(PROF_P[fp.id]||{}).n||fp.id)}.</b> ${esc(fp.migliora||'')}</div>`:''}</div>`;
+  h+=`<div class="pgrid">`+params.map(p=>{
+    const info=PROF_P[p.id]||{n:p.id,e:'•',c:'var(--mix)'};
+    const voto=Math.max(0,Math.min(5,Math.round(p.voto||0)));
+    const prev=p.prima!=null?p.prima:prevVoti[p.id];
+    const tr=prev==null?'':voto>prev?`<span class="tr" style="color:var(--ok)">▲ da ${prev}</span>`:voto<prev?`<span class="tr" style="color:var(--bad)">▼ da ${prev}</span>`:`<span class="tr" style="color:var(--mute)">= ${prev}</span>`;
+    const auto=M[p.id]||(p.id==='concentrazione'||p.id==='chiusura'?'<span>Ancora nessuna misura: il tutor la segna a fine sessione nel campo <code>sessioni</code>.</span>':'');
+    return `<div class="pcard ${p.id===focus?'focus':''}" style="--pc:${info.c}">
+      <div class="pt"><span>${info.e}</span><b>${esc(p.nome||info.n)}</b>${p.fonte==='stima'?'<span class="tag">stima</span>':''}${tr}</div>
+      <div class="pbar">${[1,2,3,4,5].map(i=>`<i class="${i<=voto?'on':''}"></i>`).join('')}</div>
+      <div class="pv"><b>${voto}/5</b> · ${VOTO_TXT[voto]||''}</div>
+      ${p.perche?`<div class="why">${esc(p.perche)}</div>`:''}
+      ${auto?`<div class="auto">📊 ${auto}</div>`:''}
+      ${p.migliora?`<div class="imp"><small>Cosa migliorare</small>${esc(p.migliora)}</div>`:''}
+    </div>`}).join('')+`</div>`;
+  const list=(t,L)=>`<div class="card"><div class="h">${t}</div><ul>${(L||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li style="color:var(--mute)">—</li>'}</ul></div>`;
+  h+=`<div class="plists">${list('💪 Punti di forza',pr.punti_forza)}${list('🧠 Come impari meglio',pr.come_impari)}${list('🚨 Segnali di allarme',pr.allarmi)}</div>`;
+  h+=STU()?`<div class="brain" style="margin-top:14px"><div class="bfoot"><button class="btn ghost" id="profSync">📥 Aggiorna dal Cervello</button><span>Legge anche <code>profilo.json</code> dalla cartella CERVELLO/dati.</span></div></div>`:'';
+  el.innerHTML=h;
+  const b=$('#profSync');if(b)b.onclick=brainImport;
 }
 
 /* ---------- reminders & supervision ---------- */
@@ -922,7 +1051,7 @@ function renderReminders(){
 }
 
 function renderOggi(){renderQuest();renderWeek();renderBrain();renderBosses();renderPlayer();renderCatchup();renderRemBanner()}
-function renderAll(){renderOggi();renderMap();renderErrors();renderFreqErrors();renderAch();renderReminders()}
+function renderAll(){renderOggi();renderMap();renderErrors();renderFreqErrors();renderAch();renderReminders();renderProfilo()}
 function showTab(v){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('act',b.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('act',x.id==='v-'+v))}
 $('#tabs').onclick=e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.v)};
 $('#eAdd').onclick=addError;$('#eTxt').onkeydown=e=>{if(e.key==='Enter')addError()};
