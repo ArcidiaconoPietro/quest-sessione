@@ -1,0 +1,98 @@
+  <div class="chapter" data-ch="teoremi-taylor">
+    <section class="board">
+      <div class="eyebrow">Capitolo 11 · blocco del 3/12 · Albano lezioni 5, 6 e 10 novembre · dispensa pp. 96-102, 109-115</div>
+      <h2>Rolle, Lagrange, De L'Hôpital, Taylor</h2>
+      <p class="big">Quattro attrezzi, due "di teoria" e due "da calcolo":</p>
+      <ul class="recap">
+        <li><b>Rolle e Lagrange</b>: legano la derivata alla crescita della funzione. Servono a giustificare lo studio di funzione (capitolo 12) e sono domande di teoria tipiche.</li>
+        <li><b>De L'Hôpital e Taylor</b>: risolvono i limiti che con i limiti notevoli non riesci a fare. Taylor è lo strumento più potente per i limiti all'esame.</li>
+      </ul>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Rolle e Lagrange <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Da qualche parte la pendenza è quella media</h2>
+      <div class="math left"><span class="box cop"><b>Rolle.</b> f continua su [a, b], derivabile in (a, b), e f(a) = f(b). Allora esiste c in (a, b) con f′(c) = 0.</span></div>
+      <p><b>Idea (facile):</b> parti a una quota e torni alla stessa quota. Da qualche parte hai una cima (o un fondo), e lì la tangente è orizzontale.</p>
+      <div class="math left"><span class="box thief"><b>Lagrange.</b> f continua su [a, b], derivabile in (a, b). Allora esiste c in (a, b) con <span class="fr"><span>f(b) − f(a)</span><span>b − a</span></span> = f′(c).</span></div>
+      <p><b>Idea (facile):</b> fai 120 km in un'ora. La velocità media è 120 km/h. In almeno un istante il tachimetro ha segnato esattamente 120. Nel disegno: la secante da A a B (arancione) e, in un punto c, una tangente parallela (blu).</p>
+      <canvas id="plotLG" aria-label="Teorema di Lagrange"></canvas>
+      <div class="controls"><label for="lgB">Sposta b: <input type="range" id="lgB" min="0" max="100" value="80"></label></div>
+      <div class="readout" id="lgOut"></div>
+      <p><b>Conseguenze</b> <span class="tag mem">a memoria</span>, sono quelle che usi davvero: se f′ &gt; 0 su un intervallo, f è crescente lì; se f′ &lt; 0, è decrescente; se f′ = 0 su tutto un intervallo, f è costante.</p>
+      <div class="note"><b>Dimostrazioni.</b> Lagrange si dimostra applicando Rolle alla differenza tra f e la retta secante (che vale 0 in a e in b): è corta, <b>capiscila se Albano la chiede</b>. Rolle usa Weierstrass e il fatto che in una cima la derivata è 0 (Fermat): più lunga, <b>a memoria solo se richiesta</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">De L'Hôpital <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea per 0/0 è facile</span></div>
+      <h2>Con 0/0 o ∞/∞, derivo sopra e sotto</h2>
+      <div class="math left"><span class="box cop">Se <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f(x)</span><span>g(x)</span></span> è nella forma 0/0 oppure ∞/∞, e <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f′(x)</span><span>g′(x)</span></span> esiste, allora i due limiti sono uguali.</span></div>
+      <p><b>Perché (caso 0/0, facile):</b> vicino a x₀ ogni funzione è quasi la sua tangente. Se f(x₀) = g(x₀) = 0, allora f(x) ≈ f′(x₀)(x − x₀) e g(x) ≈ g′(x₀)(x − x₀). Dividendo, (x − x₀) si semplifica e resta f′/g′. Vale anche x₀ = ±∞.</p>
+      <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> → forma 0/0 → <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>cos x</span><span>1</span></span> = 1</div>
+      <div class="warn"><b>Tre errori classici.</b> 1) Derivi sopra e sotto <b>separatamente</b>, non con la regola del quoziente. 2) Prima controlla che sia davvero 0/0 o ∞/∞: con (x + 1)/x per x → 0 non si può (è 1/0). 3) Con 0 · ∞ o ∞ − ∞ prima riscrivi come frazione: x ln x = ln x / (1/x).</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Taylor · prima guardiamo</div>
+      <h2>Un polinomio che copia la funzione vicino a 0</h2>
+      <p>Il polinomio di grado 1 copia valore e pendenza (è la tangente). Quello di grado 2 copia anche la curvatura. Più alzi il grado, più a lungo il polinomio (arancione) sta attaccato alla funzione (nera).</p>
+      <canvas id="plotTY" aria-label="Polinomi di Taylor"></canvas>
+      <div class="controls">
+        <label for="tyS">Funzione: <select id="tyS">
+          <option value="0">eˣ</option>
+          <option value="1">sin x</option>
+          <option value="2">cos x</option>
+          <option value="3">ln(1 + x)</option>
+        </select></label>
+        <label for="tyN">Grado: <input type="range" id="tyN" min="0" max="9" value="1"></label>
+      </div>
+      <div class="readout" id="tyOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Taylor · la formula <span class="tag mem">a memoria</span></div>
+      <h2>Sviluppo di Mac Laurin (Taylor in x₀ = 0)</h2>
+      <div class="math left"><span class="box cop">f(x) = f(0) + f′(0) x + <span class="fr"><span>f″(0)</span><span>2</span></span> x² + … + <span class="fr"><span>f<sup>(n)</sup>(0)</span><span>n!</span></span> xⁿ + o(xⁿ) &nbsp; per x → 0</span></div>
+      <p><b>o-piccolo</b> <span class="tag cap">da capire</span>: o(xⁿ) vuol dire "un pezzo che, per x → 0, va a 0 più in fretta di xⁿ", cioè <span class="lim">lim<span>x→0</span></span> o(xⁿ)/xⁿ = 0. È l'errore che commetti fermandoti al grado n. Regole: o(xⁿ) + o(xⁿ) = o(xⁿ); x · o(xⁿ) = o(x<sup>n+1</sup>); un termine x<sup>m</sup> con m &gt; n si "mangia" dentro o(xⁿ).</p>
+      <p><b>Sviluppi da sapere</b> <span class="tag mem">a memoria</span> (tutti per x → 0):</p>
+      <div class="when">
+        <div>eˣ = 1 + x + x²/2 + x³/6 + … + xⁿ/n! + o(xⁿ)</div>
+        <div>sin x = x − x³/6 + x⁵/120 + o(x⁶)</div>
+        <div>cos x = 1 − x²/2 + x⁴/24 + o(x⁵)</div>
+        <div>ln(1 + x) = x − x²/2 + x³/3 + o(x³)</div>
+        <div>(1 + x)ᵃ = 1 + a x + <span class="fr"><span>a(a − 1)</span><span>2</span></span> x² + o(x²)</div>
+        <div>arctan x = x − x³/3 + o(x⁴)</div>
+      </div>
+      <p><b>Perché i coefficienti sono quelli</b> <span class="tag cap">facile per eˣ</span>: tutte le derivate di eˣ in 0 valgono 1, quindi il coefficiente di xⁿ è 1/n!. Per sin e cos le derivate in 0 girano 0, 1, 0, −1: per questo compaiono solo potenze dispari (sin) o pari (cos).</p>
+      <div class="steps">
+        <div class="step"><h3>Come si usa nei limiti</h3><p>1) Controllo la forma (di solito 0/0). 2) Sviluppo ogni pezzo fino al primo termine che non si cancella. 3) Tengo il termine più basso sopra e sotto, il resto finisce nell'o-piccolo. 4) Faccio il limite per x → 0.</p></div>
+      </div>
+      <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − (x − x³/6 + o(x³))</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x³/6 + o(x³)</span><span>x³</span></span> = <span class="fr"><span>1</span><span>6</span></span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>eˣ − 1 − x</span><span>x²</span></span> con Taylor</h2>
+      <div class="steps" id="guided-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Per +∞ scrivi <b>inf</b>, frazioni tipo 1/6.</p>
+      <div id="ex-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Rolle: f continua su [a, b], derivabile in (a, b), f(a) = f(b) ⇒ esiste c con f′(c) = 0.</li>
+        <li>Lagrange: [f(b) − f(a)]/(b − a) = f′(c). Conseguenze: f′ &gt; 0 ⇒ crescente; f′ &lt; 0 ⇒ decrescente; f′ = 0 ⇒ costante.</li>
+        <li>De L'Hôpital: solo con 0/0 o ∞/∞; derivo sopra e sotto separatamente.</li>
+        <li>Mac Laurin: f(x) = Σ f<sup>(k)</sup>(0)/k! · x<sup>k</sup> + o(xⁿ) per x → 0. o(xⁿ)/xⁿ → 0 per x → 0.</li>
+        <li>Sviluppi: eˣ, sin x, cos x, ln(1 + x), (1 + x)ᵃ, arctan x (riquadro sopra).</li>
+      </ul>
+      <div data-copy="teoremi-taylor"></div>
+    </section>
+  </div>

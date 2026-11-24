@@ -1,0 +1,53 @@
+  <div class="chapter" data-ch="sottosuccessioni" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 5 · blocco del 12/11 · dispensa 4.5.4</div>
+      <h2>Sottosuccessioni e Bolzano-Weierstrass</h2>
+      <p class="big">Serve soprattutto a <b>dimostrare che un limite NON esiste</b>. All'esame la domanda tipica è: "il limite esiste?" e la risposta è no.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Cos'è</div>
+      <p>Una sottosuccessione è una successione fatta prendendo <b>solo alcuni termini</b>, sempre in avanti. Esempio: solo i termini con n pari, oppure solo quelli con n dispari.</p>
+      <p><b>Regola:</b> se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L, allora ogni sua sottosuccessione ha limite L. Se tutta la fila arriva in caserma, ci arriva anche chiunque prendi dalla fila.</p>
+      <p><b>Contronominale</b> (l'hai fatta a logica): se trovi <b>due sottosuccessioni con limiti diversi</b>, allora a<sub>n</sub> non ha limite.</p>
+      <canvas id="plotS" aria-label="Grafico: termini pari e dispari di meno 1 alla n per n su n più 1"></canvas>
+      <div class="controls">
+        <label for="sP"><input type="checkbox" id="sP" checked> mostra i pari</label>
+        <label for="sD"><input type="checkbox" id="sD" checked> mostra i dispari</label>
+      </div>
+      <div class="legend"><span><i style="background:var(--cop)"></i>n pari: limite 1</span><span><i style="background:var(--thief)"></i>n dispari: limite −1</span></div>
+      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Per n → +∞ i pari tendono a 1 e i dispari a −1: due limiti diversi, quindi <b>il limite non esiste</b>.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Bolzano-Weierstrass · solo enunciato</div>
+      <div class="math left"><span class="box cop">Ogni successione <b>limitata</b> ha almeno una sottosuccessione che converge.</span></div>
+      <p>Esempio: (−1)ⁿ non converge, ma è limitata (sta tra −1 e 1), e infatti i termini pari formano 1, 1, 1, … che converge a 1.</p>
+      <p>Attenzione: BW non dice che tutta la successione converge. Dice solo che <b>una parte</b> converge.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Esiste <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ · (2 + 1/n)?</h2>
+      <div class="steps" id="guided-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Sottosuccessione: prendo alcuni termini, sempre in avanti (pari, dispari, …).</li>
+        <li><span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L ⇒ ogni sottosuccessione ha limite L.</li>
+        <li><b>Per dire che il limite non esiste:</b> trovo due sottosuccessioni con limiti diversi (di solito pari e dispari).</li>
+        <li>Bolzano-Weierstrass: limitata ⇒ esiste una sottosuccessione convergente.</li>
+      </ul>
+      <div data-copy="sottosuccessioni"></div>
+      <div class="note"><b>Con questo il blocco del 12/11 è chiuso.</b> Ultimo passo: la scheda 01 dei tuoi errori (CERVELLO/schede), poi si passa alle serie.</div>
+    </section>
+  </div>

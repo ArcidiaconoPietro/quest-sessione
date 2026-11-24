@@ -1,0 +1,80 @@
+  <div class="chapter" data-ch="serie-parametro">
+    <section class="board">
+      <div class="eyebrow">Capitolo 7 · blocco del 19/11 · Mughetti lez. 10 e 11 · dispensa pp. 40-41 (equivalenze)</div>
+      <h2>Confronto asintotico, Leibniz, serie con parametro</h2>
+      <p class="big">Tre attrezzi per le serie che compaiono di più all'esame:</p>
+      <ul class="recap">
+        <li><b>Confronto asintotico</b>: per le serie con polinomi, radici, sin, ln… dentro. Le riporti a 1/n<sup>p</sup>.</li>
+        <li><b>Leibniz</b>: per le serie con i segni che si alternano, + − + − …</li>
+        <li><b>Serie con parametro</b>: "per quali valori di x la serie converge?". Usi tutto quello che sai, caso per caso.</li>
+      </ul>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 1 <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Il confronto asintotico</h2>
+      <p><b>L'idea:</b> per n → +∞ conta solo come si comporta il termine "da lontano". Se due serie a termini positivi hanno termini che da lontano sono praticamente uguali (a meno di una costante), fanno la stessa fine.</p>
+      <div class="math left"><span class="box cop">Se a<sub>n</sub>, b<sub>n</sub> &gt; 0 e <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n</sub></span><span>b<sub>n</sub></span></span> = ℓ con ℓ numero finito diverso da 0, allora Σ a<sub>n</sub> e Σ b<sub>n</sub> hanno lo stesso carattere.</span></div>
+      <p>È l'equivalenza asintotica a<sub>n</sub> ~ b<sub>n</sub> che hai già visto nel blocco del 12/11. Lì ti sembrava teoria inutile: <b>qui serve davvero</b>.</p>
+      <p><b>Ricetta:</b> 1) trovo il termine dominante sopra e sotto; 2) ottengo una cosa tipo 1/n<sup>p</sup>; 3) guardo p.</p>
+      <div class="math">a<sub>n</sub> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> ~ <span class="fr"><span>n</span><span>n³</span></span> = <span class="fr"><span>1</span><span>n²</span></span> → p = 2 &gt; 1 → converge</div>
+      <p>Nel grafico vedi il rapporto a<sub>n</sub>/b<sub>n</sub>: per n → +∞ si stabilizza su un numero (non 0, non ∞). Quello è il segnale che le due serie fanno la stessa fine.</p>
+      <canvas id="plotAs" aria-label="Rapporto tra termini equivalenti"></canvas>
+      <div class="controls"><label for="asS">Esempio: <select id="asS">
+        <option value="0">(n + 3)/(n³ + 1) confrontato con 1/n²</option>
+        <option value="1">sin(1/n) confrontato con 1/n</option>
+        <option value="2">ln(1 + 1/n²) confrontato con 1/n²</option>
+        <option value="3">1 − cos(1/n) confrontato con 1/n²</option>
+      </select></label></div>
+      <div class="readout" id="asOut"></div>
+      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 2 <span class="tag mem">enunciato a memoria</span></div>
+      <h2>Serie a segni alterni: Leibniz</h2>
+      <p>Sono le serie dove i segni si alternano: Σ (−1)ⁿ b<sub>n</sub> con b<sub>n</sub> ≥ 0. Esempio: 1 − 1/2 + 1/3 − 1/4 + …</p>
+      <div class="math left"><span class="box cop">Se b<sub>n</sub> è decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0, allora Σ (−1)ⁿ b<sub>n</sub> converge.</span></div>
+      <p><b>L'idea:</b> fai un passo avanti, uno indietro più corto, uno avanti ancora più corto… Ti avvicini sempre di più a un punto fisso. Guardalo:</p>
+      <canvas id="plotLeib" aria-label="Somme parziali di una serie a segni alterni"></canvas>
+      <p>Le somme parziali di 1 − 1/2 + 1/3 − … fanno zig-zag, ma il zig-zag si stringe intorno a 0,693.</p>
+      <div class="warn"><b>Attenzione:</b> Σ 1/n diverge, ma Σ (−1)ⁿ/n converge. I segni alterni cambiano tutto. E se b<sub>n</sub> non tende a 0, la serie non converge (condizione necessaria del capitolo 6).</div>
+      <p><b>Convergenza assoluta</b> <span class="tag mem">a memoria</span>: se Σ |a<sub>n</sub>| converge, allora converge anche Σ a<sub>n</sub>. Utile quando i segni sono "a caso", per esempio con sin n: metti il valore assoluto e usi i criteri per serie positive.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attrezzo 3 · lo schema</div>
+      <h2>Serie con parametro</h2>
+      <p>La domanda è: "per quali valori di x (o di α) la serie converge?". Non c'è un criterio nuovo: usi quelli che sai, e <b>dividi in casi</b>.</p>
+      <div class="steps">
+        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p></div>
+        <div class="step"><h3>2 · I casi di confine li faccio a mano</h3><p>Dove L = 1 il criterio non dice niente: sostituisco quei valori di x (di solito x = 1 e x = −1) e studio le due serie che escono.</p></div>
+        <div class="step"><h3>3 · Scrivo la risposta finale come insieme</h3><p>Per esempio: la serie converge per −1 ≤ x &lt; 1.</p></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Per quali x converge <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> <span class="fr"><span>xⁿ</span><span>n</span></span> ?</h2>
+      <div class="steps" id="guided-serie-parametro"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-serie-parametro"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Confronto asintotico: a<sub>n</sub>, b<sub>n</sub> &gt; 0, <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub>/b<sub>n</sub> = ℓ finito e ≠ 0 ⇒ stesso carattere. Ricetta: termine dominante → 1/n<sup>p</sup>.</li>
+        <li>Equivalenze: sin(1/n) ~ 1/n, ln(1 + 1/n) ~ 1/n, e<sup>1/n</sup> − 1 ~ 1/n, 1 − cos(1/n) ~ 1/(2n²).</li>
+        <li>Leibniz: Σ (−1)ⁿ b<sub>n</sub>, b<sub>n</sub> ≥ 0 decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0 ⇒ converge.</li>
+        <li>Convergenza assoluta: Σ |a<sub>n</sub>| converge ⇒ Σ a<sub>n</sub> converge.</li>
+        <li>Parametro: rapporto/radice con |x| → casi |x| &lt; 1 e |x| &gt; 1 → confini a mano → insieme finale.</li>
+      </ul>
+      <div data-copy="serie-parametro"></div>
+    </section>
+  </div>

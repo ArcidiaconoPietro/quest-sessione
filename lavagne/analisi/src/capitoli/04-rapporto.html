@@ -1,0 +1,65 @@
+  <div class="chapter" data-ch="rapporto" hidden>
+    <section class="board">
+      <div class="eyebrow">Capitolo 4 · blocco del 12/11 · dispensa 4.5.3</div>
+      <h2>Il criterio del rapporto</h2>
+      <p class="big">Serve quando ci sono <b>fattoriali e potenze</b> (n!, 5ⁿ, nⁿ) e vuoi una prova di chi vince, non solo "per gerarchia".</p>
+      <p>Ti prepara anche a domani: il criterio del rapporto per le <b>serie</b> funziona allo stesso modo.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea</div>
+      <p>Confronta ogni termine con quello prima: <b>quanto diventa più grande o più piccolo a ogni passo?</b></p>
+      <p>Se da un certo punto ogni termine è, per esempio, la <b>metà</b> del precedente, la successione si dimezza ogni volta e crolla a 0. Se invece ogni termine è il <b>doppio</b>, esplode a +∞.</p>
+      <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span> = L</span></div>
+      <ul class="recap">
+        <li><b>L &lt; 1</b>: si rimpicciolisce sempre, quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0</li>
+        <li><b>L &gt; 1</b> (anche L = +∞): si ingrandisce sempre, quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞</li>
+        <li><b>L = 1</b>: il criterio <b>non dice niente</b>, usa un altro metodo</li>
+      </ul>
+      <p>Vale per successioni con termini positivi.</p>
+      <p>Nel grafico vedi il <b>rapporto</b> tra un termine e il precedente, per alcune successioni. Guarda se finisce sotto o sopra la linea 1.</p>
+      <canvas id="plotQ" aria-label="Grafico del rapporto tra termini consecutivi"></canvas>
+      <div class="controls">
+        <label for="qS">Successione: <select id="qS">
+          <option value="0">2ⁿ / n!</option>
+          <option value="1">n! / 3ⁿ</option>
+          <option value="2">n² / 2ⁿ</option>
+          <option value="3">n! / nⁿ</option>
+          <option value="4">n²</option>
+        </select></label>
+      </div>
+      <div class="readout" id="qOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Il trucco algebrico che serve sempre</div>
+      <div class="math"><span class="box cop">(n+1)! = (n+1) · n!</span><span class="box cop">3<sup>n+1</sup> = 3 · 3ⁿ</span></div>
+      <p>Così nel rapporto quasi tutto si semplifica.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2><span class="lim">lim<span>n→+∞</span></span> 5ⁿ / n!</h2>
+      <p>Per gerarchia sai già che fa 0. Ora lo <b>dimostri</b> col rapporto.</p>
+      <div class="steps" id="guided-rapporto"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi il limite per n → +∞. Per +∞ scrivi <b>inf</b>.</p>
+      <div id="ex-rapporto"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>a<sub>n</sub> &gt; 0. Calcolo L = <span class="lim">lim<span>n→+∞</span></span> a<sub>n+1</sub>/a<sub>n</sub>. Se L &lt; 1: <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Se L &gt; 1: <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞. Se L = 1: non so.</li>
+        <li>(n+1)! = (n+1)·n!, a<sup>n+1</sup> = a·aⁿ.</li>
+        <li>Utile: <span class="lim">lim<span>n→+∞</span></span> (n/(n+1))<sup>n</sup> = 1/e, cioè circa 0,37 (capitolo 3).</li>
+        <li>Non confonderlo con il criterio del rapporto per le <b>serie</b>: stessa idea, conclusione diversa (domani).</li>
+      </ul>
+      <div data-copy="rapporto"></div>
+    </section>
+  </div>

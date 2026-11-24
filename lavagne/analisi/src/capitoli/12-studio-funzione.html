@@ -1,0 +1,73 @@
+  <div class="chapter" data-ch="studio-funzione">
+    <section class="board">
+      <div class="eyebrow">Capitolo 12 · blocco del 7/12 · dispensa pp. 103-108, 116-117</div>
+      <h2>Lo studio di funzione</h2>
+      <p class="big">Ti danno una formula, tu devi disegnarne il grafico. Non punto per punto: raccogli indizi (dove esiste, dove è positiva, cosa fa ai bordi, dove sale e scende) e alla fine il disegno viene da solo.</p>
+      <p>A cosa serve: è l'esercizio più frequente nello scritto di Analisi 1. Usa tutto quello che hai fatto finora: limiti (capitoli 8 e 11), derivate (9 e 10), Lagrange per crescenza (11).</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lo schema · un indizio alla volta</div>
+      <h2>Costruisci il grafico passo passo</h2>
+      <p>Scegli una funzione e fai avanzare i passi. Ogni passo aggiunge un indizio al disegno. Il grafico vero compare solo alla fine: prova a immaginarlo prima.</p>
+      <canvas id="plotSF" aria-label="Studio di funzione passo passo"></canvas>
+      <div class="controls">
+        <label for="sfS">Funzione: <select id="sfS">
+          <option value="0">f(x) = x³ − 3x</option>
+          <option value="1">f(x) = x²/(x − 1)</option>
+          <option value="2">f(x) = x · e<sup>−x</sup></option>
+        </select></label>
+        <label for="sfN">Passo: <input type="range" id="sfN" min="1" max="6" value="1"></label>
+      </div>
+      <div class="readout" id="sfOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">I sei passi <span class="tag cap">da capire, non da memorizzare</span></div>
+      <h2>Lo schema completo</h2>
+      <div class="steps">
+        <div class="step"><h3>1 · Dominio</h3><p>Dove la formula ha senso: denominatore ≠ 0, argomento del ln &gt; 0, sotto radice pari ≥ 0. Controlla anche le simmetrie: f(−x) = f(x) pari (simmetrica rispetto all'asse y), f(−x) = −f(x) dispari (simmetrica rispetto all'origine).</p></div>
+        <div class="step"><h3>2 · Segno e intersezioni con gli assi</h3><p>Risolvi f(x) &gt; 0: sai dove il grafico sta sopra o sotto l'asse x. f(0) dà l'intersezione con l'asse y (se 0 è nel dominio).</p></div>
+        <div class="step"><h3>3 · Limiti ai bordi del dominio e asintoti</h3><p>Limite per x → ±∞ e per x che tende ai punti esclusi, da destra e da sinistra. Da lì trovi gli asintoti (riquadro sotto).</p></div>
+        <div class="step"><h3>4 · Derivata prima: crescenza, massimi, minimi</h3><p>f′ &gt; 0 ⇒ sale, f′ &lt; 0 ⇒ scende (conseguenza di Lagrange). Dove f′ passa da + a − c'è un massimo, da − a + un minimo.</p></div>
+        <div class="step"><h3>5 · Derivata seconda: concavità e flessi</h3><p>f″ &gt; 0 ⇒ concava verso l'alto (a coppa ∪), f″ &lt; 0 ⇒ verso il basso (∩). Dove f″ cambia segno c'è un flesso.</p></div>
+        <div class="step"><h3>6 · Disegno</h3><p>Metti insieme tutto: prima asintoti e punti speciali, poi colleghi rispettando crescenza e concavità.</p></div>
+      </div>
+      <div class="warn"><b>Errore classico:</b> f′(x₀) = 0 non basta per avere massimo o minimo (x³ in 0 ha f′ = 0 ma sale sempre). E f″(x₀) = 0 non basta per un flesso (x⁴ in 0). Conta il <b>cambio di segno</b>.</div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Gli asintoti <span class="tag mem">formule a memoria</span> <span class="tag cap">l'idea è facile</span></div>
+      <h2>Le rette a cui il grafico si avvicina</h2>
+      <div class="when">
+        <div><b>Verticale</b> x = x₀: se <span class="lim">lim<span>x→x₀</span></span> f(x) = ±∞ (anche solo da destra o da sinistra).</div>
+        <div><b>Orizzontale</b> y = ℓ: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ℓ, numero finito.</div>
+        <div><b>Obliquo</b> y = mx + q: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ±∞ e esistono finiti m = <span class="lim">lim<span>x→±∞</span></span> <span class="fr"><span>f(x)</span><span>x</span></span> ≠ 0 e q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − m x].</div>
+      </div>
+      <p><b>Perché m e q si calcolano così (facile):</b> se da lontano f(x) ≈ mx + q, allora f(x)/x ≈ m + q/x → m per x → ±∞, e f(x) − mx ≈ q. Esempio: per x²/(x − 1), m = <span class="lim">lim<span>x→+∞</span></span> x²/(x² − x) = 1 e q = <span class="lim">lim<span>x→+∞</span></span> [x²/(x − 1) − x] = <span class="lim">lim<span>x→+∞</span></span> x/(x − 1) = 1: asintoto y = x + 1.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Massimi, minimi e flessi di f(x) = x³ − 12x</h2>
+      <div class="steps" id="guided-studio-funzione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <div id="ex-studio-funzione"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li>Schema: dominio (e simmetrie) → segno e assi → limiti e asintoti → f′ (crescenza, max, min) → f″ (concavità, flessi) → disegno.</li>
+        <li>Verticale: <span class="lim">lim<span>x→x₀</span></span> f(x) = ±∞. Orizzontale: <span class="lim">lim<span>x→±∞</span></span> f(x) = ℓ finito.</li>
+        <li>Obliquo: m = <span class="lim">lim<span>x→±∞</span></span> f(x)/x (finito, ≠ 0), q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − mx].</li>
+        <li>Max/min: f′ cambia segno. Flesso: f″ cambia segno. f′ = 0 o f″ = 0 da soli non bastano.</li>
+      </ul>
+      <div data-copy="studio-funzione"></div>
+    </section>
+  </div>

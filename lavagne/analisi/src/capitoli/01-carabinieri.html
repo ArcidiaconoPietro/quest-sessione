@@ -1,0 +1,80 @@
+  <div class="chapter" data-ch="carabinieri">
+    <section class="board">
+      <div class="eyebrow">Capitolo 1 · blocco del 12/11</div>
+      <h2>Il teorema dei due carabinieri</h2>
+      <p class="big">Serve quando una successione <b>non sta ferma</b>, perché dentro c'è un pezzo che oscilla (sin n, cos n, (−1)ⁿ), e quindi non puoi calcolare il limite direttamente.</p>
+      <p>Il trucco: non la calcoli. La <b>chiudi in mezzo</b> a due successioni facili che, per n → +∞, hanno lo stesso limite.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">L'idea in una storia</div>
+      <p>Un <span class="thief">ladro</span> cammina zigzagando. Ha un <span class="cop">carabiniere</span> a sinistra e un <span class="cop">carabiniere</span> a destra che lo tengono per le braccia.</p>
+      <p>Se i due carabinieri arrivano <b>tutti e due</b> in caserma, il ladro in mezzo ci arriva per forza. Non importa quanto zigzaga.</p>
+      <div class="note">Nel disegno il ladro è <span class="thief">sin n diviso n</span>. Trascina la barra: i punti gialli oscillano, ma restano schiacciati tra le due linee blu, che per n → +∞ tendono a 0.</div>
+      <canvas id="plot1" aria-label="Grafico: sin n su n tra meno 1 su n e 1 su n"></canvas>
+      <div class="controls">
+        <label for="n1">Quanti termini: <input type="range" id="n1" min="5" max="80" value="30"> <b id="n1v">30</b></label>
+        <label for="c1"><input type="checkbox" id="c1" checked> mostra i carabinieri</label>
+      </div>
+      <div class="legend"><span><i style="background:var(--thief)"></i>ladro: sin n / n</span><span><i style="background:var(--cop)"></i>carabinieri: −1/n e 1/n</span></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">La ricetta, un passo alla volta</div>
+      <h2>Come si costruiscono i carabinieri</h2>
+      <p>Esempio: <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span>. Premi "passo successivo".</p>
+      <div class="steps" data-recipe>
+        <div class="step"><h3>Passo 1 · Parti da quello che sai sempre</h3>
+          <p>Il seno sta sempre tra −1 e 1, per ogni n.</p>
+          <div class="math"><span class="box cop">−1</span> ≤ <span class="box thief">sin n</span> ≤ <span class="box cop">1</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 2 · Costruisci la tua espressione</h3>
+          <p>Nella successione il seno è diviso per n. Divido <b>tutti e tre</b> i pezzi per n. Siccome n è positivo, i segni ≤ non cambiano.</p>
+          <div class="math"><span class="box cop"><span class="fr"><span>−1</span><span>n</span></span></span> ≤ <span class="box thief"><span class="fr"><span>sin n</span><span>n</span></span></span> ≤ <span class="box cop"><span class="fr"><span>1</span><span>n</span></span></span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 3 · Dove vanno i carabinieri?</h3>
+          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Tutti e due vanno a 0.</p>
+          <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> −1/n = 0</span> <span class="box cop"><span class="lim">lim<span>n→+∞</span></span> 1/n = 0</span></div>
+        </div>
+        <div class="step" hidden><h3>Passo 4 · Conclusione</h3>
+          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì.</p>
+          <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> sin n / n = 0</span></div>
+        </div>
+      </div>
+      <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Attenzione</div>
+      <h2>Quando NON funziona</h2>
+      <p>Quando n → +∞, i due carabinieri devono andare nello <b>stesso</b> posto. Se uno va a 0 e l'altro a 5, il ladro può stare ovunque in mezzo e non concludi niente.</p>
+      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre:</p>
+      <canvas id="plot2" aria-label="Grafico: cos n tra meno 1 e 1, non converge"></canvas>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Tocca a te · esercizio guidato</div>
+      <h2>Quanto fa questo limite?</h2>
+      <div class="math"><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>3 + cos n</span><span>n</span></span></div>
+      <div class="steps" id="guided-carabinieri"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Esercizi da solo</div>
+      <h2>Adesso senza aiuti</h2>
+      <p>Scrivi solo il risultato. Se ti blocchi, apri prima l'aiuto, poi la soluzione.</p>
+      <div id="ex-carabinieri"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Sul quaderno-formulario</div>
+      <h2>Da scrivere a mano</h2>
+      <ul class="recap">
+        <li><b>Quando lo uso:</b> c'è sin n, cos n o (−1)ⁿ, cioè un pezzo che oscilla ma resta limitato.</li>
+        <li><b>Ricetta:</b> parto da −1 ≤ sin n ≤ 1 (o cos), faccio la stessa operazione a tutti e tre i pezzi, poi guardo dove vanno i due estremi.</li>
+        <li><b>Regola d'oro:</b> per n → +∞ i due carabinieri devono avere lo <b>stesso</b> limite.</li>
+        <li><b>Attenzione ai segni:</b> se moltiplico o divido per un numero negativo, i ≤ si girano. Con n positivo non succede.</li>
+      </ul>
+      <div data-copy="carabinieri"></div>
+    </section>
+  </div>
