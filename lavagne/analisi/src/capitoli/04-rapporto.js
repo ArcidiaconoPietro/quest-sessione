@@ -13,6 +13,17 @@
     $('qOut').innerHTML = 'Per n → +∞ il rapporto tende a <b>'+q.L+'</b>. '+q.verdict;
   };
   $('qS').addEventListener('change', () => draws.rapporto());
+  const drawQM = () => {
+    const r = (+$('qM').value)/100, a = n => 100*Math.pow(r, n-1);
+    plot($('plotQM'), { N:12, series:[{f:a, color:'--thief', line:true},{f:a, color:'--thief'}], hlines:[{y:100, color:'--muted', label:'partenza 100'}] });
+    const fin = r<1 ? 'Moltiplicatore '+it(r,2)+' &lt; 1: si rimpicciolisce, '+LIM+' a<sub>n</sub> = 0.' : r>1 ? 'Moltiplicatore '+it(r,2)+' &gt; 1: si ingrandisce, '+LIM+' a<sub>n</sub> = +∞.' : 'Moltiplicatore 1: resta sempre 100.';
+    $('qMOut').innerHTML = 'Termini: '+[1,2,3,4,5,6].map(n=>it(a(n),2)).join(' · ')+' …<br><span style="font-size:1rem">'+fin+'</span>';
+    let rows = '<tr><th>n</th><th>a<sub>n</sub> = 5ⁿ/n!</th><th>moltiplicatore 5/(n+1)</th></tr>', v = 5;
+    for (let n=1; n<=12; n++){ rows += '<tr><td>'+n+'</td><td>'+it(v,2)+'</td><td>'+it(5/(n+1),2)+(5/(n+1)>1?' (cresce)':5/(n+1)===1?' (resta)':' (cala)')+'</td></tr>'; v = v*5/(n+1); }
+    $('qTab').innerHTML = rows;
+  };
+  const oldR = draws.rapporto; draws.rapporto = () => { oldR(); drawQM(); };
+  $('qM').addEventListener('input', drawQM);
 
   guided('rapporto', 'lavagna-rapporto', [
     { h:'Passo 1 · Scrivi a<sub>n+1</sub>: al posto di n metti n+1', type:'choice', ans:2,

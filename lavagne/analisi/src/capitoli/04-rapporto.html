@@ -32,6 +32,25 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Cosa vuol dire L · prima guardiamo i numeri <span class="tag cap">facile</span></div>
+      <h2>L è il "moltiplicatore" da lontano</h2>
+      <p>Il rapporto a<sub>n+1</sub>/a<sub>n</sub> risponde a una domanda: <b>per quanto devo moltiplicare un termine per ottenere il successivo?</b> Se a<sub>n+1</sub>/a<sub>n</sub> = 0,5, il termine dopo è la metà. Se fa 2, è il doppio.</p>
+      <p>Gioca con un moltiplicatore fisso. Parto da 100 e ogni volta moltiplico per lo stesso numero:</p>
+      <canvas id="plotQM" aria-label="Successione con moltiplicatore fisso"></canvas>
+      <div class="controls"><label for="qM">Moltiplicatore: <input type="range" id="qM" min="0" max="150" value="50"></label></div>
+      <div class="readout" id="qMOut"></div>
+      <div class="when">
+        <div><b>Moltiplicatore minore di 1</b> (0,5; 0,9; anche 0,99): ogni passo rimpicciolisce. Per n → +∞ arrivi a 0.</div>
+        <div><b>Moltiplicatore 0 o quasi 0</b>: rimpicciolisce ancora più in fretta. Quindi <b>L = 0 è il caso migliore di L &lt; 1</b>, non un caso a parte.</div>
+        <div><b>Moltiplicatore maggiore di 1</b>: ogni passo ingrandisce. Per n → +∞ vai a +∞.</div>
+        <div><b>Moltiplicatore esattamente 1</b>: resta tutto uguale. È il caso in cui non si può concludere (sotto vedi perché).</div>
+      </div>
+      <p><b>E se il moltiplicatore cambia a ogni passo?</b> Succede quasi sempre. Per esempio con a<sub>n</sub> = 5ⁿ/n! il moltiplicatore è 5/(n + 1): all'inizio è più di 1 (la successione cresce), poi scende sotto 1 e continua a scendere. L = <span class="lim">lim<span>n→+∞</span></span> 5/(n + 1) = 0 dice cosa fa il moltiplicatore <b>da lontano</b>, ed è quello che decide la fine:</p>
+      <div style="overflow-x:auto"><table class="vals" id="qTab"></table></div>
+      <p><b>Perché con L = 1 non si può dire niente:</b> il moltiplicatore si avvicina a 1, ma può stare appena sotto o appena sopra. Con a<sub>n</sub> = 1/n il rapporto è n/(n + 1), appena sotto 1, e <span class="lim">lim<span>n→+∞</span></span> 1/n = 0. Con a<sub>n</sub> = n il rapporto è (n + 1)/n, appena sopra 1, e <span class="lim">lim<span>n→+∞</span></span> n = +∞. Stesso L = 1, finali opposti.</p>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Il trucco algebrico che serve sempre</div>
       <div class="math"><span class="box cop">(n+1)! = (n+1) · n!</span><span class="box cop">3<sup>n+1</sup> = 3 · 3ⁿ</span></div>
       <p>Così nel rapporto quasi tutto si semplifica.</p>
