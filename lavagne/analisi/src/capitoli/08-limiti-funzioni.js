@@ -33,13 +33,58 @@
   ], '<b>Fatto!</b> '+LIMX('2')+' (x² − 4)/(x − 2) = '+LIMX('2')+' (x + 2) = 4. Con 0/0 e polinomi la mossa è sempre questa: trova il fattore (x − x₀), semplificalo, risostituisci.');
 
   EX['limiti-funzioni'] = [
-    { id:'e1', type:'num', q:LIMX('3')+' (x² + 1)', a:10, hint:'Prima mossa: sostituisci.', sol:'9 + 1 = 10. Nessuna forma indeterminata.' },
-    { id:'e2', type:'num', q:LIMX('1')+' '+FR('x² − 1','x² − x'), a:2, hint:'0/0. Sopra (x − 1)(x + 1), sotto x(x − 1).', sol:'Semplifico (x − 1): resta (x + 1)/x, che in x = 1 vale 2.' },
-    { id:'e3', type:'num', q:LIMX('+∞')+' '+FR('3x² + x','x² − 5'), a:3, hint:'Termine dominante sopra e sotto.', sol:'3x²/x² = 3.' },
-    { id:'e4', type:'num', q:LIMX('0')+' '+FR('sin(5x)','x'), a:5, hint:'Moltiplica e dividi per 5, così sotto c\'è 5x come dentro il seno.', sol:'5 · sin(5x)/(5x), e '+LIMX('0')+' sin(5x)/(5x) = 1: risultato 5.' },
-    { id:'e5', type:'num', q:LIMX('0')+' '+FR('1 − cos x','x²'), a:0.5, hint:'È un limite notevole, direttamente.', sol:'1/2.' },
-    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + 3x)','x'), a:3, hint:'Moltiplica e dividi per 3.', sol:'3 · ln(1 + 3x)/(3x) → 3 · 1 = 3.' },
-    { id:'e7', type:'num', q:LIMX('0⁺')+' '+FR('1','x'), a:Infinity, hint:'Da destra x è un numero positivo piccolissimo. 1 diviso un positivo piccolissimo…', sol:'+∞ (scrivi inf). Da sinistra sarebbe −∞.' },
-    { id:'e8', type:'num', q:LIMX('0')+' '+FR('e<sup>2x</sup> − 1','x'), a:2, hint:'Notevole (eˣ − 1)/x, con 2x al posto di x: moltiplica e dividi per 2.', sol:'2 · (e<sup>2x</sup> − 1)/(2x) → 2.' },
-    { id:'e9', type:'choice', q:LIMX('0')+' '+FR('|x|','x'), a:2, opts:['1','0','non esiste'], hint:'Calcola il limite destro e quello sinistro.', sol:'Da destra 1, da sinistra −1: diversi, il limite non esiste.' }
+    { id:'e1', type:'num', q:LIMX('3')+' (x² + 1)', a:10, hint:'Prima mossa: sostituisci.', sol:SV(
+      '<i>Prima mossa, sostituisco x = 3:</i> 3² + 1',
+      '<i>Calcolo la potenza:</i> 3² = 9',
+      '<i>Sommo:</i> 9 + 1 = 10',
+      '<i>Controllo:</i> è un numero, nessuna forma indeterminata, ho finito: il limite è <b>10</b>') },
+    { id:'e2', type:'num', q:LIMX('1')+' '+FR('x² − 1','x² − x'), a:2, hint:'0/0. Sopra (x − 1)(x + 1), sotto x(x − 1).', sol:SV(
+      '<i>Sostituisco x = 1:</i> sopra 1 − 1 = 0, sotto 1 − 1 = 0: forma 0/0, devo semplificare',
+      '<i>Scompongo sopra (differenza di quadrati):</i> x² − 1 = (x − 1)(x + 1)',
+      '<i>Scompongo sotto (raccolgo x):</i> x² − x = x(x − 1)',
+      '<i>Riscrivo:</i> '+FR('(x − 1)(x + 1)','x(x − 1)'),
+      '<i>Semplifico (x − 1), che non è 0 perché x è vicino a 1 ma non uguale:</i> = '+FR('x + 1','x'),
+      '<i>Risostituisco x = 1:</i> '+FR('1 + 1','1')+' = <b>2</b>') },
+    { id:'e3', type:'num', q:LIMX('+∞')+' '+FR('3x² + x','x² − 5'), a:3, hint:'Termine dominante sopra e sotto.', sol:SV(
+      '<i>Sostituisco x → +∞:</i> sopra +∞, sotto +∞: forma ∞/∞',
+      '<i>Raccolgo x² sopra:</i> 3x² + x = x²(3 + 1/x)',
+      '<i>Raccolgo x² sotto:</i> x² − 5 = x²(1 − 5/x²)',
+      '<i>Semplifico x²:</i> '+FR('3 + 1/x','1 − 5/x²'),
+      '<i>Faccio il limite:</i> 1/x → 0 e 5/x² → 0, quindi '+FR('3 + 0','1 − 0'),
+      '<i>Risultato:</i> <b>3</b>') },
+    { id:'e4', type:'num', q:LIMX('0')+' '+FR('sin(5x)','x'), a:5, hint:'Moltiplica e dividi per 5, così sotto c\'è 5x come dentro il seno.', sol:SV(
+      '<i>Sostituisco x = 0:</i> sin 0 / 0 = 0/0, forma indeterminata',
+      '<i>Voglio il limite notevole sin(t)/t con t = 5x: sotto mi serve 5x.</i> Moltiplico e divido per 5: '+FR('sin(5x)','x')+' = 5 · '+FR('sin(5x)','5x'),
+      '<i>Pongo t = 5x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> '+LIMX('0')+' '+FR('sin(5x)','5x')+' = <span class="lim">lim<span>t→0</span></span> '+FR('sin t','t')+' = 1',
+      '<i>Moltiplico:</i> 5 · 1 = <b>5</b>') },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('1 − cos x','x²'), a:0.5, hint:'È un limite notevole, direttamente.', sol:SV(
+      '<i>Sostituisco x = 0:</i> (1 − 1)/0 = 0/0',
+      '<i>Riconosco il limite notevole:</i> è esattamente '+LIMX('0')+' (1 − cos x)/x²',
+      '<i>Lo scrivo dalla tabella:</i> vale 1/2',
+      '<i>Risultato:</i> <b>1/2</b> (in decimale 0,5)') },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + 3x)','x'), a:3, hint:'Moltiplica e dividi per 3.', sol:SV(
+      '<i>Sostituisco x = 0:</i> ln 1 / 0 = 0/0',
+      '<i>Voglio il notevole ln(1 + t)/t con t = 3x: sotto mi serve 3x.</i> Moltiplico e divido per 3: = 3 · '+FR('ln(1 + 3x)','3x'),
+      '<i>Pongo t = 3x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> <span class="lim">lim<span>t→0</span></span> '+FR('ln(1 + t)','t')+' = 1',
+      '<i>Moltiplico:</i> 3 · 1 = <b>3</b>') },
+    { id:'e7', type:'num', q:LIMX('0⁺')+' '+FR('1','x'), a:Infinity, hint:'Da destra x è un numero positivo piccolissimo. 1 diviso un positivo piccolissimo…', sol:SV(
+      '<i>Sostituisco:</i> 1/0, non è una forma indeterminata: il risultato è infinito, devo capire il segno',
+      '<i>0⁺ vuol dire da destra:</i> x è positivo e piccolissimo',
+      '<i>Provo con i numeri:</i> x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000',
+      '<i>Crescono senza limite e sono positivi:</i> il limite è <b>+∞</b> (scrivi inf)',
+      '<i>Nota:</i> da sinistra (x = −0,01 → −100) sarebbe −∞') },
+    { id:'e8', type:'num', q:LIMX('0')+' '+FR('e<sup>2x</sup> − 1','x'), a:2, hint:'Notevole (eˣ − 1)/x, con 2x al posto di x: moltiplica e dividi per 2.', sol:SV(
+      '<i>Sostituisco x = 0:</i> (e⁰ − 1)/0 = (1 − 1)/0 = 0/0',
+      '<i>Voglio il notevole (eᵗ − 1)/t con t = 2x.</i> Moltiplico e divido per 2: = 2 · '+FR('e<sup>2x</sup> − 1','2x'),
+      '<i>Pongo t = 2x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> <span class="lim">lim<span>t→0</span></span> '+FR('eᵗ − 1','t')+' = 1',
+      '<i>Moltiplico:</i> 2 · 1 = <b>2</b>') },
+    { id:'e9', type:'choice', q:LIMX('0')+' '+FR('|x|','x'), a:2, opts:['1','0','non esiste'], hint:'Calcola il limite destro e quello sinistro.', sol:SV(
+      '<i>Ricordo il valore assoluto:</i> |x| = x se x &gt; 0, |x| = −x se x &lt; 0',
+      '<i>Da destra (x &gt; 0):</i> '+FR('|x|','x')+' = '+FR('x','x')+' = 1, quindi '+LIMX('0⁺')+' = 1',
+      '<i>Da sinistra (x &lt; 0):</i> '+FR('|x|','x')+' = '+FR('−x','x')+' = −1, quindi '+LIMX('0⁻')+' = −1',
+      '<i>Confronto:</i> destro 1 ≠ sinistro −1',
+      '<i>Conclusione:</i> il limite <b>non esiste</b>') }
   ];

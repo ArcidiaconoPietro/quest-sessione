@@ -146,6 +146,8 @@
     });
   }
   const inp = (lbl, w) => '<input type="text" inputmode="decimal" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  // svolgimento completo: ogni riga = cosa faccio + formula
+  const SV = (...r) => '<b>Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
   const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
 
   /* ---------------- esercizi da solo ---------------- */
@@ -159,7 +161,7 @@
       else ans = '<div class="row">'+(e.type==='exp' ? 'limite = e<sup>'+inp('esponente','3.5em')+'</sup>' : (e.lbl||'limite')+' = '+inp('risultato'))+'<button data-c>Controlla</button></div>';
       d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+'</b><span class="badge"></span></div><div class="math left">'+e.q+'</div>'+ans
         +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
-        +'<p class="note" data-hint hidden>'+e.hint+'</p><p class="note" data-sol hidden>'+e.sol+'</p>';
+        +'<p class="note" data-hint hidden>'+e.hint+'</p><div class="note" data-sol hidden>'+e.sol+'</div>';
       box.appendChild(d);
       const fb = d.querySelector('.feedback'), bd = d.querySelector('.badge');
       const badge = () => { const r=res[e.id];

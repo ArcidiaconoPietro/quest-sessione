@@ -120,3 +120,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .tag { display: inline-block; font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--cop) 15%, transparent); color: var(--cop); }
 .tag.mem { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
 .tag.cap { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+
+.sv { margin: .4em 0 0; padding-left: 1.4em; }
+.sv li { margin: .45em 0; line-height: 1.6; }
+.sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }

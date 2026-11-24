@@ -132,6 +132,10 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .tag { display: inline-block; font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--cop) 15%, transparent); color: var(--cop); }
 .tag.mem { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
 .tag.cap { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+
+.sv { margin: .4em 0 0; padding-left: 1.4em; }
+.sv li { margin: .45em 0; line-height: 1.6; }
+.sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }
 </style>
 
 <div class="wrap">
@@ -1701,6 +1705,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     });
   }
   const inp = (lbl, w) => '<input type="text" inputmode="decimal" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  // svolgimento completo: ogni riga = cosa faccio + formula
+  const SV = (...r) => '<b>Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
   const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
 
   /* ---------------- esercizi da solo ---------------- */
@@ -1714,7 +1720,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       else ans = '<div class="row">'+(e.type==='exp' ? 'limite = e<sup>'+inp('esponente','3.5em')+'</sup>' : (e.lbl||'limite')+' = '+inp('risultato'))+'<button data-c>Controlla</button></div>';
       d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+'</b><span class="badge"></span></div><div class="math left">'+e.q+'</div>'+ans
         +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
-        +'<p class="note" data-hint hidden>'+e.hint+'</p><p class="note" data-sol hidden>'+e.sol+'</p>';
+        +'<p class="note" data-hint hidden>'+e.hint+'</p><div class="note" data-sol hidden>'+e.sol+'</div>';
       box.appendChild(d);
       const fb = d.querySelector('.feedback'), bd = d.querySelector('.badge');
       const badge = () => { const r=res[e.id];
@@ -1885,11 +1891,38 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Perfetto! L &lt; 1 vuol dire che si rimpicciolisce sempre: il limite è 0.', bad:'Ricontrolla la regola: se L &lt; 1 il limite di a<sub>n</sub> è…?' }
   ], '<b>Fatto!</b> '+LIM+' 5ⁿ/n! = 0, adesso dimostrato: '+LIM+' 5/(n+1) = 0 &lt; 1.');
 
+  const A1 = 'a<sub>n+1</sub>', A0 = 'a<sub>n</sub>';
   EX['rapporto'] = [
-      { id:'e1', type:'num', q:LIM+' n! / 4ⁿ', a:Infinity, hint:'Rapporto: (n+1)!/n! = n+1 e 4ⁿ/4<sup>n+1</sup> = 1/4.', sol:'L = '+LIM+' (n+1)/4 = +∞ &gt; 1, quindi '+LIM+' n!/4ⁿ = +∞.' },
-      { id:'e2', type:'num', q:LIM+' n³ / 2ⁿ', a:0, hint:'Rapporto = ((n+1)/n)³ · 1/2. Per n → +∞ dove va (n+1)/n?', sol:LIM+' (n+1)/n = 1, quindi L = 1/2 &lt; 1: limite 0.' },
-      { id:'e3', type:'num', q:LIM+' n! / nⁿ <span style="font-size:1rem">(era un tuo errore)</span>', a:0, hint:'Rapporto = (n+1)! / (n+1)<sup>n+1</sup> · nⁿ / n! = nⁿ/(n+1)ⁿ = (n/(n+1))ⁿ. Ricorda il capitolo 3.', sol:'(n/(n+1))ⁿ → 1/e ≈ 0,37 &lt; 1: limite 0. nⁿ batte n!.' },
-      { id:'e4', type:'num', q:'Per a<sub>n</sub> = 1/n, quanto vale L, il limite del rapporto?', a:1, hint:'(1/(n+1)) / (1/n) = n/(n+1).', sol:'L = 1: il criterio non dice niente, anche se sai che '+LIM+' 1/n = 0. È il caso dubbio.' }
+      { id:'e1', type:'num', q:LIM+' n! / 4ⁿ', a:Infinity, hint:'Rapporto: (n+1)!/n! = n+1 e 4ⁿ/4<sup>n+1</sup> = 1/4.', sol:SV(
+        '<i>Scrivo '+A1+' (al posto di n metto n + 1):</i> '+A1+' = '+FR('(n + 1)!','4<sup>n+1</sup>'),
+        '<i>Scrivo il rapporto (dividere per una frazione = moltiplicare per la sua capovolta):</i> '+FR(A1,A0)+' = '+FR('(n + 1)!','4<sup>n+1</sup>')+' · '+FR('4ⁿ','n!'),
+        '<i>Spezzo (n + 1)! = (n + 1) · n! e 4<sup>n+1</sup> = 4 · 4ⁿ:</i> = '+FR('(n + 1) · n!','4 · 4ⁿ')+' · '+FR('4ⁿ','n!'),
+        '<i>Semplifico n! con n! e 4ⁿ con 4ⁿ:</i> = '+FR('n + 1','4'),
+        '<i>Faccio il limite:</i> L = '+LIM+' '+FR('n + 1','4')+' = +∞ (sopra cresce senza fine, sotto resta 4)',
+        '<i>Applico il criterio:</i> L = +∞ &gt; 1, quindi '+LIM+' n!/4ⁿ = <b>+∞</b>') },
+      { id:'e2', type:'num', q:LIM+' n³ / 2ⁿ', a:0, hint:'Rapporto = ((n+1)/n)³ · 1/2. Per n → +∞ dove va (n+1)/n?', sol:SV(
+        '<i>Scrivo '+A1+':</i> '+A1+' = '+FR('(n + 1)³','2<sup>n+1</sup>'),
+        '<i>Scrivo il rapporto:</i> '+FR(A1,A0)+' = '+FR('(n + 1)³','2<sup>n+1</sup>')+' · '+FR('2ⁿ','n³'),
+        '<i>Spezzo 2<sup>n+1</sup> = 2 · 2ⁿ e semplifico 2ⁿ:</i> = '+FR('(n + 1)³','2 · n³'),
+        '<i>Metto insieme le potenze con lo stesso esponente:</i> = '+FR('1','2')+' · ('+FR('n + 1','n')+')³ = '+FR('1','2')+' · (1 + '+FR('1','n')+')³',
+        '<i>Faccio il limite per n → +∞:</i> 1/n tende a 0, quindi (1 + 1/n)³ tende a 1³ = 1',
+        '<i>Quindi:</i> L = '+FR('1','2')+' · 1 = '+FR('1','2'),
+        '<i>Applico il criterio:</i> L = 1/2 &lt; 1, quindi '+LIM+' n³/2ⁿ = <b>0</b>') },
+      { id:'e3', type:'num', q:LIM+' n! / nⁿ <span style="font-size:1rem">(era un tuo errore)</span>', a:0, hint:'Rapporto = (n+1)! / (n+1)<sup>n+1</sup> · nⁿ / n! = nⁿ/(n+1)ⁿ = (n/(n+1))ⁿ. Ricorda il capitolo 3.', sol:SV(
+        '<i>Scrivo '+A1+' (n + 1 va nel fattoriale, nella base e nell\'esponente):</i> '+A1+' = '+FR('(n + 1)!','(n + 1)<sup>n+1</sup>'),
+        '<i>Scrivo il rapporto:</i> '+FR(A1,A0)+' = '+FR('(n + 1)!','(n + 1)<sup>n+1</sup>')+' · '+FR('nⁿ','n!'),
+        '<i>Spezzo (n + 1)! = (n + 1) · n! e semplifico n!:</i> = '+FR('(n + 1) · nⁿ','(n + 1)<sup>n+1</sup>'),
+        '<i>Spezzo (n + 1)<sup>n+1</sup> = (n + 1) · (n + 1)ⁿ e semplifico (n + 1):</i> = '+FR('nⁿ','(n + 1)ⁿ'),
+        '<i>Stesso esponente sopra e sotto, lo metto fuori:</i> = ('+FR('n','n + 1')+')ⁿ',
+        '<i>Capovolgo la frazione dentro (così compare il numero e):</i> ('+FR('n','n + 1')+')ⁿ = '+FR('1','((n + 1)/n)ⁿ')+' = '+FR('1','(1 + 1/n)ⁿ'),
+        '<i>Faccio il limite (capitolo 3):</i> '+LIM+' (1 + 1/n)ⁿ = e, quindi L = '+FR('1','e')+' ≈ 0,37',
+        '<i>Applico il criterio:</i> L = 1/e &lt; 1, quindi '+LIM+' n!/nⁿ = <b>0</b>: nⁿ batte n!') },
+      { id:'e4', type:'num', q:'Per a<sub>n</sub> = 1/n, quanto vale L, il limite del rapporto?', a:1, hint:'(1/(n+1)) / (1/n) = n/(n+1).', sol:SV(
+        '<i>Scrivo '+A1+':</i> '+A1+' = '+FR('1','n + 1'),
+        '<i>Scrivo il rapporto:</i> '+FR(A1,A0)+' = '+FR('1','n + 1')+' · '+FR('n','1')+' = '+FR('n','n + 1'),
+        '<i>Divido sopra e sotto per n:</i> = '+FR('1','1 + 1/n'),
+        '<i>Faccio il limite:</i> 1/n tende a 0, quindi L = '+FR('1','1 + 0')+' = <b>1</b>',
+        '<i>Conclusione:</i> con L = 1 il criterio non dice niente. Che '+LIM+' 1/n = 0 lo sai per un\'altra strada.') }
     ];
 
   /* ===== capitolo 5: Sottosuccessioni ===== */
@@ -1915,12 +1948,35 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Perfetto! Pari: limite 2. Dispari: limite −2. Il limite non esiste.', bad:'Non si fa la media. Rileggi la contronominale.' }
   ], '<b>Fatto!</b> Questa è esattamente la frase da scrivere all\'esame: "la sottosuccessione dei pari tende a 2, quella dei dispari a −2, quindi il limite non esiste".');
 
+  const LIMK = '<span class="lim">lim<span>k→+∞</span></span>';
   EX['sottosuccessioni'] = [
-      { id:'e1', type:'choice', q:LIM+' cos(nπ)', a:2, opts:['1','0','non esiste'], hint:'cos(nπ) per n pari vale 1, per n dispari vale −1.', sol:'Pari: limite 1. Dispari: limite −1. Limiti diversi, quindi il limite non esiste.' },
-      { id:'e2', type:'choice', q:LIM+' (−1)ⁿ / n', a:0, opts:['0','non esiste','1'], hint:'Pari: 1/n. Dispari: −1/n. Per n → +∞ dove vanno?', sol:'Per n → +∞ tutte e due tendono a 0: il limite è 0 (l\'hai fatto anche coi carabinieri).' },
-      { id:'e3', type:'choice', q:LIM+' (−1)ⁿ + 1/n', a:1, opts:['0','non esiste','1'], hint:'Pari: 1 + 1/n. Dispari: −1 + 1/n.', sol:'Pari: limite 1. Dispari: limite −1. Il limite non esiste.' },
+      { id:'e1', type:'choice', q:LIM+' cos(nπ)', a:2, opts:['1','0','non esiste'], hint:'cos(nπ) per n pari vale 1, per n dispari vale −1.', sol:SV(
+        '<i>Calcolo i primi termini:</i> n = 1: cos π = −1; n = 2: cos 2π = 1; n = 3: cos 3π = −1; n = 4: cos 4π = 1',
+        '<i>Divido in due sottosuccessioni:</i> n pari (n = 2k) e n dispari (n = 2k + 1)',
+        '<i>Pari:</i> cos(2kπ) = 1 sempre, quindi '+LIMK+' cos(2kπ) = 1',
+        '<i>Dispari:</i> cos((2k + 1)π) = −1 sempre, quindi '+LIMK+' cos((2k + 1)π) = −1',
+        '<i>Confronto:</i> due sottosuccessioni con limiti diversi (1 ≠ −1)',
+        '<i>Conclusione:</i> '+LIM+' cos(nπ) <b>non esiste</b>') },
+      { id:'e2', type:'choice', q:LIM+' (−1)ⁿ / n', a:0, opts:['0','non esiste','1'], hint:'Pari: 1/n. Dispari: −1/n. Per n → +∞ dove vanno?', sol:SV(
+        '<i>n pari:</i> (−1)ⁿ = 1, quindi il termine è 1/n',
+        '<i>Limite dei pari:</i> 1/n tende a 0 per n → +∞',
+        '<i>n dispari:</i> (−1)ⁿ = −1, quindi il termine è −1/n',
+        '<i>Limite dei dispari:</i> −1/n tende a 0 per n → +∞',
+        '<i>Confronto:</i> tutte e due tendono a 0, lo stesso numero',
+        '<i>Conclusione:</i> '+LIM+' (−1)ⁿ/n = <b>0</b> (come coi carabinieri: −1/n ≤ (−1)ⁿ/n ≤ 1/n)') },
+      { id:'e3', type:'choice', q:LIM+' (−1)ⁿ + 1/n', a:1, opts:['0','non esiste','1'], hint:'Pari: 1 + 1/n. Dispari: −1 + 1/n.', sol:SV(
+        '<i>n pari:</i> (−1)ⁿ = 1, il termine è 1 + 1/n',
+        '<i>Limite dei pari:</i> 1/n tende a 0, quindi 1 + 1/n tende a 1 + 0 = 1',
+        '<i>n dispari:</i> (−1)ⁿ = −1, il termine è −1 + 1/n',
+        '<i>Limite dei dispari:</i> −1 + 1/n tende a −1 + 0 = −1',
+        '<i>Confronto:</i> 1 ≠ −1',
+        '<i>Conclusione:</i> il limite per n → +∞ <b>non esiste</b>') },
       { id:'e4', type:'choice', q:'a<sub>n</sub> = sin n sta sempre tra −1 e 1. Cosa garantisce Bolzano-Weierstrass?', a:1,
-        opts:['Che sin n converge','Che esiste almeno una sottosuccessione di sin n che converge','Niente, perché sin n oscilla'], hint:'BW parla solo di una parte della successione.', sol:'sin n è limitata, quindi ha almeno una sottosuccessione convergente. Tutta la successione invece non converge.' }
+        opts:['Che sin n converge','Che esiste almeno una sottosuccessione di sin n che converge','Niente, perché sin n oscilla'], hint:'BW parla solo di una parte della successione.', sol:SV(
+        '<i>Ricordo l\'enunciato:</i> ogni successione limitata ha almeno una sottosuccessione convergente',
+        '<i>Controllo l\'ipotesi:</i> −1 ≤ sin n ≤ 1 per ogni n, quindi sin n è limitata ✓',
+        '<i>Applico il teorema:</i> esiste una sottosuccessione di sin n che converge',
+        '<i>Attenzione a cosa NON dice:</i> non dice che tutta sin n converge (infatti non converge), né quale sia la sottosuccessione') }
     ];
 
   /* ===== capitolo 6: Serie numeriche ===== */
@@ -1961,14 +2017,59 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 
   const CV = ['converge','diverge','è irregolare'];
   EX['serie'] = [
-    { id:'e1', type:'num', q:SUM(0)+' (1/3)ⁿ = ?', a:1.5, hint:'Geometrica con q = 1/3, parte da n = 0: somma 1/(1 − q).', sol:'1/(1 − 1/3) = 1/(2/3) = 3/2.' },
-    { id:'e2', type:'choice', q:SUM(1)+' '+FR('n + 1','n'), a:1, opts:CV, hint:'Primo controllo: quanto fa il limite del termine per n → +∞?', sol:LIM+' (n+1)/n = 1 ≠ 0: la condizione necessaria non vale, termini positivi, quindi diverge.' },
-    { id:'e3', type:'choice', q:SUM(1)+' '+FR('1','n³'), a:0, opts:CV, hint:'È una 1/n<sup>p</sup>. Quanto vale p?', sol:'p = 3 &gt; 1: converge.' },
-    { id:'e4', type:'choice', q:SUM(1)+' '+FR('1','√n'), a:1, opts:CV, hint:'√n = n<sup>1/2</sup>. Quanto vale p?', sol:'p = 1/2 ≤ 1: diverge.' },
-    { id:'e5', type:'choice', q:SUM(1)+' '+FR('2ⁿ','n!'), a:0, opts:CV, hint:'C\'è un fattoriale: rapporto. (n+1)! = (n+1) · n!.', sol:'Rapporto = 2/(n+1), e '+LIM+' 2/(n+1) = 0 &lt; 1: converge.' },
-    { id:'e6', type:'choice', q:SUM(1)+' ('+FR('n','2n + 1')+')ⁿ', a:0, opts:CV, hint:'È tutto elevato alla n: radice. La radice n-esima smonta la potenza.', sol:'Radice n-esima = n/(2n+1), e '+LIM+' n/(2n+1) = 1/2 &lt; 1: converge.' },
-    { id:'e7', type:'choice', q:SUM(1)+' '+FR('1','n² + 5'), a:0, opts:CV, hint:'Confronto: 1/(n² + 5) è più piccolo di quale serie che conosci?', sol:'1/(n² + 5) ≤ 1/n², e Σ 1/n² converge (p = 2): converge.' },
-    { id:'e8', type:'choice', q:SUM(0)+' (5/4)ⁿ', a:1, opts:CV, hint:'Geometrica: quanto vale q? È minore di 1?', sol:'q = 5/4 ≥ 1: diverge.' }
+    { id:'e1', type:'num', q:SUM(0)+' (1/3)ⁿ = ?', a:1.5, hint:'Geometrica con q = 1/3, parte da n = 0: somma 1/(1 − q).', sol:SV(
+      '<i>Riconosco il tipo:</i> è una geometrica Σ qⁿ con ragione q = 1/3, che parte da n = 0',
+      '<i>Controllo se converge:</i> |q| = 1/3 &lt; 1, quindi converge',
+      '<i>Scrivo la formula della somma (vale se parte da n = 0):</i> '+SUM(0)+' qⁿ = '+FR('1','1 − q'),
+      '<i>Sostituisco q = 1/3:</i> '+FR('1','1 − 1/3'),
+      '<i>Faccio il conto sotto:</i> 1 − 1/3 = 3/3 − 1/3 = 2/3, quindi = '+FR('1','2/3'),
+      '<i>Dividere per una frazione = moltiplicare per la capovolta:</i> 1 · '+FR('3','2')+' = <b>3/2</b>') },
+    { id:'e2', type:'choice', q:SUM(1)+' '+FR('n + 1','n'), a:1, opts:CV, hint:'Primo controllo: quanto fa il limite del termine per n → +∞?', sol:SV(
+      '<i>Primo controllo, la condizione necessaria:</i> calcolo '+LIM+' '+FR('n + 1','n'),
+      '<i>Divido sopra e sotto per n:</i> '+FR('n + 1','n')+' = 1 + '+FR('1','n'),
+      '<i>Faccio il limite:</i> 1/n tende a 0, quindi 1 + 1/n tende a 1',
+      '<i>Confronto con 0:</i> il termine tende a 1 ≠ 0, quindi la serie NON converge',
+      '<i>Termini positivi:</i> sommo infinite volte numeri vicini a 1, la somma cresce senza fine',
+      '<i>Conclusione:</i> <b>diverge</b> (a +∞)') },
+    { id:'e3', type:'choice', q:SUM(1)+' '+FR('1','n³'), a:0, opts:CV, hint:'È una 1/n<sup>p</sup>. Quanto vale p?', sol:SV(
+      '<i>Riconosco il tipo:</i> è un\'armonica generalizzata Σ 1/n<sup>p</sup>',
+      '<i>Leggo p:</i> p = 3',
+      '<i>Ricordo la regola:</i> Σ 1/n<sup>p</sup> converge se p &gt; 1, diverge se p ≤ 1',
+      '<i>Confronto:</i> 3 &gt; 1',
+      '<i>Conclusione:</i> <b>converge</b>') },
+    { id:'e4', type:'choice', q:SUM(1)+' '+FR('1','√n'), a:1, opts:CV, hint:'√n = n<sup>1/2</sup>. Quanto vale p?', sol:SV(
+      '<i>Riscrivo la radice come potenza:</i> √n = n<sup>1/2</sup>, quindi '+FR('1','√n')+' = '+FR('1','n<sup>1/2</sup>'),
+      '<i>Riconosco il tipo:</i> armonica generalizzata con p = 1/2',
+      '<i>Ricordo la regola:</i> converge solo se p &gt; 1',
+      '<i>Confronto:</i> 1/2 ≤ 1',
+      '<i>Conclusione:</i> <b>diverge</b>') },
+    { id:'e5', type:'choice', q:SUM(1)+' '+FR('2ⁿ','n!'), a:0, opts:CV, hint:'C\'è un fattoriale: rapporto. (n+1)! = (n+1) · n!.', sol:SV(
+      '<i>Scelgo il criterio:</i> c\'è un fattoriale, uso il rapporto. a<sub>n</sub> = '+FR('2ⁿ','n!'),
+      '<i>Scrivo a<sub>n+1</sub> (al posto di n metto n + 1):</i> a<sub>n+1</sub> = '+FR('2<sup>n+1</sup>','(n + 1)!'),
+      '<i>Scrivo il rapporto:</i> '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('2<sup>n+1</sup>','(n + 1)!')+' · '+FR('n!','2ⁿ'),
+      '<i>Spezzo 2<sup>n+1</sup> = 2 · 2ⁿ e (n + 1)! = (n + 1) · n!:</i> = '+FR('2 · 2ⁿ','(n + 1) · n!')+' · '+FR('n!','2ⁿ'),
+      '<i>Semplifico 2ⁿ e n!:</i> = '+FR('2','n + 1'),
+      '<i>Faccio il limite:</i> L = '+LIM+' '+FR('2','n + 1')+' = 0',
+      '<i>Applico il criterio delle serie:</i> L = 0 &lt; 1, quindi la serie <b>converge</b>') },
+    { id:'e6', type:'choice', q:SUM(1)+' ('+FR('n','2n + 1')+')ⁿ', a:0, opts:CV, hint:'È tutto elevato alla n: radice. La radice n-esima smonta la potenza.', sol:SV(
+      '<i>Scelgo il criterio:</i> tutto il termine è elevato alla n, uso la radice',
+      '<i>Faccio la radice n-esima (la radice n-esima di (qualcosa)ⁿ è il qualcosa):</i> ⁿ√('+FR('n','2n + 1')+')ⁿ = '+FR('n','2n + 1'),
+      '<i>Divido sopra e sotto per n:</i> '+FR('n','2n + 1')+' = '+FR('1','2 + 1/n'),
+      '<i>Faccio il limite:</i> 1/n tende a 0, quindi L = '+FR('1','2 + 0')+' = '+FR('1','2'),
+      '<i>Applico il criterio:</i> L = 1/2 &lt; 1, quindi la serie <b>converge</b>') },
+    { id:'e7', type:'choice', q:SUM(1)+' '+FR('1','n² + 5'), a:0, opts:CV, hint:'Confronto: 1/(n² + 5) è più piccolo di quale serie che conosci?', sol:SV(
+      '<i>Scelgo il criterio:</i> somiglia a 1/n², uso il confronto',
+      '<i>Confronto i denominatori:</i> n² + 5 &gt; n²',
+      '<i>Denominatore più grande = frazione più piccola:</i> '+FR('1','n² + 5')+' &lt; '+FR('1','n²'),
+      '<i>So che la serie più grande converge:</i> Σ 1/n² ha p = 2 &gt; 1, converge',
+      '<i>Applico il confronto:</i> se la serie più grande converge, anche quella più piccola (a termini positivi) converge',
+      '<i>Conclusione:</i> <b>converge</b>') },
+    { id:'e8', type:'choice', q:SUM(0)+' (5/4)ⁿ', a:1, opts:CV, hint:'Geometrica: quanto vale q? È minore di 1?', sol:SV(
+      '<i>Riconosco il tipo:</i> geometrica con ragione q = 5/4',
+      '<i>Calcolo q in decimale:</i> 5/4 = 1,25',
+      '<i>Ricordo la regola:</i> converge solo se |q| &lt; 1; se q ≥ 1 diverge',
+      '<i>Confronto:</i> 1,25 ≥ 1 (ogni termine è più grande del precedente)',
+      '<i>Conclusione:</i> <b>diverge</b> (a +∞)') }
   ];
 
   /* ===== capitolo 7: Serie con parametro e Leibniz ===== */
@@ -2008,14 +2109,59 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 
   const CV2 = ['converge','diverge','non converge (irregolare)'];
   EX['serie-parametro'] = [
-    { id:'e1', type:'choice', q:SUM(1)+' '+FR('n + 3','n³ + 1'), a:0, opts:CV2, hint:'Termine dominante sopra e sotto: n/n³.', sol:'~ 1/n², p = 2 &gt; 1: converge.' },
-    { id:'e2', type:'choice', q:SUM(1)+' '+FR('2n + 1','n² + 4'), a:1, opts:CV2, hint:'Termine dominante: 2n/n² = 2/n. La costante 2 non conta.', sol:'~ 2/n, si comporta come l\'armonica: diverge.' },
-    { id:'e3', type:'choice', q:SUM(1)+' sin(1/n²)', a:0, opts:CV2, hint:'Per n → +∞, 1/n² tende a 0, e sin(piccolo) ~ piccolo.', sol:'sin(1/n²) ~ 1/n², p = 2: converge.' },
-    { id:'e4', type:'choice', q:SUM(1)+' '+FR('(−1)ⁿ','√n'), a:0, opts:CV2, hint:'Segni alterni. 1/√n è decrescente? Tende a 0?', sol:'Sì e sì: converge per Leibniz. (Senza i segni, Σ 1/√n divergerebbe.)' },
-    { id:'e5', type:'choice', q:SUM(1)+' (−1)ⁿ · '+FR('n','n + 1'), a:2, opts:CV2, hint:'Primo controllo: il termine tende a 0? n/(n+1) per n → +∞ tende a…', sol:'n/(n+1) tende a 1, quindi i termini fanno quasi ±1 e non tendono a 0: la serie non converge, le somme oscillano.' },
-    { id:'e6', type:'choice', q:SUM(1)+' 1 − cos(1/n)', a:0, opts:CV2, hint:'Equivalenza: 1 − cos(piccolo) ~ (piccolo)²/2.', sol:'~ 1/(2n²), si comporta come Σ 1/n²: converge.' },
-    { id:'e7', type:'choice', q:'Per quali α converge '+SUM(1)+' '+FR('1','n<sup>α − 1</sup>')+' ?', a:1, opts:['α &gt; 1','α &gt; 2','α ≥ 2'], hint:'È una 1/n<sup>p</sup> con p = α − 1. Serve p &gt; 1.', sol:'α − 1 &gt; 1, cioè α &gt; 2.' },
-    { id:'e8', type:'choice', q:'Per quali x converge '+SUM(0)+' xⁿ ?', a:0, opts:['−1 &lt; x &lt; 1','−1 ≤ x ≤ 1','x &gt; 0'], hint:'È la geometrica del capitolo 6 con q = x.', sol:'Geometrica: converge solo per −1 &lt; x &lt; 1. Per x = 1 diverge, per x = −1 è irregolare.' }
+    { id:'e1', type:'choice', q:SUM(1)+' '+FR('n + 3','n³ + 1'), a:0, opts:CV2, hint:'Termine dominante sopra e sotto: n/n³.', sol:SV(
+      '<i>Termine dominante sopra:</i> in n + 3, per n → +∞ conta n',
+      '<i>Termine dominante sotto:</i> in n³ + 1 conta n³',
+      '<i>Scrivo l\'equivalenza:</i> '+FR('n + 3','n³ + 1')+' ~ '+FR('n','n³'),
+      '<i>Semplifico:</i> '+FR('n','n³')+' = '+FR('1','n²'),
+      '<i>Controllo (rapporto tra i due termini):</i> '+LIM+' '+FR('(n + 3)/(n³ + 1)','1/n²')+' = '+LIM+' '+FR('n³ + 3n²','n³ + 1')+' = 1, finito e ≠ 0 ✓',
+      '<i>Confronto asintotico:</i> stessa fine di Σ 1/n², che ha p = 2 &gt; 1',
+      '<i>Conclusione:</i> <b>converge</b>') },
+    { id:'e2', type:'choice', q:SUM(1)+' '+FR('2n + 1','n² + 4'), a:1, opts:CV2, hint:'Termine dominante: 2n/n² = 2/n. La costante 2 non conta.', sol:SV(
+      '<i>Termine dominante sopra:</i> 2n',
+      '<i>Termine dominante sotto:</i> n²',
+      '<i>Scrivo l\'equivalenza:</i> '+FR('2n + 1','n² + 4')+' ~ '+FR('2n','n²')+' = '+FR('2','n'),
+      '<i>La costante 2 non cambia la fine:</i> Σ 2/n = 2 · Σ 1/n',
+      '<i>Ricordo:</i> Σ 1/n è l\'armonica, p = 1, diverge',
+      '<i>Conclusione:</i> <b>diverge</b>') },
+    { id:'e3', type:'choice', q:SUM(1)+' sin(1/n²)', a:0, opts:CV2, hint:'Per n → +∞, 1/n² tende a 0, e sin(piccolo) ~ piccolo.', sol:SV(
+      '<i>Guardo cosa c\'è dentro il seno:</i> 1/n² tende a 0 per n → +∞',
+      '<i>Uso il limite notevole sin(t)/t → 1 per t → 0, con t = 1/n²:</i> sin(1/n²) ~ 1/n²',
+      '<i>Termini positivi (sin di un numero piccolo positivo è positivo):</i> posso usare il confronto asintotico',
+      '<i>Confronto:</i> stessa fine di Σ 1/n², p = 2 &gt; 1',
+      '<i>Conclusione:</i> <b>converge</b>') },
+    { id:'e4', type:'choice', q:SUM(1)+' '+FR('(−1)ⁿ','√n'), a:0, opts:CV2, hint:'Segni alterni. 1/√n è decrescente? Tende a 0?', sol:SV(
+      '<i>Riconosco il tipo:</i> segni alterni, Σ (−1)ⁿ b<sub>n</sub> con b<sub>n</sub> = 1/√n ≥ 0',
+      '<i>Leibniz, controllo 1 (b<sub>n</sub> tende a 0):</i> '+LIM+' 1/√n = 0 ✓',
+      '<i>Leibniz, controllo 2 (b<sub>n</sub> decrescente):</i> se n cresce, √n cresce, quindi 1/√n diminuisce ✓',
+      '<i>Applico Leibniz:</i> tutte e due le condizioni valgono',
+      '<i>Conclusione:</i> <b>converge</b> (senza i segni, Σ 1/√n divergerebbe: p = 1/2)') },
+    { id:'e5', type:'choice', q:SUM(1)+' (−1)ⁿ · '+FR('n','n + 1'), a:2, opts:CV2, hint:'Primo controllo: il termine tende a 0? n/(n+1) per n → +∞ tende a…', sol:SV(
+      '<i>Primo controllo, condizione necessaria:</i> il termine deve tendere a 0',
+      '<i>Guardo la parte senza segno:</i> '+FR('n','n + 1')+' = '+FR('1','1 + 1/n')+', che tende a 1 per n → +∞',
+      '<i>Quindi i termini:</i> per n pari sono vicini a +1, per n dispari vicini a −1: non tendono a 0',
+      '<i>Condizione necessaria non vale:</i> la serie non converge',
+      '<i>Le somme parziali:</i> aggiungono circa +1, −1, +1, −1… e oscillano senza fermarsi',
+      '<i>Conclusione:</i> <b>non converge (irregolare)</b>. Leibniz non si può usare: b<sub>n</sub> non tende a 0') },
+    { id:'e6', type:'choice', q:SUM(1)+' 1 − cos(1/n)', a:0, opts:CV2, hint:'Equivalenza: 1 − cos(piccolo) ~ (piccolo)²/2.', sol:SV(
+      '<i>Guardo cosa c\'è dentro il coseno:</i> 1/n tende a 0',
+      '<i>Uso il limite notevole (1 − cos t)/t² → 1/2 per t → 0, con t = 1/n:</i> 1 − cos(1/n) ~ '+FR('1','2')+' · '+FR('1','n²'),
+      '<i>Termini positivi:</i> cos(1/n) &lt; 1, quindi 1 − cos(1/n) &gt; 0',
+      '<i>Confronto asintotico:</i> stessa fine di Σ 1/(2n²), cioè di Σ 1/n² (la costante 1/2 non conta), p = 2',
+      '<i>Conclusione:</i> <b>converge</b>') },
+    { id:'e7', type:'choice', q:'Per quali α converge '+SUM(1)+' '+FR('1','n<sup>α − 1</sup>')+' ?', a:1, opts:['α &gt; 1','α &gt; 2','α ≥ 2'], hint:'È una 1/n<sup>p</sup> con p = α − 1. Serve p &gt; 1.', sol:SV(
+      '<i>Riconosco il tipo:</i> armonica generalizzata con p = α − 1',
+      '<i>Scrivo la condizione per convergere:</i> p &gt; 1',
+      '<i>Sostituisco p:</i> α − 1 &gt; 1',
+      '<i>Porto 1 dall\'altra parte:</i> α &gt; 1 + 1',
+      '<i>Conclusione:</i> converge per <b>α &gt; 2</b> (con α = 2 è l\'armonica e diverge)') },
+    { id:'e8', type:'choice', q:'Per quali x converge '+SUM(0)+' xⁿ ?', a:0, opts:['−1 &lt; x &lt; 1','−1 ≤ x ≤ 1','x &gt; 0'], hint:'È la geometrica del capitolo 6 con q = x.', sol:SV(
+      '<i>Riconosco il tipo:</i> geometrica con ragione q = x',
+      '<i>Ricordo la regola:</i> converge se e solo se |q| &lt; 1',
+      '<i>Scrivo |x| &lt; 1 come doppia disuguaglianza:</i> −1 &lt; x &lt; 1',
+      '<i>Controllo x = 1:</i> Σ 1ⁿ = 1 + 1 + 1 + … diverge',
+      '<i>Controllo x = −1:</i> Σ (−1)ⁿ = 1 − 1 + 1 − … oscilla, irregolare',
+      '<i>Conclusione:</i> converge per <b>−1 &lt; x &lt; 1</b>, estremi esclusi') }
   ];
 
   /* ===== capitolo 8: Limiti di funzioni ===== */
@@ -2053,15 +2199,60 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   ], '<b>Fatto!</b> '+LIMX('2')+' (x² − 4)/(x − 2) = '+LIMX('2')+' (x + 2) = 4. Con 0/0 e polinomi la mossa è sempre questa: trova il fattore (x − x₀), semplificalo, risostituisci.');
 
   EX['limiti-funzioni'] = [
-    { id:'e1', type:'num', q:LIMX('3')+' (x² + 1)', a:10, hint:'Prima mossa: sostituisci.', sol:'9 + 1 = 10. Nessuna forma indeterminata.' },
-    { id:'e2', type:'num', q:LIMX('1')+' '+FR('x² − 1','x² − x'), a:2, hint:'0/0. Sopra (x − 1)(x + 1), sotto x(x − 1).', sol:'Semplifico (x − 1): resta (x + 1)/x, che in x = 1 vale 2.' },
-    { id:'e3', type:'num', q:LIMX('+∞')+' '+FR('3x² + x','x² − 5'), a:3, hint:'Termine dominante sopra e sotto.', sol:'3x²/x² = 3.' },
-    { id:'e4', type:'num', q:LIMX('0')+' '+FR('sin(5x)','x'), a:5, hint:'Moltiplica e dividi per 5, così sotto c\'è 5x come dentro il seno.', sol:'5 · sin(5x)/(5x), e '+LIMX('0')+' sin(5x)/(5x) = 1: risultato 5.' },
-    { id:'e5', type:'num', q:LIMX('0')+' '+FR('1 − cos x','x²'), a:0.5, hint:'È un limite notevole, direttamente.', sol:'1/2.' },
-    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + 3x)','x'), a:3, hint:'Moltiplica e dividi per 3.', sol:'3 · ln(1 + 3x)/(3x) → 3 · 1 = 3.' },
-    { id:'e7', type:'num', q:LIMX('0⁺')+' '+FR('1','x'), a:Infinity, hint:'Da destra x è un numero positivo piccolissimo. 1 diviso un positivo piccolissimo…', sol:'+∞ (scrivi inf). Da sinistra sarebbe −∞.' },
-    { id:'e8', type:'num', q:LIMX('0')+' '+FR('e<sup>2x</sup> − 1','x'), a:2, hint:'Notevole (eˣ − 1)/x, con 2x al posto di x: moltiplica e dividi per 2.', sol:'2 · (e<sup>2x</sup> − 1)/(2x) → 2.' },
-    { id:'e9', type:'choice', q:LIMX('0')+' '+FR('|x|','x'), a:2, opts:['1','0','non esiste'], hint:'Calcola il limite destro e quello sinistro.', sol:'Da destra 1, da sinistra −1: diversi, il limite non esiste.' }
+    { id:'e1', type:'num', q:LIMX('3')+' (x² + 1)', a:10, hint:'Prima mossa: sostituisci.', sol:SV(
+      '<i>Prima mossa, sostituisco x = 3:</i> 3² + 1',
+      '<i>Calcolo la potenza:</i> 3² = 9',
+      '<i>Sommo:</i> 9 + 1 = 10',
+      '<i>Controllo:</i> è un numero, nessuna forma indeterminata, ho finito: il limite è <b>10</b>') },
+    { id:'e2', type:'num', q:LIMX('1')+' '+FR('x² − 1','x² − x'), a:2, hint:'0/0. Sopra (x − 1)(x + 1), sotto x(x − 1).', sol:SV(
+      '<i>Sostituisco x = 1:</i> sopra 1 − 1 = 0, sotto 1 − 1 = 0: forma 0/0, devo semplificare',
+      '<i>Scompongo sopra (differenza di quadrati):</i> x² − 1 = (x − 1)(x + 1)',
+      '<i>Scompongo sotto (raccolgo x):</i> x² − x = x(x − 1)',
+      '<i>Riscrivo:</i> '+FR('(x − 1)(x + 1)','x(x − 1)'),
+      '<i>Semplifico (x − 1), che non è 0 perché x è vicino a 1 ma non uguale:</i> = '+FR('x + 1','x'),
+      '<i>Risostituisco x = 1:</i> '+FR('1 + 1','1')+' = <b>2</b>') },
+    { id:'e3', type:'num', q:LIMX('+∞')+' '+FR('3x² + x','x² − 5'), a:3, hint:'Termine dominante sopra e sotto.', sol:SV(
+      '<i>Sostituisco x → +∞:</i> sopra +∞, sotto +∞: forma ∞/∞',
+      '<i>Raccolgo x² sopra:</i> 3x² + x = x²(3 + 1/x)',
+      '<i>Raccolgo x² sotto:</i> x² − 5 = x²(1 − 5/x²)',
+      '<i>Semplifico x²:</i> '+FR('3 + 1/x','1 − 5/x²'),
+      '<i>Faccio il limite:</i> 1/x → 0 e 5/x² → 0, quindi '+FR('3 + 0','1 − 0'),
+      '<i>Risultato:</i> <b>3</b>') },
+    { id:'e4', type:'num', q:LIMX('0')+' '+FR('sin(5x)','x'), a:5, hint:'Moltiplica e dividi per 5, così sotto c\'è 5x come dentro il seno.', sol:SV(
+      '<i>Sostituisco x = 0:</i> sin 0 / 0 = 0/0, forma indeterminata',
+      '<i>Voglio il limite notevole sin(t)/t con t = 5x: sotto mi serve 5x.</i> Moltiplico e divido per 5: '+FR('sin(5x)','x')+' = 5 · '+FR('sin(5x)','5x'),
+      '<i>Pongo t = 5x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> '+LIMX('0')+' '+FR('sin(5x)','5x')+' = <span class="lim">lim<span>t→0</span></span> '+FR('sin t','t')+' = 1',
+      '<i>Moltiplico:</i> 5 · 1 = <b>5</b>') },
+    { id:'e5', type:'num', q:LIMX('0')+' '+FR('1 − cos x','x²'), a:0.5, hint:'È un limite notevole, direttamente.', sol:SV(
+      '<i>Sostituisco x = 0:</i> (1 − 1)/0 = 0/0',
+      '<i>Riconosco il limite notevole:</i> è esattamente '+LIMX('0')+' (1 − cos x)/x²',
+      '<i>Lo scrivo dalla tabella:</i> vale 1/2',
+      '<i>Risultato:</i> <b>1/2</b> (in decimale 0,5)') },
+    { id:'e6', type:'num', q:LIMX('0')+' '+FR('ln(1 + 3x)','x'), a:3, hint:'Moltiplica e dividi per 3.', sol:SV(
+      '<i>Sostituisco x = 0:</i> ln 1 / 0 = 0/0',
+      '<i>Voglio il notevole ln(1 + t)/t con t = 3x: sotto mi serve 3x.</i> Moltiplico e divido per 3: = 3 · '+FR('ln(1 + 3x)','3x'),
+      '<i>Pongo t = 3x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> <span class="lim">lim<span>t→0</span></span> '+FR('ln(1 + t)','t')+' = 1',
+      '<i>Moltiplico:</i> 3 · 1 = <b>3</b>') },
+    { id:'e7', type:'num', q:LIMX('0⁺')+' '+FR('1','x'), a:Infinity, hint:'Da destra x è un numero positivo piccolissimo. 1 diviso un positivo piccolissimo…', sol:SV(
+      '<i>Sostituisco:</i> 1/0, non è una forma indeterminata: il risultato è infinito, devo capire il segno',
+      '<i>0⁺ vuol dire da destra:</i> x è positivo e piccolissimo',
+      '<i>Provo con i numeri:</i> x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000',
+      '<i>Crescono senza limite e sono positivi:</i> il limite è <b>+∞</b> (scrivi inf)',
+      '<i>Nota:</i> da sinistra (x = −0,01 → −100) sarebbe −∞') },
+    { id:'e8', type:'num', q:LIMX('0')+' '+FR('e<sup>2x</sup> − 1','x'), a:2, hint:'Notevole (eˣ − 1)/x, con 2x al posto di x: moltiplica e dividi per 2.', sol:SV(
+      '<i>Sostituisco x = 0:</i> (e⁰ − 1)/0 = (1 − 1)/0 = 0/0',
+      '<i>Voglio il notevole (eᵗ − 1)/t con t = 2x.</i> Moltiplico e divido per 2: = 2 · '+FR('e<sup>2x</sup> − 1','2x'),
+      '<i>Pongo t = 2x:</i> per x → 0 anche t → 0',
+      '<i>Uso il notevole:</i> <span class="lim">lim<span>t→0</span></span> '+FR('eᵗ − 1','t')+' = 1',
+      '<i>Moltiplico:</i> 2 · 1 = <b>2</b>') },
+    { id:'e9', type:'choice', q:LIMX('0')+' '+FR('|x|','x'), a:2, opts:['1','0','non esiste'], hint:'Calcola il limite destro e quello sinistro.', sol:SV(
+      '<i>Ricordo il valore assoluto:</i> |x| = x se x &gt; 0, |x| = −x se x &lt; 0',
+      '<i>Da destra (x &gt; 0):</i> '+FR('|x|','x')+' = '+FR('x','x')+' = 1, quindi '+LIMX('0⁺')+' = 1',
+      '<i>Da sinistra (x &lt; 0):</i> '+FR('|x|','x')+' = '+FR('−x','x')+' = −1, quindi '+LIMX('0⁻')+' = −1',
+      '<i>Confronto:</i> destro 1 ≠ sinistro −1',
+      '<i>Conclusione:</i> il limite <b>non esiste</b>') }
   ];
 
   /* ===== capitolo 9: Continuità e derivata ===== */
