@@ -8,10 +8,23 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-serie"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · la torta</div>
       <p>Hai una torta. Ne mangi metà. Poi metà di quello che resta, cioè un quarto. Poi metà del resto, un ottavo. E così via per sempre.</p>
       <div class="math">1/2 + 1/4 + 1/8 + 1/16 + …</div>
-      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Quindi questa somma infinita fa un numero preciso: 1.</p>
+      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Facciamo i conti:</p>
+      <ol class="sv">
+        <li><i>Dopo 1 fetta:</i> 1/2 = 0,5. Manca 1/2.</li>
+        <li><i>Dopo 2 fette:</i> 1/2 + 1/4 = 2/4 + 1/4 = 3/4 = 0,75. Manca 1/4.</li>
+        <li><i>Dopo 3 fette:</i> 3/4 + 1/8 = 6/8 + 1/8 = 7/8 = 0,875. Manca 1/8.</li>
+        <li><i>Lo schema:</i> dopo n fette manca sempre l'ultima fetta mangiata, cioè 1/2ⁿ. Quindi la somma è 1 − 1/2ⁿ.</li>
+        <li><i>Faccio il limite:</i> 2ⁿ cresce senza fine, quindi 1/2ⁿ tende a 0, e 1 − 1/2ⁿ tende a 1 − 0 = 1.</li>
+      </ol>
+      <p>Quindi questa somma infinita fa un numero preciso: 1.</p>
       <p><b>Come si fa davvero:</b> sommo i primi n pezzi e chiamo il risultato <b>somma parziale</b> S<sub>n</sub>. Poi guardo cosa fa S<sub>n</sub> per n → +∞.</p>
       <div class="math"><span class="box thief">S<sub>n</sub> = a<sub>1</sub> + a<sub>2</sub> + … + a<sub>n</sub></span></div>
       <div class="when">
@@ -51,10 +64,22 @@
           <div class="math left">q · S<sub>n</sub> = q + q² + … + qⁿ + q<sup>n+1</sup></div>
         </div>
         <div class="step" hidden><h3>Passo 2 · Sottraggo: quasi tutto si cancella</h3>
-          <div class="math left">S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup>, quindi S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></div>
+          <ol class="sv">
+            <li><i>Scrivo una sotto l'altra e sottraggo:</i> (1 + q + q² + … + qⁿ) − (q + q² + … + qⁿ + q<sup>n+1</sup>)</li>
+            <li><i>q con −q, q² con −q², …, qⁿ con −qⁿ si cancellano. Restano il primo della prima e l'ultimo della seconda:</i> S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup></li>
+            <li><i>A sinistra raccolgo S<sub>n</sub>:</i> S<sub>n</sub> (1 − q) = 1 − q<sup>n+1</sup></li>
+            <li><i>Divido per (1 − q), che non è 0 se q ≠ 1:</i> S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></li>
+            <li><i>Controllo con q = 1/2 e n = 2:</i> 1 + 1/2 + 1/4 = 1,75 e la formula dà (1 − 1/8)/(1/2) = (7/8) · 2 = 1,75 ✓</li>
+          </ol>
         </div>
         <div class="step" hidden><h3>Passo 3 · Faccio il limite per n → +∞</h3>
-          <p>Se −1 &lt; q &lt; 1, allora <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0 (un numero più piccolo di 1 moltiplicato per sé tante volte diventa piccolissimo). Resta 1/(1 − q).</p>
+          <ol class="sv">
+            <li><i>Se −1 &lt; q &lt; 1, per esempio q = 1/2:</i> (1/2)¹⁰ ≈ 0,001, (1/2)²⁰ ≈ 0,000001. Quindi <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0.</li>
+            <li><i>Sostituisco nella formula:</i> S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span> tende a <span class="fr"><span>1 − 0</span><span>1 − q</span></span> = <span class="fr"><span>1</span><span>1 − q</span></span>.</li>
+            <li><i>Esempio q = 1/2:</i> 1/(1 − 1/2) = 1/(1/2) = 2. Infatti 1 + 1/2 + 1/4 + … = 1 + (la torta) = 1 + 1 = 2 ✓</li>
+            <li><i>Se q ≥ 1, per esempio q = 2:</i> 1 + 2 + 4 + 8 + … ogni termine è almeno 1, la somma cresce senza fine: diverge.</li>
+            <li><i>Se q = −1:</i> 1 − 1 + 1 − 1 … le somme parziali valgono 1, 0, 1, 0, … e non si fermano: irregolare.</li>
+          </ol>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -63,7 +88,12 @@
     <section class="board">
       <div class="eyebrow">Il primo controllo, sempre <span class="tag cap">da capire</span></div>
       <h2>La condizione necessaria</h2>
-      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Perché: se i pezzi che aggiungi non diventano piccolissimi, la somma continua a crescere.</p>
+      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Il calcolo che lo mostra:</p>
+      <ol class="sv">
+        <li><i>Il termine n-esimo è la differenza tra due somme parziali vicine:</i> S<sub>n</sub> − S<sub>n−1</sub> = (a<sub>1</sub> + … + a<sub>n</sub>) − (a<sub>1</sub> + … + a<sub>n−1</sub>) = a<sub>n</sub></li>
+        <li><i>Se la serie converge con somma S:</i> S<sub>n</sub> tende a S e anche S<sub>n−1</sub> tende a S</li>
+        <li><i>Quindi:</i> a<sub>n</sub> = S<sub>n</sub> − S<sub>n−1</sub> tende a S − S = 0</li>
+      </ol>
       <p><b>Come si usa</b> (contronominale): se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> ≠ 0, la serie <b>non converge</b>. Se i termini sono positivi, diverge. È il primo controllo da fare, costa 10 secondi.</p>
       <div class="warn"><b>Trappola:</b> <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0 <b>non basta</b> per convergere. La serie armonica 1 + 1/2 + 1/3 + … ha termini che tendono a 0, eppure diverge (guardala nel grafico sopra: cresce piano, ma senza fermarsi). Se il termine tende a 0, devi usare un criterio.</div>
     </section>
@@ -76,7 +106,15 @@
         <div><b>p &gt; 1</b>: converge. Esempio 1/n², 1/n³, 1/n<sup>1,5</sup>.</div>
         <div><b>p ≤ 1</b>: diverge. Esempio 1/n (p = 1, l'armonica), 1/√n (p = 1/2).</div>
       </div>
-      <p>Perché l'armonica diverge (intuizione facile): raggruppo i termini. 1/3 + 1/4 è più di 1/4 + 1/4 = 1/2. Poi 1/5 + … + 1/8 è più di 4 · 1/8 = 1/2. E così via: aggiungo sempre almeno 1/2, infinite volte. Il resto (p qualsiasi) impara solo il risultato.</p>
+      <p><b>Perché l'armonica diverge</b> <span class="tag cap">facile</span>: raggruppo i termini a blocchi.</p>
+      <ol class="sv">
+        <li><i>Primi due:</i> 1 + 1/2 = 1,5</li>
+        <li><i>Blocco da 2 termini:</i> 1/3 + 1/4. Ognuno è almeno 1/4, quindi il blocco è almeno 1/4 + 1/4 = 2/4 = 1/2</li>
+        <li><i>Blocco da 4 termini:</i> 1/5 + 1/6 + 1/7 + 1/8. Ognuno è almeno 1/8, quindi almeno 4 · 1/8 = 1/2</li>
+        <li><i>Blocco da 8 termini (da 1/9 a 1/16):</i> almeno 8 · 1/16 = 1/2. E così via: ogni blocco aggiunge almeno 1/2</li>
+        <li><i>Dopo k blocchi:</i> la somma è almeno 1,5 + k · 1/2, che cresce senza fine. Quindi diverge</li>
+      </ol>
+      <p>Per p qualsiasi impara solo il risultato <span class="tag mem">a memoria</span>.</p>
       <p>Servono come <b>metro di paragone</b>: con il confronto (qui sotto) e con il confronto asintotico (capitolo 7) riporti tante serie a queste.</p>
     </section>
 
@@ -95,11 +133,18 @@
         <div class="step"><h3>Rapporto · lo conosci dal capitolo 4</h3>
           <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span></div>
           <p>L &lt; 1: la serie <b>converge</b>. L &gt; 1: la serie <b>diverge</b>. L = 1: non dice niente.</p>
-          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita.</p>
+          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita. Il calcolo:</p>
+          <ol class="sv">
+            <li><i>Come nel capitolo 4, con L &lt; 1 scelgo q tra L e 1 (per esempio L = 1/3, q = 1/2). Da un certo N in poi:</i> a<sub>N+1</sub> ≤ q · a<sub>N</sub>, a<sub>N+2</sub> ≤ q² · a<sub>N</sub>, …, a<sub>N+k</sub> ≤ q<sup>k</sup> · a<sub>N</sub></li>
+            <li><i>Sommo tutti questi termini:</i> a<sub>N</sub> + a<sub>N+1</sub> + a<sub>N+2</sub> + … ≤ a<sub>N</sub> (1 + q + q² + …)</li>
+            <li><i>Tra parentesi c'è una geometrica con q &lt; 1:</i> 1 + q + q² + … = 1/(1 − q), con q = 1/2 fa 2</li>
+            <li><i>Quindi la coda della serie è al massimo</i> a<sub>N</sub> · 2, un numero finito. I primi N termini sono un numero finito di numeri. Totale finito: converge (confronto con la geometrica).</li>
+            <li><i>Con L &gt; 1</i> i termini crescono (capitolo 4: a<sub>n</sub> tende a +∞), quindi non tendono a 0 e la serie diverge per la condizione necessaria.</li>
+          </ol>
         </div>
         <div class="step"><h3>Radice · lo conosci dal capitolo 2</h3>
           <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a<sub>n</sub></span></span></div>
-          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente.</p>
+          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente. Il calcolo per L &lt; 1: scelgo q tra L e 1; da un certo punto ⁿ√a<sub>n</sub> ≤ q; elevo alla n: a<sub>n</sub> ≤ qⁿ; e Σ qⁿ è una geometrica con q &lt; 1, che converge. Per il confronto converge anche Σ a<sub>n</sub>.</p>
         </div>
       </div>
     </section>

@@ -582,6 +582,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Cos'è</div>
       <p>Una sottosuccessione è una successione fatta prendendo <b>solo alcuni termini</b>, sempre in avanti. Esempio: solo i termini con n pari, oppure solo quelli con n dispari.</p>
       <p><b>Regola:</b> se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L, allora ogni sua sottosuccessione ha limite L. Se tutta la fila arriva in caserma, ci arriva anche chiunque prendi dalla fila.</p>
@@ -592,13 +597,27 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <label for="sD"><input type="checkbox" id="sD" checked> mostra i dispari</label>
       </div>
       <div class="legend"><span><i style="background:var(--cop)"></i>n pari: limite 1</span><span><i style="background:var(--thief)"></i>n dispari: limite −1</span></div>
-      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Per n → +∞ i pari tendono a 1 e i dispari a −1: due limiti diversi, quindi <b>il limite non esiste</b>.</p>
+      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Ecco i calcoli:</p>
+      <ol class="sv">
+        <li><i>Cosa fa (−1)ⁿ:</i> (−1)² = (−1)·(−1) = 1; (−1)³ = (−1)·(−1)·(−1) = −1. Con n pari vale 1, con n dispari vale −1.</li>
+        <li><i>n pari, quindi a<sub>n</sub> = 1 · n/(n+1) = n/(n+1). Con i numeri:</i> n = 2 → 2/3 ≈ 0,67; n = 10 → 10/11 ≈ 0,91; n = 100 → 100/101 ≈ 0,99.</li>
+        <li><i>Limite dei pari (divido sopra e sotto per n):</i> <span class="fr"><span>n</span><span>n + 1</span></span> = <span class="fr"><span>1</span><span>1 + 1/n</span></span>, e 1/n tende a 0, quindi tende a <span class="fr"><span>1</span><span>1 + 0</span></span> = 1.</li>
+        <li><i>n dispari, quindi a<sub>n</sub> = −1 · n/(n+1) = −n/(n+1). Con i numeri:</i> n = 1 → −1/2 = −0,5; n = 9 → −9/10 = −0,9; n = 99 → −0,99.</li>
+        <li><i>Limite dei dispari:</i> è lo stesso conto con il meno davanti, quindi tende a −1.</li>
+        <li><i>Confronto:</i> 1 ≠ −1. Due sottosuccessioni con limiti diversi, quindi <b>il limite per n → +∞ di a<sub>n</sub> non esiste</b>.</li>
+      </ol>
+      <p><b>Perché la regola funziona</b> <span class="tag cap">facile</span>: se il limite fosse un numero L, da un certo punto in poi <b>tutti</b> i termini sarebbero vicinissimi a L, sia i pari sia i dispari. Ma i pari stanno vicino a 1 e i dispari vicino a −1, che distano 2: non possono essere tutti vicini allo stesso numero.</p>
     </section>
 
     <section class="board">
       <div class="eyebrow">Bolzano-Weierstrass · solo enunciato</div>
       <div class="math left"><span class="box cop">Ogni successione <b>limitata</b> ha almeno una sottosuccessione che converge.</span></div>
-      <p>Esempio: (−1)ⁿ non converge, ma è limitata (sta tra −1 e 1), e infatti i termini pari formano 1, 1, 1, … che converge a 1.</p>
+      <p>Esempio con i calcoli: a<sub>n</sub> = (−1)ⁿ.</p>
+      <ol class="sv">
+        <li><i>È limitata?</i> Vale solo −1 o 1, quindi −1 ≤ (−1)ⁿ ≤ 1 per ogni n: sì.</li>
+        <li><i>Converge?</i> I termini sono −1, 1, −1, 1, …: pari → 1, dispari → −1, limiti diversi, quindi no.</li>
+        <li><i>BW promette una sottosuccessione convergente. Eccola:</i> prendo solo gli n pari: a₂, a₄, a₆, … = 1, 1, 1, … che converge a 1.</li>
+      </ol>
       <p>Attenzione: BW non dice che tutta la successione converge. Dice solo che <b>una parte</b> converge.</p>
     </section>
 
@@ -639,10 +658,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-serie"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · la torta</div>
       <p>Hai una torta. Ne mangi metà. Poi metà di quello che resta, cioè un quarto. Poi metà del resto, un ottavo. E così via per sempre.</p>
       <div class="math">1/2 + 1/4 + 1/8 + 1/16 + …</div>
-      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Quindi questa somma infinita fa un numero preciso: 1.</p>
+      <p>Mangi infinite fette, ma non superi mai <b>una</b> torta. Facciamo i conti:</p>
+      <ol class="sv">
+        <li><i>Dopo 1 fetta:</i> 1/2 = 0,5. Manca 1/2.</li>
+        <li><i>Dopo 2 fette:</i> 1/2 + 1/4 = 2/4 + 1/4 = 3/4 = 0,75. Manca 1/4.</li>
+        <li><i>Dopo 3 fette:</i> 3/4 + 1/8 = 6/8 + 1/8 = 7/8 = 0,875. Manca 1/8.</li>
+        <li><i>Lo schema:</i> dopo n fette manca sempre l'ultima fetta mangiata, cioè 1/2ⁿ. Quindi la somma è 1 − 1/2ⁿ.</li>
+        <li><i>Faccio il limite:</i> 2ⁿ cresce senza fine, quindi 1/2ⁿ tende a 0, e 1 − 1/2ⁿ tende a 1 − 0 = 1.</li>
+      </ol>
+      <p>Quindi questa somma infinita fa un numero preciso: 1.</p>
       <p><b>Come si fa davvero:</b> sommo i primi n pezzi e chiamo il risultato <b>somma parziale</b> S<sub>n</sub>. Poi guardo cosa fa S<sub>n</sub> per n → +∞.</p>
       <div class="math"><span class="box thief">S<sub>n</sub> = a<sub>1</sub> + a<sub>2</sub> + … + a<sub>n</sub></span></div>
       <div class="when">
@@ -682,10 +714,22 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
           <div class="math left">q · S<sub>n</sub> = q + q² + … + qⁿ + q<sup>n+1</sup></div>
         </div>
         <div class="step" hidden><h3>Passo 2 · Sottraggo: quasi tutto si cancella</h3>
-          <div class="math left">S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup>, quindi S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></div>
+          <ol class="sv">
+            <li><i>Scrivo una sotto l'altra e sottraggo:</i> (1 + q + q² + … + qⁿ) − (q + q² + … + qⁿ + q<sup>n+1</sup>)</li>
+            <li><i>q con −q, q² con −q², …, qⁿ con −qⁿ si cancellano. Restano il primo della prima e l'ultimo della seconda:</i> S<sub>n</sub> − q · S<sub>n</sub> = 1 − q<sup>n+1</sup></li>
+            <li><i>A sinistra raccolgo S<sub>n</sub>:</i> S<sub>n</sub> (1 − q) = 1 − q<sup>n+1</sup></li>
+            <li><i>Divido per (1 − q), che non è 0 se q ≠ 1:</i> S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span></li>
+            <li><i>Controllo con q = 1/2 e n = 2:</i> 1 + 1/2 + 1/4 = 1,75 e la formula dà (1 − 1/8)/(1/2) = (7/8) · 2 = 1,75 ✓</li>
+          </ol>
         </div>
         <div class="step" hidden><h3>Passo 3 · Faccio il limite per n → +∞</h3>
-          <p>Se −1 &lt; q &lt; 1, allora <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0 (un numero più piccolo di 1 moltiplicato per sé tante volte diventa piccolissimo). Resta 1/(1 − q).</p>
+          <ol class="sv">
+            <li><i>Se −1 &lt; q &lt; 1, per esempio q = 1/2:</i> (1/2)¹⁰ ≈ 0,001, (1/2)²⁰ ≈ 0,000001. Quindi <span class="lim">lim<span>n→+∞</span></span> q<sup>n+1</sup> = 0.</li>
+            <li><i>Sostituisco nella formula:</i> S<sub>n</sub> = <span class="fr"><span>1 − q<sup>n+1</sup></span><span>1 − q</span></span> tende a <span class="fr"><span>1 − 0</span><span>1 − q</span></span> = <span class="fr"><span>1</span><span>1 − q</span></span>.</li>
+            <li><i>Esempio q = 1/2:</i> 1/(1 − 1/2) = 1/(1/2) = 2. Infatti 1 + 1/2 + 1/4 + … = 1 + (la torta) = 1 + 1 = 2 ✓</li>
+            <li><i>Se q ≥ 1, per esempio q = 2:</i> 1 + 2 + 4 + 8 + … ogni termine è almeno 1, la somma cresce senza fine: diverge.</li>
+            <li><i>Se q = −1:</i> 1 − 1 + 1 − 1 … le somme parziali valgono 1, 0, 1, 0, … e non si fermano: irregolare.</li>
+          </ol>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -694,7 +738,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Il primo controllo, sempre <span class="tag cap">da capire</span></div>
       <h2>La condizione necessaria</h2>
-      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Perché: se i pezzi che aggiungi non diventano piccolissimi, la somma continua a crescere.</p>
+      <p><b>Se la serie converge, allora <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</b> Il calcolo che lo mostra:</p>
+      <ol class="sv">
+        <li><i>Il termine n-esimo è la differenza tra due somme parziali vicine:</i> S<sub>n</sub> − S<sub>n−1</sub> = (a<sub>1</sub> + … + a<sub>n</sub>) − (a<sub>1</sub> + … + a<sub>n−1</sub>) = a<sub>n</sub></li>
+        <li><i>Se la serie converge con somma S:</i> S<sub>n</sub> tende a S e anche S<sub>n−1</sub> tende a S</li>
+        <li><i>Quindi:</i> a<sub>n</sub> = S<sub>n</sub> − S<sub>n−1</sub> tende a S − S = 0</li>
+      </ol>
       <p><b>Come si usa</b> (contronominale): se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> ≠ 0, la serie <b>non converge</b>. Se i termini sono positivi, diverge. È il primo controllo da fare, costa 10 secondi.</p>
       <div class="warn"><b>Trappola:</b> <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0 <b>non basta</b> per convergere. La serie armonica 1 + 1/2 + 1/3 + … ha termini che tendono a 0, eppure diverge (guardala nel grafico sopra: cresce piano, ma senza fermarsi). Se il termine tende a 0, devi usare un criterio.</div>
     </section>
@@ -707,7 +756,15 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div><b>p &gt; 1</b>: converge. Esempio 1/n², 1/n³, 1/n<sup>1,5</sup>.</div>
         <div><b>p ≤ 1</b>: diverge. Esempio 1/n (p = 1, l'armonica), 1/√n (p = 1/2).</div>
       </div>
-      <p>Perché l'armonica diverge (intuizione facile): raggruppo i termini. 1/3 + 1/4 è più di 1/4 + 1/4 = 1/2. Poi 1/5 + … + 1/8 è più di 4 · 1/8 = 1/2. E così via: aggiungo sempre almeno 1/2, infinite volte. Il resto (p qualsiasi) impara solo il risultato.</p>
+      <p><b>Perché l'armonica diverge</b> <span class="tag cap">facile</span>: raggruppo i termini a blocchi.</p>
+      <ol class="sv">
+        <li><i>Primi due:</i> 1 + 1/2 = 1,5</li>
+        <li><i>Blocco da 2 termini:</i> 1/3 + 1/4. Ognuno è almeno 1/4, quindi il blocco è almeno 1/4 + 1/4 = 2/4 = 1/2</li>
+        <li><i>Blocco da 4 termini:</i> 1/5 + 1/6 + 1/7 + 1/8. Ognuno è almeno 1/8, quindi almeno 4 · 1/8 = 1/2</li>
+        <li><i>Blocco da 8 termini (da 1/9 a 1/16):</i> almeno 8 · 1/16 = 1/2. E così via: ogni blocco aggiunge almeno 1/2</li>
+        <li><i>Dopo k blocchi:</i> la somma è almeno 1,5 + k · 1/2, che cresce senza fine. Quindi diverge</li>
+      </ol>
+      <p>Per p qualsiasi impara solo il risultato <span class="tag mem">a memoria</span>.</p>
       <p>Servono come <b>metro di paragone</b>: con il confronto (qui sotto) e con il confronto asintotico (capitolo 7) riporti tante serie a queste.</p>
     </section>
 
@@ -726,11 +783,18 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div class="step"><h3>Rapporto · lo conosci dal capitolo 4</h3>
           <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>a<sub>n+1</sub></span><span>a<sub>n</sub></span></span></div>
           <p>L &lt; 1: la serie <b>converge</b>. L &gt; 1: la serie <b>diverge</b>. L = 1: non dice niente.</p>
-          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita.</p>
+          <p>Differenza con il capitolo 4: lì con L &lt; 1 concludevi che <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0. Qui concludi di più: che la <b>somma</b> è finita. Il calcolo:</p>
+          <ol class="sv">
+            <li><i>Come nel capitolo 4, con L &lt; 1 scelgo q tra L e 1 (per esempio L = 1/3, q = 1/2). Da un certo N in poi:</i> a<sub>N+1</sub> ≤ q · a<sub>N</sub>, a<sub>N+2</sub> ≤ q² · a<sub>N</sub>, …, a<sub>N+k</sub> ≤ q<sup>k</sup> · a<sub>N</sub></li>
+            <li><i>Sommo tutti questi termini:</i> a<sub>N</sub> + a<sub>N+1</sub> + a<sub>N+2</sub> + … ≤ a<sub>N</sub> (1 + q + q² + …)</li>
+            <li><i>Tra parentesi c'è una geometrica con q &lt; 1:</i> 1 + q + q² + … = 1/(1 − q), con q = 1/2 fa 2</li>
+            <li><i>Quindi la coda della serie è al massimo</i> a<sub>N</sub> · 2, un numero finito. I primi N termini sono un numero finito di numeri. Totale finito: converge (confronto con la geometrica).</li>
+            <li><i>Con L &gt; 1</i> i termini crescono (capitolo 4: a<sub>n</sub> tende a +∞), quindi non tendono a 0 e la serie diverge per la condizione necessaria.</li>
+          </ol>
         </div>
         <div class="step"><h3>Radice · lo conosci dal capitolo 2</h3>
           <div class="math left">L = <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a<sub>n</sub></span></span></div>
-          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente.</p>
+          <p>Stessa regola: L &lt; 1 converge, L &gt; 1 diverge, L = 1 non dice niente. Il calcolo per L &lt; 1: scelgo q tra L e 1; da un certo punto ⁿ√a<sub>n</sub> ≤ q; elevo alla n: a<sub>n</sub> ≤ qⁿ; e Σ qⁿ è una geometrica con q &lt; 1, che converge. Per il confronto converge anche Σ a<sub>n</sub>.</p>
         </div>
       </div>
     </section>
@@ -788,6 +852,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-serie-parametro"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Attrezzo 1 <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Il confronto asintotico</h2>
       <p><b>L'idea:</b> per n → +∞ conta solo come si comporta il termine "da lontano". Se due serie a termini positivi hanno termini che da lontano sono praticamente uguali (a meno di una costante), fanno la stessa fine.</p>
@@ -795,6 +864,16 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p>È l'equivalenza asintotica a<sub>n</sub> ~ b<sub>n</sub> che hai già visto nel blocco del 12/11. Lì ti sembrava teoria inutile: <b>qui serve davvero</b>.</p>
       <p><b>Ricetta:</b> 1) trovo il termine dominante sopra e sotto; 2) ottengo una cosa tipo 1/n<sup>p</sup>; 3) guardo p.</p>
       <div class="math">a<sub>n</sub> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> ~ <span class="fr"><span>n</span><span>n³</span></span> = <span class="fr"><span>1</span><span>n²</span></span> → p = 2 &gt; 1 → converge</div>
+      <p>Ecco tutti i calcoli di questo esempio:</p>
+      <ol class="sv">
+        <li><i>Scelgo b<sub>n</sub>:</i> il termine dominante sopra è n, sotto è n³, quindi provo b<sub>n</sub> = n/n³ = 1/n².</li>
+        <li><i>Faccio il rapporto (dividere per 1/n² è moltiplicare per n²):</i> <span class="fr"><span>a<sub>n</sub></span><span>b<sub>n</sub></span></span> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> · n² = <span class="fr"><span>n³ + 3n²</span><span>n³ + 1</span></span></li>
+        <li><i>Con i numeri:</i> n = 10 → 1300/1001 ≈ 1,30; n = 100 → 1 030 000/1 000 001 ≈ 1,03. Si avvicina a 1.</li>
+        <li><i>Limite (divido sopra e sotto per n³):</i> <span class="fr"><span>1 + 3/n</span><span>1 + 1/n³</span></span>, e 3/n e 1/n³ tendono a 0, quindi tende a <span class="fr"><span>1 + 0</span><span>1 + 0</span></span> = 1.</li>
+        <li><i>Controllo ℓ:</i> ℓ = 1 è un numero finito e diverso da 0 ✓</li>
+        <li><i>Conclusione:</i> Σ a<sub>n</sub> fa come Σ 1/n², che converge (p = 2 &gt; 1). Quindi <b>converge</b>.</li>
+      </ol>
+      <p><b>Perché funziona</b> <span class="tag cap">facile</span>: se a<sub>n</sub>/b<sub>n</sub> tende a 1, da un certo n in poi il rapporto sta tra 0,5 e 2, cioè 0,5 · b<sub>n</sub> ≤ a<sub>n</sub> ≤ 2 · b<sub>n</sub>. Se Σ b<sub>n</sub> converge, anche Σ 2b<sub>n</sub> converge, e a<sub>n</sub> è più piccolo: converge (confronto). Se Σ b<sub>n</sub> diverge, anche Σ 0,5 · b<sub>n</sub> diverge, e a<sub>n</sub> è più grande: diverge. Per questo ℓ non deve essere 0 né ∞: servono tutte e due le disuguaglianze.</p>
       <p>Nel grafico vedi il rapporto a<sub>n</sub>/b<sub>n</sub>: per n → +∞ si stabilizza su un numero (non 0, non ∞). Quello è il segnale che le due serie fanno la stessa fine.</p>
       <canvas id="plotAs" aria-label="Rapporto tra termini equivalenti"></canvas>
       <div class="controls"><label for="asS">Esempio: <select id="asS">
@@ -804,7 +883,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <option value="3">1 − cos(1/n) confrontato con 1/n²</option>
       </select></label></div>
       <div class="readout" id="asOut"></div>
-      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span></div>
+      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span><br>
+        Prova con n = 10, cioè 1/n = 0,1: sin(0,1) ≈ 0,0998 (quasi 0,1) · ln(1,1) ≈ 0,0953 (quasi 0,1) · e<sup>0,1</sup> − 1 ≈ 0,1052 (quasi 0,1) · 1 − cos(0,1) ≈ 0,0050, e 1/(2 · 100) = 0,005. Più n è grande, più i due numeri sono vicini.</div>
     </section>
 
     <section class="board">
@@ -814,9 +894,28 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <div class="math left"><span class="box cop">Se b<sub>n</sub> è decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0, allora Σ (−1)ⁿ b<sub>n</sub> converge.</span></div>
       <p><b>L'idea:</b> fai un passo avanti, uno indietro più corto, uno avanti ancora più corto… Ti avvicini sempre di più a un punto fisso. Guardalo:</p>
       <canvas id="plotLeib" aria-label="Somme parziali di una serie a segni alterni"></canvas>
-      <p>Le somme parziali di 1 − 1/2 + 1/3 − … fanno zig-zag, ma il zig-zag si stringe intorno a 0,693.</p>
+      <p>Le somme parziali di 1 − 1/2 + 1/3 − … calcolate una per una:</p>
+      <ol class="sv">
+        <li><i>S₁:</i> 1</li>
+        <li><i>S₂ = S₁ − 1/2:</i> 1 − 0,5 = 0,5</li>
+        <li><i>S₃ = S₂ + 1/3:</i> 0,5 + 0,333 = 0,833</li>
+        <li><i>S₄ = S₃ − 1/4:</i> 0,833 − 0,25 = 0,583</li>
+        <li><i>S₅ = S₄ + 1/5:</i> 0,583 + 0,2 = 0,783</li>
+        <li><i>S₆ = S₅ − 1/6:</i> 0,783 − 0,167 = 0,617</li>
+        <li><i>Cosa noto:</i> i dispari (1; 0,833; 0,783) scendono, i pari (0,5; 0,583; 0,617) salgono. La distanza tra due somme vicine è il termine aggiunto: 1/2, 1/3, 1/4, … che tende a 0. Le due file si stringono sullo stesso numero, 0,693…</li>
+      </ol>
+      <p><b>Perché funziona</b> <span class="tag cap">facile</span>: è proprio il conto qui sopra. Da S<sub>n</sub> a S<sub>n+2</sub> fai un passo di b<sub>n+1</sub> in un verso e uno di b<sub>n+2</sub> nell'altro; siccome b<sub>n+2</sub> ≤ b<sub>n+1</sub> (decrescente), il secondo passo non annulla il primo, quindi una fila scende sempre e l'altra sale sempre, senza mai superarsi. La distanza tra loro è b<sub>n</sub>, che tende a 0: finiscono sullo stesso numero.</p>
       <div class="warn"><b>Attenzione:</b> Σ 1/n diverge, ma Σ (−1)ⁿ/n converge. I segni alterni cambiano tutto. E se b<sub>n</sub> non tende a 0, la serie non converge (condizione necessaria del capitolo 6).</div>
       <p><b>Convergenza assoluta</b> <span class="tag mem">a memoria</span>: se Σ |a<sub>n</sub>| converge, allora converge anche Σ a<sub>n</sub>. Utile quando i segni sono "a caso", per esempio con sin n: metti il valore assoluto e usi i criteri per serie positive.</p>
+      <p>Esempio con i calcoli: Σ sin(n)/n².</p>
+      <ol class="sv">
+        <li><i>Perché serve:</i> sin 1 ≈ 0,84, sin 2 ≈ 0,91, sin 4 ≈ −0,76, sin 5 ≈ −0,96: i segni non si alternano con regola, Leibniz non si applica.</li>
+        <li><i>Metto il valore assoluto:</i> |sin(n)/n²| = |sin n|/n²</li>
+        <li><i>Maggioro:</i> |sin n| ≤ 1 sempre, quindi |sin n|/n² ≤ 1/n²</li>
+        <li><i>Confronto:</i> Σ 1/n² converge (p = 2 &gt; 1), quindi anche Σ |sin n|/n² converge</li>
+        <li><i>Convergenza assoluta:</i> Σ |a<sub>n</sub>| converge, quindi <b>Σ sin(n)/n² converge</b></li>
+      </ol>
+      <p><b>Perché vale</b> <span class="tag cap">abbastanza facile</span>: se togli i segni e la somma resta finita, rimettendo i meno puoi solo togliere qualcosa, non far esplodere la somma. (La dimostrazione formale è più lunga: <span class="tag mem">enunciato a memoria</span>.)</p>
     </section>
 
     <section class="board">
@@ -824,7 +923,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Serie con parametro</h2>
       <p>La domanda è: "per quali valori di x (o di α) la serie converge?". Non c'è un criterio nuovo: usi quelli che sai, e <b>dividi in casi</b>.</p>
       <div class="steps">
-        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p></div>
+        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p>
+          <p>Con i numeri, per Σ xⁿ/n: con x = 0,5 i termini sono 0,5; 0,125; 0,042; 0,016 → si rimpiccioliscono come 0,5ⁿ (L = 0,5 &lt; 1). Con x = 2 i termini sono 2; 2; 2,67; 4; 6,4 → crescono (L = 2 &gt; 1), non tendono a 0, non converge.</p></div>
         <div class="step"><h3>2 · I casi di confine li faccio a mano</h3><p>Dove L = 1 il criterio non dice niente: sostituisco quei valori di x (di solito x = 1 e x = −1) e studio le due serie che escono.</p></div>
         <div class="step"><h3>3 · Scrivo la risposta finale come insieme</h3><p>Per esempio: la serie converge per −1 ≤ x &lt; 1.</p></div>
       </div>
@@ -867,6 +967,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · guardare vicino, non sopra</div>
       <p>Il limite <b>non</b> chiede quanto vale f in x₀. Chiede dove va f(x) quando x è <b>vicinissimo</b> a x₀, da sinistra e da destra. La funzione in x₀ può anche non esistere.</p>
       <canvas id="plotLF" aria-label="Grafico di una funzione vicino a un punto"></canvas>
@@ -892,6 +997,14 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div><span class="lim">lim<span>x→x₀⁺</span></span> f(x): arrivo da <b>destra</b> (x più grande di x₀).</div>
       </div>
       <p><b>Il limite esiste solo se destro e sinistro sono uguali.</b> Esempio 1/x vicino a 0: da sinistra va a −∞, da destra a +∞, quindi <span class="lim">lim<span>x→0</span></span> 1/x non esiste. Con |x|/x: da sinistra vale sempre −1, da destra sempre 1, quindi non esiste.</p>
+      <p>I calcoli, con i numeri:</p>
+      <ol class="sv">
+        <li><i>1/x da sinistra (x negativo, sempre più vicino a 0):</i> x = −0,1 → 1/(−0,1) = −10; x = −0,01 → −100; x = −0,001 → −1000. Va a −∞.</li>
+        <li><i>1/x da destra (x positivo):</i> x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000. Va a +∞.</li>
+        <li><i>|x|/x da sinistra:</i> x = −0,5 → |−0,5|/(−0,5) = 0,5/(−0,5) = −1; x = −0,01 → 0,01/(−0,01) = −1. Sempre −1.</li>
+        <li><i>|x|/x da destra:</i> x = 0,5 → 0,5/0,5 = 1; x = 0,01 → 0,01/0,01 = 1. Sempre 1.</li>
+        <li><i>Confronto:</i> −∞ ≠ +∞ e −1 ≠ 1: in tutti e due i casi <b>il limite per x → 0 non esiste</b>.</li>
+      </ol>
       <p>È la stessa idea delle sottosuccessioni del capitolo 5: due strade con risultati diversi ⇒ il limite non esiste.</p>
     </section>
 
@@ -899,9 +1012,16 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <div class="eyebrow">Come si calcola · lo schema</div>
       <h2>Quattro mosse, in quest'ordine</h2>
       <div class="steps">
-        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1) = 10.</p></div>
-        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p></div>
-        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p></div>
+        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1): sostituisco, 3² + 1 = 9 + 1 = 10. Il limite è 10.</p></div>
+        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p>
+          <p><b>Perché c'è sempre (x − x₀)</b> <span class="tag cap">facile</span>: è il teorema di Ruffini. Se un polinomio vale 0 in x₀, allora si divide per (x − x₀). Esempio: x² − 1 vale 0 in x = 1, e infatti x² − 1 = (x − 1)(x + 1).</p></div>
+        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p>
+          <ol class="sv">
+            <li><i>Sostituisco "x enorme":</i> sopra +∞, sotto +∞: forma ∞/∞</li>
+            <li><i>Divido sopra e sotto per x² (la potenza più alta):</i> <span class="fr"><span>3x²/x² + x/x²</span><span>x²/x² − 5/x²</span></span> = <span class="fr"><span>3 + 1/x</span><span>1 − 5/x²</span></span></li>
+            <li><i>Per x → +∞:</i> 1/x → 0 e 5/x² → 0, quindi tende a <span class="fr"><span>3 + 0</span><span>1 − 0</span></span> = 3</li>
+            <li><i>Controllo con i numeri:</i> x = 10 → (300 + 10)/(100 − 5) = 310/95 ≈ 3,26; x = 100 → 30 100/9995 ≈ 3,01. Si avvicina a 3 ✓</li>
+          </ol></div>
         <div class="step"><h3>4 · Se ci sono sin, cos, ln, e<sup>x</sup>: limiti notevoli</h3><p>Li trovi nel riquadro qui sotto. Più avanti (capitolo 11) avrai anche De L'Hôpital e Taylor.</p></div>
       </div>
       <p>Le forme indeterminate sono le stesse delle successioni: 0/0, ∞/∞, ∞ − ∞, 0 · ∞, 1<sup>∞</sup>, 0<sup>0</sup>, ∞<sup>0</sup>.</p>
@@ -918,8 +1038,31 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>(1 + x)<sup>a</sup> − 1</span><span>x</span></span> = a</div>
         <div><span class="lim">lim<span>x→±∞</span></span> (1 + <span class="fr"><span>1</span><span>x</span></span>)<sup>x</sup> = e</div>
       </div>
-      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x.</p>
-      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x = <span class="lim">lim<span>x→0</span></span> 5 · sin(5x)/(5x) = 5 · 1 = 5.</p>
+      <p><b>Controllo con i numeri</b> (metto x piccolo, prima 0,1 poi 0,01):</p>
+      <ol class="sv">
+        <li><i>sin x / x:</i> sin(0,1)/0,1 ≈ 0,09983/0,1 = 0,9983; sin(0,01)/0,01 ≈ 0,99998. Tende a 1.</li>
+        <li><i>(1 − cos x)/x²:</i> (1 − cos 0,1)/0,01 ≈ 0,0049958/0,01 ≈ 0,4996. Tende a 0,5 = 1/2.</li>
+        <li><i>ln(1 + x)/x:</i> ln(1,1)/0,1 ≈ 0,0953/0,1 = 0,953; ln(1,01)/0,01 ≈ 0,995. Tende a 1.</li>
+        <li><i>(eˣ − 1)/x:</i> (e<sup>0,1</sup> − 1)/0,1 ≈ 0,1052/0,1 = 1,052; (e<sup>0,01</sup> − 1)/0,01 ≈ 1,005. Tende a 1.</li>
+        <li><i>((1 + x)<sup>a</sup> − 1)/x con a = 2:</i> (1,1² − 1)/0,1 = (1,21 − 1)/0,1 = 0,21/0,1 = 2,1; (1,01² − 1)/0,01 = 0,0201/0,01 = 2,01. Tende a 2 = a.</li>
+        <li><i>(1 + 1/x)<sup>x</sup> per x → +∞:</i> x = 10 → 1,1¹⁰ ≈ 2,594; x = 100 → 1,01¹⁰⁰ ≈ 2,705; x = 1000 → ≈ 2,717. Tende a e ≈ 2,718.</li>
+      </ol>
+      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x. Questi due, e (1 + 1/x)<sup>x</sup> → e, hanno una dimostrazione lunga: <span class="tag mem">conviene impararli a memoria</span>.</p>
+      <p><b>Perché (1 − cos x)/x² → 1/2</b> <span class="tag cap">facile, se sai già sin x / x</span>:</p>
+      <ol class="sv">
+        <li><i>Moltiplico sopra e sotto per (1 + cos x):</i> <span class="fr"><span>(1 − cos x)(1 + cos x)</span><span>x² (1 + cos x)</span></span></li>
+        <li><i>Sopra è una differenza di quadrati:</i> (1 − cos x)(1 + cos x) = 1 − cos²x = sin²x</li>
+        <li><i>Riscrivo:</i> <span class="fr"><span>sin²x</span><span>x²</span></span> · <span class="fr"><span>1</span><span>1 + cos x</span></span> = (<span class="fr"><span>sin x</span><span>x</span></span>)² · <span class="fr"><span>1</span><span>1 + cos x</span></span></li>
+        <li><i>Per x → 0:</i> sin x / x → 1, e cos x → cos 0 = 1, quindi tende a 1² · <span class="fr"><span>1</span><span>1 + 1</span></span> = <span class="fr"><span>1</span><span>2</span></span></li>
+      </ol>
+      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x.</p>
+      <ol class="sv">
+        <li><i>Sostituisco x = 0:</i> sin(0)/0 = 0/0, forma indeterminata</li>
+        <li><i>Sopra c'è sin(5x): per usare il notevole, sotto mi serve 5x, non x. Moltiplico e divido per 5:</i> <span class="fr"><span>sin(5x)</span><span>x</span></span> = 5 · <span class="fr"><span>sin(5x)</span><span>5x</span></span></li>
+        <li><i>Chiamo t = 5x:</i> se x → 0, anche t = 5x → 0, e <span class="fr"><span>sin t</span><span>t</span></span> → 1</li>
+        <li><i>Risultato:</i> 5 · 1 = <b>5</b></li>
+        <li><i>Controllo con i numeri:</i> x = 0,01 → sin(0,05)/0,01 ≈ 0,04998/0,01 ≈ 4,998 ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -2151,6 +2294,33 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('sP').addEventListener('change', () => draws.sottosuccessioni());
   $('sD').addEventListener('change', () => draws.sottosuccessioni());
 
+  video('sottosuccessioni', [
+    { show:'<h3>Sottosuccessioni: a cosa servono</h3>Servono a dimostrare che un limite NON esiste.',
+      say:'Le sottosuccessioni servono soprattutto a dimostrare che un limite non esiste. All\'esame la domanda tipica è: il limite esiste? E la risposta è no.' },
+    { show:'Esempio: a<sub>n</sub> = (−1)ⁿ · '+FR('n','n + 1'),
+      say:'Prendiamo questo esempio: a con n uguale a meno uno alla n, per n diviso n più uno.' },
+    { show:'(−1)¹ = −1 · (−1)² = (−1)·(−1) = 1 · (−1)³ = −1 · (−1)⁴ = 1',
+      say:'Prima capisco cosa fa meno uno alla n. Meno uno alla prima è meno uno. Alla seconda è meno uno per meno uno, cioè più uno. Alla terza torna meno uno, alla quarta più uno. Con n pari vale uno, con n dispari vale meno uno.' },
+    { show:'a₁ = −1/2 = −0,5 · a₂ = 2/3 ≈ 0,67 · a₃ = −3/4 = −0,75 · a₄ = 4/5 = 0,8 · a₉ = −0,9 · a₁₀ ≈ 0,91',
+      say:'Ora i numeri. a uno vale meno un mezzo. a due vale due terzi, circa zero virgola sessantasette. a tre meno tre quarti. a quattro quattro quinti, zero virgola otto. a nove meno zero virgola nove, a dieci circa zero virgola novantuno. Saltano da una parte all\'altra.' },
+    { show:'Idea: divido la fila in due. <b>Pari</b>: n = 2, 4, 6, … · <b>Dispari</b>: n = 1, 3, 5, …',
+      say:'L\'idea è dividere la successione in due file: quella dei termini con n pari e quella dei termini con n dispari. Ognuna è una sottosuccessione.' },
+    { show:'n pari: a<sub>n</sub> = 1 · '+FR('n','n + 1')+' = '+FR('n','n + 1'),
+      say:'Con n pari, meno uno alla n vale uno, quindi a con n è semplicemente n diviso n più uno.' },
+    { show:'Divido sopra e sotto per n: '+FR('n','n + 1')+' = '+FR('1','1 + 1/n'),
+      say:'Per fare il limite divido sopra e sotto per n. Sopra n diviso n fa uno. Sotto n più uno diviso n fa uno più uno su n.' },
+    { show:'1/n → 0, quindi '+FR('1','1 + 1/n')+' → '+FR('1','1 + 0')+' = 1. <b>I pari tendono a 1</b>',
+      say:'Quando n tende a più infinito, uno su n tende a zero. Quindi uno su uno più uno su n tende a uno su uno più zero, cioè uno. La sottosuccessione dei pari tende a uno.' },
+    { show:'n dispari: a<sub>n</sub> = −1 · '+FR('n','n + 1')+' = −'+FR('n','n + 1')+' → −1. <b>I dispari tendono a −1</b>',
+      say:'Con n dispari, meno uno alla n vale meno uno, quindi a con n è meno n su n più uno. È lo stesso conto di prima con il meno davanti: tende a meno uno.' },
+    { show:'Regola: se '+LIM+' a<sub>n</sub> = L, ogni sottosuccessione tende a L.<br>Qui: pari → 1, dispari → −1, e 1 ≠ −1',
+      say:'La regola dice: se la successione avesse un limite L, ogni sua sottosuccessione dovrebbe tendere allo stesso L. Ma qui i pari tendono a uno e i dispari a meno uno, che sono diversi.' },
+    { show:'Conclusione: '+LIM+' (−1)ⁿ · '+FR('n','n + 1')+' <b>non esiste</b>',
+      say:'Conclusione: il limite per n che tende a più infinito di meno uno alla n per n su n più uno non esiste. All\'esame scrivi proprio così: la sottosuccessione dei pari tende a uno, quella dei dispari a meno uno, quindi il limite non esiste.' },
+    { show:'<h3>Bolzano-Weierstrass</h3>Ogni successione <b>limitata</b> ha almeno una sottosuccessione che converge.<br>Esempio: (−1)ⁿ sta tra −1 e 1 → i pari 1, 1, 1, … convergono a 1',
+      say:'Ultima cosa, il teorema di Bolzano Weierstrass: ogni successione limitata ha almeno una sottosuccessione che converge. Per esempio meno uno alla n sta sempre tra meno uno e uno, quindi è limitata. Non converge, ma la sottosuccessione dei pari, uno, uno, uno, converge a uno. Attenzione: il teorema non dice che tutta la successione converge.' }
+  ]);
+
   guided('sottosuccessioni', 'lavagna-sottosuccessioni', [
     { h:'Passo 1 · Prendi solo gli n pari: (−1)ⁿ = 1. Quanto fa il limite di 2 + 1/n?', type:'nums', ans:[2],
       html:'n pari: '+LIM+' (2 + 1/n) = '+inp('limite dei pari'), ok:'Sì, i pari hanno limite 2.', bad:'Per n → +∞, 1/n tende a 0, quindi 2 + quasi 0…' },
@@ -2195,10 +2365,10 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 6: Serie numeriche ===== */
   order.push('serie'); NAMES['serie'] = '6 Serie numeriche';
   const SER = [
-    { a:n=>1/Math.pow(2,n), lim:1, txt:'Le somme salgono ma si fermano a 1: la serie <b>converge</b> e la somma è 1.' },
-    { a:n=>1/n, lim:null, txt:'Le somme crescono sempre, piano piano, senza fermarsi: la serie <b>diverge</b>. Eppure i termini 1/n tendono a 0!' },
-    { a:n=>1/(n*n), lim:Math.PI*Math.PI/6, txt:'Le somme si fermano a circa 1,645: la serie <b>converge</b>. (La somma esatta è π²/6, non serve saperla.)' },
-    { a:n=>(n%2===1)?1:-1, lim:null, txt:'Le somme saltano tra 1 e 0 per sempre: la serie è <b>irregolare</b>.' }
+    { a:n=>1/Math.pow(2,n), lim:1, txt:'S₁ = 0,5 · S₂ = 0,75 · S₃ = 0,875: ogni volta manca 1/2ⁿ, quindi S<sub>n</sub> = 1 − 1/2ⁿ, che tende a 1 − 0 = 1. La serie <b>converge</b> e la somma è 1.' },
+    { a:n=>1/n, lim:null, txt:'S₁ = 1 · S₂ = 1,5 · S₄ ≈ 2,08 · S₈ ≈ 2,72 · S₁₆ ≈ 3,38: ogni volta che raddoppio n aggiungo almeno 1/2 (vedi i blocchi sotto). Cresce piano ma senza fermarsi: la serie <b>diverge</b>. Eppure i termini 1/n tendono a 0!' },
+    { a:n=>1/(n*n), lim:Math.PI*Math.PI/6, txt:'S₁ = 1 · S₂ = 1 + 0,25 = 1,25 · S₃ = 1,25 + 0,111 ≈ 1,361 · S₁₀ ≈ 1,550 · S₁₀₀ ≈ 1,635: i pezzi aggiunti diventano piccolissimi molto in fretta e le somme si fermano a circa 1,645. La serie <b>converge</b> (p = 2 &gt; 1).' },
+    { a:n=>(n%2===1)?1:-1, lim:null, txt:'S₁ = 1 · S₂ = 1 − 1 = 0 · S₃ = 0 + 1 = 1 · S₄ = 1 − 1 = 0: le somme valgono 1, 0, 1, 0 per sempre, il limite non esiste. La serie è <b>irregolare</b>.' }
   ];
   draws.serie = () => {
     const k = +$('serS').value, N = +$('serN').value, s = SER[k];
@@ -2209,10 +2379,45 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('serS').addEventListener('change', () => draws.serie());
   $('serN').addEventListener('input', () => { $('serNv').textContent = $('serN').value; draws.serie(); });
 
+  video('serie', [
+    { show:'<h3>Le serie: sommare infiniti numeri</h3>'+SUM(1)+' a<sub>n</sub> = a₁ + a₂ + a₃ + …',
+      say:'Una serie è una somma di infiniti numeri: a uno più a due più a tre, e così via per sempre. La domanda è: questa somma fa un numero preciso, oppure esplode?' },
+    { show:'Come si fa: somme parziali S<sub>n</sub> = a₁ + … + a<sub>n</sub>, poi '+LIM+' S<sub>n</sub>',
+      say:'Non posso sommare infiniti numeri direttamente. Allora sommo i primi n e chiamo il risultato somma parziale, S con n. Poi guardo cosa fa S con n quando n tende a più infinito.' },
+    { show:'Esempio: 1/2 + 1/4 + 1/8 + …<br>S₁ = 1/2 · S₂ = 1/2 + 1/4 = 3/4 · S₃ = 3/4 + 1/8 = 7/8',
+      say:'Esempio: un mezzo più un quarto più un ottavo, e così via. S uno è un mezzo. S due è un mezzo più un quarto, cioè due quarti più un quarto, tre quarti. S tre è tre quarti più un ottavo, cioè sei ottavi più un ottavo, sette ottavi.' },
+    { show:'Manca sempre l\'ultima fetta: S<sub>n</sub> = 1 − '+FR('1','2ⁿ')+' → 1 − 0 = 1. <b>Converge, somma 1</b>',
+      say:'Vedi lo schema: a un mezzo manca un mezzo per arrivare a uno, a tre quarti manca un quarto, a sette ottavi manca un ottavo. Quindi S con n è uno meno uno su due alla n. Due alla n cresce senza fine, quindi uno su due alla n tende a zero, e S con n tende a uno. La serie converge e la somma è uno.' },
+    { show:'<h3>La geometrica</h3>'+SUM(0)+' qⁿ = 1 + q + q² + …<br>S<sub>n</sub> = 1 + q + … + qⁿ · q · S<sub>n</sub> = q + q² + … + q<sup>n+1</sup>',
+      say:'La serie più importante è la geometrica: uno più q più q al quadrato, e così via. Per trovare la somma parziale uso un trucco: scrivo S con n, e sotto scrivo q per S con n, che è la stessa somma spostata di un posto.' },
+    { show:'Sottraggo: tutto si cancella tranne 1 e −q<sup>n+1</sup><br>S<sub>n</sub>(1 − q) = 1 − q<sup>n+1</sup> → S<sub>n</sub> = '+FR('1 − q<sup>n+1</sup>','1 − q'),
+      say:'Sottraggo le due righe. q si cancella con meno q, q al quadrato con meno q al quadrato, e così via. Restano solo uno e meno q alla n più uno. A sinistra raccolgo S con n: S con n per uno meno q. Divido per uno meno q e ottengo la formula.' },
+    { show:'Se −1 &lt; q &lt; 1: q<sup>n+1</sup> → 0, quindi S<sub>n</sub> → '+FR('1','1 − q')+'<br>Esempio q = 1/2: '+FR('1','1 − 1/2')+' = '+FR('1','1/2')+' = 2',
+      say:'Se q sta tra meno uno e uno, q alla n più uno tende a zero: per esempio un mezzo alla dieci è circa un millesimo. Quindi S con n tende a uno diviso uno meno q. Con q uguale a un mezzo: uno diviso un mezzo, che fa due.' },
+    { show:'<h3>Primo controllo: condizione necessaria</h3>a<sub>n</sub> = S<sub>n</sub> − S<sub>n−1</sub> → S − S = 0',
+      say:'Prima di ogni criterio, si fa sempre un controllo. Il termine a con n è la differenza tra due somme parziali vicine: S con n meno S con n meno uno. Se la serie converge a S, tutte e due tendono a S, quindi a con n tende a S meno S, cioè zero.' },
+    { show:'Quindi: se '+LIM+' a<sub>n</sub> ≠ 0 → la serie NON converge<br>Ma attenzione: 1 + 1/2 + 1/3 + … ha termini → 0 e diverge',
+      say:'Quindi se il termine non tende a zero, la serie non converge. Attenzione però: se tende a zero non basta. La serie armonica, uno più un mezzo più un terzo, ha termini che tendono a zero eppure diverge.' },
+    { show:'Armonica: 1/3 + 1/4 ≥ 1/4 + 1/4 = 1/2 · 1/5 + … + 1/8 ≥ 4 · 1/8 = 1/2 · …<br>ogni blocco aggiunge almeno 1/2 → diverge',
+      say:'Perché diverge? Raggruppo. Un terzo più un quarto è almeno un quarto più un quarto, cioè un mezzo. Da un quinto a un ottavo sono quattro termini, ognuno almeno un ottavo: almeno quattro ottavi, cioè un mezzo. Ogni blocco aggiunge almeno un mezzo, infinite volte: la somma cresce senza fine.' },
+    { show:'<h3>Esempio con il rapporto</h3>'+SUM(1)+' '+FR('n','3ⁿ')+' · controllo: n = 10 → 10/59049 ≈ 0,0002 → 0 ✓',
+      say:'Ora un esercizio completo: la serie di n diviso tre alla n. Primo controllo: il termine tende a zero? Con n uguale a dieci fa circa due decimillesimi. Tre alla n cresce molto più in fretta di n, quindi sì, tende a zero. Serve un criterio.' },
+    { show:'a<sub>n+1</sub> = '+FR('n + 1','3<sup>n+1</sup>')+' → '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('n + 1','3<sup>n+1</sup>')+' · '+FR('3ⁿ','n'),
+      say:'C\'è una potenza, tre alla n, quindi uso il rapporto. Scrivo a con n più uno: n più uno su tre alla n più uno. Il rapporto è n più uno su tre alla n più uno, per tre alla n su n.' },
+    { show:'3<sup>n+1</sup> = 3 · 3ⁿ, semplifico 3ⁿ: = '+FR('n + 1','3n')+' = '+FR('1 + 1/n','3'),
+      say:'Tre alla n più uno è tre per tre alla n. Semplifico tre alla n. Resta n più uno su tre n. Divido sopra e sotto per n: uno più uno su n, diviso tre.' },
+    { show:'L = '+LIM+' '+FR('1 + 1/n','3')+' = '+FR('1 + 0','3')+' = '+FR('1','3')+' &lt; 1 → <b>la serie converge</b>',
+      say:'Faccio il limite: uno su n tende a zero, quindi L è uno più zero diviso tre, cioè un terzo. Un terzo è minore di uno, quindi per il criterio del rapporto la serie converge.' },
+    { show:'Perché L &lt; 1 → converge: da un certo punto a<sub>n+1</sub> ≤ '+FR('1','2')+' a<sub>n</sub>, quindi la coda ≤ a<sub>N</sub>(1 + 1/2 + 1/4 + …) = 2 a<sub>N</sub>, finita',
+      say:'Perché L minore di uno vuol dire che converge? Da un certo punto ogni termine è al massimo la metà del precedente. Allora la coda della serie è al massimo a con N per uno più un mezzo più un quarto e così via, che è una geometrica e fa due. Quindi la somma è finita.' },
+    { show:'<h3>Schema</h3>1) '+LIM+' a<sub>n</sub> ≠ 0? → non converge · 2) geometrica o 1/n<sup>p</sup>? · 3) n! o 3ⁿ → rapporto · 4) (…)ⁿ → radice · 5) polinomi → confronto',
+      say:'Lo schema per ogni serie. Uno: il termine tende a zero? Se no, non converge. Due: è una geometrica o una uno su n alla p? Uso le formule. Tre: ci sono fattoriali o potenze? Rapporto. Quattro: è tutto elevato alla n? Radice. Cinque: solo polinomi? Confronto.' }
+  ]);
+
   guided('serie', 'lavagna-serie', [
     { h:'Passo 1 · Primo controllo: quanto fa il limite del termine generale?', type:'nums', ans:[0],
       html: LIM+' '+FR('n','3ⁿ')+' = '+inp('limite del termine'),
-      ok:'Giusto: 3ⁿ batte n (gerarchia degli infiniti), quindi il termine tende a 0. La condizione necessaria è rispettata, ma non basta: serve un criterio.', bad:'Gerarchia: chi cresce più in fretta tra n e 3ⁿ?' },
+      ok:'Giusto: 3ⁿ batte n (gerarchia degli infiniti). Coi numeri: n = 5 → 5/243 ≈ 0,02; n = 10 → 10/59049 ≈ 0,0002. Quindi il termine tende a 0. La condizione necessaria è rispettata, ma non basta: serve un criterio.', bad:'Gerarchia: chi cresce più in fretta tra n e 3ⁿ?' },
     { h:'Passo 2 · Quale criterio usi?', type:'choice', ans:1,
       opts:['Confronto con 1/n','Rapporto, perché c\'è 3ⁿ','Radice, perché c\'è la n all\'esponente di tutto'],
       ok:'Esatto: con le potenze tipo 3ⁿ il rapporto si semplifica bene. (Anche la radice funzionerebbe, ma il rapporto è più comodo.)', bad:'Guarda lo schema: c\'è una potenza 3ⁿ ma non è "tutto elevato alla n".' },
@@ -2222,7 +2427,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Giusto: 3ⁿ / 3<sup>n+1</sup> = 1/3.', bad:'Ricorda 3<sup>n+1</sup> = 3 · 3ⁿ. Cosa resta dopo aver semplificato 3ⁿ?' },
     { h:'Passo 4 · Quanto vale L?', type:'nums', ans:[1/3],
       html: 'L = '+LIM+' '+FR('n+1','3n')+' = '+inp('valore di L'),
-      ok:'Sì, L = 1/3.', bad:'Termine dominante: n/(3n). Scrivi la frazione, tipo 1/5.' },
+      ok:'Sì: divido sopra e sotto per n, '+FR('n+1','3n')+' = '+FR('1 + 1/n','3')+', e 1/n tende a 0, quindi L = '+FR('1 + 0','3')+' = 1/3.', bad:'Divido sopra e sotto per n: (1 + 1/n)/3. Dove va 1/n? Scrivi la frazione, tipo 1/5.' },
     { h:'Passo 5 · Conclusione', type:'choice', ans:0,
       opts:['L = 1/3 &lt; 1: la serie converge','L = 1/3 &lt; 1: la serie diverge','Non si può dire'],
       ok:'Perfetto!', bad:'Ripassa la regola del rapporto: L &lt; 1 → ?' }
@@ -2288,33 +2493,93 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 7: Serie con parametro e Leibniz ===== */
   order.push('serie-parametro'); NAMES['serie-parametro'] = '7 Serie con parametro';
   const AS = [
-    { r:n=>((n+3)/(n*n*n+1))/(1/(n*n)), l:'1', t:'Il rapporto tende a 1: Σ (n+3)/(n³+1) si comporta come Σ 1/n², che converge.' },
-    { r:n=>Math.sin(1/n)/(1/n), l:'1', t:'Il rapporto tende a 1: Σ sin(1/n) si comporta come Σ 1/n, che diverge.' },
-    { r:n=>Math.log(1+1/(n*n))/(1/(n*n)), l:'1', t:'Il rapporto tende a 1: Σ ln(1 + 1/n²) si comporta come Σ 1/n², che converge.' },
-    { r:n=>(1-Math.cos(1/n))/(1/(n*n)), l:'1/2', t:'Il rapporto tende a 1/2 (finito e diverso da 0): Σ (1 − cos(1/n)) si comporta come Σ 1/n², che converge.' }
+    { r:n=>((n+3)/(n*n*n+1))/(1/(n*n)), l:'1', calc:[
+      '<i>Rapporto:</i> '+FR('n + 3','n³ + 1')+' : '+FR('1','n²')+' = '+FR('n + 3','n³ + 1')+' · n² = '+FR('n³ + 3n²','n³ + 1'),
+      '<i>Con i numeri:</i> n = 10 → 1300/1001 ≈ 1,30; n = 40 → 68 800/64 001 ≈ 1,07',
+      '<i>Limite (divido per n³):</i> '+FR('1 + 3/n','1 + 1/n³')+' → '+FR('1 + 0','1 + 0')+' = 1',
+      '<i>ℓ = 1, finito e ≠ 0:</i> stesso carattere di Σ 1/n²',
+      '<i>Conclusione:</i> p = 2 &gt; 1, quindi Σ (n+3)/(n³+1) <b>converge</b>'] },
+    { r:n=>Math.sin(1/n)/(1/n), l:'1', calc:[
+      '<i>Rapporto:</i> sin(1/n) : '+FR('1','n')+' = '+FR('sin(1/n)','1/n'),
+      '<i>Chiamo t = 1/n:</i> per n → +∞, t tende a 0, e il rapporto è sin t / t',
+      '<i>Con i numeri:</i> n = 2 → sin(0,5)/0,5 ≈ 0,479/0,5 ≈ 0,96; n = 10 → sin(0,1)/0,1 ≈ 0,0998/0,1 ≈ 0,998',
+      '<i>Limite notevole:</i> sin t / t → 1 per t → 0, quindi ℓ = 1',
+      '<i>Conclusione:</i> stesso carattere di Σ 1/n (armonica, p = 1), quindi Σ sin(1/n) <b>diverge</b>'] },
+    { r:n=>Math.log(1+1/(n*n))/(1/(n*n)), l:'1', calc:[
+      '<i>Rapporto:</i> ln(1 + 1/n²) : '+FR('1','n²')+' = '+FR('ln(1 + 1/n²)','1/n²'),
+      '<i>Chiamo t = 1/n²:</i> per n → +∞, t tende a 0, e il rapporto è ln(1 + t)/t',
+      '<i>Con i numeri:</i> n = 2 → ln(1,25)/0,25 ≈ 0,223/0,25 ≈ 0,89; n = 10 → ln(1,01)/0,01 ≈ 0,00995/0,01 ≈ 0,995',
+      '<i>Limite notevole:</i> ln(1 + t)/t → 1 per t → 0, quindi ℓ = 1',
+      '<i>Conclusione:</i> stesso carattere di Σ 1/n² (p = 2 &gt; 1), quindi <b>converge</b>'] },
+    { r:n=>(1-Math.cos(1/n))/(1/(n*n)), l:'1/2', calc:[
+      '<i>Rapporto:</i> (1 − cos(1/n)) : '+FR('1','n²')+' = '+FR('1 − cos(1/n)','1/n²'),
+      '<i>Chiamo t = 1/n:</i> 1/n² = t², e il rapporto è (1 − cos t)/t² con t → 0',
+      '<i>Con i numeri:</i> n = 10 → (1 − cos 0,1)/0,01 ≈ 0,0049958/0,01 ≈ 0,4996',
+      '<i>Limite notevole:</i> (1 − cos t)/t² → 1/2 per t → 0, quindi ℓ = 1/2',
+      '<i>ℓ = 1/2 è finito e ≠ 0:</i> va bene lo stesso, non serve che sia 1',
+      '<i>Conclusione:</i> stesso carattere di Σ 1/n² (p = 2 &gt; 1), quindi <b>converge</b>'] }
   ];
   draws['serie-parametro'] = () => {
     const a = AS[+$('asS').value];
     plot($('plotAs'), { N:40, zero:false, series:[{f:a.r, color:'--thief'}], hlines:[{y:a.l==='1/2'?0.5:1, color:'--cop', label:'ℓ = '+a.l}] });
-    $('asOut').innerHTML = a.t;
+    $('asOut').innerHTML = SV(...a.calc);
     const S=[0]; for (let n=1;n<=40;n++) S[n]=S[n-1]+(n%2===1?1:-1)/n;
     plot($('plotLeib'), { N:40, zero:false, series:[{f:n=>S[n], color:'--thief', line:true},{f:n=>S[n], color:'--thief'}], hlines:[{y:Math.log(2), color:'--cop', label:'0,693…'}] });
   };
   $('asS').addEventListener('change', () => draws['serie-parametro']());
 
+  video('serie-parametro', [
+    { show:'<h3>Serie con parametro</h3>Tre attrezzi: confronto asintotico, Leibniz, schema con parametro',
+      say:'In questa lezione vediamo tre attrezzi: il confronto asintotico, il criterio di Leibniz, e lo schema per le serie con parametro. Facciamo tutti i calcoli.' },
+    { show:'Attrezzo 1. Esempio: '+SUM(1)+' '+FR('n + 3','n³ + 1'),
+      say:'Primo esempio: la serie di n più tre, diviso n al cubo più uno.' },
+    { show:'Termine dominante: sopra n, sotto n³ → b<sub>n</sub> = '+FR('n','n³')+' = '+FR('1','n²'),
+      say:'Per n molto grande, sopra conta n e sotto conta n al cubo. Quindi il termine assomiglia a n su n al cubo, cioè uno su n al quadrato. Lo chiamo b con n.' },
+    { show:'Rapporto: '+FR('n + 3','n³ + 1')+' · n² = '+FR('n³ + 3n²','n³ + 1'),
+      say:'Controllo facendo il rapporto tra a con n e b con n. Dividere per uno su n al quadrato vuol dire moltiplicare per n al quadrato. Sopra viene n al cubo più tre n al quadrato, sotto n al cubo più uno.' },
+    { show:'n = 10 → 1300/1001 ≈ 1,30 · n = 100 → 1 030 000/1 000 001 ≈ 1,03',
+      say:'Con i numeri: per n uguale a dieci viene milletrecento su milleuno, circa uno virgola tre. Per n uguale a cento viene circa uno virgola zero tre. Si avvicina a uno.' },
+    { show:'Divido per n³: '+FR('1 + 3/n','1 + 1/n³')+' → '+FR('1 + 0','1 + 0')+' = 1',
+      say:'Per il limite divido sopra e sotto per n al cubo: uno più tre su n, diviso uno più uno su n al cubo. Tre su n e uno su n al cubo tendono a zero, quindi il rapporto tende a uno.' },
+    { show:'ℓ = 1, finito e ≠ 0 → stesso carattere di Σ 1/n², p = 2 &gt; 1 → <b>converge</b>',
+      say:'Il limite è uno, un numero finito e diverso da zero. Allora le due serie fanno la stessa fine. La serie di uno su n al quadrato converge perché p è due, maggiore di uno. Quindi anche la nostra converge.' },
+    { show:'Perché: da un certo n in poi 0,5 · b<sub>n</sub> ≤ a<sub>n</sub> ≤ 2 · b<sub>n</sub>',
+      say:'Perché funziona? Se il rapporto tende a uno, da un certo punto in poi sta tra zero virgola cinque e due. Quindi a con n è al massimo due volte b con n. Se la serie dei b converge, converge anche quella dei due b, e la nostra è più piccola, quindi converge.' },
+    { show:'Attrezzo 2. Leibniz: 1 − '+FR('1','2')+' + '+FR('1','3')+' − '+FR('1','4')+' + …',
+      say:'Secondo attrezzo: le serie a segni alterni. Esempio: uno meno un mezzo più un terzo meno un quarto, e così via.' },
+    { show:'S₁ = 1 · S₂ = 1 − 0,5 = 0,5 · S₃ = 0,5 + 0,333 = 0,833 · S₄ = 0,833 − 0,25 = 0,583',
+      say:'Calcolo le somme parziali. S uno è uno. S due è uno meno zero virgola cinque, cioè zero virgola cinque. S tre è zero virgola cinque più zero virgola trecentotrentatré, cioè zero virgola ottocentotrentatré. S quattro è zero virgola ottocentotrentatré meno zero virgola venticinque, cioè zero virgola cinquecentottantatré.' },
+    { show:'S₅ = 0,583 + 0,2 = 0,783 · S₆ = 0,783 − 0,167 = 0,617<br>Dispari scendono: 1; 0,833; 0,783 · Pari salgono: 0,5; 0,583; 0,617',
+      say:'S cinque è zero virgola settecentottantatré, S sei è zero virgola seicentodiciassette. Guarda: le somme dispari scendono, le pari salgono. E la distanza tra loro è il termine che aggiungo, che diventa sempre più piccolo. Si stringono su zero virgola seicentonovantatré.' },
+    { show:'Leibniz: b<sub>n</sub> ≥ 0 decrescente e '+LIM+' b<sub>n</sub> = 0 ⇒ Σ (−1)ⁿ b<sub>n</sub> converge',
+      say:'Il criterio di Leibniz dice proprio questo: se b con n è positivo, decrescente, e tende a zero per n che tende a più infinito, la serie a segni alterni converge.' },
+    { show:'Attrezzo 3. Per quali x converge '+SUM(1)+' '+FR('xⁿ','n')+' ?',
+      say:'Terzo attrezzo: le serie con parametro. Per quali x converge la serie di x alla n diviso n?' },
+    { show:FR('|x|<sup>n+1</sup>','n + 1')+' · '+FR('n','|x|ⁿ')+' = |x| · '+FR('n','n + 1')+' → |x| · 1 = |x|',
+      say:'Uso il rapporto con il valore assoluto. Il termine n più uno diviso il termine n fa: valore assoluto di x alla n più uno su n più uno, per n su valore assoluto di x alla n. Si semplifica e resta valore assoluto di x per n su n più uno. n su n più uno tende a uno, quindi L è il valore assoluto di x.' },
+    { show:'|x| &lt; 1 → converge · |x| &gt; 1 → non converge · x = 0,5: L = 0,5 · x = 2: L = 2',
+      say:'Se il valore assoluto di x è minore di uno, converge. Per esempio x uguale a zero virgola cinque dà L uguale a zero virgola cinque. Se è maggiore di uno non converge: con x uguale a due, L è due.' },
+    { show:'x = 1: '+FR('1ⁿ','n')+' = '+FR('1','n')+' → armonica, <b>diverge</b>',
+      say:'Ora i confini, dove L è uno e il criterio non dice niente. Con x uguale a uno, uno alla n su n è uno su n: la serie armonica, che diverge.' },
+    { show:'x = −1: '+FR('(−1)ⁿ','n')+' → Leibniz: 1/n → 0 e decresce → <b>converge</b>',
+      say:'Con x uguale a meno uno viene meno uno alla n su n: segni alterni. Uno su n tende a zero ed è decrescente, quindi per Leibniz converge.' },
+    { show:'Risposta: converge per <b>−1 ≤ x &lt; 1</b>',
+      say:'Metto insieme: converge per x maggiore o uguale a meno uno e minore di uno. Meno uno è incluso, uno è escluso. Questo è lo schema di quasi tutti gli esercizi con parametro.' }
+  ]);
+
   guided('serie-parametro', 'lavagna-serie-parametro', [
     { h:'Passo 1 · Rapporto con il valore assoluto: |a<sub>n+1</sub>| / |a<sub>n</sub>| = |x| · n/(n+1). Quanto fa il limite per n → +∞?', type:'choice', ans:1,
       opts:['L = 1','L = |x|','L = x²'],
-      ok:'Giusto: '+LIM+' n/(n+1) = 1, quindi resta |x|.', bad:'|x|<sup>n+1</sup>/|x|ⁿ = |x|, e '+LIM+' n/(n+1) = …' },
+      ok:'Giusto. I calcoli: |a<sub>n+1</sub>|/|a<sub>n</sub>| = '+FR('|x|<sup>n+1</sup>','n + 1')+' · '+FR('n','|x|ⁿ')+' = |x| · '+FR('n','n + 1')+'. Poi '+FR('n','n + 1')+' = '+FR('1','1 + 1/n')+' → '+FR('1','1 + 0')+' = 1 per n → +∞. Quindi L = |x| · 1 = |x|.', bad:'|x|<sup>n+1</sup>/|x|ⁿ = |x|, e '+LIM+' n/(n+1) = …' },
     { h:'Passo 2 · Cosa dice il criterio?', type:'choice', ans:0,
       opts:['Se |x| &lt; 1 converge (anche assolutamente), se |x| &gt; 1 non converge','Converge sempre','Se |x| &lt; 1 diverge'],
-      ok:'Esatto. Restano da fare a mano i confini x = 1 e x = −1, dove L = 1.', bad:'L &lt; 1 → converge, L &gt; 1 → no. Qui L = |x|.' },
+      ok:'Esatto. Esempi: x = 0,5 → L = 0,5 &lt; 1, converge; x = 3 → L = 3 &gt; 1, non converge. Restano i confini |x| = 1, cioè x = 1 e x = −1, dove L = 1 e il criterio non dice niente.', bad:'L &lt; 1 → converge, L &gt; 1 → no. Qui L = |x|.' },
     { h:'Passo 3 · Caso x = 1: la serie diventa Σ 1/n. Che fine fa?', type:'choice', ans:1,
       opts:['Converge','Diverge: è l\'armonica','È irregolare'],
-      ok:'Sì: armonica, p = 1, diverge.', bad:'Σ 1/n è la serie armonica.' },
+      ok:'Sì. Con x = 1: xⁿ/n = 1ⁿ/n = 1/n. È l\'armonica Σ 1/n<sup>p</sup> con p = 1, e p ≤ 1 diverge.', bad:'Σ 1/n è la serie armonica.' },
     { h:'Passo 4 · Caso x = −1: la serie diventa Σ (−1)ⁿ/n. Che fine fa?', type:'choice', ans:0,
       opts:['Converge per Leibniz: 1/n decresce e tende a 0','Diverge come l\'armonica','Non si può dire'],
-      ok:'Perfetto: segni alterni e 1/n decrescente con limite 0.', bad:'Segni alterni: quale criterio?' },
+      ok:'Perfetto. Con x = −1: (−1)ⁿ/n, segni alterni con b<sub>n</sub> = 1/n. Controllo 1: '+LIM+' 1/n = 0 ✓. Controllo 2: 1 &gt; 1/2 &gt; 1/3 &gt; …, decrescente ✓. Leibniz: converge.', bad:'Segni alterni: quale criterio?' },
     { h:'Passo 5 · Risposta finale: per quali x converge?', type:'choice', ans:2,
       opts:['−1 &lt; x &lt; 1','−1 &lt; x ≤ 1','−1 ≤ x &lt; 1'],
       ok:'Perfetto! x = −1 incluso (Leibniz), x = 1 escluso (armonica).', bad:'Rimetti insieme: |x| &lt; 1 sì, x = 1 no, x = −1 sì.' }
@@ -2380,10 +2645,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 8: Limiti di funzioni ===== */
   order.push('limiti-funzioni'); NAMES['limiti-funzioni'] = '8 Limiti di funzioni';
   const LF = [
-    { f:x=>(x*x-1)/(x-1), x0:1, xr:[-1,3], yr:[-0.5,4.5], hole:{y:2}, txt:'Da sinistra e da destra si va verso 2. In x = 1 la funzione non esiste (pallino vuoto), ma il limite c\'è: '+LIMX('1')+' (x² − 1)/(x − 1) = 2.' },
-    { f:x=>Math.sin(x)/x, x0:0, xr:[-8,8], yr:[-0.5,1.3], hole:{y:1}, extra:[{f:x=>x, color:'--muted', dash:true, width:1.5}], txt:'Da tutte e due le parti si va verso 1: '+LIMX('0')+' sin(x)/x = 1. La linea tratteggiata è y = x: vicino a 0 è quasi uguale a sin x.' },
-    { f:x=>1/x, x0:0, xr:[-3,3], yr:[-8,8], txt:'Da sinistra si scende a −∞, da destra si sale a +∞. Destro e sinistro diversi: '+LIMX('0')+' 1/x non esiste.' },
-    { f:x=>x===0?NaN:Math.abs(x)/x, x0:0, xr:[-3,3], yr:[-2,2], txt:'Da sinistra vale sempre −1, da destra sempre 1. Destro e sinistro diversi: il limite non esiste.' }
+    { f:x=>(x*x-1)/(x-1), x0:1, xr:[-1,3], yr:[-0.5,4.5], hole:{y:2}, txt:SV('<i>Sostituisco x = 1:</i> (1 − 1)/(1 − 1) = 0/0, in x = 1 la funzione non esiste (pallino vuoto)',
+      '<i>Con i numeri da sinistra:</i> x = 0,9 → (0,81 − 1)/(0,9 − 1) = (−0,19)/(−0,1) = 1,9; x = 0,99 → 1,99',
+      '<i>Con i numeri da destra:</i> x = 1,1 → (1,21 − 1)/(1,1 − 1) = 0,21/0,1 = 2,1; x = 1,01 → 2,01',
+      '<i>Scompongo:</i> x² − 1 = (x − 1)(x + 1), quindi (x² − 1)/(x − 1) = x + 1 per x ≠ 1',
+      '<i>Limite:</i> '+LIMX('1')+' (x + 1) = 1 + 1 = <b>2</b>') },
+    { f:x=>Math.sin(x)/x, x0:0, xr:[-8,8], yr:[-0.5,1.3], hole:{y:1}, extra:[{f:x=>x, color:'--muted', dash:true, width:1.5}], txt:SV('<i>Sostituisco x = 0:</i> sin 0 / 0 = 0/0, forma indeterminata',
+      '<i>Con i numeri da destra:</i> x = 1 → sin 1 / 1 ≈ 0,841; x = 0,5 → 0,479/0,5 ≈ 0,959; x = 0,1 → 0,0998/0,1 ≈ 0,998',
+      '<i>Da sinistra:</i> sin(−x) = −sin x, quindi sin(−x)/(−x) = sin x / x: stessi numeri',
+      '<i>Perché:</i> la linea tratteggiata è y = x; vicino a 0 sin x è quasi uguale a x, quindi sin x / x è quasi x/x = 1',
+      '<i>Limite:</i> '+LIMX('0')+' sin(x)/x = <b>1</b>') },
+    { f:x=>1/x, x0:0, xr:[-3,3], yr:[-8,8], txt:SV('<i>Sostituisco x = 0:</i> 1/0, non è un numero: guardo da destra e da sinistra',
+      '<i>Da sinistra:</i> x = −0,1 → 1/(−0,1) = −10; x = −0,01 → −100: va a −∞',
+      '<i>Da destra:</i> x = 0,1 → 10; x = 0,01 → 100: va a +∞',
+      '<i>Confronto:</i> −∞ ≠ +∞, quindi '+LIMX('0')+' 1/x <b>non esiste</b>') },
+    { f:x=>x===0?NaN:Math.abs(x)/x, x0:0, xr:[-3,3], yr:[-2,2], txt:SV('<i>Da sinistra, x &lt; 0:</i> |x| = −x, quindi |x|/x = −x/x = −1. Esempio x = −0,5: 0,5/(−0,5) = −1',
+      '<i>Da destra, x &gt; 0:</i> |x| = x, quindi |x|/x = x/x = 1. Esempio x = 0,5: 0,5/0,5 = 1',
+      '<i>Confronto:</i> −1 ≠ 1, quindi '+LIMX('0')+' |x|/x <b>non esiste</b>') }
   ];
   draws['limiti-funzioni'] = () => {
     const c = LF[+$('lfS').value], d = (+$('lfD').value)/100 * (c.xr[1]-c.x0) * 0.9;
@@ -2391,10 +2669,39 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     const pts = [{x:xl, y:Math.max(c.yr[0], Math.min(c.yr[1], yl)), color:'--cop'}, {x:xr, y:Math.max(c.yr[0], Math.min(c.yr[1], yr)), color:'--thief'}];
     if (c.hole) pts.push({x:c.x0, y:c.hole.y, color:'--ink', open:true});
     plotF($('plotLF'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[...(c.extra||[]), {f:c.f, color:'--ink', width:2}], points:pts, vlines:[{x:c.x0, color:'--muted', label:'x₀'}] });
-    $('lfOut').innerHTML = 'f('+it(xl,3)+') = <b class="cop">'+it(yl,3)+'</b> · f('+it(xr,3)+') = <b class="thief">'+it(yr,3)+'</b><br><span style="font-size:1rem">'+c.txt+'</span>';
+    $('lfOut').innerHTML = 'f('+it(xl,3)+') = <b class="cop">'+it(yl,3)+'</b> · f('+it(xr,3)+') = <b class="thief">'+it(yr,3)+'</b><br>'+c.txt;
   };
   $('lfS').addEventListener('change', () => draws['limiti-funzioni']());
   $('lfD').addEventListener('input', () => draws['limiti-funzioni']());
+
+  video('limiti-funzioni', [
+    { show:'<h3>Limiti di funzioni</h3>'+LIMX('x₀')+' f(x) = L',
+      say:'Limiti di funzioni. Si legge: limite per x che tende a x zero di f di x uguale a L. Vuol dire: quando x si avvicina a x zero, f di x si avvicina a L.' },
+    { show:'Esempio: '+LIMX('1')+' '+FR('x² − 1','x − 1')+' · sostituisco: '+FR('1 − 1','1 − 1')+' = '+FR('0','0'),
+      say:'Primo esempio: limite per x che tende a uno di x al quadrato meno uno, diviso x meno uno. Se sostituisco uno, sopra viene zero e sotto zero. Zero su zero: in x uguale a uno la funzione non esiste.' },
+    { show:'x = 0,9 → '+FR('0,81 − 1','0,9 − 1')+' = '+FR('−0,19','−0,1')+' = 1,9 · x = 1,1 → '+FR('1,21 − 1','0,1')+' = 2,1',
+      say:'Allora provo con numeri vicini. Con x uguale a zero virgola nove: sopra zero virgola ottantuno meno uno, cioè meno zero virgola diciannove; sotto meno zero virgola uno. Fa uno virgola nove. Con x uguale a uno virgola uno viene due virgola uno.' },
+    { show:'x = 0,99 → 1,99 · x = 1,01 → 2,01 · da tutte e due le parti si va verso 2',
+      say:'Più vicino ancora: zero virgola novantanove dà uno virgola novantanove, uno virgola zero uno dà due virgola zero uno. Da sinistra e da destra si va verso due.' },
+    { show:'Scompongo: x² − 1 = (x − 1)(x + 1) → '+FR('(x − 1)(x + 1)','x − 1')+' = x + 1 → 1 + 1 = <b>2</b>',
+      say:'Lo stesso risultato con il calcolo. x al quadrato meno uno è una differenza di quadrati: x meno uno per x più uno. Semplifico x meno uno, che non è zero perché x è vicino a uno ma non uguale. Resta x più uno, e sostituendo uno viene due.' },
+    { show:'Destra e sinistra: 1/x · x = −0,1 → −10, x = −0,01 → −100 · x = 0,1 → 10, x = 0,01 → 100',
+      say:'Secondo esempio: uno su x vicino a zero. Da sinistra: meno zero virgola uno dà meno dieci, meno zero virgola zero uno dà meno cento, si va a meno infinito. Da destra: dieci, cento, si va a più infinito.' },
+    { show:'Sinistro −∞ ≠ destro +∞ → '+LIMX('0')+' '+FR('1','x')+' <b>non esiste</b>',
+      say:'Il limite sinistro e il limite destro sono diversi, quindi il limite per x che tende a zero di uno su x non esiste. Il limite esiste solo se destro e sinistro sono uguali.' },
+    { show:'∞/∞: '+LIMX('+∞')+' '+FR('3x² + x','x² − 5')+' = '+FR('3 + 1/x','1 − 5/x²')+' → '+FR('3 + 0','1 − 0')+' = 3',
+      say:'Quando x tende a più infinito e viene infinito su infinito, divido per la potenza più alta. Tre x al quadrato più x, diviso x al quadrato meno cinque: divido tutto per x al quadrato e ottengo tre più uno su x, diviso uno meno cinque su x al quadrato. Uno su x e cinque su x al quadrato tendono a zero, quindi il limite è tre.' },
+    { show:'x = 10 → '+FR('310','95')+' ≈ 3,26 · x = 100 → '+FR('30 100','9995')+' ≈ 3,01',
+      say:'Controllo: con x uguale a dieci viene trecentodieci su novantacinque, circa tre virgola ventisei. Con cento circa tre virgola zero uno. Giusto.' },
+    { show:'Notevole: '+LIMX('0')+' '+FR('sin x','x')+' = 1 · x = 0,1 → '+FR('0,09983','0,1')+' = 0,9983',
+      say:'Ora i limiti notevoli. Il più importante: seno di x diviso x tende a uno per x che tende a zero. Con x uguale a zero virgola uno, seno di zero virgola uno è circa zero virgola zero novantotto, e diviso zero virgola uno fa zero virgola novantanove. Quasi uno.' },
+    { show:LIMX('0')+' '+FR('sin(5x)','x')+' = 5 · '+FR('sin(5x)','5x')+' , t = 5x → 0 , = 5 · 1 = <b>5</b>',
+      say:'Come si usa: limite per x che tende a zero di seno di cinque x diviso x. Sotto mi serve cinque x, uguale a quello dentro il seno. Allora moltiplico e divido per cinque. Cinque x tende a zero, quindi seno di cinque x su cinque x tende a uno, e il risultato è cinque per uno, cioè cinque.' },
+    { show:FR('1 − cos x','x²')+' = ('+FR('sin x','x')+')² · '+FR('1','1 + cos x')+' → 1 · '+FR('1','2')+' = '+FR('1','2'),
+      say:'Uno meno coseno di x su x al quadrato: moltiplico sopra e sotto per uno più coseno di x. Sopra viene uno meno coseno al quadrato, cioè seno al quadrato. Così ho seno di x su x, al quadrato, per uno su uno più coseno di x. Tende a uno per un mezzo, cioè un mezzo.' },
+    { show:'Schema: 1 sostituisco · 2 0/0 polinomi: scompongo · 3 ∞/∞: potenza più alta · 4 notevoli',
+      say:'Riassumo lo schema: primo, sostituisco. Secondo, se viene zero su zero con polinomi, scompongo e semplifico. Terzo, se x va all\'infinito e viene infinito su infinito, divido per la potenza più alta. Quarto, con seno, coseno, logaritmo ed esponenziale uso i limiti notevoli.' }
+  ]);
 
   guided('limiti-funzioni', 'lavagna-limiti-funzioni', [
     { h:'Passo 1 · Sostituisco x = 2. Cosa esce?', type:'choice', ans:1,
@@ -2405,10 +2712,10 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Sì: differenza di quadrati. E infatti c\'è il fattore (x − 2), come previsto.', bad:'Differenza di quadrati: a² − b² = (a − b)(a + b).' },
     { h:'Passo 3 · Semplifico (x − 2) sopra e sotto. Cosa resta?', type:'choice', ans:2,
       opts:['x − 2','1/(x + 2)','x + 2'],
-      ok:'Esatto. Posso semplificare perché x è vicino a 2 ma non uguale a 2, quindi x − 2 ≠ 0.', bad:'(x − 2)(x + 2) / (x − 2) = ?' },
+      ok:'Esatto: '+FR('(x − 2)(x + 2)','x − 2')+' = x + 2. Posso semplificare perché x è vicino a 2 ma non uguale a 2, quindi x − 2 ≠ 0.', bad:'(x − 2)(x + 2) / (x − 2) = ?' },
     { h:'Passo 4 · Ora risostituisco x = 2. Quanto fa il limite?', type:'nums', ans:[4],
       html: LIMX('2')+' (x + 2) = '+inp('risultato'),
-      ok:'Perfetto!', bad:'2 + 2…' }
+      ok:'Perfetto: 2 + 2 = 4. Controllo con i numeri: x = 2,01 → (4,0401 − 4)/(2,01 − 2) = 0,0401/0,01 = 4,01, vicino a 4 ✓', bad:'2 + 2…' }
   ], '<b>Fatto!</b> '+LIMX('2')+' (x² − 4)/(x − 2) = '+LIMX('2')+' (x + 2) = 4. Con 0/0 e polinomi la mossa è sempre questa: trova il fattore (x − x₀), semplificalo, risostituisci.');
 
   EX['limiti-funzioni'] = [
