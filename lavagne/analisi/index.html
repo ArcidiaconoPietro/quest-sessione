@@ -133,6 +133,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .tag.mem { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
 .tag.cap { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
 
+.svh { display: block; margin-top: .5em; }
 .sv { margin: .4em 0 0; padding-left: 1.4em; }
 .sv li { margin: .45em 0; line-height: 1.6; }
 .sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }
@@ -181,6 +182,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-carabinieri"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea in una storia</div>
       <p>Un <span class="thief">ladro</span> cammina zigzagando. Ha un <span class="cop">carabiniere</span> a sinistra e un <span class="cop">carabiniere</span> a destra che lo tengono per le braccia.</p>
       <p>Se i due carabinieri arrivano <b>tutti e due</b> in caserma, il ladro in mezzo ci arriva per forza. Non importa quanto zigzaga.</p>
@@ -199,19 +205,21 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p>Esempio: <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span>. Premi "passo successivo".</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Parti da quello che sai sempre</h3>
-          <p>Il seno sta sempre tra −1 e 1, per ogni n.</p>
+          <p>Il seno sta sempre tra −1 e 1, per ogni n. Con i numeri: sin 1 ≈ 0,84; sin 4 ≈ −0,76; sin 8 ≈ 0,99; sin 11 ≈ −1,00. Salta su e giù, ma non esce mai da −1 e 1.</p>
           <div class="math"><span class="box cop">−1</span> ≤ <span class="box thief">sin n</span> ≤ <span class="box cop">1</span></div>
         </div>
         <div class="step" hidden><h3>Passo 2 · Costruisci la tua espressione</h3>
           <p>Nella successione il seno è diviso per n. Divido <b>tutti e tre</b> i pezzi per n. Siccome n è positivo, i segni ≤ non cambiano.</p>
+          <p>Controllo con n = 10: −1/10 = −0,1; sin 10/10 ≈ −0,544/10 = −0,054; 1/10 = 0,1. E infatti −0,1 ≤ −0,054 ≤ 0,1 ✓</p>
           <div class="math"><span class="box cop"><span class="fr"><span>−1</span><span>n</span></span></span> ≤ <span class="box thief"><span class="fr"><span>sin n</span><span>n</span></span></span> ≤ <span class="box cop"><span class="fr"><span>1</span><span>n</span></span></span></div>
         </div>
         <div class="step" hidden><h3>Passo 3 · Dove vanno i carabinieri?</h3>
-          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Tutti e due vanno a 0.</p>
+          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Con i numeri: 1/10 = 0,1; 1/100 = 0,01; 1/1000 = 0,001; e −1/n fa −0,1; −0,01; −0,001. Tutti e due vanno a 0.</p>
           <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> −1/n = 0</span> <span class="box cop"><span class="lim">lim<span>n→+∞</span></span> 1/n = 0</span></div>
         </div>
         <div class="step" hidden><h3>Passo 4 · Conclusione</h3>
-          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì.</p>
+          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì. Con n = 1000 il ladro è chiuso tra −0,001 e 0,001: è a meno di un millesimo da 0.</p>
+          <p><b>Perché funziona</b> <span class="tag cap">facile</span>: se tutti e due i carabinieri sono a meno di 0,001 da 0, il ladro che sta in mezzo è anche lui a meno di 0,001 da 0. E lo stesso con 0,000001, o con qualsiasi distanza piccola che scegli: basta aspettare n abbastanza grande.</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> sin n / n = 0</span></div>
         </div>
       </div>
@@ -222,7 +230,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <div class="eyebrow">Attenzione</div>
       <h2>Quando NON funziona</h2>
       <p>Quando n → +∞, i due carabinieri devono andare nello <b>stesso</b> posto. Se uno va a 0 e l'altro a 5, il ladro può stare ovunque in mezzo e non concludi niente.</p>
-      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre:</p>
+      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre: cos 1 ≈ 0,54; cos 3 ≈ −0,99; cos 6 ≈ 0,96; cos 22 ≈ −1,00; cos 25 ≈ 0,99.</p>
       <canvas id="plot2" aria-label="Grafico: cos n tra meno 1 e 1, non converge"></canvas>
     </section>
 
@@ -263,12 +271,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-radici"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Solo due fatti da sapere</div>
       <h2>Per n → +∞ tutte e due fanno 1</h2>
       <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1</span><span style="font-size:1rem">per qualsiasi numero fisso a &gt; 0</span></div>
       <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1</span><span style="font-size:1rem">anche se dentro c'è n che cresce</span></div>
       <p><b>Perché, a intuito:</b> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> è a elevato alla 1/n. Quando n → +∞ l'esponente 1/n diventa quasi 0, e qualsiasi numero elevato a 0 fa 1. Con n dentro è una gara: n cresce, ma la radice schiaccia molto più forte, e vince la radice.</p>
-      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1.</p>
+      <ol class="sv">
+        <li><i>Fatto 1 con i numeri, a = 2:</i> 2<sup>1/10</sup> ≈ 1,072; 2<sup>1/100</sup> ≈ 1,007; 2<sup>1/1000</sup> ≈ 1,0007. Si avvicina a 1.</li>
+        <li><i>Anche con a grande, a = 2000:</i> 2000<sup>1/10</sup> ≈ 2,138; 2000<sup>1/100</sup> ≈ 1,079; 2000<sup>1/1000</sup> ≈ 1,0076. Ci mette di più, ma va a 1.</li>
+        <li><i>Fatto 2 con i numeri:</i> 10<sup>1/10</sup> ≈ 1,259; 100<sup>1/100</sup> ≈ 1,047; 1000<sup>1/1000</sup> ≈ 1,0069. Va a 1.</li>
+        <li><i>Perché vince la radice:</i> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = n<sup>1/n</sup> = e<sup>(ln n)/n</sup>. L'esponente (ln n)/n: con n = 100 fa 4,6/100 = 0,046; con n = 1000 fa 6,9/1000 = 0,0069. Tende a 0, quindi tutto tende a e⁰ = 1.</li>
+      </ol>
+      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1. Per esempio: <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> → 1 · 1 = 1; <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">5</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> → 1 · 1 = 1.</p>
       <canvas id="plotR" aria-label="Grafico: radice n-esima di a e radice n-esima di n che tendono a 1"></canvas>
       <div class="controls">
         <label for="rA">Numero a: <select id="rA"><option>2</option><option>10</option><option>100</option><option selected>2000</option></select></label>
@@ -324,11 +343,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
           <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3</span></div>
           <p>Dal fatto numero 1 di questo capitolo: <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> = 1. Quindi:</p>
           <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3 = 1 · 3 = 3</span></div>
+          <p>Con i numeri: n = 10 → 1,072 · 3 ≈ 3,215; n = 100 → 1,007 · 3 ≈ 3,021. Scende verso 3.</p>
         </div>
         <div class="step" hidden><h3>Passo 7 · Conclusione con i carabinieri</h3>
           <p>Per n → +∞ il carabiniere sotto ha limite 3 e il carabiniere sopra ha limite 3. Stesso limite, quindi anche quello in mezzo:</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = 3</span></div>
-          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3.</p>
+          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3. Controllo con n = 10: 2¹⁰ + 3¹⁰ = 1024 + 59 049 = 60 073, e 60 073<sup>1/10</sup> ≈ 3,005, chiuso tra 3 e 3,215 ✓</p>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -375,11 +395,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-nepero"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea con i soldi</div>
       <p>Metti 1 € in banca al 100% di interesse all'anno.</p>
       <p>Se te lo danno in <b>una</b> volta: 1 · 2 = 2 €. Se te lo danno in <b>n rate</b>, ognuna da 1/n, e ogni rata frutta anche sugli interessi già presi, alla fine hai</p>
       <div class="math"><span class="box thief">(1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup></span></div>
-      <p>Più rate fai, più guadagni, ma <b>non all'infinito</b>: ti fermi a 2,718… Quel numero si chiama <b>e</b>:</p>
+      <ol class="sv">
+        <li><i>1 rata (n = 1):</i> (1 + 1/1)¹ = 2¹ = 2 €</li>
+        <li><i>2 rate (n = 2):</i> (1 + 1/2)² = 1,5² = 1,5 · 1,5 = 2,25 €</li>
+        <li><i>4 rate (n = 4):</i> (1 + 1/4)⁴ = 1,25⁴ = 1,5625 · 1,5625 ≈ 2,441 €</li>
+        <li><i>12 rate, una al mese:</i> (1 + 1/12)¹² ≈ 1,0833¹² ≈ 2,613 €</li>
+        <li><i>365 rate, una al giorno:</i> (1 + 1/365)³⁶⁵ ≈ 2,7146 €</li>
+      </ol>
+      <p>Più rate fai, più guadagni, ma <b>non all'infinito</b>: da 12 a 365 rate guadagni solo 10 centesimi in più. Ti fermi a 2,718… Quel numero si chiama <b>e</b>:</p>
       <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = e ≈ 2,718</span></div>
       <canvas id="plotE" aria-label="Grafico: 1 più 1 su n alla n che sale verso e"></canvas>
       <div class="controls">
@@ -391,7 +423,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Perché 1<sup>∞</sup> non fa 1</div>
       <p>È un tiro alla fune: la base è <b>un pelo più di 1</b> e tira verso 1, l'esponente è <b>enorme</b> e tira verso infinito. Chi vince dipende da quanto sono veloci. Quindi può venire qualsiasi cosa: 1, e, e², e<sup>−1</sup>…</p>
-      <div class="warn">Esempio trappola: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>7</sup> = 1, perché l'esponente 7 è fisso. Non è una forma 1<sup>∞</sup>. Controlla sempre che per n → +∞ l'esponente tenda davvero a +∞.</div>
+      <ol class="sv">
+        <li><i>Base veloce, (1 + 1/n²)ⁿ:</i> n = 10 → 1,01¹⁰ ≈ 1,105; n = 100 → 1,0001¹⁰⁰ ≈ 1,010. Vince la base: tende a 1.</li>
+        <li><i>Pari, (1 + 1/n)ⁿ:</i> n = 10 → 1,1¹⁰ ≈ 2,594; n = 100 → 1,01¹⁰⁰ ≈ 2,705. Pareggio: tende a e.</li>
+        <li><i>Esponente veloce, (1 + 1/n)<sup>n²</sup>:</i> n = 10 → 1,1¹⁰⁰ ≈ 13 781; n = 20 → 1,05⁴⁰⁰ ≈ 3 · 10⁸. Vince l'esponente: tende a +∞.</li>
+        <li><i>Conclusione:</i> tutte e tre sono 1<sup>∞</sup>, e danno 1, e, +∞. Per questo 1<sup>∞</sup> è indeterminata.</li>
+      </ol>
+      <div class="warn">Esempio trappola: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>7</sup> = 1, perché l'esponente 7 è fisso: n = 100 → 1,01⁷ ≈ 1,072; n = 1000 → 1,001⁷ ≈ 1,007; la base va a 1 e 1⁷ = 1. Non è una forma 1<sup>∞</sup>. Controlla sempre che per n → +∞ l'esponente tenda davvero a +∞.</div>
     </section>
 
     <section class="board">
@@ -412,7 +450,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
-      <div class="note">Regola rapida: <b><span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup></b>. Per esempio <span class="lim">lim<span>n→+∞</span></span> (1 + 3/n)<sup>n</sup> = e³ e <span class="lim">lim<span>n→+∞</span></span> (1 − 2/n)<sup>n</sup> = e<sup>−2</sup>.</div>
+      <div class="note">Regola rapida: <b><span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup></b>. Per esempio <span class="lim">lim<span>n→+∞</span></span> (1 + 3/n)<sup>n</sup> = e³ e <span class="lim">lim<span>n→+∞</span></span> (1 − 2/n)<sup>n</sup> = e<sup>−2</sup>.
+        <ol class="sv">
+          <li><i>Da dove viene (pezzo · esponente):</i> 3/n · n = 3, quindi e³; (−2/n) · n = −2, quindi e<sup>−2</sup></li>
+          <li><i>Controllo (1 + 3/n)ⁿ:</i> n = 100 → 1,03¹⁰⁰ ≈ 19,22; n = 1000 → 1,003¹⁰⁰⁰ ≈ 19,99; e³ ≈ 20,09 ✓</li>
+          <li><i>Controllo (1 − 2/n)ⁿ:</i> n = 100 → 0,98¹⁰⁰ ≈ 0,1326; e<sup>−2</sup> ≈ 0,1353 ✓</li>
+        </ol></div>
     </section>
 
     <section class="board">
@@ -437,7 +480,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div class="step" hidden><h3>Passo 3 · Guardo i due pezzi separatamente</h3>
           <p>Per n → +∞: la parte <span class="cop">blu</span> tende a e (passo 1). L'esponente <span class="thief">giallo</span>, u · esponente, tende a L. Quindi tutto tende a e elevato a L.</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> (1 + u)<sup>esponente</sup> = e<sup>L</sup></span></div>
-          <p>Esempio: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup>. Dentro va a e, fuori c'è 10: risultato e<sup>10</sup>. È proprio il numero che trovi con la ricetta (5/n · 2n = 10).</p>
+          <p>Esempio: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup>. Dentro va a e, fuori c'è 10: risultato e<sup>10</sup>. È proprio il numero che trovi con la ricetta (5/n · 2n = 10). Controllo con n = 1000: 1,005²⁰⁰⁰ ≈ 21 500, ed e¹⁰ ≈ 22 026 ✓</p>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -1875,7 +1918,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   }
   const inp = (lbl, w) => '<input type="text" inputmode="decimal" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
   // svolgimento completo: ogni riga = cosa faccio + formula
-  const SV = (...r) => '<b>Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
+  const SV = (...r) => '<b class="svh">Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
   const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
 
   /* ---------------- videolezione ---------------- */
@@ -1975,15 +2018,40 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('n1').addEventListener('input', () => { $('n1v').textContent = $('n1').value; draws.carabinieri(); });
   $('c1').addEventListener('change', () => draws.carabinieri());
 
+  video('carabinieri', [
+    { show:'<h3>Il teorema dei due carabinieri</h3>Esempio: '+LIM+' '+FR('sin n','n'),
+      say:'Il teorema dei due carabinieri. Esempio: limite per n che tende a più infinito di seno di n diviso n.' },
+    { show:'sin 1 ≈ 0,84 · sin 4 ≈ −0,76 · sin 8 ≈ 0,99 · sin 11 ≈ −1,00',
+      say:'Il problema è il seno: salta su e giù. Seno di uno è circa zero virgola ottantaquattro, seno di quattro meno zero virgola settantasei, seno di otto zero virgola novantanove, seno di undici circa meno uno. Non ha limite.' },
+    { show:'Passo 1: −1 ≤ sin n ≤ 1 per ogni n',
+      say:'Però una cosa la so sempre: il seno sta tra meno uno e uno. Per ogni n.' },
+    { show:'Passo 2: divido tutto per n &gt; 0 → '+FR('−1','n')+' ≤ '+FR('sin n','n')+' ≤ '+FR('1','n'),
+      say:'Nella successione il seno è diviso per n. Allora divido tutti e tre i pezzi per n. n è positivo, quindi i segni minore o uguale non si girano.' },
+    { show:'n = 10: −0,1 ≤ '+FR('−0,544','10')+' = −0,054 ≤ 0,1 ✓',
+      say:'Controllo con n uguale a dieci. Meno uno su dieci è meno zero virgola uno. Seno di dieci è circa meno zero virgola cinquecentoquarantaquattro, diviso dieci fa meno zero virgola zero cinquantaquattro. Uno su dieci è zero virgola uno. Sta in mezzo, giusto.' },
+    { show:'Passo 3: '+FR('1','n')+' = 0,1 · 0,01 · 0,001 → 0 · '+FR('−1','n')+' = −0,1 · −0,01 · −0,001 → 0',
+      say:'Dove vanno i carabinieri? Uno su n vale zero virgola uno, poi zero virgola zero uno, poi zero virgola zero zero uno: tende a zero. Meno uno su n fa lo stesso con il meno: tende a zero anche lui.' },
+    { show:'Passo 4: stesso limite 0 → '+LIM+' '+FR('sin n','n')+' = <b>0</b>',
+      say:'Tutti e due i carabinieri vanno a zero, quindi anche il ladro in mezzo va a zero. Il limite è zero.' },
+    { show:'Perché: con n = 1000 il ladro è tra −0,001 e 0,001',
+      say:'Perché funziona? Con n uguale a mille, il ladro è chiuso tra meno zero virgola zero zero uno e più zero virgola zero zero uno. Più n cresce, più la gabbia si stringe intorno a zero.' },
+    { show:'Attenzione: −1 ≤ cos n ≤ 1, ma −1 ≠ 1 → non si conclude niente',
+      say:'Attenzione: i due carabinieri devono andare nello stesso posto. Con meno uno minore o uguale coseno di n minore o uguale uno, i carabinieri restano meno uno e uno, posti diversi. E infatti coseno di n non ha limite.' },
+    { show:'Esercizio: '+LIM+' '+FR('3 + cos n','n')+' → −1 + 3 ≤ 3 + cos n ≤ 1 + 3 → 2 ≤ 3 + cos n ≤ 4',
+      say:'Proviamo l\'esercizio guidato: tre più coseno di n, diviso n. Parto da meno uno minore o uguale coseno di n minore o uguale uno, e aggiungo tre a tutti e tre i pezzi: meno uno più tre fa due, uno più tre fa quattro.' },
+    { show:FR('2','n')+' ≤ '+FR('3 + cos n','n')+' ≤ '+FR('4','n')+' · 2/n → 0 e 4/n → 0 → limite <b>0</b>',
+      say:'Divido tutto per n: due su n, minore o uguale al nostro termine, minore o uguale quattro su n. Due su n e quattro su n tendono tutti e due a zero, quindi il limite è zero.' }
+  ]);
+
   guided('carabinieri', 'lavagna-carabinieri', [
     { h:'Passo 1 · Parti da −1 ≤ cos n ≤ 1 e aggiungi 3 a tutti e tre i pezzi', type:'nums', ans:[2,4],
       html: inp('numero a sinistra')+' ≤ <span class="box thief">3 + cos n</span> ≤ '+inp('numero a destra'),
       ok:'Giusto: −1+3 = 2 e 1+3 = 4.', bad:'Non ancora. Fai −1 + 3 e poi 1 + 3.' },
     { h:'Passo 2 · Ora dividi tutto per n. Quale riga è giusta?', type:'choice', ans:1,
       opts:['3/n ≤ (3 + cos n)/n ≤ 5/n','2/n ≤ (3 + cos n)/n ≤ 4/n','2 ≤ (3 + cos n)/n ≤ 4'],
-      ok:'Esatto: divido 2, 3+cos n e 4 per n.', bad:'Ricontrolla: i numeri del passo 1 erano 2 e 4, e vanno divisi per n tutti e tre i pezzi.' },
+      ok:'Esatto: divido 2, 3+cos n e 4 per n. Controllo con n = 10: 2/10 = 0,2; (3 + cos 10)/10 ≈ (3 − 0,84)/10 = 0,216; 4/10 = 0,4. E 0,2 ≤ 0,216 ≤ 0,4 ✓', bad:'Ricontrolla: i numeri del passo 1 erano 2 e 4, e vanno divisi per n tutti e tre i pezzi.' },
     { h:'Passo 3 · Per n → +∞, dove vanno i carabinieri 2/n e 4/n? Quindi quanto fa il limite?', type:'nums', ans:[0],
-      html:LIM+' (3 + cos n)/n = '+inp('valore del limite'), ok:'Perfetto!', bad:'Pensa: 2 diviso un numero enorme quanto fa, più o meno?' }
+      html:LIM+' (3 + cos n)/n = '+inp('valore del limite'), ok:'Perfetto! 2/n: 0,2; 0,02; 0,002 per n = 10, 100, 1000 → 0. 4/n: 0,4; 0,04; 0,004 → 0. Stesso limite 0, quindi il limite è 0.', bad:'Pensa: 2 diviso un numero enorme quanto fa, più o meno?' }
   ], '<b>Fatto!</b> '+LIM+' 2/n = 0 e '+LIM+' 4/n = 0, stesso limite, quindi '+LIM+' (3 + cos n)/n = 0. Il ladro giallo è schiacciato tra 2/n e 4/n.<canvas id="plot3" style="margin-top:10px" aria-label="Grafico: 3 più cos n su n tra 2 su n e 4 su n"></canvas>');
 
   EX['carabinieri'] = [
@@ -2037,6 +2105,29 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('rA').addEventListener('change', () => draws.radici());
   $('rN').addEventListener('input', () => { $('rNv').textContent = $('rN').value; draws.radici(); });
 
+  video('radici', [
+    { show:'<h3>Le radici n-esime</h3>'+R('n','a')+' = a<sup>1/n</sup>',
+      say:'Le radici n-esime. La radice n-esima di a è a elevato a uno su n. Due fatti da sapere, e poi l\'esercizio del professore.' },
+    { show:'Fatto 1: '+LIM+' '+R('n','a')+' = 1 · 2<sup>1/10</sup> ≈ 1,072 · 2<sup>1/100</sup> ≈ 1,007',
+      say:'Primo fatto: la radice n-esima di un numero fisso tende a uno. Con a uguale a due: due alla un decimo è circa uno virgola zero settantadue, due alla un centesimo è circa uno virgola zero zero sette. Si avvicina a uno, perché l\'esponente uno su n tende a zero, e un numero elevato a zero fa uno.' },
+    { show:'Fatto 2: '+LIM+' '+R('n','n')+' = 1 · 10<sup>1/10</sup> ≈ 1,259 · 100<sup>1/100</sup> ≈ 1,047 · 1000<sup>1/1000</sup> ≈ 1,007',
+      say:'Secondo fatto: anche la radice n-esima di n tende a uno. Dieci alla un decimo è circa uno virgola duecentocinquantanove, cento alla un centesimo uno virgola zero quarantasette, mille alla un millesimo uno virgola zero zero sette. Va a uno.' },
+    { show:'Esercizio: '+LIM+' '+R('n','2ⁿ + 3ⁿ')+' · n = 10: 1024 + 59 049 = 60 073 → 60 073<sup>1/10</sup> ≈ 3,005',
+      say:'Ora l\'esercizio: radice n-esima di due alla n più tre alla n. Prima i numeri: con n uguale a dieci, due alla dieci è milleventiquattro, tre alla dieci è cinquantanovemilaquarantanove. La somma è sessantamilasettantatré, e la radice decima fa circa tre virgola zero zero cinque. Sembra tendere a tre.' },
+    { show:'Carabiniere sotto: tolgo 2ⁿ → 3ⁿ ≤ 2ⁿ + 3ⁿ · n = 2: 9 ≤ 13',
+      say:'Dimostriamolo con i carabinieri. Carabiniere sotto: se tolgo due alla n, la somma diventa più piccola. Quindi tre alla n è minore o uguale a due alla n più tre alla n. Con n uguale a due: nove minore o uguale tredici.' },
+    { show:'Carabiniere sopra: 2ⁿ ≤ 3ⁿ → 2ⁿ + 3ⁿ ≤ 3ⁿ + 3ⁿ = 2 · 3ⁿ · n = 2: 13 ≤ 18',
+      say:'Carabiniere sopra: due alla n è più piccolo di tre alla n. Se al suo posto metto tre alla n, la somma diventa più grande: tre alla n più tre alla n, cioè due per tre alla n. Con n uguale a due: tredici minore o uguale diciotto.' },
+    { show:R('n','3ⁿ')+' ≤ '+R('n','2ⁿ + 3ⁿ')+' ≤ '+R('n','2 · 3ⁿ'),
+      say:'Faccio la radice n-esima di tutti e tre i pezzi. La radice di un numero più grande è più grande, quindi i segni restano uguali.' },
+    { show:'Sotto: '+R('n','3ⁿ')+' = 3 · Sopra: '+R('n','2 · 3ⁿ')+' = '+R('n','2')+' · 3',
+      say:'Sotto: la radice n-esima di tre alla n è tre, la radice smonta la potenza. Sopra: la radice di un prodotto è il prodotto delle radici, quindi radice n-esima di due per tre.' },
+    { show:R('n','2')+' · 3: n = 10 → 1,072 · 3 ≈ 3,215 · n = 100 → 1,007 · 3 ≈ 3,021 → 1 · 3 = 3',
+      say:'La radice n-esima di due tende a uno, per il fatto uno. Con n uguale a dieci il carabiniere sopra vale circa tre virgola due, con cento circa tre virgola zero due. Tende a uno per tre, cioè tre.' },
+    { show:'Sotto → 3, sopra → 3 → '+LIM+' '+R('n','2ⁿ + 3ⁿ')+' = <b>3</b>',
+      say:'Carabiniere sotto tre, carabiniere sopra tende a tre. Stesso limite, quindi il limite è tre. Vince il più grande dei due numeri sotto la radice.' }
+  ]);
+
   guided('radici', 'lavagna-radici', [
     { h:'Passo 1 · Carabiniere sotto: togli il più piccolo. Carabiniere sopra: al posto di 2ⁿ metti un altro 3ⁿ', type:'nums', ans:[2],
       html:'<span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ 3ⁿ + 3ⁿ = '+inp('quante volte 3 alla n','3.5em')+' · 3ⁿ',
@@ -2049,7 +2140,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       opts:[R('n','2')+' · 3, che per n → +∞ tende a 1 · 3 = 3','2 · 3 = 6','tende a +∞'],
       ok:'Esatto: la radice si divide sul prodotto, e '+LIM+' '+R('n','2')+' = 1 (fatto numero 1).', bad:'Spezza: radice di 2·3ⁿ = (radice n-esima di 2) · (radice n-esima di 3ⁿ). Il primo pezzo, per n → +∞, dove va?' },
     { h:'Passo 4 · Per n → +∞ i due carabinieri tendono entrambi a 3. Quanto fa il limite?', type:'nums', ans:[3],
-      html:LIM+' '+R('n','2ⁿ+3ⁿ')+' = '+inp('valore del limite'), ok:'Perfetto!', bad:'Carabiniere sotto 3, carabiniere sopra 3…' }
+      html:LIM+' '+R('n','2ⁿ+3ⁿ')+' = '+inp('valore del limite'), ok:'Perfetto! Sotto: 3 sempre. Sopra: '+R('n','2')+' · 3, con n = 10 vale 1,072 · 3 ≈ 3,215, con n = 100 vale 1,007 · 3 ≈ 3,021 → 3. Stesso limite, quindi 3.', bad:'Carabiniere sotto 3, carabiniere sopra 3…' }
   ], '<b>Fatto!</b> 3 ≤ '+R('n','2ⁿ+3ⁿ')+' ≤ '+R('n','2')+' · 3, e per n → +∞ tutti e due gli estremi tendono a 3. Quindi '+LIM+' '+R('n','2ⁿ+3ⁿ')+' = 3: vince il più grande.');
 
   EX['radici'] = [
@@ -2094,17 +2185,45 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   draws.nepero = () => {
     const N = +$('eN').value;
     plot($('plotE'), { N:Math.max(N,2), zero:false, series:[{f:n=>Math.pow(1+1/n,n), color:'--thief'}], hlines:[{y:Math.E, color:'--cop', label:'e = 2,718…'},{y:2, color:'--muted', label:'2'}] });
-    $('eOut').innerHTML = 'Con <b>'+N+'</b> rate: (1 + 1/'+N+')<sup>'+N+'</sup> = <b>'+it(Math.pow(1+1/N,N),4)+'</b> €';
+    $('eOut').innerHTML = 'Con <b>'+N+'</b> rate: (1 + 1/'+N+')<sup>'+N+'</sup> = <b>'+it(Math.pow(1+1/N,N),4)+'</b> €'
+      + SV('<i>Ogni rata:</i> 1/'+N+' ≈ '+it(1/N,4)+', quindi ogni volta moltiplico per 1 + 1/'+N+' ≈ '+it(1+1/N,4),
+           '<i>Lo faccio '+N+' volte:</i> '+it(1+1/N,4)+'<sup>'+N+'</sup> ≈ '+it(Math.pow(1+1/N,N),4)+' €',
+           '<i>Confronto con e ≈ 2,7183:</i> mancano ancora '+it(Math.E-Math.pow(1+1/N,N),4)+' €');
   };
   $('eN').addEventListener('input', () => { $('eNv').textContent = $('eN').value; draws.nepero(); });
+
+  video('nepero', [
+    { show:'<h3>Il numero e</h3>'+LIM+' (1 + '+FR('1','n')+')<sup>n</sup> = e ≈ 2,718',
+      say:'Il numero e. È il limite per n che tende a più infinito di uno più uno su n, tutto elevato alla n. Vale circa due virgola settecentodiciotto. Vediamo da dove viene, con i soldi.' },
+    { show:'1 rata: 2¹ = 2 · 2 rate: 1,5² = 1,5 · 1,5 = 2,25 · 4 rate: 1,25⁴ ≈ 2,441',
+      say:'Un euro in banca al cento per cento. Con una rata hai due euro. Con due rate, ognuna del cinquanta per cento: uno virgola cinque per uno virgola cinque, due virgola venticinque. Con quattro rate: uno virgola venticinque alla quarta, circa due virgola quarantaquattro.' },
+    { show:'12 rate: (1 + 1/12)¹² ≈ 2,613 · 365 rate: (1 + 1/365)³⁶⁵ ≈ 2,7146',
+      say:'Con dodici rate, una al mese, circa due virgola sessantuno. Con trecentosessantacinque, una al giorno, due virgola settantuno. Cresce, ma sempre più piano: si ferma vicino a due virgola settecentodiciotto, cioè e.' },
+    { show:'1<sup>∞</sup>: (1 + 1/n²)ⁿ → 1 · (1 + 1/n)ⁿ → e · (1 + 1/n)<sup>n²</sup> → +∞',
+      say:'Perché uno elevato a infinito non fa sempre uno? Guarda tre esempi: tutti hanno base che va a uno ed esponente che va a infinito. Il primo tende a uno, il secondo a e, il terzo a più infinito. Dipende da chi è più veloce, la base o l\'esponente.' },
+    { show:'(1 + 1/n)<sup>n²</sup>: n = 10 → 1,1¹⁰⁰ ≈ 13 781',
+      say:'Per esempio il terzo: con n uguale a dieci, uno virgola uno alla cento fa circa tredicimilasettecentottanta. L\'esponente vince.' },
+    { show:'Ricetta: (1 + u)<sup>esponente</sup>, '+LIM+' u · esponente = L → risultato e<sup>L</sup>',
+      say:'La ricetta: scrivo la base come uno più un pezzo piccolo u. Moltiplico u per l\'esponente e ne faccio il limite: lo chiamo L. Il risultato è e elevato a L.' },
+    { show:'Prova: (1 + 1/n)ⁿ → u = 1/n, '+FR('1','n')+' · n = 1 → e¹ = e ✓',
+      say:'Prova con la definizione: il pezzo è uno su n, l\'esponente è n. Uno su n per n fa uno. Quindi e alla uno, cioè e. Torna.' },
+    { show:'Esercizio: '+LIM+' (1 + '+FR('5','n')+')<sup>2n</sup> · base: 1 + 5/n → 1 + 0 = 1, esponente 2n → +∞',
+      say:'Esercizio: uno più cinque su n, elevato a due n. Prima controllo la forma: cinque su n tende a zero, quindi la base tende a uno. L\'esponente due n tende a più infinito. È uno alla infinito.' },
+    { show:'u · esponente = '+FR('5','n')+' · 2n = '+FR('10n','n')+' = 10 → <b>e¹⁰</b>',
+      say:'Il pezzo piccolo è cinque su n, l\'esponente due n. Cinque su n per due n fa dieci n su n, cioè dieci. Il risultato è e alla dieci.' },
+    { show:'Perché: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup> → e¹⁰',
+      say:'Perché funziona? Riscrivo l\'esponente due n come n quinti per dieci. Dentro ho uno più cinque su n elevato a n quinti, cioè a uno diviso il pezzo piccolo, e questo tende a e. Fuori resta l\'esponente dieci. Quindi e alla dieci.' },
+    { show:'Controllo: n = 1000 → 1,005²⁰⁰⁰ ≈ 21 500 · e¹⁰ ≈ 22 026',
+      say:'Controllo con i numeri: con n uguale a mille, uno virgola zero zero cinque alla duemila fa circa ventunomilaseicento, ed e alla dieci è circa ventiduemila. Ci siamo.' }
+  ]);
 
   guided('nepero', 'lavagna-nepero', [
     { h:'Passo 1 · È una forma 1^∞? Quanto fa il limite della base?', type:'nums', ans:[1],
       html:LIM+' (1 + 5/n) = '+inp('limite della base'), ok:'Sì: per n → +∞ la base tende a 1 e l\'esponente 2n tende a +∞. È una forma 1^∞.', bad:'5 diviso un numero enorme è quasi 0. Quindi 1 + quasi 0…' },
     { h:'Passo 2 · Il pezzo piccolo u è 5/n e l\'esponente è 2n. Quanto fa u · esponente?', type:'nums', ans:[10],
-      html:'<span class="box thief">5/n</span> · <span class="box cop">2n</span> = '+inp('prodotto'), ok:'Giusto: le n si semplificano, resta 10.', bad:'Moltiplica: 5 · 2 = ? e n/n = 1.' },
+      html:'<span class="box thief">5/n</span> · <span class="box cop">2n</span> = '+inp('prodotto'), ok:'Giusto: '+FR('5','n')+' · 2n = '+FR('5 · 2n','n')+' = '+FR('10n','n')+' = 10. Le n si semplificano.', bad:'Moltiplica: 5 · 2 = ? e n/n = 1.' },
     { h:'Passo 3 · Quindi il limite è e elevato a…', type:'nums', ans:[10],
-      html:'e<sup>'+inp('esponente','3.5em')+'</sup>', ok:'Perfetto!', bad:'Il risultato è e elevato al numero del passo 2.' }
+      html:'e<sup>'+inp('esponente','3.5em')+'</sup>', ok:'Perfetto! Controllo con n = 1000: (1 + 5/1000)<sup>2000</sup> = 1,005<sup>2000</sup> ≈ 21 500, ed e<sup>10</sup> ≈ 22 026: ci si avvicina.', bad:'Il risultato è e elevato al numero del passo 2.' }
   ], '<b>Fatto!</b> '+LIM+' (1 + 5/n)<sup>2n</sup> = e<sup>10</sup>. Ricetta: pezzo piccolo × esponente, poi e elevato a quello.');
 
   EX['nepero'] = [
@@ -2669,7 +2788,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     const pts = [{x:xl, y:Math.max(c.yr[0], Math.min(c.yr[1], yl)), color:'--cop'}, {x:xr, y:Math.max(c.yr[0], Math.min(c.yr[1], yr)), color:'--thief'}];
     if (c.hole) pts.push({x:c.x0, y:c.hole.y, color:'--ink', open:true});
     plotF($('plotLF'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[...(c.extra||[]), {f:c.f, color:'--ink', width:2}], points:pts, vlines:[{x:c.x0, color:'--muted', label:'x₀'}] });
-    $('lfOut').innerHTML = 'f('+it(xl,3)+') = <b class="cop">'+it(yl,3)+'</b> · f('+it(xr,3)+') = <b class="thief">'+it(yr,3)+'</b><br>'+c.txt;
+    $('lfOut').innerHTML = 'f('+it(xl,3)+') = <b class="cop">'+it(yl,3)+'</b> · f('+it(xr,3)+') = <b class="thief">'+it(yr,3)+'</b>'+c.txt;
   };
   $('lfS').addEventListener('change', () => draws['limiti-funzioni']());
   $('lfD').addEventListener('input', () => draws['limiti-funzioni']());

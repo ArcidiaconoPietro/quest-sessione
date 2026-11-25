@@ -121,6 +121,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .tag.mem { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
 .tag.cap { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
 
+.svh { display: block; margin-top: .5em; }
 .sv { margin: .4em 0 0; padding-left: 1.4em; }
 .sv li { margin: .45em 0; line-height: 1.6; }
 .sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }

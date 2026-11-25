@@ -7,12 +7,23 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-radici"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Solo due fatti da sapere</div>
       <h2>Per n → +∞ tutte e due fanno 1</h2>
       <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> = 1</span><span style="font-size:1rem">per qualsiasi numero fisso a &gt; 0</span></div>
       <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = 1</span><span style="font-size:1rem">anche se dentro c'è n che cresce</span></div>
       <p><b>Perché, a intuito:</b> <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> è a elevato alla 1/n. Quando n → +∞ l'esponente 1/n diventa quasi 0, e qualsiasi numero elevato a 0 fa 1. Con n dentro è una gara: n cresce, ma la radice schiaccia molto più forte, e vince la radice.</p>
-      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1.</p>
+      <ol class="sv">
+        <li><i>Fatto 1 con i numeri, a = 2:</i> 2<sup>1/10</sup> ≈ 1,072; 2<sup>1/100</sup> ≈ 1,007; 2<sup>1/1000</sup> ≈ 1,0007. Si avvicina a 1.</li>
+        <li><i>Anche con a grande, a = 2000:</i> 2000<sup>1/10</sup> ≈ 2,138; 2000<sup>1/100</sup> ≈ 1,079; 2000<sup>1/1000</sup> ≈ 1,0076. Ci mette di più, ma va a 1.</li>
+        <li><i>Fatto 2 con i numeri:</i> 10<sup>1/10</sup> ≈ 1,259; 100<sup>1/100</sup> ≈ 1,047; 1000<sup>1/1000</sup> ≈ 1,0069. Va a 1.</li>
+        <li><i>Perché vince la radice:</i> <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> = n<sup>1/n</sup> = e<sup>(ln n)/n</sup>. L'esponente (ln n)/n: con n = 100 fa 4,6/100 = 0,046; con n = 1000 fa 6,9/1000 = 0,0069. Tende a 0, quindi tutto tende a e⁰ = 1.</li>
+      </ol>
+      <p>Conseguenza che usi spesso: anche <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">n³</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> per n → +∞ hanno limite 1, perché sono prodotti di pezzi che hanno limite 1. Per esempio: <span class="rt"><sup>n</sup>√<span class="ov">n²</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> → 1 · 1 = 1; <span class="rt"><sup>n</sup>√<span class="ov">5n</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">5</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> → 1 · 1 = 1.</p>
       <canvas id="plotR" aria-label="Grafico: radice n-esima di a e radice n-esima di n che tendono a 1"></canvas>
       <div class="controls">
         <label for="rA">Numero a: <select id="rA"><option>2</option><option>10</option><option>100</option><option selected>2000</option></select></label>
@@ -68,11 +79,12 @@
           <div class="math"><span class="box cop"><span class="rt"><sup>n</sup>√<span class="ov">2 · 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3</span></div>
           <p>Dal fatto numero 1 di questo capitolo: <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> = 1. Quindi:</p>
           <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> · 3 = 1 · 3 = 3</span></div>
+          <p>Con i numeri: n = 10 → 1,072 · 3 ≈ 3,215; n = 100 → 1,007 · 3 ≈ 3,021. Scende verso 3.</p>
         </div>
         <div class="step" hidden><h3>Passo 7 · Conclusione con i carabinieri</h3>
           <p>Per n → +∞ il carabiniere sotto ha limite 3 e il carabiniere sopra ha limite 3. Stesso limite, quindi anche quello in mezzo:</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = 3</span></div>
-          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3.</p>
+          <p>Torna con l'intuizione dei numeri: vince il più grande, il 3. Controllo con n = 10: 2¹⁰ + 3¹⁰ = 1024 + 59 049 = 60 073, e 60 073<sup>1/10</sup> ≈ 3,005, chiuso tra 3 e 3,215 ✓</p>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>

@@ -20,6 +20,29 @@
   $('rA').addEventListener('change', () => draws.radici());
   $('rN').addEventListener('input', () => { $('rNv').textContent = $('rN').value; draws.radici(); });
 
+  video('radici', [
+    { show:'<h3>Le radici n-esime</h3>'+R('n','a')+' = a<sup>1/n</sup>',
+      say:'Le radici n-esime. La radice n-esima di a è a elevato a uno su n. Due fatti da sapere, e poi l\'esercizio del professore.' },
+    { show:'Fatto 1: '+LIM+' '+R('n','a')+' = 1 · 2<sup>1/10</sup> ≈ 1,072 · 2<sup>1/100</sup> ≈ 1,007',
+      say:'Primo fatto: la radice n-esima di un numero fisso tende a uno. Con a uguale a due: due alla un decimo è circa uno virgola zero settantadue, due alla un centesimo è circa uno virgola zero zero sette. Si avvicina a uno, perché l\'esponente uno su n tende a zero, e un numero elevato a zero fa uno.' },
+    { show:'Fatto 2: '+LIM+' '+R('n','n')+' = 1 · 10<sup>1/10</sup> ≈ 1,259 · 100<sup>1/100</sup> ≈ 1,047 · 1000<sup>1/1000</sup> ≈ 1,007',
+      say:'Secondo fatto: anche la radice n-esima di n tende a uno. Dieci alla un decimo è circa uno virgola duecentocinquantanove, cento alla un centesimo uno virgola zero quarantasette, mille alla un millesimo uno virgola zero zero sette. Va a uno.' },
+    { show:'Esercizio: '+LIM+' '+R('n','2ⁿ + 3ⁿ')+' · n = 10: 1024 + 59 049 = 60 073 → 60 073<sup>1/10</sup> ≈ 3,005',
+      say:'Ora l\'esercizio: radice n-esima di due alla n più tre alla n. Prima i numeri: con n uguale a dieci, due alla dieci è milleventiquattro, tre alla dieci è cinquantanovemilaquarantanove. La somma è sessantamilasettantatré, e la radice decima fa circa tre virgola zero zero cinque. Sembra tendere a tre.' },
+    { show:'Carabiniere sotto: tolgo 2ⁿ → 3ⁿ ≤ 2ⁿ + 3ⁿ · n = 2: 9 ≤ 13',
+      say:'Dimostriamolo con i carabinieri. Carabiniere sotto: se tolgo due alla n, la somma diventa più piccola. Quindi tre alla n è minore o uguale a due alla n più tre alla n. Con n uguale a due: nove minore o uguale tredici.' },
+    { show:'Carabiniere sopra: 2ⁿ ≤ 3ⁿ → 2ⁿ + 3ⁿ ≤ 3ⁿ + 3ⁿ = 2 · 3ⁿ · n = 2: 13 ≤ 18',
+      say:'Carabiniere sopra: due alla n è più piccolo di tre alla n. Se al suo posto metto tre alla n, la somma diventa più grande: tre alla n più tre alla n, cioè due per tre alla n. Con n uguale a due: tredici minore o uguale diciotto.' },
+    { show:R('n','3ⁿ')+' ≤ '+R('n','2ⁿ + 3ⁿ')+' ≤ '+R('n','2 · 3ⁿ'),
+      say:'Faccio la radice n-esima di tutti e tre i pezzi. La radice di un numero più grande è più grande, quindi i segni restano uguali.' },
+    { show:'Sotto: '+R('n','3ⁿ')+' = 3 · Sopra: '+R('n','2 · 3ⁿ')+' = '+R('n','2')+' · 3',
+      say:'Sotto: la radice n-esima di tre alla n è tre, la radice smonta la potenza. Sopra: la radice di un prodotto è il prodotto delle radici, quindi radice n-esima di due per tre.' },
+    { show:R('n','2')+' · 3: n = 10 → 1,072 · 3 ≈ 3,215 · n = 100 → 1,007 · 3 ≈ 3,021 → 1 · 3 = 3',
+      say:'La radice n-esima di due tende a uno, per il fatto uno. Con n uguale a dieci il carabiniere sopra vale circa tre virgola due, con cento circa tre virgola zero due. Tende a uno per tre, cioè tre.' },
+    { show:'Sotto → 3, sopra → 3 → '+LIM+' '+R('n','2ⁿ + 3ⁿ')+' = <b>3</b>',
+      say:'Carabiniere sotto tre, carabiniere sopra tende a tre. Stesso limite, quindi il limite è tre. Vince il più grande dei due numeri sotto la radice.' }
+  ]);
+
   guided('radici', 'lavagna-radici', [
     { h:'Passo 1 · Carabiniere sotto: togli il più piccolo. Carabiniere sopra: al posto di 2ⁿ metti un altro 3ⁿ', type:'nums', ans:[2],
       html:'<span class="box cop">3ⁿ</span> ≤ <span class="box thief">2ⁿ + 3ⁿ</span> ≤ 3ⁿ + 3ⁿ = '+inp('quante volte 3 alla n','3.5em')+' · 3ⁿ',
@@ -32,7 +55,7 @@
       opts:[R('n','2')+' · 3, che per n → +∞ tende a 1 · 3 = 3','2 · 3 = 6','tende a +∞'],
       ok:'Esatto: la radice si divide sul prodotto, e '+LIM+' '+R('n','2')+' = 1 (fatto numero 1).', bad:'Spezza: radice di 2·3ⁿ = (radice n-esima di 2) · (radice n-esima di 3ⁿ). Il primo pezzo, per n → +∞, dove va?' },
     { h:'Passo 4 · Per n → +∞ i due carabinieri tendono entrambi a 3. Quanto fa il limite?', type:'nums', ans:[3],
-      html:LIM+' '+R('n','2ⁿ+3ⁿ')+' = '+inp('valore del limite'), ok:'Perfetto!', bad:'Carabiniere sotto 3, carabiniere sopra 3…' }
+      html:LIM+' '+R('n','2ⁿ+3ⁿ')+' = '+inp('valore del limite'), ok:'Perfetto! Sotto: 3 sempre. Sopra: '+R('n','2')+' · 3, con n = 10 vale 1,072 · 3 ≈ 3,215, con n = 100 vale 1,007 · 3 ≈ 3,021 → 3. Stesso limite, quindi 3.', bad:'Carabiniere sotto 3, carabiniere sopra 3…' }
   ], '<b>Fatto!</b> 3 ≤ '+R('n','2ⁿ+3ⁿ')+' ≤ '+R('n','2')+' · 3, e per n → +∞ tutti e due gli estremi tendono a 3. Quindi '+LIM+' '+R('n','2ⁿ+3ⁿ')+' = 3: vince il più grande.');
 
   EX['radici'] = [

@@ -8,15 +8,40 @@
   $('n1').addEventListener('input', () => { $('n1v').textContent = $('n1').value; draws.carabinieri(); });
   $('c1').addEventListener('change', () => draws.carabinieri());
 
+  video('carabinieri', [
+    { show:'<h3>Il teorema dei due carabinieri</h3>Esempio: '+LIM+' '+FR('sin n','n'),
+      say:'Il teorema dei due carabinieri. Esempio: limite per n che tende a più infinito di seno di n diviso n.' },
+    { show:'sin 1 ≈ 0,84 · sin 4 ≈ −0,76 · sin 8 ≈ 0,99 · sin 11 ≈ −1,00',
+      say:'Il problema è il seno: salta su e giù. Seno di uno è circa zero virgola ottantaquattro, seno di quattro meno zero virgola settantasei, seno di otto zero virgola novantanove, seno di undici circa meno uno. Non ha limite.' },
+    { show:'Passo 1: −1 ≤ sin n ≤ 1 per ogni n',
+      say:'Però una cosa la so sempre: il seno sta tra meno uno e uno. Per ogni n.' },
+    { show:'Passo 2: divido tutto per n &gt; 0 → '+FR('−1','n')+' ≤ '+FR('sin n','n')+' ≤ '+FR('1','n'),
+      say:'Nella successione il seno è diviso per n. Allora divido tutti e tre i pezzi per n. n è positivo, quindi i segni minore o uguale non si girano.' },
+    { show:'n = 10: −0,1 ≤ '+FR('−0,544','10')+' = −0,054 ≤ 0,1 ✓',
+      say:'Controllo con n uguale a dieci. Meno uno su dieci è meno zero virgola uno. Seno di dieci è circa meno zero virgola cinquecentoquarantaquattro, diviso dieci fa meno zero virgola zero cinquantaquattro. Uno su dieci è zero virgola uno. Sta in mezzo, giusto.' },
+    { show:'Passo 3: '+FR('1','n')+' = 0,1 · 0,01 · 0,001 → 0 · '+FR('−1','n')+' = −0,1 · −0,01 · −0,001 → 0',
+      say:'Dove vanno i carabinieri? Uno su n vale zero virgola uno, poi zero virgola zero uno, poi zero virgola zero zero uno: tende a zero. Meno uno su n fa lo stesso con il meno: tende a zero anche lui.' },
+    { show:'Passo 4: stesso limite 0 → '+LIM+' '+FR('sin n','n')+' = <b>0</b>',
+      say:'Tutti e due i carabinieri vanno a zero, quindi anche il ladro in mezzo va a zero. Il limite è zero.' },
+    { show:'Perché: con n = 1000 il ladro è tra −0,001 e 0,001',
+      say:'Perché funziona? Con n uguale a mille, il ladro è chiuso tra meno zero virgola zero zero uno e più zero virgola zero zero uno. Più n cresce, più la gabbia si stringe intorno a zero.' },
+    { show:'Attenzione: −1 ≤ cos n ≤ 1, ma −1 ≠ 1 → non si conclude niente',
+      say:'Attenzione: i due carabinieri devono andare nello stesso posto. Con meno uno minore o uguale coseno di n minore o uguale uno, i carabinieri restano meno uno e uno, posti diversi. E infatti coseno di n non ha limite.' },
+    { show:'Esercizio: '+LIM+' '+FR('3 + cos n','n')+' → −1 + 3 ≤ 3 + cos n ≤ 1 + 3 → 2 ≤ 3 + cos n ≤ 4',
+      say:'Proviamo l\'esercizio guidato: tre più coseno di n, diviso n. Parto da meno uno minore o uguale coseno di n minore o uguale uno, e aggiungo tre a tutti e tre i pezzi: meno uno più tre fa due, uno più tre fa quattro.' },
+    { show:FR('2','n')+' ≤ '+FR('3 + cos n','n')+' ≤ '+FR('4','n')+' · 2/n → 0 e 4/n → 0 → limite <b>0</b>',
+      say:'Divido tutto per n: due su n, minore o uguale al nostro termine, minore o uguale quattro su n. Due su n e quattro su n tendono tutti e due a zero, quindi il limite è zero.' }
+  ]);
+
   guided('carabinieri', 'lavagna-carabinieri', [
     { h:'Passo 1 · Parti da −1 ≤ cos n ≤ 1 e aggiungi 3 a tutti e tre i pezzi', type:'nums', ans:[2,4],
       html: inp('numero a sinistra')+' ≤ <span class="box thief">3 + cos n</span> ≤ '+inp('numero a destra'),
       ok:'Giusto: −1+3 = 2 e 1+3 = 4.', bad:'Non ancora. Fai −1 + 3 e poi 1 + 3.' },
     { h:'Passo 2 · Ora dividi tutto per n. Quale riga è giusta?', type:'choice', ans:1,
       opts:['3/n ≤ (3 + cos n)/n ≤ 5/n','2/n ≤ (3 + cos n)/n ≤ 4/n','2 ≤ (3 + cos n)/n ≤ 4'],
-      ok:'Esatto: divido 2, 3+cos n e 4 per n.', bad:'Ricontrolla: i numeri del passo 1 erano 2 e 4, e vanno divisi per n tutti e tre i pezzi.' },
+      ok:'Esatto: divido 2, 3+cos n e 4 per n. Controllo con n = 10: 2/10 = 0,2; (3 + cos 10)/10 ≈ (3 − 0,84)/10 = 0,216; 4/10 = 0,4. E 0,2 ≤ 0,216 ≤ 0,4 ✓', bad:'Ricontrolla: i numeri del passo 1 erano 2 e 4, e vanno divisi per n tutti e tre i pezzi.' },
     { h:'Passo 3 · Per n → +∞, dove vanno i carabinieri 2/n e 4/n? Quindi quanto fa il limite?', type:'nums', ans:[0],
-      html:LIM+' (3 + cos n)/n = '+inp('valore del limite'), ok:'Perfetto!', bad:'Pensa: 2 diviso un numero enorme quanto fa, più o meno?' }
+      html:LIM+' (3 + cos n)/n = '+inp('valore del limite'), ok:'Perfetto! 2/n: 0,2; 0,02; 0,002 per n = 10, 100, 1000 → 0. 4/n: 0,4; 0,04; 0,004 → 0. Stesso limite 0, quindi il limite è 0.', bad:'Pensa: 2 diviso un numero enorme quanto fa, più o meno?' }
   ], '<b>Fatto!</b> '+LIM+' 2/n = 0 e '+LIM+' 4/n = 0, stesso limite, quindi '+LIM+' (3 + cos n)/n = 0. Il ladro giallo è schiacciato tra 2/n e 4/n.<canvas id="plot3" style="margin-top:10px" aria-label="Grafico: 3 più cos n su n tra 2 su n e 4 su n"></canvas>');
 
   EX['carabinieri'] = [
