@@ -7,6 +7,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-studio-funzione"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Lo schema · un indizio alla volta</div>
       <h2>Costruisci il grafico passo passo</h2>
       <p>Scegli una funzione e fai avanzare i passi. Ogni passo aggiunge un indizio al disegno. Il grafico vero compare solo alla fine: prova a immaginarlo prima.</p>
@@ -45,6 +50,11 @@
         <div><b>Obliquo</b> y = mx + q: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ±∞ e esistono finiti m = <span class="lim">lim<span>x→±∞</span></span> <span class="fr"><span>f(x)</span><span>x</span></span> ≠ 0 e q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − m x].</div>
       </div>
       <p><b>Perché m e q si calcolano così (facile):</b> se da lontano f(x) ≈ mx + q, allora f(x)/x ≈ m + q/x → m per x → ±∞, e f(x) − mx ≈ q. Esempio: per x²/(x − 1), m = <span class="lim">lim<span>x→+∞</span></span> x²/(x² − x) = 1 e q = <span class="lim">lim<span>x→+∞</span></span> [x²/(x − 1) − x] = <span class="lim">lim<span>x→+∞</span></span> x/(x − 1) = 1: asintoto y = x + 1.</p>
+      <ol class="sv">
+        <li><i>m, passo per passo:</i> f(x)/x = <span class="fr"><span>x²</span><span>x − 1</span></span> · <span class="fr"><span>1</span><span>x</span></span> = <span class="fr"><span>x²</span><span>x² − x</span></span>; divido sopra e sotto per x²: <span class="fr"><span>1</span><span>1 − 1/x</span></span> → <span class="fr"><span>1</span><span>1 − 0</span></span> = 1</li>
+        <li><i>q, passo per passo:</i> <span class="fr"><span>x²</span><span>x − 1</span></span> − x = <span class="fr"><span>x² − x(x − 1)</span><span>x − 1</span></span> = <span class="fr"><span>x² − x² + x</span><span>x − 1</span></span> = <span class="fr"><span>x</span><span>x − 1</span></span> → 1</li>
+        <li><i>Controllo con x = 100:</i> f(100) = 10 000/99 ≈ 101,01 e la retta dà 100 + 1 = 101: distanza 0,01 ✓</li>
+      </ol>
     </section>
 
     <section class="board">

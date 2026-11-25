@@ -1545,6 +1545,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-studio-funzione"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Lo schema · un indizio alla volta</div>
       <h2>Costruisci il grafico passo passo</h2>
       <p>Scegli una funzione e fai avanzare i passi. Ogni passo aggiunge un indizio al disegno. Il grafico vero compare solo alla fine: prova a immaginarlo prima.</p>
@@ -1583,6 +1588,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div><b>Obliquo</b> y = mx + q: se <span class="lim">lim<span>x→±∞</span></span> f(x) = ±∞ e esistono finiti m = <span class="lim">lim<span>x→±∞</span></span> <span class="fr"><span>f(x)</span><span>x</span></span> ≠ 0 e q = <span class="lim">lim<span>x→±∞</span></span> [f(x) − m x].</div>
       </div>
       <p><b>Perché m e q si calcolano così (facile):</b> se da lontano f(x) ≈ mx + q, allora f(x)/x ≈ m + q/x → m per x → ±∞, e f(x) − mx ≈ q. Esempio: per x²/(x − 1), m = <span class="lim">lim<span>x→+∞</span></span> x²/(x² − x) = 1 e q = <span class="lim">lim<span>x→+∞</span></span> [x²/(x − 1) − x] = <span class="lim">lim<span>x→+∞</span></span> x/(x − 1) = 1: asintoto y = x + 1.</p>
+      <ol class="sv">
+        <li><i>m, passo per passo:</i> f(x)/x = <span class="fr"><span>x²</span><span>x − 1</span></span> · <span class="fr"><span>1</span><span>x</span></span> = <span class="fr"><span>x²</span><span>x² − x</span></span>; divido sopra e sotto per x²: <span class="fr"><span>1</span><span>1 − 1/x</span></span> → <span class="fr"><span>1</span><span>1 − 0</span></span> = 1</li>
+        <li><i>q, passo per passo:</i> <span class="fr"><span>x²</span><span>x − 1</span></span> − x = <span class="fr"><span>x² − x(x − 1)</span><span>x − 1</span></span> = <span class="fr"><span>x² − x² + x</span><span>x − 1</span></span> = <span class="fr"><span>x</span><span>x − 1</span></span> → 1</li>
+        <li><i>Controllo con x = 100:</i> f(100) = 10 000/99 ≈ 101,01 e la retta dà 100 + 1 = 101: distanza 0,01 ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1621,6 +1631,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Perché + C · prima guardiamo <span class="tag cap">facile</span></div>
       <h2>Tante primitive, tutte "parallele"</h2>
       <p>Se F è una primitiva, anche F + 1, F − 3, F + C vanno bene: la derivata di una costante è 0. Nel grafico: sposta C, la curva sale e scende, ma nel punto x₀ la pendenza resta la stessa, e vale proprio f(x₀).</p>
@@ -1651,7 +1666,19 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div>∫ <span class="fr"><span>1</span><span>√(1 − x²)</span></span> dx = arcsin x + C</div>
       </div>
       <p>Linearità <span class="tag cap">facile</span>: ∫ (a f + b g) dx = a ∫ f dx + b ∫ g dx. <b>Il trucco per controllare sempre:</b> deriva il risultato. Se torna f, è giusto.</p>
+      <ol class="sv">
+        <li><i>∫ x² dx con la regola (a = 2):</i> x<sup>2+1</sup>/(2 + 1) = x³/3 + C. Controllo: (x³/3)′ = 3x²/3 = x² ✓</li>
+        <li><i>∫ sin x dx = −cos x + C.</i> Controllo: (−cos x)′ = −(−sin x) = sin x ✓ (per questo c'è il meno)</li>
+        <li><i>∫ √x dx, cioè a = 1/2:</i> x<sup>3/2</sup>/(3/2) = (2/3) x<sup>3/2</sup> + C. Controllo: (2/3) · (3/2) x<sup>1/2</sup> = √x ✓</li>
+        <li><i>∫ (4x³ − 6x + 5) dx, pezzo per pezzo:</i> 4 · x⁴/4 − 6 · x²/2 + 5x = x⁴ − 3x² + 5x + C. Controllo: 4x³ − 6x + 5 ✓</li>
+      </ol>
       <p><b>Immediati "generalizzati"</b>: se dentro c'è g(x) e fuori c'è g′(x), è la catena al contrario. ∫ g′(x)/g(x) dx = ln |g(x)| + C, ∫ g′(x) e<sup>g(x)</sup> dx = e<sup>g(x)</sup> + C. Esempio: ∫ 2x/(x² + 1) dx = ln(x² + 1) + C.</p>
+      <ol class="sv">
+        <li><i>Chi è g:</i> sotto c'è g(x) = x² + 1</li>
+        <li><i>La sua derivata:</i> g′(x) = 2x, ed è proprio quello che c'è sopra</li>
+        <li><i>Quindi è g′/g:</i> ∫ g′/g dx = ln |g| + C = ln(x² + 1) + C (x² + 1 è sempre positivo, il modulo si toglie)</li>
+        <li><i>Controllo con la catena:</i> (ln(x² + 1))′ = 1/(x² + 1) · 2x = 2x/(x² + 1) ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1660,6 +1687,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p>Pongo t = g(x), quindi dt = g′(x) dx. Riscrivo tutto con t, integro, rimetto x.</p>
       <div class="math left">∫ cos(3x) dx: &nbsp; t = 3x, dt = 3 dx, dx = dt/3 &nbsp;→&nbsp; ∫ cos t · dt/3 = (1/3) sin t + C = (1/3) sin(3x) + C</div>
       <p>Regola pratica: con f(ax + b) dentro, il risultato è F(ax + b)/a. Esempio: ∫ e<sup>2x</sup> dx = e<sup>2x</sup>/2 + C.</p>
+      <ol class="sv">
+        <li><i>Controllo il primo con la catena:</i> ((1/3) sin(3x))′ = (1/3) · cos(3x) · 3 = cos(3x) ✓</li>
+        <li><i>Il secondo, con la sostituzione:</i> t = 2x, dt = 2 dx, dx = dt/2 → ∫ eᵗ dt/2 = eᵗ/2 + C = e<sup>2x</sup>/2 + C</li>
+        <li><i>Controllo:</i> (e<sup>2x</sup>/2)′ = e<sup>2x</sup> · 2/2 = e<sup>2x</sup> ✓</li>
+        <li><i>Un esempio senza regola pratica, ∫ x · cos(x²) dx:</i> t = x², dt = 2x dx, quindi x dx = dt/2 → ∫ cos t · dt/2 = (1/2) sin t + C = (1/2) sin(x²) + C</li>
+        <li><i>Controllo:</i> ((1/2) sin(x²))′ = (1/2) cos(x²) · 2x = x cos(x²) ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1669,6 +1703,14 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p><b>Perché (una riga):</b> (f g)′ = f′g + f g′ (regola del prodotto). Integro tutti e due i lati: f g = ∫ f′g dx + ∫ f g′ dx. Sposto un pezzo e ho la formula.</p>
       <p><b>Chi scegliere come f (da derivare):</b> quella che derivata diventa più semplice. Polinomi: da derivare (x → 1). eˣ, sin, cos: da integrare (restano uguali). ln x e arctan x: sempre da derivare (diventano 1/x e 1/(1 + x²)).</p>
       <div class="math left">∫ ln x dx = ∫ ln x · 1 dx: f = ln x, g′ = 1 → x ln x − ∫ (1/x) · x dx = x ln x − x + C</div>
+      <ol class="sv">
+        <li><i>Scelgo:</i> f = ln x (da derivare), g′ = 1 (da integrare)</li>
+        <li><i>Calcolo i pezzi:</i> f′ = 1/x, g = ∫ 1 dx = x</li>
+        <li><i>Formula f g − ∫ f′ g:</i> ln x · x − ∫ (1/x) · x dx</li>
+        <li><i>Semplifico dentro:</i> (1/x) · x = 1, quindi − ∫ 1 dx = −x</li>
+        <li><i>Risultato:</i> x ln x − x + C</li>
+        <li><i>Controllo:</i> (x ln x − x)′ = (1 · ln x + x · 1/x) − 1 = ln x + 1 − 1 = ln x ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1680,6 +1722,17 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div class="step"><h3>2 · Scompongo Q</h3><p>Radici distinte: <span class="fr"><span>1</span><span>(x − a)(x − b)</span></span> = <span class="fr"><span>A</span><span>x − a</span></span> + <span class="fr"><span>B</span><span>x − b</span></span>. Trovo A e B facendo il denominatore comune e uguagliando i numeratori.</p></div>
         <div class="step"><h3>3 · Integro i pezzi</h3><p>∫ A/(x − a) dx = A ln |x − a| + C. Se Q ha radice doppia: ∫ 1/(x − a)² dx = −1/(x − a) + C. Se Q non ha radici (Δ &lt; 0): si arriva a un arctan.</p></div>
       </div>
+      <p>Esempio con tutti i calcoli: ∫ <span class="fr"><span>1</span><span>x² − 1</span></span> dx.</p>
+      <ol class="sv">
+        <li><i>Gradi:</i> sopra 0, sotto 2: niente divisione</li>
+        <li><i>Scompongo sotto:</i> x² − 1 = (x − 1)(x + 1)</li>
+        <li><i>Scrivo i fratti:</i> <span class="fr"><span>1</span><span>(x − 1)(x + 1)</span></span> = <span class="fr"><span>A</span><span>x − 1</span></span> + <span class="fr"><span>B</span><span>x + 1</span></span></li>
+        <li><i>Denominatore comune:</i> 1 = A(x + 1) + B(x − 1)</li>
+        <li><i>Metto x = 1:</i> 1 = A · 2 + B · 0 → A = 1/2</li>
+        <li><i>Metto x = −1:</i> 1 = A · 0 + B · (−2) → B = −1/2</li>
+        <li><i>Integro i pezzi:</i> (1/2) ln |x − 1| − (1/2) ln |x + 1| + C</li>
+        <li><i>Controllo in x = 2:</i> la funzione vale 1/(4 − 1) = 1/3; la derivata del risultato vale (1/2) · 1/(2 − 1) − (1/2) · 1/(2 + 1) = 1/2 − 1/6 = 3/6 − 1/6 = 2/6 = 1/3 ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1720,6 +1773,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-integrali-definiti"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · prima guardiamo i numeri</div>
       <h2>Tanti rettangoli sottili</h2>
       <p>Non so calcolare l'area sotto una curva, ma so calcolare quella dei rettangoli. Divido [a, b] in n pezzi, su ciascuno metto un rettangolo alto quanto f nel punto di mezzo, e sommo. Aumenta n: la somma si avvicina all'area vera.</p>
@@ -1741,8 +1799,15 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Per l'area basta una primitiva</h2>
       <div class="math left"><span class="box cop">Se f è continua su [a, b] e F è una sua primitiva, allora <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = F(b) − F(a) = [F(x)]<sub>a</sub><sup>b</sup></span></div>
       <p><b>Perché (facile):</b> chiamo A(x) l'area da a fino a x. Se sposto x di un pochino h, aggiungo una striscia sottile alta circa f(x) e larga h: A(x + h) − A(x) ≈ f(x) · h. Divido per h e faccio il limite per h → 0: A′(x) = f(x). Quindi l'area A è una primitiva di f! E A(a) = 0, da cui A(b) = F(b) − F(a).</p>
+      <ol class="sv">
+        <li><i>Con i numeri, f(x) = x² da 0:</i> A(x) = x³/3. A(1) = 1/3 ≈ 0,3333; A(1,1) = 1,331/3 ≈ 0,4437</li>
+        <li><i>Striscia aggiunta:</i> A(1,1) − A(1) ≈ 0,4437 − 0,3333 = 0,1104</li>
+        <li><i>Rettangolo alto f(1) e largo h = 0,1:</i> 1 · 0,1 = 0,1. Quasi uguale, e con h più piccolo la differenza sparisce</li>
+        <li><i>Diviso h:</i> 0,1104/0,1 ≈ 1,10 → tende a f(1) = 1 per h → 0. Cioè A′(1) = f(1)</li>
+        <li><i>Perché A(b) = F(b) − F(a):</i> A e F sono primitive della stessa f, quindi A = F + k. Siccome A(a) = 0, k = −F(a). Allora A(b) = F(b) − F(a)</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Funzione integrale.</b> F(x) = <span class="sig"><span>x</span><b>∫</b><span>a</span></span> f(t) dt ha derivata F′(x) = f(x).</span></div>
-      <div class="math left"><b>Teorema della media</b> <span class="tag mem">a memoria</span>: se f è continua su [a, b], esiste c in [a, b] con <span class="fr"><span>1</span><span>b − a</span></span> <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = f(c). L'altezza media del grafico è raggiunta da qualche parte.</div>
+      <div class="math left"><b>Teorema della media</b> <span class="tag mem">a memoria</span>: se f è continua su [a, b], esiste c in [a, b] con <span class="fr"><span>1</span><span>b − a</span></span> <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = f(c). L'altezza media del grafico è raggiunta da qualche parte.<br>Esempio: x² su [0, 2]. Integrale 8/3, diviso la lunghezza 2: (8/3)/2 = 8/6 = 4/3 ≈ 1,33. Cerco c: c² = 4/3 → c = √(4/3) ≈ 1,155, che sta in [0, 2] ✓</div>
     </section>
 
     <section class="board">
@@ -1750,10 +1815,18 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Cosa ti serve all'esame</h2>
       <div class="steps">
         <div class="step"><h3>Linearità e additività</h3><p>∫ (a f + b g) = a ∫ f + b ∫ g. Se a &lt; c &lt; b, l'integrale da a a b = da a a c + da c a b (spezzo l'area).</p></div>
-        <div class="step"><h3>Funzioni dispari su [−a, a]</h3><p>Se f(−x) = −f(x), l'integrale da −a ad a fa 0: l'area sopra e quella sotto si cancellano.</p></div>
-        <div class="step"><h3>Area vera (sempre positiva)</h3><p>Se f cambia segno, spezza nei punti dove f = 0 e prendi il valore assoluto di ogni pezzo. Area tra due curve: ∫ (sopra − sotto) dx.</p></div>
-        <div class="step"><h3>Sostituzione: cambia anche gli estremi</h3><p>Se pongo t = g(x), gli estremi diventano g(a) e g(b). Così non devi tornare alla x.</p></div>
-        <div class="step"><h3>Integrali impropri</h3><p>Se un estremo è ±∞: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> f dx = <span class="lim">lim<span>M→+∞</span></span> <span class="sig"><span>M</span><b>∫</b><span>1</span></span> f dx. Come le serie: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> 1/xᵖ dx converge solo se p &gt; 1.</p></div>
+        <div class="step"><h3>Funzioni dispari su [−a, a]</h3><p>Se f(−x) = −f(x), l'integrale da −a ad a fa 0: l'area sopra e quella sotto si cancellano.</p><p>Esempio: ∫ x³ da −1 a 1 = [x⁴/4] da −1 a 1 = 1/4 − (−1)⁴/4 = 1/4 − 1/4 = 0.</p></div>
+        <div class="step"><h3>Area vera (sempre positiva)</h3><p>Se f cambia segno, spezza nei punti dove f = 0 e prendi il valore assoluto di ogni pezzo. Area tra due curve: ∫ (sopra − sotto) dx.</p>
+          <p>Esempio: sin x su [0, 2π]. ∫ da 0 a π = −cos π + cos 0 = 1 + 1 = 2; ∫ da π a 2π = −cos 2π + cos π = −1 − 1 = −2. L'integrale fa 2 + (−2) = 0, ma l'area vera è 2 + |−2| = 4.</p></div>
+        <div class="step"><h3>Sostituzione: cambia anche gli estremi</h3><p>Se pongo t = g(x), gli estremi diventano g(a) e g(b). Così non devi tornare alla x.</p>
+          <p>Esempio: ∫ 2x e<sup>x²</sup> da 0 a 1. Pongo t = x², dt = 2x dx. Estremi: x = 0 → t = 0; x = 1 → t = 1. Diventa ∫ eᵗ da 0 a 1 = e¹ − e⁰ = e − 1 ≈ 1,718.</p></div>
+        <div class="step"><h3>Integrali impropri</h3><p>Se un estremo è ±∞: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> f dx = <span class="lim">lim<span>M→+∞</span></span> <span class="sig"><span>M</span><b>∫</b><span>1</span></span> f dx. Come le serie: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> 1/xᵖ dx converge solo se p &gt; 1.</p>
+          <ol class="sv">
+            <li><i>p = 2, fino a M:</i> ∫ 1/x² da 1 a M = [−1/x] da 1 a M = −1/M − (−1/1) = 1 − 1/M</li>
+            <li><i>Per M → +∞:</i> 1/M → 0, quindi tende a 1: <b>converge</b>, vale 1. (M = 10 → 0,9; M = 100 → 0,99)</li>
+            <li><i>p = 1, fino a M:</i> ∫ 1/x da 1 a M = ln M − ln 1 = ln M</li>
+            <li><i>Per M → +∞:</i> ln M → +∞ (M = 100 → 4,6; M = 10⁶ → 13,8): <b>diverge</b></li>
+          </ol></div>
       </div>
     </section>
 
@@ -1794,6 +1867,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · prima guardiamo</div>
       <h2>L'equazione ti dice la pendenza in ogni punto</h2>
       <p>y′ = f(x, y) dice: se passi dal punto (x, y), la tua pendenza è f(x, y). Disegno un trattino con quella pendenza in tanti punti (il "campo delle direzioni"). Una soluzione è una curva che segue i trattini. Scegli il punto di partenza y(0): ottieni una sola curva. Questo è il <b>problema di Cauchy</b>.</p>
@@ -1821,6 +1899,14 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div class="step"><h3>4 · Condizione iniziale</h3><p>Metto x₀ e y₀ per trovare C.</p></div>
       </div>
       <div class="math left">y′ = 2xy: &nbsp; dy/y = 2x dx → ln |y| = x² + C → y = K e<sup>x²</sup> &nbsp; (K costante qualsiasi, anche 0)</div>
+      <ol class="sv">
+        <li><i>Soluzione costante:</i> b(y) = y, fa 0 per y = 0, quindi y = 0 è soluzione</li>
+        <li><i>Separo:</i> dy/dx = 2xy → dy/y = 2x dx</li>
+        <li><i>Integro:</i> ∫ dy/y = ln |y|; ∫ 2x dx = x². Quindi ln |y| = x² + C</li>
+        <li><i>Ricavo y (e alla … di tutti e due i lati):</i> |y| = e<sup>x² + C</sup> = e<sup>C</sup> · e<sup>x²</sup>, quindi y = K e<sup>x²</sup> con K = ±e<sup>C</sup> (o 0)</li>
+        <li><i>Controllo:</i> y′ = K e<sup>x²</sup> · 2x = 2x · y ✓</li>
+        <li><i>Se y(0) = 5:</i> K e⁰ = K = 5, quindi y = 5e<sup>x²</sup>; y(1) = 5e ≈ 13,6</li>
+      </ol>
       <p><b>Perché si può "separare" dy e dx (facile, è la catena):</b> se G è primitiva di 1/b, allora [G(y(x))]′ = y′/b(y) = a(x). Quindi G(y(x)) è una primitiva di a(x). Scrivere dy/b(y) = a(x) dx è solo un modo comodo per ricordarlo.</p>
     </section>
 
@@ -1830,6 +1916,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <div class="math"><span class="box cop">y(x) = e<sup>−A(x)</sup> [ ∫ f(x) e<sup>A(x)</sup> dx + C ] &nbsp; con A primitiva di a</span></div>
       <p><b>Perché:</b> moltiplico l'equazione per e<sup>A(x)</sup>. A sinistra viene y′e<sup>A</sup> + a y e<sup>A</sup>, che è esattamente (y e<sup>A</sup>)′ per la regola del prodotto. Quindi (y e<sup>A</sup>)′ = f e<sup>A</sup>: integro e divido per e<sup>A</sup>.</p>
       <div class="math left">y′ + y = 1: &nbsp; a = 1, A = x → y = e<sup>−x</sup> [∫ eˣ dx + C] = e<sup>−x</sup>(eˣ + C) = 1 + C e<sup>−x</sup></div>
+      <ol class="sv">
+        <li><i>Riconosco:</i> a(x) = 1, f(x) = 1. Primitiva di a: A(x) = x</li>
+        <li><i>Calcolo l'integrale:</i> ∫ f e<sup>A</sup> dx = ∫ 1 · eˣ dx = eˣ</li>
+        <li><i>Metto nella formula:</i> y = e<sup>−x</sup>(eˣ + C) = e<sup>−x</sup>eˣ + C e<sup>−x</sup> = 1 + C e<sup>−x</sup></li>
+        <li><i>Controllo:</i> y′ = −C e<sup>−x</sup>; y′ + y = −C e<sup>−x</sup> + 1 + C e<sup>−x</sup> = 1 ✓</li>
+        <li><i>Se y(0) = 3:</i> 1 + C = 3 → C = 2, y = 1 + 2e<sup>−x</sup>. Per x → +∞ tende a 1</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1841,7 +1934,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div><b>Δ = 0</b>, una radice λ: y = (c₁ + c₂ x) e<sup>λx</sup></div>
         <div><b>Δ &lt; 0</b>, radici α ± iβ: y = e<sup>αx</sup> (c₁ cos βx + c₂ sin βx)</div>
       </div>
+      <p>Un esempio per caso, con i calcoli:</p>
+      <ol class="sv">
+        <li><i>Δ &gt; 0, y″ − 3y′ + 2y = 0:</i> λ² − 3λ + 2 = 0, Δ = 9 − 8 = 1, λ = (3 ± 1)/2 → λ = 1 e λ = 2 → y = c₁ eˣ + c₂ e<sup>2x</sup></li>
+        <li><i>Controllo con y = e<sup>2x</sup>:</i> y′ = 2e<sup>2x</sup>, y″ = 4e<sup>2x</sup>; 4e<sup>2x</sup> − 6e<sup>2x</sup> + 2e<sup>2x</sup> = 0 ✓</li>
+        <li><i>Δ = 0, y″ − 2y′ + y = 0:</i> λ² − 2λ + 1 = (λ − 1)² = 0, Δ = 4 − 4 = 0, λ = 1 → y = (c₁ + c₂ x)eˣ</li>
+        <li><i>Δ &lt; 0, y″ + 4y = 0:</i> λ² + 4 = 0 → λ² = −4 → λ = ±2i, quindi α = 0, β = 2 → y = c₁ cos 2x + c₂ sin 2x</li>
+        <li><i>Controllo con y = cos 2x:</i> y′ = −2 sin 2x, y″ = −4 cos 2x; −4 cos 2x + 4 cos 2x = 0 ✓</li>
+        <li><i>Cauchy per il primo, y(0) = 1 e y′(0) = 0:</i> c₁ + c₂ = 1 e c₁ + 2c₂ = 0. Sottraggo: c₂ = −1, quindi c₁ = 2 → y = 2eˣ − e<sup>2x</sup></li>
+      </ol>
       <p><b>Con il termine noto</b> y″ + a y′ + b y = f(x): soluzione = (soluzione dell'omogenea) + (una soluzione particolare). La particolare si cerca "simile" a f <span class="tag mem">a memoria</span>: f polinomio → polinomio dello stesso grado; f = k e<sup>mx</sup> → A e<sup>mx</sup> (se m non è radice); f = cos/sin(ωx) → A cos ωx + B sin ωx.</p>
+      <ol class="sv">
+        <li><i>Esempio y″ + y = x:</i> f è un polinomio di grado 1, provo y<sub>p</sub> = Ax + B</li>
+        <li><i>Derivate:</i> y<sub>p</sub>′ = A, y<sub>p</sub>″ = 0</li>
+        <li><i>Sostituisco:</i> 0 + Ax + B = x → A = 1 e B = 0, quindi y<sub>p</sub> = x</li>
+        <li><i>Omogenea:</i> λ² + 1 = 0 → λ = ±i → c₁ cos x + c₂ sin x</li>
+        <li><i>Soluzione:</i> y = c₁ cos x + c₂ sin x + x</li>
+      </ol>
       <p>Per il problema di Cauchy del secondo ordine servono <b>due</b> condizioni: y(x₀) e y′(x₀), perché ci sono due costanti c₁ e c₂.</p>
     </section>
 
@@ -3416,28 +3525,96 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   const SF = [
     { f:x=>x*x*x-3*x, xr:[-3,3], yr:[-5,5], excl:[], asy:[], ext:[{x:-1,y:2,label:'max'},{x:1,y:-2,label:'min'}], fl:[{x:0,y:0,label:'flesso'}],
       sign:x=>x*x*x-3*x, zeros:[-Math.sqrt(3),0,Math.sqrt(3)],
-      t:['<b>Dominio:</b> tutto ℝ (è un polinomio). È dispari: f(−x) = −f(x), quindi simmetrica rispetto all\'origine.',
-         '<b>Segno:</b> x³ − 3x = x(x² − 3) &gt; 0 per −√3 &lt; x &lt; 0 e per x &gt; √3. Zone verdi: sopra l\'asse; zone rosse: sotto. Tocca l\'asse in −√3, 0, √3.',
-         '<b>Limiti:</b> '+LIMX('+∞')+' f(x) = +∞, '+LIMX('−∞')+' f(x) = −∞. Niente asintoti (un polinomio di grado 3 non ha nemmeno l\'obliquo: f(x)/x → +∞).',
-         '<b>f′(x) = 3x² − 3</b> = 0 per x = ±1. f′ &gt; 0 fuori da [−1, 1]: sale, scende, sale. Massimo in (−1, 2), minimo in (1, −2).',
-         '<b>f″(x) = 6x</b>: negativa per x &lt; 0 (∩), positiva per x &gt; 0 (∪). Cambia segno in 0: flesso in (0, 0).',
-         '<b>Disegno:</b> sale fino al massimo, scende passando per il flesso, risale dopo il minimo.'] },
+      t:['<b>Dominio</b>'+SV(
+           '<i>Cosa può dare problemi:</i> denominatori, logaritmi, radici pari. Qui x³ − 3x è un polinomio, non c\'è niente di questo',
+           '<i>Quindi:</i> dominio = tutto ℝ',
+           '<i>Simmetria, calcolo f(−x):</i> (−x)³ − 3(−x) = −x³ + 3x = −(x³ − 3x) = −f(x): è <b>dispari</b>, simmetrica rispetto all\'origine',
+           '<i>Controllo con i numeri:</i> f(2) = 8 − 6 = 2 e f(−2) = −8 + 6 = −2 ✓'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>Raccolgo x:</i> x³ − 3x = x(x² − 3)',
+           '<i>Quando fa 0:</i> x = 0, oppure x² − 3 = 0 → x² = 3 → x = ±√3 ≈ ±1,73',
+           '<i>Segno dei pezzi:</i> x &gt; 0 per x &gt; 0; x² − 3 &gt; 0 per x &lt; −√3 o x &gt; √3',
+           '<i>Metto insieme (prodotto):</i> x &lt; −√3: (−)(+) = −; tra −√3 e 0: (−)(−) = +; tra 0 e √3: (+)(−) = −; x &gt; √3: (+)(+) = +',
+           '<i>Controllo con i numeri:</i> f(−1) = −1 + 3 = 2 &gt; 0 ✓; f(1) = 1 − 3 = −2 &lt; 0 ✓',
+           '<i>Asse y:</i> f(0) = 0. Zone verdi: sopra l\'asse; zone rosse: sotto'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>Raccolgo x³:</i> x³ − 3x = x³(1 − 3/x²)',
+           '<i>Per x → +∞:</i> 3/x² → 0, quindi x³ · (1 − 0) → +∞. Con i numeri: f(10) = 1000 − 30 = 970',
+           '<i>Per x → −∞:</i> x³ → −∞, quindi f → −∞. f(−10) = −970',
+           '<i>Asintoto obliquo?</i> f(x)/x = x² − 3 → +∞, non è un numero: niente obliquo. Niente punti esclusi: niente verticali'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Derivo:</i> f′(x) = 3x² − 3 = 3(x² − 1)',
+           '<i>Dove fa 0:</i> x² − 1 = 0 → x² = 1 → x = −1 oppure x = 1',
+           '<i>Segno, provo un numero per zona:</i> f′(−2) = 12 − 3 = 9 &gt; 0; f′(0) = −3 &lt; 0; f′(2) = 9 &gt; 0',
+           '<i>Quindi:</i> sale, scende, sale. In −1 da + a −: massimo. In 1 da − a +: minimo',
+           '<i>Valori:</i> f(−1) = −1 + 3 = 2 → massimo (−1, 2); f(1) = 1 − 3 = −2 → minimo (1, −2)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Derivo f′ = 3x² − 3:</i> f″(x) = 6x',
+           '<i>Segno:</i> f″(−1) = −6 &lt; 0 → ∩ per x &lt; 0; f″(1) = 6 &gt; 0 → ∪ per x &gt; 0',
+           '<i>Cambio di segno in 0:</i> flesso, f(0) = 0 → flesso in (0, 0)'),
+         '<b>Disegno</b>'+SV(
+           '<i>Punti:</i> zeri −1,73; 0; 1,73 · massimo (−1, 2) · minimo (1, −2) · flesso (0, 0)',
+           '<i>Andamento:</i> da −∞ sale fino al massimo, scende passando per il flesso, risale dopo il minimo verso +∞')] },
     { f:x=>x*x/(x-1), xr:[-4,5], yr:[-8,10], excl:[1], asy:[{type:'v',x:1},{type:'o',m:1,q:1}], ext:[{x:0,y:0,label:'max'},{x:2,y:4,label:'min'}], fl:[],
       sign:x=>x*x/(x-1), zeros:[0],
-      t:['<b>Dominio:</b> x ≠ 1 (il denominatore non può fare 0). Linea tratteggiata: x = 1 è escluso.',
-         '<b>Segno:</b> x² ≥ 0 sempre, quindi il segno è quello di x − 1: positiva per x &gt; 1, negativa per x &lt; 1 (tranne x = 0, dove vale 0).',
-         '<b>Limiti:</b> '+LIMX('1⁺')+' f(x) = +∞ e '+LIMX('1⁻')+' f(x) = −∞: asintoto verticale x = 1. Per x → ±∞, f → ±∞; m = 1, q = 1: asintoto obliquo y = x + 1.',
-         '<b>f′(x) = x(x − 2)/(x − 1)²</b> = 0 per x = 0 e x = 2. Segno di f′: + − − +. Massimo in (0, 0), minimo in (2, 4).',
-         '<b>f″(x) = 2/(x − 1)³</b>: negativa per x &lt; 1 (∩), positiva per x &gt; 1 (∪). Cambia segno in x = 1, ma lì f non esiste: nessun flesso.',
-         '<b>Disegno:</b> due rami, uno a sinistra e uno a destra dell\'asintoto verticale, entrambi attaccati all\'obliqua y = x + 1 da lontano.'] },
+      t:['<b>Dominio</b>'+SV(
+           '<i>C\'è un denominatore:</i> x − 1 ≠ 0 → x ≠ 1',
+           '<i>Dominio:</i> tutto ℝ tranne 1. Linea tratteggiata: x = 1 è escluso',
+           '<i>Simmetria:</i> f(2) = 4/1 = 4 e f(−2) = 4/(−3) ≈ −1,33: né uguali né opposti, quindi né pari né dispari'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>Sopra:</i> x² ≥ 0 sempre, vale 0 solo in x = 0',
+           '<i>Sotto:</i> x − 1 &gt; 0 per x &gt; 1, &lt; 0 per x &lt; 1',
+           '<i>Quindi:</i> positiva per x &gt; 1, negativa per x &lt; 1 (tranne x = 0, dove vale 0)',
+           '<i>Controllo:</i> f(2) = 4 &gt; 0; f(−1) = 1/(−2) = −0,5 &lt; 0; f(0,5) = 0,25/(−0,5) = −0,5 &lt; 0 ✓',
+           '<i>Asse y:</i> f(0) = 0/(−1) = 0'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>x → 1⁺:</i> sopra → 1, sotto → 0 positivo, quindi +∞. Con i numeri: f(1,01) = 1,0201/0,01 ≈ 102',
+           '<i>x → 1⁻:</i> sopra → 1, sotto → 0 negativo, quindi −∞. f(0,99) = 0,9801/(−0,01) ≈ −98. <b>Asintoto verticale x = 1</b>',
+           '<i>x → ±∞:</i> divido per x: x/(1 − 1/x) → ±∞. Nessun orizzontale, provo l\'obliquo',
+           '<i>m:</i> f(x)/x = x²/(x² − x) = 1/(1 − 1/x) → 1/(1 − 0) = 1',
+           '<i>q:</i> f(x) − x = x²/(x − 1) − x = (x² − x(x − 1))/(x − 1) = (x² − x² + x)/(x − 1) = x/(x − 1) → 1',
+           '<i>Asintoto obliquo y = x + 1.</i> Controllo: f(100) = 10 000/99 ≈ 101,01 e 100 + 1 = 101 ✓'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Quoziente:</i> f′ = '+FR('2x · (x − 1) − x² · 1','(x − 1)²')+' = '+FR('2x² − 2x − x²','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' = '+FR('x(x − 2)','(x − 1)²'),
+           '<i>Dove fa 0:</i> x = 0 oppure x − 2 = 0 → x = 2',
+           '<i>Segno (sotto è un quadrato, sempre &gt; 0):</i> f′(−1) = (−1)(−3)/4 = 0,75 &gt; 0; f′(0,5) = 0,5 · (−1,5)/0,25 = −3 &lt; 0; f′(1,5) = 1,5 · (−0,5)/0,25 = −3 &lt; 0; f′(3) = 3 · 1/4 = 0,75 &gt; 0',
+           '<i>Quindi + − − +:</i> massimo in 0, f(0) = 0 → (0, 0); minimo in 2, f(2) = 4/1 = 4 → (2, 4)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Trucco, divido x² per x − 1:</i> x² = (x − 1)(x + 1) + 1, quindi f(x) = x + 1 + '+FR('1','x − 1'),
+           '<i>Derivo:</i> f′(x) = 1 − '+FR('1','(x − 1)²')+' (controllo: '+FR('(x − 1)² − 1','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' ✓)',
+           '<i>Derivo ancora:</i> f″(x) = '+FR('2','(x − 1)³'),
+           '<i>Segno:</i> f″(0) = 2/(−1) = −2 &lt; 0 → ∩ per x &lt; 1; f″(2) = 2/1 = 2 &gt; 0 → ∪ per x &gt; 1',
+           '<i>Flessi:</i> cambia segno solo in x = 1, ma lì f non esiste: nessun flesso'),
+         '<b>Disegno</b>'+SV(
+           '<i>Ramo sinistro:</i> arriva da −∞ attaccato a y = x + 1, sale al massimo (0, 0), scende a −∞ vicino a x = 1',
+           '<i>Ramo destro:</i> scende da +∞ vicino a x = 1 fino al minimo (2, 4), poi risale attaccato a y = x + 1')] },
     { f:x=>x*Math.exp(-x), xr:[-1,6], yr:[-2,1], excl:[], asy:[{type:'h',y:0,from:0}], ext:[{x:1,y:Math.exp(-1),label:'max'}], fl:[{x:2,y:2*Math.exp(-2),label:'flesso'}],
       sign:x=>x, zeros:[0],
-      t:['<b>Dominio:</b> tutto ℝ.',
-         '<b>Segno:</b> e<sup>−x</sup> &gt; 0 sempre, quindi il segno è quello di x: positiva per x &gt; 0, negativa per x &lt; 0. Passa per (0, 0).',
-         '<b>Limiti:</b> '+LIMX('+∞')+' x e<sup>−x</sup> = '+LIMX('+∞')+' x/eˣ = 0 (l\'esponenziale vince): asintoto orizzontale y = 0 a destra. '+LIMX('−∞')+' f(x) = −∞.',
-         '<b>f′(x) = (1 − x) e<sup>−x</sup></b>: positiva per x &lt; 1, negativa per x &gt; 1. Massimo in (1, 1/e) ≈ (1; 0,37).',
-         '<b>f″(x) = (x − 2) e<sup>−x</sup></b>: cambia segno in x = 2. Flesso in (2, 2/e²) ≈ (2; 0,27).',
-         '<b>Disegno:</b> sale da −∞, arriva al massimo in x = 1, scende piano verso 0 cambiando concavità in x = 2.'] }
+      t:['<b>Dominio</b>'+SV(
+           '<i>x e e<sup>−x</sup> esistono per ogni x:</i> dominio = tutto ℝ',
+           '<i>Simmetria:</i> f(1) = e<sup>−1</sup> ≈ 0,37 e f(−1) = −1 · e¹ ≈ −2,72: né pari né dispari'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>e<sup>−x</sup> = 1/eˣ è sempre &gt; 0:</i> il segno è quello di x',
+           '<i>Quindi:</i> positiva per x &gt; 0, negativa per x &lt; 0',
+           '<i>Asse y:</i> f(0) = 0 · e⁰ = 0 · 1 = 0, passa per (0, 0)'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>x → +∞:</i> x e<sup>−x</sup> = x/eˣ, forma ∞/∞',
+           '<i>Con i numeri:</i> f(5) = 5/148,4 ≈ 0,034; f(10) = 10/22 026 ≈ 0,00045',
+           '<i>De L\'Hôpital:</i> (x)′/(eˣ)′ = 1/eˣ → 0. <b>Asintoto orizzontale y = 0</b> a destra',
+           '<i>x → −∞:</i> x → −∞ e e<sup>−x</sup> → +∞, prodotto −∞. f(−3) = −3e³ ≈ −60'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Prodotto (e catena per e<sup>−x</sup>, la cui derivata è −e<sup>−x</sup>):</i> f′ = 1 · e<sup>−x</sup> + x · (−e<sup>−x</sup>) = e<sup>−x</sup>(1 − x)',
+           '<i>Dove fa 0:</i> e<sup>−x</sup> non è mai 0, quindi 1 − x = 0 → x = 1',
+           '<i>Segno:</i> f′(0) = 1 · 1 = 1 &gt; 0; f′(2) = e<sup>−2</sup> · (−1) ≈ −0,14 &lt; 0',
+           '<i>Massimo in x = 1:</i> f(1) = 1/e ≈ 0,368 → (1; 0,37)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Derivo f′ = (1 − x)e<sup>−x</sup>:</i> (−1) · e<sup>−x</sup> + (1 − x) · (−e<sup>−x</sup>) = e<sup>−x</sup>(−1 − 1 + x) = (x − 2)e<sup>−x</sup>',
+           '<i>Dove fa 0:</i> x = 2',
+           '<i>Segno:</i> f″(0) = −2 &lt; 0 → ∩ prima di 2; f″(3) = e<sup>−3</sup> &gt; 0 → ∪ dopo 2',
+           '<i>Flesso:</i> f(2) = 2e<sup>−2</sup> ≈ 2 · 0,135 = 0,271 → (2; 0,27)'),
+         '<b>Disegno</b>'+SV(
+           '<i>Andamento:</i> sale da −∞, passa per (0, 0), arriva al massimo (1; 0,37), scende',
+           '<i>Dopo:</i> in (2; 0,27) cambia concavità e si appoggia piano sull\'asintoto y = 0')] }
   ];
   draws['studio-funzione'] = () => {
     const c = SF[+$('sfS').value], n = +$('sfN').value, o = { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[], points:[], vlines:[] };
@@ -3452,10 +3629,37 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     if (n>=5) c.fl.forEach(p => o.points.push({...p, color:'--cop'}));
     if (n>=6) o.fns.push({f:c.f, color:'--ink', width:2.5});
     plotF($('plotSF'), o);
-    $('sfOut').innerHTML = '<span style="font-size:1rem">Passo '+n+' di 6 · '+c.t[n-1]+'</span>';
+    $('sfOut').innerHTML = 'Passo '+n+' di 6 · '+c.t[n-1];
   };
   $('sfS').addEventListener('change', () => { $('sfN').value = 1; draws['studio-funzione'](); });
   $('sfN').addEventListener('input', () => draws['studio-funzione']());
+
+  video('studio-funzione', [
+    { show:'<h3>Studio di funzione</h3>f(x) = '+FR('x²','x − 1'),
+      say:'Studio di funzione completo, con tutti i calcoli. La funzione è x al quadrato diviso x meno uno.' },
+    { show:'1 · Dominio: x − 1 ≠ 0 → <b>x ≠ 1</b>',
+      say:'Primo passo, il dominio. C\'è un denominatore, che non può fare zero: x meno uno diverso da zero, cioè x diverso da uno.' },
+    { show:'2 · Segno: x² ≥ 0 · x − 1 &gt; 0 per x &gt; 1 → f &gt; 0 per x &gt; 1, f &lt; 0 per x &lt; 1 · f(0) = 0',
+      say:'Secondo, il segno. Sopra x al quadrato è sempre positivo o zero. Sotto x meno uno è positivo per x maggiore di uno. Quindi la funzione è positiva dopo uno e negativa prima. In zero vale zero.' },
+    { show:'3 · x → 1⁺: f(1,01) = 1,0201/0,01 ≈ 102 → +∞ · x → 1⁻: f(0,99) ≈ −98 → −∞',
+      say:'Terzo, i limiti. Vicino a uno da destra: uno virgola zero due zero uno diviso zero virgola zero uno, circa centodue. Va a più infinito. Da sinistra circa meno novantotto, va a meno infinito. Asintoto verticale x uguale a uno.' },
+    { show:'m = '+LIMX('+∞')+' '+FR('x²','x² − x')+' = '+FR('1','1 − 1/x')+' → 1',
+      say:'Per x che va all\'infinito la funzione va all\'infinito, quindi cerco l\'asintoto obliquo. m è il limite di f di x su x: x al quadrato su x al quadrato meno x. Divido per x al quadrato: uno su uno meno uno su x, che tende a uno.' },
+    { show:'q = '+FR('x²','x − 1')+' − x = '+FR('x² − x² + x','x − 1')+' = '+FR('x','x − 1')+' → 1 → <b>y = x + 1</b>',
+      say:'q è il limite di f di x meno m per x. Faccio il denominatore comune: x al quadrato meno x per x meno uno, cioè x al quadrato meno x al quadrato più x. Resta x su x meno uno, che tende a uno. Asintoto obliquo y uguale x più uno.' },
+    { show:'Controllo: f(100) = 10 000/99 ≈ 101,01 · retta: 100 + 1 = 101',
+      say:'Controllo: f di cento è diecimila su novantanove, circa centouno virgola zero uno. La retta dà centouno. Vicinissimi.' },
+    { show:'4 · f′ = '+FR('2x(x − 1) − x²','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' = '+FR('x(x − 2)','(x − 1)²'),
+      say:'Quarto, la derivata prima, con la regola del quoziente. Sopra: due x per x meno uno, meno x al quadrato per uno. Due x al quadrato meno due x meno x al quadrato fa x al quadrato meno due x, cioè x per x meno due. Sotto x meno uno al quadrato.' },
+    { show:'f′ = 0 in x = 0 e x = 2 · f′(−1) = 0,75 &gt; 0 · f′(0,5) = −3 · f′(1,5) = −3 · f′(3) = 0,75',
+      say:'La derivata fa zero in zero e in due. Il segno lo provo con un numero per zona: in meno uno viene zero virgola settantacinque, positivo. In zero virgola cinque meno tre, negativo. In uno virgola cinque meno tre. In tre zero virgola settantacinque, positivo.' },
+    { show:'+ − − + → massimo (0, 0), minimo (2, 4): f(2) = 4/1 = 4',
+      say:'Quindi sale, scende, scende, sale. In zero da più a meno: massimo, e f di zero è zero. In due da meno a più: minimo, e f di due è quattro su uno, quattro.' },
+    { show:'5 · f = x + 1 + '+FR('1','x − 1')+' → f″ = '+FR('2','(x − 1)³')+' · f″(0) = −2 ∩ · f″(2) = 2 ∪',
+      say:'Quinto, la derivata seconda. Trucco: x al quadrato è x meno uno per x più uno, più uno. Quindi f è x più uno più uno su x meno uno. Derivando due volte viene due su x meno uno al cubo. In zero vale meno due, concava verso il basso. In due vale due, verso l\'alto. Cambia segno solo in uno, che è escluso: niente flessi.' },
+    { show:'6 · Disegno: due rami, asintoto x = 1 e y = x + 1, max (0, 0), min (2, 4)',
+      say:'Sesto, il disegno. Il ramo di sinistra arriva vicino alla retta y uguale x più uno, sale al massimo in zero e precipita a meno infinito vicino a uno. Il ramo di destra scende da più infinito al minimo in due, quattro, e poi risale vicino alla retta.' }
+  ]);
 
   guided('studio-funzione', 'lavagna-studio-funzione', [
     { h:'Passo 1 · Derivata prima: f′(x) = 3x² − 12. Dove fa 0? (scrivi prima il più piccolo)', type:'nums', ans:[-2,2],
@@ -3463,13 +3667,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Giusto: 3x² = 12, x² = 4, x = ±2.', bad:'3x² − 12 = 0 → x² = 4.' },
     { h:'Passo 2 · Segno di f′ = 3(x² − 4): positiva fuori da [−2, 2], negativa dentro. Dove c\'è il massimo?', type:'choice', ans:0,
       opts:['in x = −2: f′ passa da + a −','in x = 2: f′ passa da + a −','non ci sono massimi'],
-      ok:'Esatto: prima sale, poi scende. In x = 2 invece c\'è il minimo (da − a +).', bad:'Massimo = prima sale (f′ &gt; 0) poi scende (f′ &lt; 0).' },
+      ok:'Esatto. Con i numeri: f′(−3) = 27 − 12 = 15 &gt; 0, f′(0) = −12 &lt; 0, f′(3) = 15 &gt; 0. In −2 da + a −: massimo. In x = 2 invece c\'è il minimo (da − a +): f(2) = 8 − 24 = −16.', bad:'Massimo = prima sale (f′ &gt; 0) poi scende (f′ &lt; 0).' },
     { h:'Passo 3 · Quanto vale il massimo? f(−2) = (−2)³ − 12 · (−2)', type:'nums', ans:[16],
       html:'f(−2) = '+inp('f(−2)'),
       ok:'Perfetto: −8 + 24 = 16. Il massimo è nel punto (−2, 16).', bad:'(−2)³ = −8 e −12 · (−2) = +24.' },
     { h:'Passo 4 · Derivata seconda f″(x) = 6x. Dove c\'è il flesso?', type:'choice', ans:1,
       opts:['in x = 2','in x = 0: f″ cambia segno','non c\'è'],
-      ok:'Sì: 6x &lt; 0 per x &lt; 0 e &gt; 0 per x &gt; 0. Flesso in (0, 0).', bad:'Dove 6x cambia segno?' }
+      ok:'Sì: f″(−1) = −6 &lt; 0 e f″(1) = 6 &gt; 0, quindi 6x cambia segno in 0. f(0) = 0 − 0 = 0: flesso in (0, 0).', bad:'Dove 6x cambia segno?' }
   ], '<b>Fatto!</b> f(x) = x³ − 12x: massimo in (−2, 16), minimo in (2, −16), flesso in (0, 0). È la stessa forma della prima funzione del grafico, solo più "stirata".');
 
   EX['studio-funzione'] = [
@@ -3532,9 +3736,9 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 13: Integrali indefiniti ===== */
   order.push('integrali-indefiniti'); NAMES['integrali-indefiniti'] = '13 Integrali indefiniti';
   const II = [
-    { F:x=>x*x, f:x=>2*x, x0:1, xr:[-2.5,2.5], yr:[-4,8], n:'2x', Fn:'x²' },
-    { F:Math.sin, f:Math.cos, x0:0.8, xr:[-4,4], yr:[-4,4.5], n:'cos x', Fn:'sin x' },
-    { F:x=>x>0?Math.log(x):NaN, f:x=>1/x, x0:1, xr:[0,5], yr:[-5,5], n:'1/x', Fn:'ln x' }
+    { F:x=>x*x, f:x=>2*x, x0:1, xr:[-2.5,2.5], yr:[-4,8], n:'2x', Fn:'x²', d:'(x²)′ = 2x', v:'2 · 1 = 2' },
+    { F:Math.sin, f:Math.cos, x0:0.8, xr:[-4,4], yr:[-4,4.5], n:'cos x', Fn:'sin x', d:'(sin x)′ = cos x', v:'cos 0,8 ≈ 0,697' },
+    { F:x=>x>0?Math.log(x):NaN, f:x=>1/x, x0:1, xr:[0,5], yr:[-5,5], n:'1/x', Fn:'ln x', d:'(ln x)′ = 1/x', v:'1/1 = 1' }
   ];
   draws['integrali-indefiniti'] = () => {
     const c = II[+$('iiS').value], C = (+$('iiC').value)/10, m = c.f(c.x0);
@@ -3542,10 +3746,41 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     fns.push({f:x=>c.F(x)+C, color:'--thief', width:2.5});
     fns.push({f:x=>c.F(c.x0)+C+m*(x-c.x0), color:'--cop', dash:true, width:1.5});
     plotF($('plotII'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns, points:[{x:c.x0, y:c.F(c.x0)+C, color:'--cop'}] });
-    $('iiOut').innerHTML = 'F(x) = '+c.Fn+' '+(C<0?'− '+it(-C,1):'+ '+it(C,1))+' · pendenza in x₀ = '+it(c.x0,1)+': <b class="cop">'+it(m,3)+'</b> = f(x₀), qualunque sia C';
+    $('iiOut').innerHTML = 'F(x) = '+c.Fn+' '+(C<0?'− '+it(-C,1):'+ '+it(C,1))+' · pendenza in x₀ = '+it(c.x0,1)+': <b class="cop">'+it(m,3)+'</b> = f(x₀), qualunque sia C' + SV(
+      '<i>Derivo F(x) = '+c.Fn+' '+(C<0?'− '+it(-C,1):'+ '+it(C,1))+':</i> '+c.d+', e la derivata della costante '+it(C,1)+' è 0',
+      '<i>Quindi:</i> F′(x) = '+c.n+' + 0 = '+c.n+' = f(x) ✓',
+      '<i>In x₀ = '+it(c.x0,1)+':</i> pendenza = '+c.v,
+      '<i>Controllo con i numeri, h = 0,01:</i> (F('+it(c.x0+0.01,2)+') − F('+it(c.x0,2)+'))/0,01 ≈ '+it((c.F(c.x0+0.01)-c.F(c.x0))/0.01,3)+'. La C si cancella nella differenza: per questo non conta');
   };
   $('iiS').addEventListener('change', () => draws['integrali-indefiniti']());
   $('iiC').addEventListener('input', () => draws['integrali-indefiniti']());
+
+  video('integrali-indefiniti', [
+    { show:'<h3>Integrali indefiniti</h3>∫ f(x) dx = F(x) + C ⟺ F′(x) = f(x)',
+      say:'Integrali indefiniti. Integrare è il contrario di derivare: cerco una funzione F la cui derivata è f. Si scrive integrale di f di x in d x uguale F di x più C.' },
+    { show:'∫ 2x dx = x² + C · controllo: (x² + 5)′ = 2x + 0 = 2x',
+      say:'Esempio: l\'integrale di due x è x al quadrato più C. Perché più C? Perché la derivata di una costante è zero: x al quadrato più cinque, derivato, dà ancora due x.' },
+    { show:'∫ xᵃ dx = '+FR('x<sup>a+1</sup>','a + 1')+' + C · ∫ x² dx = '+FR('x³','3')+' + C · ('+FR('x³','3')+')′ = '+FR('3x²','3')+' = x²',
+      say:'La regola delle potenze: alzo l\'esponente di uno e divido per il nuovo esponente. Integrale di x al quadrato: x al cubo su tre. Controllo: la derivata di x al cubo su tre è tre x al quadrato su tre, cioè x al quadrato.' },
+    { show:'∫ sin x dx = −cos x + C · (−cos x)′ = −(−sin x) = sin x',
+      say:'Integrale di seno di x: meno coseno di x. Controllo: la derivata di meno coseno è meno meno seno, cioè seno. Per questo c\'è il meno.' },
+    { show:'Sostituzione: ∫ cos(3x) dx · t = 3x, dt = 3 dx → ∫ cos t · '+FR('dt','3')+' = '+FR('1','3')+' sin(3x) + C',
+      say:'Metodo di sostituzione: integrale di coseno di tre x. Pongo t uguale tre x, quindi d t uguale tre d x, e d x è d t su tre. Diventa un terzo dell\'integrale di coseno di t, cioè un terzo seno di t, e rimetto tre x.' },
+    { show:'Controllo: ('+FR('1','3')+' sin(3x))′ = '+FR('1','3')+' · cos(3x) · 3 = cos(3x) ✓',
+      say:'Controllo con la catena: un terzo per coseno di tre x per tre, cioè coseno di tre x. Torna.' },
+    { show:'Per parti: ∫ f g′ dx = f g − ∫ f′ g dx · viene da (f g)′ = f′g + f g′',
+      say:'Metodo per parti: integrale di f per g primo uguale f per g meno integrale di f primo per g. Viene dalla regola del prodotto letta al contrario.' },
+    { show:'∫ x eˣ dx: f = x → f′ = 1 · g′ = eˣ → g = eˣ',
+      say:'Esempio: integrale di x per e alla x. Scelgo f uguale x, da derivare, perché diventa uno. E g primo uguale e alla x, che integrato resta e alla x.' },
+    { show:'x eˣ − ∫ 1 · eˣ dx = x eˣ − eˣ + C = (x − 1)eˣ + C',
+      say:'Applico la formula: x per e alla x, meno integrale di uno per e alla x. L\'integrale di e alla x è e alla x. Risultato: x e alla x meno e alla x più C.' },
+    { show:'Controllo: (x eˣ − eˣ)′ = (1 · eˣ + x eˣ) − eˣ = x eˣ ✓',
+      say:'Controllo derivando: la derivata di x e alla x è e alla x più x e alla x, poi tolgo la derivata di e alla x, che è e alla x. Resta x e alla x. Giusto.' },
+    { show:'Fratti semplici: '+FR('1','x² − 1')+' = '+FR('A','x − 1')+' + '+FR('B','x + 1')+' · 1 = A(x + 1) + B(x − 1)',
+      say:'Ultimo metodo, i fratti semplici. Uno su x al quadrato meno uno: scompongo il sotto in x meno uno per x più uno e scrivo A su x meno uno più B su x più uno. Con il denominatore comune: uno uguale A per x più uno più B per x meno uno.' },
+    { show:'x = 1: 1 = 2A → A = '+FR('1','2')+' · x = −1: 1 = −2B → B = −'+FR('1','2')+' → '+FR('1','2')+' ln|x − 1| − '+FR('1','2')+' ln|x + 1| + C',
+      say:'Metto x uguale uno: uno uguale due A, quindi A è un mezzo. Metto x uguale meno uno: uno uguale meno due B, quindi B è meno un mezzo. Integro: un mezzo logaritmo di x meno uno, meno un mezzo logaritmo di x più uno, più C.' }
+  ]);
 
   guided('integrali-indefiniti', 'lavagna-integrali-indefiniti', [
     { h:'Passo 1 · Per parti: chi derivo (f) e chi integro (g′)?', type:'choice', ans:0,
@@ -3556,7 +3791,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Esatto: f g = x eˣ, e ∫ f′ g = ∫ 1 · eˣ dx.', bad:'f g = x · eˣ; f′ g = 1 · eˣ; in mezzo c\'è il meno.' },
     { h:'Passo 3 · ∫ eˣ dx = eˣ. Quindi il risultato è:', type:'choice', ans:2,
       opts:['x eˣ + eˣ + C','x eˣ + C','x eˣ − eˣ + C'],
-      ok:'Sì.', bad:'x eˣ − (eˣ) + C.' },
+      ok:'Sì: x eˣ − ∫ eˣ dx = x eˣ − eˣ + C. Si può anche raccogliere: (x − 1) eˣ + C.', bad:'x eˣ − (eˣ) + C.' },
     { h:'Passo 4 · Controllo derivando: (x eˣ − eˣ)′ = eˣ + x eˣ − eˣ = ? Quanto vale in x = 1, se scrivo il risultato come k · e (scrivi k)?', type:'nums', ans:[1],
       html:'(x eˣ − eˣ)′ in x = 1 = '+inp('k','3em')+' · e',
       ok:'Perfetto: la derivata è x eˣ, che in x = 1 vale e. Torna la funzione di partenza: il risultato è giusto.', bad:'eˣ e −eˣ si cancellano: resta x eˣ. In x = 1 vale 1 · e.' }
@@ -3616,9 +3851,9 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 14: Integrali definiti ===== */
   order.push('integrali-definiti'); NAMES['integrali-definiti'] = '14 Integrali definiti';
   const ID = [
-    { f:x=>x*x, a:0, b:2, ex:8/3, exs:'8/3 ≈ 2,6667', xr:[-0.3,2.3], yr:[-0.5,4.5] },
-    { f:Math.sin, a:0, b:Math.PI, ex:2, exs:'2', xr:[-0.3,3.5], yr:[-0.3,1.3] },
-    { f:Math.exp, a:0, b:1, ex:Math.E-1, exs:'e − 1 ≈ 1,7183', xr:[-0.2,1.2], yr:[-0.3,3] }
+    { f:x=>x*x, a:0, b:2, ex:8/3, exs:'8/3 ≈ 2,6667', xr:[-0.3,2.3], yr:[-0.5,4.5], fn:'(X)²', ab:'[0, 2]', len:'2', ft:'F(x) = x³/3: F(2) − F(0) = 8/3 − 0 = 8/3 ≈ 2,6667' },
+    { f:Math.sin, a:0, b:Math.PI, ex:2, exs:'2', xr:[-0.3,3.5], yr:[-0.3,1.3], fn:'sin X', ab:'[0, π]', len:'π', ft:'F(x) = −cos x: F(π) − F(0) = −cos π − (−cos 0) = 1 + 1 = 2' },
+    { f:Math.exp, a:0, b:1, ex:Math.E-1, exs:'e − 1 ≈ 1,7183', xr:[-0.2,1.2], yr:[-0.3,3], fn:'e<sup>X</sup>', ab:'[0, 1]', len:'1', ft:'F(x) = eˣ: F(1) − F(0) = e − e⁰ = e − 1 ≈ 1,7183' }
   ];
   draws['integrali-definiti'] = () => {
     const c = ID[+$('idS').value], n = +$('idN').value, w = (c.b-c.a)/n;
@@ -3626,25 +3861,57 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     let S = 0; for (let k=0;k<n;k++) S += c.f(c.a+(k+0.5)*w)*w;
     plotF($('plotID'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], area:{f:step, a:c.a, b:c.b, color:'--thief'},
       fns:[{f:step, color:'--thief', width:1}, {f:c.f, color:'--ink', width:2.5}] });
-    $('idOut').innerHTML = 'Somma di '+n+' rettangoli = <b class="thief">'+it(S,4)+'</b> · area vera = <b class="cop">'+c.exs+'</b><br><span style="font-size:1rem">Differenza: '+it(Math.abs(S-c.ex),4)+'. Più rettangoli, più si avvicina.</span>';
+    $('idOut').innerHTML = 'Somma di '+n+' rettangoli = <b class="thief">'+it(S,4)+'</b> · area vera = <b class="cop">'+c.exs+'</b>';
+    const rows = []; for (let k=0;k<Math.min(n,4);k++){ const m=c.a+(k+0.5)*w; rows.push('rettangolo '+(k+1)+': punto di mezzo '+it(m,3)+', altezza '+c.fn.replace('X',it(m,3))+' ≈ '+it(c.f(m),4)+', area ≈ '+it(c.f(m),4)+' · '+it(w,3)+' ≈ '+it(c.f(m)*w,4)); }
+    $('idOut').innerHTML += SV(
+      '<i>Larghezza di ogni rettangolo:</i> lunghezza di '+c.ab+' diviso n = '+c.len+'/'+n+' ≈ '+it(w,4),
+      '<i>I primi rettangoli:</i> '+rows.join('; ')+(n>4?'; … e così via fino al '+n+'°':''),
+      '<i>Sommo tutte le aree:</i> ≈ '+it(S,4),
+      '<i>Area vera con il teorema fondamentale:</i> '+c.ft,
+      '<i>Differenza:</i> '+it(Math.abs(S-c.ex),4)+'. Più rettangoli, più si avvicina');
   };
   $('idS').addEventListener('change', () => draws['integrali-definiti']());
   $('idN').addEventListener('input', () => draws['integrali-definiti']());
 
   const INT = (a,b) => '<span class="sig"><span>'+b+'</span><b>∫</b><span>'+a+'</span></span>';
+  video('integrali-definiti', [
+    { show:'<h3>Integrali definiti</h3>'+INT('a','b')+' f(x) dx = area sotto il grafico tra a e b',
+      say:'Integrali definiti. L\'integrale da a a b di f di x è l\'area sotto il grafico di f, tra x uguale a e x uguale b.' },
+    { show:'x² su [0, 2] con 2 rettangoli: larghezza 2/2 = 1 · mezzi 0,5 e 1,5',
+      say:'Esempio: x al quadrato tra zero e due. Non so l\'area sotto la curva, ma so quella dei rettangoli. Con due rettangoli, ognuno largo uno, i punti di mezzo sono zero virgola cinque e uno virgola cinque.' },
+    { show:'0,5² · 1 = 0,25 · 1,5² · 1 = 2,25 · somma = 2,5',
+      say:'Il primo rettangolo è alto zero virgola cinque al quadrato, zero virgola venticinque. Il secondo uno virgola cinque al quadrato, due virgola venticinque. Sommo: due virgola cinque.' },
+    { show:'4 rettangoli larghi 0,5: (0,0625 + 0,5625 + 1,5625 + 3,0625) · 0,5 = 2,625',
+      say:'Con quattro rettangoli larghi zero virgola cinque: le altezze sono zero virgola zero sei, zero virgola cinquantasei, uno virgola cinquantasei, tre virgola zero sei. Sommo e moltiplico per zero virgola cinque: due virgola sei due cinque. Si avvicina a otto terzi, due virgola sei sei sei.' },
+    { show:'Teorema fondamentale: '+INT('a','b')+' f(x) dx = F(b) − F(a) · F primitiva di f',
+      say:'Il teorema fondamentale del calcolo dice che per l\'area basta una primitiva: l\'integrale da a a b è F di b meno F di a.' },
+    { show:'Perché: A(1,1) − A(1) = 1,331/3 − 1/3 ≈ 0,1104 ≈ f(1) · 0,1 = 0,1',
+      say:'Perché? Chiamo A di x l\'area da zero fino a x. Se sposto x da uno a uno virgola uno, aggiungo una striscia sottile: circa zero virgola undici. È quasi un rettangolo alto f di uno, cioè uno, e largo zero virgola uno. Quindi la derivata dell\'area è f: l\'area è una primitiva.' },
+    { show:INT(0,2)+' x² dx = ['+FR('x³','3')+']<sub>0</sub><sup>2</sup> = '+FR('8','3')+' − 0 = '+FR('8','3')+' ≈ 2,667',
+      say:'Allora: la primitiva di x al quadrato è x al cubo su tre. In due vale otto terzi, in zero vale zero. L\'area è otto terzi, circa due virgola sei sei sette. Proprio dove andavano i rettangoli.' },
+    { show:'Esercizio: '+INT(0,2)+' (x² + 1) dx · F(x) = '+FR('x³','3')+' + x · F′ = x² + 1 ✓',
+      say:'Esercizio: integrale da zero a due di x al quadrato più uno. La primitiva è x al cubo su tre più x. Controllo: derivata x al quadrato più uno.' },
+    { show:'F(2) = '+FR('8','3')+' + 2 = '+FR('8','3')+' + '+FR('6','3')+' = '+FR('14','3')+' · F(0) = 0 → '+FR('14','3')+' ≈ 4,67',
+      say:'F di due: otto terzi più due, cioè otto terzi più sei terzi, quattordici terzi. F di zero: zero. Il risultato è quattordici terzi, circa quattro virgola sessantasette.' },
+    { show:'Attenzione: sin x su [0, 2π]: 2 + (−2) = 0, ma area vera = 2 + |−2| = 4',
+      say:'Attenzione: dove la funzione è sotto l\'asse, l\'integrale conta negativo. Seno da zero a pi greco fa due, da pi greco a due pi greco fa meno due. L\'integrale totale è zero, ma l\'area vera è due più due, quattro.' },
+    { show:'Improprio: '+INT(1,'M')+' '+FR('1','x²')+' dx = 1 − '+FR('1','M')+' → 1 · '+INT(1,'M')+' '+FR('1','x')+' dx = ln M → +∞',
+      say:'Ultimo: gli integrali fino a infinito. Da uno a M di uno su x al quadrato fa uno meno uno su M, che tende a uno: converge. Da uno a M di uno su x fa logaritmo di M, che va a più infinito: diverge. Come le serie: converge solo se p è maggiore di uno.' }
+  ]);
+
   guided('integrali-definiti', 'lavagna-integrali-definiti', [
     { h:'Passo 1 · Primitiva di x² + 1:', type:'choice', ans:1,
       opts:['2x + C','x³/3 + x','x³ + x'],
-      ok:'Giusto. Per l\'integrale definito la C non serve: si cancella in F(b) − F(a).', bad:'xᵃ → x<sup>a+1</sup>/(a + 1). E 1 → x.' },
+      ok:'Giusto: x² → x³/3 e 1 → x. Controllo: (x³/3 + x)′ = x² + 1 ✓. La C non serve: (F(b) + C) − (F(a) + C) = F(b) − F(a).', bad:'xᵃ → x<sup>a+1</sup>/(a + 1). E 1 → x.' },
     { h:'Passo 2 · F(2) = 2³/3 + 2 = ?', type:'nums', ans:[14/3],
       html:'F(2) = '+inp('F(2)'),
       ok:'Sì: 8/3 + 6/3 = 14/3.', bad:'8/3 + 2 = 8/3 + 6/3.' },
     { h:'Passo 3 · F(0) = 0³/3 + 0 = ?', type:'nums', ans:[0],
       html:'F(0) = '+inp('F(0)'),
-      ok:'Esatto.', bad:'Metti 0 al posto di x.' },
+      ok:'Esatto: 0/3 + 0 = 0.', bad:'Metti 0 al posto di x.' },
     { h:'Passo 4 · Risultato: F(2) − F(0).', type:'nums', ans:[14/3],
       html:INT(0,2)+' (x² + 1) dx = '+inp('risultato'),
-      ok:'Perfetto: 14/3 ≈ 4,67.', bad:'14/3 − 0.' }
+      ok:'Perfetto: 14/3 − 0 = 14/3 ≈ 4,67. Controllo a occhio: f va da 1 a 5 su un tratto lungo 2, quindi l\'area sta tra 1 · 2 = 2 e 5 · 2 = 10 ✓', bad:'14/3 − 0.' }
   ], '<b>Fatto!</b> '+INT(0,2)+' (x² + 1) dx = [x³/3 + x]<sub>0</sub><sup>2</sup> = 14/3 − 0 = 14/3. Schema: primitiva → F(b) → F(a) → sottrai.');
 
   EX['integrali-definiti'] = [
@@ -3704,10 +3971,33 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 15: Equazioni differenziali ===== */
   order.push('equazioni-differenziali'); NAMES['equazioni-differenziali'] = '15 Equazioni differenziali';
   const ED = [
-    { F:(x,y)=>y, sol:(x,y0)=>y0*Math.exp(x), t:y0=>'Soluzione: y = '+it(y0,1)+' · eˣ. Con y(0) = 0 resta sempre 0 (soluzione costante).' },
-    { F:(x,y)=>-2*x*y, sol:(x,y0)=>y0*Math.exp(-x*x), t:y0=>'Separabile: y = '+it(y0,1)+' · e<sup>−x²</sup>, una "campana" che va a 0 per x → ±∞.' },
-    { F:(x,y)=>x-y, sol:(x,y0)=>x-1+(y0+1)*Math.exp(-x), t:y0=>'Lineare: y = x − 1 + ('+it(y0+1,1)+') e<sup>−x</sup>. Tutte le soluzioni si attaccano alla retta y = x − 1 per x → +∞.' },
-    { F:(x,y)=>y*(1-y), sol:(x,y0)=> y0===0 ? 0 : 1/(1+((1-y0)/y0)*Math.exp(-x)), t:y0=>'Logistica (separabile): y = 0 e y = 1 sono soluzioni costanti. Se parti tra 0 e 1, sali verso 1 per x → +∞.' }
+    { F:(x,y)=>y, sol:(x,y0)=>y0*Math.exp(x), t:y0=>SV(
+      '<i>Soluzione costante:</i> y = 0 (0′ = 0 = y ✓)',
+      '<i>Separo:</i> dy/y = dx → integro: ln |y| = x + C',
+      '<i>Ricavo y:</i> |y| = e<sup>x + C</sup> = e<sup>C</sup> eˣ, quindi y = K eˣ',
+      '<i>Uso y(0) = '+it(y0,1)+':</i> K · e⁰ = K = '+it(y0,1)+', quindi y = '+it(y0,1)+' · eˣ',
+      '<i>Controllo:</i> y′ = '+it(y0,1)+' · eˣ = y ✓. Con i numeri: y(1) = '+it(y0,1)+' · 2,718 ≈ '+it(y0*Math.E,3)) },
+    { F:(x,y)=>-2*x*y, sol:(x,y0)=>y0*Math.exp(-x*x), t:y0=>SV(
+      '<i>Separo:</i> dy/y = −2x dx',
+      '<i>Integro:</i> ln |y| = −x² + C → y = K e<sup>−x²</sup>',
+      '<i>Uso y(0) = '+it(y0,1)+':</i> K e⁰ = K = '+it(y0,1),
+      '<i>Controllo con la catena:</i> y′ = '+it(y0,1)+' · e<sup>−x²</sup> · (−2x) = −2x · y ✓',
+      '<i>Forma:</i> y(1) = '+it(y0,1)+'/e ≈ '+it(y0/Math.E,3)+', y(2) = '+it(y0,1)+'/e⁴ ≈ '+it(y0*Math.exp(-4),3)+': una campana che va a 0 per x → ±∞') },
+    { F:(x,y)=>x-y, sol:(x,y0)=>x-1+(y0+1)*Math.exp(-x), t:y0=>SV(
+      '<i>Riscrivo:</i> y′ + y = x, lineare con a = 1, A = x, f = x',
+      '<i>Formula:</i> y = e<sup>−x</sup> [∫ x eˣ dx + C]',
+      '<i>Per parti (capitolo 13):</i> ∫ x eˣ dx = (x − 1)eˣ',
+      '<i>Quindi:</i> y = e<sup>−x</sup>[(x − 1)eˣ + C] = x − 1 + C e<sup>−x</sup>',
+      '<i>Uso y(0) = '+it(y0,1)+':</i> 0 − 1 + C = '+it(y0,1)+' → C = '+it(y0+1,1),
+      '<i>Controllo:</i> y′ = 1 − C e<sup>−x</sup>; x − y = x − x + 1 − C e<sup>−x</sup> = 1 − C e<sup>−x</sup> ✓',
+      '<i>Per x → +∞:</i> C e<sup>−x</sup> → 0, tutte si attaccano alla retta y = x − 1') },
+    { F:(x,y)=>y*(1-y), sol:(x,y0)=> y0===0 ? 0 : 1/(1+((1-y0)/y0)*Math.exp(-x)), t:y0=>SV(
+      '<i>Soluzioni costanti:</i> y(1 − y) = 0 per y = 0 e y = 1',
+      '<i>Separo:</i> dy/(y(1 − y)) = dx; fratti semplici: 1/(y(1 − y)) = 1/y + 1/(1 − y)',
+      '<i>Integro:</i> ln |y| − ln |1 − y| = x + C → y/(1 − y) = K eˣ',
+      '<i>Ricavo y:</i> y = K eˣ (1 − y) → y(1 + K eˣ) = K eˣ → y = '+FR('K eˣ','1 + K eˣ'),
+      '<i>Uso y(0) = '+it(y0,1)+':</i> K = y(0)/(1 − y(0)) = '+(y0===1?'(infinito: è la costante y = 1)':it(y0,1)+'/'+it(1-y0,1)+' ≈ '+it(y0/(1-y0),3)),
+      '<i>Con i numeri:</i> y(2) ≈ '+it(y0===0?0:1/(1+((1-y0)/y0)*Math.exp(-2)),3)+'. Se parti tra 0 e 1, sali verso 1 per x → +∞') }
   ];
   draws['equazioni-differenziali'] = () => {
     const c = ED[+$('edS').value], y0 = (+$('edY').value)/10, cv = $('plotED');
@@ -3722,10 +4012,37 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       const m = c.F(x,y), dx = 1, dy = m, L = Math.hypot(dx*sx, dy*sy), k = 9/L;
       g.beginPath(); g.moveTo(X(x)-dx*sx*k, Y(y)+dy*sy*k); g.lineTo(X(x)+dx*sx*k, Y(y)-dy*sy*k); g.stroke(); }
     g.globalAlpha = 1;
-    $('edOut').innerHTML = 'y(0) = <b class="cop">'+it(y0,1)+'</b><br><span style="font-size:1rem">'+c.t(y0)+'</span>';
+    $('edOut').innerHTML = 'y(0) = <b class="cop">'+it(y0,1)+'</b>'+c.t(y0);
   };
   $('edS').addEventListener('change', () => draws['equazioni-differenziali']());
   $('edY').addEventListener('input', () => draws['equazioni-differenziali']());
+
+  video('equazioni-differenziali', [
+    { show:'<h3>Equazioni differenziali</h3>L\'incognita è una funzione y(x). Esempio: y′ = y',
+      say:'Equazioni differenziali. Qui l\'incognita è una funzione, y di x, e l\'equazione lega y alle sue derivate. Esempio: y primo uguale y. Una funzione uguale alla sua derivata.' },
+    { show:'y = eˣ → y′ = eˣ = y ✓ · y = 5eˣ → y′ = 5eˣ = y ✓ · tutte: y = K eˣ',
+      say:'e alla x funziona: la sua derivata è e alla x. Ma anche cinque e alla x: derivata cinque e alla x. Tutte le funzioni K per e alla x sono soluzioni.' },
+    { show:'Cauchy: y′ = y, y(0) = 2 → K · e⁰ = K = 2 → y = 2eˣ',
+      say:'Per sceglierne una sola serve la condizione iniziale: il problema di Cauchy. Se y di zero è due, allora K per e alla zero, cioè K, vale due. La soluzione è due e alla x.' },
+    { show:'Separabili: y′ = a(x) · b(y) → '+FR('dy','b(y)')+' = a(x) dx → integro tutti e due i lati',
+      say:'Primo tipo: le equazioni a variabili separabili. y primo è un pezzo con la x per un pezzo con la y. Porto le y a sinistra e le x a destra, poi integro.' },
+    { show:'Esercizio: y′ = 2y, y(0) = 3 · '+FR('dy','y')+' = 2 dx → ln|y| = 2x + C',
+      say:'Esercizio: y primo uguale due y, con y di zero uguale tre. Separo: d y su y uguale due d x. Integro: logaritmo del valore assoluto di y uguale due x più C.' },
+    { show:'|y| = e<sup>2x + C</sup> = e<sup>C</sup> · e<sup>2x</sup> → y = K e<sup>2x</sup>',
+      say:'Faccio e alla tutti e due i lati: valore assoluto di y uguale e alla due x più C, che è e alla C per e alla due x. Chiamo K la costante: y uguale K e alla due x.' },
+    { show:'y(0) = 3: K · e⁰ = K = 3 → y = 3e<sup>2x</sup> · controllo: y′ = 6e<sup>2x</sup> = 2y ✓',
+      say:'Condizione iniziale: K per e alla zero uguale tre, quindi K è tre. La soluzione è tre e alla due x. Controllo: la derivata è tre per due e alla due x, sei e alla due x, che è proprio due volte y.' },
+    { show:'Lineari: y′ + a(x) y = f(x) → y = e<sup>−A</sup>[∫ f e<sup>A</sup> dx + C]',
+      say:'Secondo tipo: le lineari del primo ordine. y primo più a di x per y uguale f di x. La formula: y uguale e alla meno A per, integrale di f per e alla A, più C. A è una primitiva di a.' },
+    { show:'y′ + y = 1: A = x → e<sup>−x</sup>(∫ eˣ dx + C) = e<sup>−x</sup>(eˣ + C) = 1 + C e<sup>−x</sup>',
+      say:'Esempio: y primo più y uguale uno. a è uno, quindi A è x. Integrale di uno per e alla x: e alla x. Moltiplico per e alla meno x: uno più C e alla meno x.' },
+    { show:'Controllo: y′ = −C e<sup>−x</sup> → y′ + y = −C e<sup>−x</sup> + 1 + C e<sup>−x</sup> = 1 ✓',
+      say:'Controllo: la derivata è meno C e alla meno x. Sommata a y, i due pezzi con C si cancellano e resta uno. Giusto.' },
+    { show:'Secondo ordine: y″ − 3y′ + 2y = 0 → λ² − 3λ + 2 = 0 → Δ = 9 − 8 = 1 → λ = 1, 2',
+      say:'Terzo tipo: secondo ordine a coefficienti costanti. Esempio: y secondo meno tre y primo più due y uguale zero. Provo e alla lambda x e arrivo all\'equazione caratteristica: lambda al quadrato meno tre lambda più due. Delta è nove meno otto, uno. Le radici sono uno e due.' },
+    { show:'y = c₁ eˣ + c₂ e<sup>2x</sup> · Δ = 0: (c₁ + c₂x)e<sup>λx</sup> · Δ &lt; 0: e<sup>αx</sup>(c₁ cos βx + c₂ sin βx)',
+      say:'Con due radici la soluzione è c uno e alla x più c due e alla due x. Se delta è zero si mette c uno più c due x, per e alla lambda x. Se delta è negativo compaiono coseno e seno.' }
+  ]);
 
   guided('equazioni-differenziali', 'lavagna-equazioni-differenziali', [
     { h:'Passo 1 · È separabile: dy/y = 2 dx. Integrando: ln |y| = 2x + C. Ricavo y:', type:'choice', ans:1,
@@ -3736,7 +4053,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Sì: e⁰ = 1, K = 3. La soluzione è y = 3e<sup>2x</sup>.', bad:'e⁰ = 1.' },
     { h:'Passo 3 · Controllo: y′ = 6e<sup>2x</sup> e 2y = 6e<sup>2x</sup>. Torna? Calcola y(ln 2) = 3 e<sup>2 ln 2</sup>.', type:'nums', ans:[12],
       html:'y(ln 2) = '+inp('y(ln 2)'),
-      ok:'Perfetto: e<sup>2 ln 2</sup> = (e<sup>ln 2</sup>)² = 4, quindi 3 · 4 = 12.', bad:'e<sup>2 ln 2</sup> = e<sup>ln 4</sup> = 4.' }
+      ok:'Perfetto: e<sup>2 ln 2</sup> = (e<sup>ln 2</sup>)² = 2² = 4, quindi 3 · 4 = 12. E il controllo torna: y′ = 3 · e<sup>2x</sup> · 2 = 6e<sup>2x</sup> = 2 · 3e<sup>2x</sup> = 2y ✓', bad:'e<sup>2 ln 2</sup> = e<sup>ln 4</sup> = 4.' }
   ], '<b>Fatto!</b> y′ = 2y, y(0) = 3 ha soluzione y = 3e<sup>2x</sup>. Schema: separo, integro, ricavo y, uso y(0) per la costante, controllo derivando.');
 
   EX['equazioni-differenziali'] = [

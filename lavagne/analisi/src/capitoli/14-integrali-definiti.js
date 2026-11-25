@@ -1,9 +1,9 @@
   /* ===== capitolo 14: Integrali definiti ===== */
   order.push('integrali-definiti'); NAMES['integrali-definiti'] = '14 Integrali definiti';
   const ID = [
-    { f:x=>x*x, a:0, b:2, ex:8/3, exs:'8/3 ≈ 2,6667', xr:[-0.3,2.3], yr:[-0.5,4.5] },
-    { f:Math.sin, a:0, b:Math.PI, ex:2, exs:'2', xr:[-0.3,3.5], yr:[-0.3,1.3] },
-    { f:Math.exp, a:0, b:1, ex:Math.E-1, exs:'e − 1 ≈ 1,7183', xr:[-0.2,1.2], yr:[-0.3,3] }
+    { f:x=>x*x, a:0, b:2, ex:8/3, exs:'8/3 ≈ 2,6667', xr:[-0.3,2.3], yr:[-0.5,4.5], fn:'(X)²', ab:'[0, 2]', len:'2', ft:'F(x) = x³/3: F(2) − F(0) = 8/3 − 0 = 8/3 ≈ 2,6667' },
+    { f:Math.sin, a:0, b:Math.PI, ex:2, exs:'2', xr:[-0.3,3.5], yr:[-0.3,1.3], fn:'sin X', ab:'[0, π]', len:'π', ft:'F(x) = −cos x: F(π) − F(0) = −cos π − (−cos 0) = 1 + 1 = 2' },
+    { f:Math.exp, a:0, b:1, ex:Math.E-1, exs:'e − 1 ≈ 1,7183', xr:[-0.2,1.2], yr:[-0.3,3], fn:'e<sup>X</sup>', ab:'[0, 1]', len:'1', ft:'F(x) = eˣ: F(1) − F(0) = e − e⁰ = e − 1 ≈ 1,7183' }
   ];
   draws['integrali-definiti'] = () => {
     const c = ID[+$('idS').value], n = +$('idN').value, w = (c.b-c.a)/n;
@@ -11,25 +11,57 @@
     let S = 0; for (let k=0;k<n;k++) S += c.f(c.a+(k+0.5)*w)*w;
     plotF($('plotID'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], area:{f:step, a:c.a, b:c.b, color:'--thief'},
       fns:[{f:step, color:'--thief', width:1}, {f:c.f, color:'--ink', width:2.5}] });
-    $('idOut').innerHTML = 'Somma di '+n+' rettangoli = <b class="thief">'+it(S,4)+'</b> · area vera = <b class="cop">'+c.exs+'</b><br><span style="font-size:1rem">Differenza: '+it(Math.abs(S-c.ex),4)+'. Più rettangoli, più si avvicina.</span>';
+    $('idOut').innerHTML = 'Somma di '+n+' rettangoli = <b class="thief">'+it(S,4)+'</b> · area vera = <b class="cop">'+c.exs+'</b>';
+    const rows = []; for (let k=0;k<Math.min(n,4);k++){ const m=c.a+(k+0.5)*w; rows.push('rettangolo '+(k+1)+': punto di mezzo '+it(m,3)+', altezza '+c.fn.replace('X',it(m,3))+' ≈ '+it(c.f(m),4)+', area ≈ '+it(c.f(m),4)+' · '+it(w,3)+' ≈ '+it(c.f(m)*w,4)); }
+    $('idOut').innerHTML += SV(
+      '<i>Larghezza di ogni rettangolo:</i> lunghezza di '+c.ab+' diviso n = '+c.len+'/'+n+' ≈ '+it(w,4),
+      '<i>I primi rettangoli:</i> '+rows.join('; ')+(n>4?'; … e così via fino al '+n+'°':''),
+      '<i>Sommo tutte le aree:</i> ≈ '+it(S,4),
+      '<i>Area vera con il teorema fondamentale:</i> '+c.ft,
+      '<i>Differenza:</i> '+it(Math.abs(S-c.ex),4)+'. Più rettangoli, più si avvicina');
   };
   $('idS').addEventListener('change', () => draws['integrali-definiti']());
   $('idN').addEventListener('input', () => draws['integrali-definiti']());
 
   const INT = (a,b) => '<span class="sig"><span>'+b+'</span><b>∫</b><span>'+a+'</span></span>';
+  video('integrali-definiti', [
+    { show:'<h3>Integrali definiti</h3>'+INT('a','b')+' f(x) dx = area sotto il grafico tra a e b',
+      say:'Integrali definiti. L\'integrale da a a b di f di x è l\'area sotto il grafico di f, tra x uguale a e x uguale b.' },
+    { show:'x² su [0, 2] con 2 rettangoli: larghezza 2/2 = 1 · mezzi 0,5 e 1,5',
+      say:'Esempio: x al quadrato tra zero e due. Non so l\'area sotto la curva, ma so quella dei rettangoli. Con due rettangoli, ognuno largo uno, i punti di mezzo sono zero virgola cinque e uno virgola cinque.' },
+    { show:'0,5² · 1 = 0,25 · 1,5² · 1 = 2,25 · somma = 2,5',
+      say:'Il primo rettangolo è alto zero virgola cinque al quadrato, zero virgola venticinque. Il secondo uno virgola cinque al quadrato, due virgola venticinque. Sommo: due virgola cinque.' },
+    { show:'4 rettangoli larghi 0,5: (0,0625 + 0,5625 + 1,5625 + 3,0625) · 0,5 = 2,625',
+      say:'Con quattro rettangoli larghi zero virgola cinque: le altezze sono zero virgola zero sei, zero virgola cinquantasei, uno virgola cinquantasei, tre virgola zero sei. Sommo e moltiplico per zero virgola cinque: due virgola sei due cinque. Si avvicina a otto terzi, due virgola sei sei sei.' },
+    { show:'Teorema fondamentale: '+INT('a','b')+' f(x) dx = F(b) − F(a) · F primitiva di f',
+      say:'Il teorema fondamentale del calcolo dice che per l\'area basta una primitiva: l\'integrale da a a b è F di b meno F di a.' },
+    { show:'Perché: A(1,1) − A(1) = 1,331/3 − 1/3 ≈ 0,1104 ≈ f(1) · 0,1 = 0,1',
+      say:'Perché? Chiamo A di x l\'area da zero fino a x. Se sposto x da uno a uno virgola uno, aggiungo una striscia sottile: circa zero virgola undici. È quasi un rettangolo alto f di uno, cioè uno, e largo zero virgola uno. Quindi la derivata dell\'area è f: l\'area è una primitiva.' },
+    { show:INT(0,2)+' x² dx = ['+FR('x³','3')+']<sub>0</sub><sup>2</sup> = '+FR('8','3')+' − 0 = '+FR('8','3')+' ≈ 2,667',
+      say:'Allora: la primitiva di x al quadrato è x al cubo su tre. In due vale otto terzi, in zero vale zero. L\'area è otto terzi, circa due virgola sei sei sette. Proprio dove andavano i rettangoli.' },
+    { show:'Esercizio: '+INT(0,2)+' (x² + 1) dx · F(x) = '+FR('x³','3')+' + x · F′ = x² + 1 ✓',
+      say:'Esercizio: integrale da zero a due di x al quadrato più uno. La primitiva è x al cubo su tre più x. Controllo: derivata x al quadrato più uno.' },
+    { show:'F(2) = '+FR('8','3')+' + 2 = '+FR('8','3')+' + '+FR('6','3')+' = '+FR('14','3')+' · F(0) = 0 → '+FR('14','3')+' ≈ 4,67',
+      say:'F di due: otto terzi più due, cioè otto terzi più sei terzi, quattordici terzi. F di zero: zero. Il risultato è quattordici terzi, circa quattro virgola sessantasette.' },
+    { show:'Attenzione: sin x su [0, 2π]: 2 + (−2) = 0, ma area vera = 2 + |−2| = 4',
+      say:'Attenzione: dove la funzione è sotto l\'asse, l\'integrale conta negativo. Seno da zero a pi greco fa due, da pi greco a due pi greco fa meno due. L\'integrale totale è zero, ma l\'area vera è due più due, quattro.' },
+    { show:'Improprio: '+INT(1,'M')+' '+FR('1','x²')+' dx = 1 − '+FR('1','M')+' → 1 · '+INT(1,'M')+' '+FR('1','x')+' dx = ln M → +∞',
+      say:'Ultimo: gli integrali fino a infinito. Da uno a M di uno su x al quadrato fa uno meno uno su M, che tende a uno: converge. Da uno a M di uno su x fa logaritmo di M, che va a più infinito: diverge. Come le serie: converge solo se p è maggiore di uno.' }
+  ]);
+
   guided('integrali-definiti', 'lavagna-integrali-definiti', [
     { h:'Passo 1 · Primitiva di x² + 1:', type:'choice', ans:1,
       opts:['2x + C','x³/3 + x','x³ + x'],
-      ok:'Giusto. Per l\'integrale definito la C non serve: si cancella in F(b) − F(a).', bad:'xᵃ → x<sup>a+1</sup>/(a + 1). E 1 → x.' },
+      ok:'Giusto: x² → x³/3 e 1 → x. Controllo: (x³/3 + x)′ = x² + 1 ✓. La C non serve: (F(b) + C) − (F(a) + C) = F(b) − F(a).', bad:'xᵃ → x<sup>a+1</sup>/(a + 1). E 1 → x.' },
     { h:'Passo 2 · F(2) = 2³/3 + 2 = ?', type:'nums', ans:[14/3],
       html:'F(2) = '+inp('F(2)'),
       ok:'Sì: 8/3 + 6/3 = 14/3.', bad:'8/3 + 2 = 8/3 + 6/3.' },
     { h:'Passo 3 · F(0) = 0³/3 + 0 = ?', type:'nums', ans:[0],
       html:'F(0) = '+inp('F(0)'),
-      ok:'Esatto.', bad:'Metti 0 al posto di x.' },
+      ok:'Esatto: 0/3 + 0 = 0.', bad:'Metti 0 al posto di x.' },
     { h:'Passo 4 · Risultato: F(2) − F(0).', type:'nums', ans:[14/3],
       html:INT(0,2)+' (x² + 1) dx = '+inp('risultato'),
-      ok:'Perfetto: 14/3 ≈ 4,67.', bad:'14/3 − 0.' }
+      ok:'Perfetto: 14/3 − 0 = 14/3 ≈ 4,67. Controllo a occhio: f va da 1 a 5 su un tratto lungo 2, quindi l\'area sta tra 1 · 2 = 2 e 5 · 2 = 10 ✓', bad:'14/3 − 0.' }
   ], '<b>Fatto!</b> '+INT(0,2)+' (x² + 1) dx = [x³/3 + x]<sub>0</sub><sup>2</sup> = 14/3 − 0 = 14/3. Schema: primitiva → F(b) → F(a) → sottrai.');
 
   EX['integrali-definiti'] = [

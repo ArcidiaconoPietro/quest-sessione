@@ -3,28 +3,96 @@
   const SF = [
     { f:x=>x*x*x-3*x, xr:[-3,3], yr:[-5,5], excl:[], asy:[], ext:[{x:-1,y:2,label:'max'},{x:1,y:-2,label:'min'}], fl:[{x:0,y:0,label:'flesso'}],
       sign:x=>x*x*x-3*x, zeros:[-Math.sqrt(3),0,Math.sqrt(3)],
-      t:['<b>Dominio:</b> tutto ℝ (è un polinomio). È dispari: f(−x) = −f(x), quindi simmetrica rispetto all\'origine.',
-         '<b>Segno:</b> x³ − 3x = x(x² − 3) &gt; 0 per −√3 &lt; x &lt; 0 e per x &gt; √3. Zone verdi: sopra l\'asse; zone rosse: sotto. Tocca l\'asse in −√3, 0, √3.',
-         '<b>Limiti:</b> '+LIMX('+∞')+' f(x) = +∞, '+LIMX('−∞')+' f(x) = −∞. Niente asintoti (un polinomio di grado 3 non ha nemmeno l\'obliquo: f(x)/x → +∞).',
-         '<b>f′(x) = 3x² − 3</b> = 0 per x = ±1. f′ &gt; 0 fuori da [−1, 1]: sale, scende, sale. Massimo in (−1, 2), minimo in (1, −2).',
-         '<b>f″(x) = 6x</b>: negativa per x &lt; 0 (∩), positiva per x &gt; 0 (∪). Cambia segno in 0: flesso in (0, 0).',
-         '<b>Disegno:</b> sale fino al massimo, scende passando per il flesso, risale dopo il minimo.'] },
+      t:['<b>Dominio</b>'+SV(
+           '<i>Cosa può dare problemi:</i> denominatori, logaritmi, radici pari. Qui x³ − 3x è un polinomio, non c\'è niente di questo',
+           '<i>Quindi:</i> dominio = tutto ℝ',
+           '<i>Simmetria, calcolo f(−x):</i> (−x)³ − 3(−x) = −x³ + 3x = −(x³ − 3x) = −f(x): è <b>dispari</b>, simmetrica rispetto all\'origine',
+           '<i>Controllo con i numeri:</i> f(2) = 8 − 6 = 2 e f(−2) = −8 + 6 = −2 ✓'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>Raccolgo x:</i> x³ − 3x = x(x² − 3)',
+           '<i>Quando fa 0:</i> x = 0, oppure x² − 3 = 0 → x² = 3 → x = ±√3 ≈ ±1,73',
+           '<i>Segno dei pezzi:</i> x &gt; 0 per x &gt; 0; x² − 3 &gt; 0 per x &lt; −√3 o x &gt; √3',
+           '<i>Metto insieme (prodotto):</i> x &lt; −√3: (−)(+) = −; tra −√3 e 0: (−)(−) = +; tra 0 e √3: (+)(−) = −; x &gt; √3: (+)(+) = +',
+           '<i>Controllo con i numeri:</i> f(−1) = −1 + 3 = 2 &gt; 0 ✓; f(1) = 1 − 3 = −2 &lt; 0 ✓',
+           '<i>Asse y:</i> f(0) = 0. Zone verdi: sopra l\'asse; zone rosse: sotto'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>Raccolgo x³:</i> x³ − 3x = x³(1 − 3/x²)',
+           '<i>Per x → +∞:</i> 3/x² → 0, quindi x³ · (1 − 0) → +∞. Con i numeri: f(10) = 1000 − 30 = 970',
+           '<i>Per x → −∞:</i> x³ → −∞, quindi f → −∞. f(−10) = −970',
+           '<i>Asintoto obliquo?</i> f(x)/x = x² − 3 → +∞, non è un numero: niente obliquo. Niente punti esclusi: niente verticali'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Derivo:</i> f′(x) = 3x² − 3 = 3(x² − 1)',
+           '<i>Dove fa 0:</i> x² − 1 = 0 → x² = 1 → x = −1 oppure x = 1',
+           '<i>Segno, provo un numero per zona:</i> f′(−2) = 12 − 3 = 9 &gt; 0; f′(0) = −3 &lt; 0; f′(2) = 9 &gt; 0',
+           '<i>Quindi:</i> sale, scende, sale. In −1 da + a −: massimo. In 1 da − a +: minimo',
+           '<i>Valori:</i> f(−1) = −1 + 3 = 2 → massimo (−1, 2); f(1) = 1 − 3 = −2 → minimo (1, −2)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Derivo f′ = 3x² − 3:</i> f″(x) = 6x',
+           '<i>Segno:</i> f″(−1) = −6 &lt; 0 → ∩ per x &lt; 0; f″(1) = 6 &gt; 0 → ∪ per x &gt; 0',
+           '<i>Cambio di segno in 0:</i> flesso, f(0) = 0 → flesso in (0, 0)'),
+         '<b>Disegno</b>'+SV(
+           '<i>Punti:</i> zeri −1,73; 0; 1,73 · massimo (−1, 2) · minimo (1, −2) · flesso (0, 0)',
+           '<i>Andamento:</i> da −∞ sale fino al massimo, scende passando per il flesso, risale dopo il minimo verso +∞')] },
     { f:x=>x*x/(x-1), xr:[-4,5], yr:[-8,10], excl:[1], asy:[{type:'v',x:1},{type:'o',m:1,q:1}], ext:[{x:0,y:0,label:'max'},{x:2,y:4,label:'min'}], fl:[],
       sign:x=>x*x/(x-1), zeros:[0],
-      t:['<b>Dominio:</b> x ≠ 1 (il denominatore non può fare 0). Linea tratteggiata: x = 1 è escluso.',
-         '<b>Segno:</b> x² ≥ 0 sempre, quindi il segno è quello di x − 1: positiva per x &gt; 1, negativa per x &lt; 1 (tranne x = 0, dove vale 0).',
-         '<b>Limiti:</b> '+LIMX('1⁺')+' f(x) = +∞ e '+LIMX('1⁻')+' f(x) = −∞: asintoto verticale x = 1. Per x → ±∞, f → ±∞; m = 1, q = 1: asintoto obliquo y = x + 1.',
-         '<b>f′(x) = x(x − 2)/(x − 1)²</b> = 0 per x = 0 e x = 2. Segno di f′: + − − +. Massimo in (0, 0), minimo in (2, 4).',
-         '<b>f″(x) = 2/(x − 1)³</b>: negativa per x &lt; 1 (∩), positiva per x &gt; 1 (∪). Cambia segno in x = 1, ma lì f non esiste: nessun flesso.',
-         '<b>Disegno:</b> due rami, uno a sinistra e uno a destra dell\'asintoto verticale, entrambi attaccati all\'obliqua y = x + 1 da lontano.'] },
+      t:['<b>Dominio</b>'+SV(
+           '<i>C\'è un denominatore:</i> x − 1 ≠ 0 → x ≠ 1',
+           '<i>Dominio:</i> tutto ℝ tranne 1. Linea tratteggiata: x = 1 è escluso',
+           '<i>Simmetria:</i> f(2) = 4/1 = 4 e f(−2) = 4/(−3) ≈ −1,33: né uguali né opposti, quindi né pari né dispari'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>Sopra:</i> x² ≥ 0 sempre, vale 0 solo in x = 0',
+           '<i>Sotto:</i> x − 1 &gt; 0 per x &gt; 1, &lt; 0 per x &lt; 1',
+           '<i>Quindi:</i> positiva per x &gt; 1, negativa per x &lt; 1 (tranne x = 0, dove vale 0)',
+           '<i>Controllo:</i> f(2) = 4 &gt; 0; f(−1) = 1/(−2) = −0,5 &lt; 0; f(0,5) = 0,25/(−0,5) = −0,5 &lt; 0 ✓',
+           '<i>Asse y:</i> f(0) = 0/(−1) = 0'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>x → 1⁺:</i> sopra → 1, sotto → 0 positivo, quindi +∞. Con i numeri: f(1,01) = 1,0201/0,01 ≈ 102',
+           '<i>x → 1⁻:</i> sopra → 1, sotto → 0 negativo, quindi −∞. f(0,99) = 0,9801/(−0,01) ≈ −98. <b>Asintoto verticale x = 1</b>',
+           '<i>x → ±∞:</i> divido per x: x/(1 − 1/x) → ±∞. Nessun orizzontale, provo l\'obliquo',
+           '<i>m:</i> f(x)/x = x²/(x² − x) = 1/(1 − 1/x) → 1/(1 − 0) = 1',
+           '<i>q:</i> f(x) − x = x²/(x − 1) − x = (x² − x(x − 1))/(x − 1) = (x² − x² + x)/(x − 1) = x/(x − 1) → 1',
+           '<i>Asintoto obliquo y = x + 1.</i> Controllo: f(100) = 10 000/99 ≈ 101,01 e 100 + 1 = 101 ✓'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Quoziente:</i> f′ = '+FR('2x · (x − 1) − x² · 1','(x − 1)²')+' = '+FR('2x² − 2x − x²','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' = '+FR('x(x − 2)','(x − 1)²'),
+           '<i>Dove fa 0:</i> x = 0 oppure x − 2 = 0 → x = 2',
+           '<i>Segno (sotto è un quadrato, sempre &gt; 0):</i> f′(−1) = (−1)(−3)/4 = 0,75 &gt; 0; f′(0,5) = 0,5 · (−1,5)/0,25 = −3 &lt; 0; f′(1,5) = 1,5 · (−0,5)/0,25 = −3 &lt; 0; f′(3) = 3 · 1/4 = 0,75 &gt; 0',
+           '<i>Quindi + − − +:</i> massimo in 0, f(0) = 0 → (0, 0); minimo in 2, f(2) = 4/1 = 4 → (2, 4)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Trucco, divido x² per x − 1:</i> x² = (x − 1)(x + 1) + 1, quindi f(x) = x + 1 + '+FR('1','x − 1'),
+           '<i>Derivo:</i> f′(x) = 1 − '+FR('1','(x − 1)²')+' (controllo: '+FR('(x − 1)² − 1','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' ✓)',
+           '<i>Derivo ancora:</i> f″(x) = '+FR('2','(x − 1)³'),
+           '<i>Segno:</i> f″(0) = 2/(−1) = −2 &lt; 0 → ∩ per x &lt; 1; f″(2) = 2/1 = 2 &gt; 0 → ∪ per x &gt; 1',
+           '<i>Flessi:</i> cambia segno solo in x = 1, ma lì f non esiste: nessun flesso'),
+         '<b>Disegno</b>'+SV(
+           '<i>Ramo sinistro:</i> arriva da −∞ attaccato a y = x + 1, sale al massimo (0, 0), scende a −∞ vicino a x = 1',
+           '<i>Ramo destro:</i> scende da +∞ vicino a x = 1 fino al minimo (2, 4), poi risale attaccato a y = x + 1')] },
     { f:x=>x*Math.exp(-x), xr:[-1,6], yr:[-2,1], excl:[], asy:[{type:'h',y:0,from:0}], ext:[{x:1,y:Math.exp(-1),label:'max'}], fl:[{x:2,y:2*Math.exp(-2),label:'flesso'}],
       sign:x=>x, zeros:[0],
-      t:['<b>Dominio:</b> tutto ℝ.',
-         '<b>Segno:</b> e<sup>−x</sup> &gt; 0 sempre, quindi il segno è quello di x: positiva per x &gt; 0, negativa per x &lt; 0. Passa per (0, 0).',
-         '<b>Limiti:</b> '+LIMX('+∞')+' x e<sup>−x</sup> = '+LIMX('+∞')+' x/eˣ = 0 (l\'esponenziale vince): asintoto orizzontale y = 0 a destra. '+LIMX('−∞')+' f(x) = −∞.',
-         '<b>f′(x) = (1 − x) e<sup>−x</sup></b>: positiva per x &lt; 1, negativa per x &gt; 1. Massimo in (1, 1/e) ≈ (1; 0,37).',
-         '<b>f″(x) = (x − 2) e<sup>−x</sup></b>: cambia segno in x = 2. Flesso in (2, 2/e²) ≈ (2; 0,27).',
-         '<b>Disegno:</b> sale da −∞, arriva al massimo in x = 1, scende piano verso 0 cambiando concavità in x = 2.'] }
+      t:['<b>Dominio</b>'+SV(
+           '<i>x e e<sup>−x</sup> esistono per ogni x:</i> dominio = tutto ℝ',
+           '<i>Simmetria:</i> f(1) = e<sup>−1</sup> ≈ 0,37 e f(−1) = −1 · e¹ ≈ −2,72: né pari né dispari'),
+         '<b>Segno e assi</b>'+SV(
+           '<i>e<sup>−x</sup> = 1/eˣ è sempre &gt; 0:</i> il segno è quello di x',
+           '<i>Quindi:</i> positiva per x &gt; 0, negativa per x &lt; 0',
+           '<i>Asse y:</i> f(0) = 0 · e⁰ = 0 · 1 = 0, passa per (0, 0)'),
+         '<b>Limiti e asintoti</b>'+SV(
+           '<i>x → +∞:</i> x e<sup>−x</sup> = x/eˣ, forma ∞/∞',
+           '<i>Con i numeri:</i> f(5) = 5/148,4 ≈ 0,034; f(10) = 10/22 026 ≈ 0,00045',
+           '<i>De L\'Hôpital:</i> (x)′/(eˣ)′ = 1/eˣ → 0. <b>Asintoto orizzontale y = 0</b> a destra',
+           '<i>x → −∞:</i> x → −∞ e e<sup>−x</sup> → +∞, prodotto −∞. f(−3) = −3e³ ≈ −60'),
+         '<b>Derivata prima</b>'+SV(
+           '<i>Prodotto (e catena per e<sup>−x</sup>, la cui derivata è −e<sup>−x</sup>):</i> f′ = 1 · e<sup>−x</sup> + x · (−e<sup>−x</sup>) = e<sup>−x</sup>(1 − x)',
+           '<i>Dove fa 0:</i> e<sup>−x</sup> non è mai 0, quindi 1 − x = 0 → x = 1',
+           '<i>Segno:</i> f′(0) = 1 · 1 = 1 &gt; 0; f′(2) = e<sup>−2</sup> · (−1) ≈ −0,14 &lt; 0',
+           '<i>Massimo in x = 1:</i> f(1) = 1/e ≈ 0,368 → (1; 0,37)'),
+         '<b>Derivata seconda</b>'+SV(
+           '<i>Derivo f′ = (1 − x)e<sup>−x</sup>:</i> (−1) · e<sup>−x</sup> + (1 − x) · (−e<sup>−x</sup>) = e<sup>−x</sup>(−1 − 1 + x) = (x − 2)e<sup>−x</sup>',
+           '<i>Dove fa 0:</i> x = 2',
+           '<i>Segno:</i> f″(0) = −2 &lt; 0 → ∩ prima di 2; f″(3) = e<sup>−3</sup> &gt; 0 → ∪ dopo 2',
+           '<i>Flesso:</i> f(2) = 2e<sup>−2</sup> ≈ 2 · 0,135 = 0,271 → (2; 0,27)'),
+         '<b>Disegno</b>'+SV(
+           '<i>Andamento:</i> sale da −∞, passa per (0, 0), arriva al massimo (1; 0,37), scende',
+           '<i>Dopo:</i> in (2; 0,27) cambia concavità e si appoggia piano sull\'asintoto y = 0')] }
   ];
   draws['studio-funzione'] = () => {
     const c = SF[+$('sfS').value], n = +$('sfN').value, o = { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns:[], points:[], vlines:[] };
@@ -39,10 +107,37 @@
     if (n>=5) c.fl.forEach(p => o.points.push({...p, color:'--cop'}));
     if (n>=6) o.fns.push({f:c.f, color:'--ink', width:2.5});
     plotF($('plotSF'), o);
-    $('sfOut').innerHTML = '<span style="font-size:1rem">Passo '+n+' di 6 · '+c.t[n-1]+'</span>';
+    $('sfOut').innerHTML = 'Passo '+n+' di 6 · '+c.t[n-1];
   };
   $('sfS').addEventListener('change', () => { $('sfN').value = 1; draws['studio-funzione'](); });
   $('sfN').addEventListener('input', () => draws['studio-funzione']());
+
+  video('studio-funzione', [
+    { show:'<h3>Studio di funzione</h3>f(x) = '+FR('x²','x − 1'),
+      say:'Studio di funzione completo, con tutti i calcoli. La funzione è x al quadrato diviso x meno uno.' },
+    { show:'1 · Dominio: x − 1 ≠ 0 → <b>x ≠ 1</b>',
+      say:'Primo passo, il dominio. C\'è un denominatore, che non può fare zero: x meno uno diverso da zero, cioè x diverso da uno.' },
+    { show:'2 · Segno: x² ≥ 0 · x − 1 &gt; 0 per x &gt; 1 → f &gt; 0 per x &gt; 1, f &lt; 0 per x &lt; 1 · f(0) = 0',
+      say:'Secondo, il segno. Sopra x al quadrato è sempre positivo o zero. Sotto x meno uno è positivo per x maggiore di uno. Quindi la funzione è positiva dopo uno e negativa prima. In zero vale zero.' },
+    { show:'3 · x → 1⁺: f(1,01) = 1,0201/0,01 ≈ 102 → +∞ · x → 1⁻: f(0,99) ≈ −98 → −∞',
+      say:'Terzo, i limiti. Vicino a uno da destra: uno virgola zero due zero uno diviso zero virgola zero uno, circa centodue. Va a più infinito. Da sinistra circa meno novantotto, va a meno infinito. Asintoto verticale x uguale a uno.' },
+    { show:'m = '+LIMX('+∞')+' '+FR('x²','x² − x')+' = '+FR('1','1 − 1/x')+' → 1',
+      say:'Per x che va all\'infinito la funzione va all\'infinito, quindi cerco l\'asintoto obliquo. m è il limite di f di x su x: x al quadrato su x al quadrato meno x. Divido per x al quadrato: uno su uno meno uno su x, che tende a uno.' },
+    { show:'q = '+FR('x²','x − 1')+' − x = '+FR('x² − x² + x','x − 1')+' = '+FR('x','x − 1')+' → 1 → <b>y = x + 1</b>',
+      say:'q è il limite di f di x meno m per x. Faccio il denominatore comune: x al quadrato meno x per x meno uno, cioè x al quadrato meno x al quadrato più x. Resta x su x meno uno, che tende a uno. Asintoto obliquo y uguale x più uno.' },
+    { show:'Controllo: f(100) = 10 000/99 ≈ 101,01 · retta: 100 + 1 = 101',
+      say:'Controllo: f di cento è diecimila su novantanove, circa centouno virgola zero uno. La retta dà centouno. Vicinissimi.' },
+    { show:'4 · f′ = '+FR('2x(x − 1) − x²','(x − 1)²')+' = '+FR('x² − 2x','(x − 1)²')+' = '+FR('x(x − 2)','(x − 1)²'),
+      say:'Quarto, la derivata prima, con la regola del quoziente. Sopra: due x per x meno uno, meno x al quadrato per uno. Due x al quadrato meno due x meno x al quadrato fa x al quadrato meno due x, cioè x per x meno due. Sotto x meno uno al quadrato.' },
+    { show:'f′ = 0 in x = 0 e x = 2 · f′(−1) = 0,75 &gt; 0 · f′(0,5) = −3 · f′(1,5) = −3 · f′(3) = 0,75',
+      say:'La derivata fa zero in zero e in due. Il segno lo provo con un numero per zona: in meno uno viene zero virgola settantacinque, positivo. In zero virgola cinque meno tre, negativo. In uno virgola cinque meno tre. In tre zero virgola settantacinque, positivo.' },
+    { show:'+ − − + → massimo (0, 0), minimo (2, 4): f(2) = 4/1 = 4',
+      say:'Quindi sale, scende, scende, sale. In zero da più a meno: massimo, e f di zero è zero. In due da meno a più: minimo, e f di due è quattro su uno, quattro.' },
+    { show:'5 · f = x + 1 + '+FR('1','x − 1')+' → f″ = '+FR('2','(x − 1)³')+' · f″(0) = −2 ∩ · f″(2) = 2 ∪',
+      say:'Quinto, la derivata seconda. Trucco: x al quadrato è x meno uno per x più uno, più uno. Quindi f è x più uno più uno su x meno uno. Derivando due volte viene due su x meno uno al cubo. In zero vale meno due, concava verso il basso. In due vale due, verso l\'alto. Cambia segno solo in uno, che è escluso: niente flessi.' },
+    { show:'6 · Disegno: due rami, asintoto x = 1 e y = x + 1, max (0, 0), min (2, 4)',
+      say:'Sesto, il disegno. Il ramo di sinistra arriva vicino alla retta y uguale x più uno, sale al massimo in zero e precipita a meno infinito vicino a uno. Il ramo di destra scende da più infinito al minimo in due, quattro, e poi risale vicino alla retta.' }
+  ]);
 
   guided('studio-funzione', 'lavagna-studio-funzione', [
     { h:'Passo 1 · Derivata prima: f′(x) = 3x² − 12. Dove fa 0? (scrivi prima il più piccolo)', type:'nums', ans:[-2,2],
@@ -50,13 +145,13 @@
       ok:'Giusto: 3x² = 12, x² = 4, x = ±2.', bad:'3x² − 12 = 0 → x² = 4.' },
     { h:'Passo 2 · Segno di f′ = 3(x² − 4): positiva fuori da [−2, 2], negativa dentro. Dove c\'è il massimo?', type:'choice', ans:0,
       opts:['in x = −2: f′ passa da + a −','in x = 2: f′ passa da + a −','non ci sono massimi'],
-      ok:'Esatto: prima sale, poi scende. In x = 2 invece c\'è il minimo (da − a +).', bad:'Massimo = prima sale (f′ &gt; 0) poi scende (f′ &lt; 0).' },
+      ok:'Esatto. Con i numeri: f′(−3) = 27 − 12 = 15 &gt; 0, f′(0) = −12 &lt; 0, f′(3) = 15 &gt; 0. In −2 da + a −: massimo. In x = 2 invece c\'è il minimo (da − a +): f(2) = 8 − 24 = −16.', bad:'Massimo = prima sale (f′ &gt; 0) poi scende (f′ &lt; 0).' },
     { h:'Passo 3 · Quanto vale il massimo? f(−2) = (−2)³ − 12 · (−2)', type:'nums', ans:[16],
       html:'f(−2) = '+inp('f(−2)'),
       ok:'Perfetto: −8 + 24 = 16. Il massimo è nel punto (−2, 16).', bad:'(−2)³ = −8 e −12 · (−2) = +24.' },
     { h:'Passo 4 · Derivata seconda f″(x) = 6x. Dove c\'è il flesso?', type:'choice', ans:1,
       opts:['in x = 2','in x = 0: f″ cambia segno','non c\'è'],
-      ok:'Sì: 6x &lt; 0 per x &lt; 0 e &gt; 0 per x &gt; 0. Flesso in (0, 0).', bad:'Dove 6x cambia segno?' }
+      ok:'Sì: f″(−1) = −6 &lt; 0 e f″(1) = 6 &gt; 0, quindi 6x cambia segno in 0. f(0) = 0 − 0 = 0: flesso in (0, 0).', bad:'Dove 6x cambia segno?' }
   ], '<b>Fatto!</b> f(x) = x³ − 12x: massimo in (−2, 16), minimo in (2, −16), flesso in (0, 0). È la stessa forma della prima funzione del grafico, solo più "stirata".');
 
   EX['studio-funzione'] = [

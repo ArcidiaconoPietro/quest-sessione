@@ -7,6 +7,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-equazioni-differenziali"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · prima guardiamo</div>
       <h2>L'equazione ti dice la pendenza in ogni punto</h2>
       <p>y′ = f(x, y) dice: se passi dal punto (x, y), la tua pendenza è f(x, y). Disegno un trattino con quella pendenza in tanti punti (il "campo delle direzioni"). Una soluzione è una curva che segue i trattini. Scegli il punto di partenza y(0): ottieni una sola curva. Questo è il <b>problema di Cauchy</b>.</p>
@@ -34,6 +39,14 @@
         <div class="step"><h3>4 · Condizione iniziale</h3><p>Metto x₀ e y₀ per trovare C.</p></div>
       </div>
       <div class="math left">y′ = 2xy: &nbsp; dy/y = 2x dx → ln |y| = x² + C → y = K e<sup>x²</sup> &nbsp; (K costante qualsiasi, anche 0)</div>
+      <ol class="sv">
+        <li><i>Soluzione costante:</i> b(y) = y, fa 0 per y = 0, quindi y = 0 è soluzione</li>
+        <li><i>Separo:</i> dy/dx = 2xy → dy/y = 2x dx</li>
+        <li><i>Integro:</i> ∫ dy/y = ln |y|; ∫ 2x dx = x². Quindi ln |y| = x² + C</li>
+        <li><i>Ricavo y (e alla … di tutti e due i lati):</i> |y| = e<sup>x² + C</sup> = e<sup>C</sup> · e<sup>x²</sup>, quindi y = K e<sup>x²</sup> con K = ±e<sup>C</sup> (o 0)</li>
+        <li><i>Controllo:</i> y′ = K e<sup>x²</sup> · 2x = 2x · y ✓</li>
+        <li><i>Se y(0) = 5:</i> K e⁰ = K = 5, quindi y = 5e<sup>x²</sup>; y(1) = 5e ≈ 13,6</li>
+      </ol>
       <p><b>Perché si può "separare" dy e dx (facile, è la catena):</b> se G è primitiva di 1/b, allora [G(y(x))]′ = y′/b(y) = a(x). Quindi G(y(x)) è una primitiva di a(x). Scrivere dy/b(y) = a(x) dx è solo un modo comodo per ricordarlo.</p>
     </section>
 
@@ -43,6 +56,13 @@
       <div class="math"><span class="box cop">y(x) = e<sup>−A(x)</sup> [ ∫ f(x) e<sup>A(x)</sup> dx + C ] &nbsp; con A primitiva di a</span></div>
       <p><b>Perché:</b> moltiplico l'equazione per e<sup>A(x)</sup>. A sinistra viene y′e<sup>A</sup> + a y e<sup>A</sup>, che è esattamente (y e<sup>A</sup>)′ per la regola del prodotto. Quindi (y e<sup>A</sup>)′ = f e<sup>A</sup>: integro e divido per e<sup>A</sup>.</p>
       <div class="math left">y′ + y = 1: &nbsp; a = 1, A = x → y = e<sup>−x</sup> [∫ eˣ dx + C] = e<sup>−x</sup>(eˣ + C) = 1 + C e<sup>−x</sup></div>
+      <ol class="sv">
+        <li><i>Riconosco:</i> a(x) = 1, f(x) = 1. Primitiva di a: A(x) = x</li>
+        <li><i>Calcolo l'integrale:</i> ∫ f e<sup>A</sup> dx = ∫ 1 · eˣ dx = eˣ</li>
+        <li><i>Metto nella formula:</i> y = e<sup>−x</sup>(eˣ + C) = e<sup>−x</sup>eˣ + C e<sup>−x</sup> = 1 + C e<sup>−x</sup></li>
+        <li><i>Controllo:</i> y′ = −C e<sup>−x</sup>; y′ + y = −C e<sup>−x</sup> + 1 + C e<sup>−x</sup> = 1 ✓</li>
+        <li><i>Se y(0) = 3:</i> 1 + C = 3 → C = 2, y = 1 + 2e<sup>−x</sup>. Per x → +∞ tende a 1</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -54,7 +74,23 @@
         <div><b>Δ = 0</b>, una radice λ: y = (c₁ + c₂ x) e<sup>λx</sup></div>
         <div><b>Δ &lt; 0</b>, radici α ± iβ: y = e<sup>αx</sup> (c₁ cos βx + c₂ sin βx)</div>
       </div>
+      <p>Un esempio per caso, con i calcoli:</p>
+      <ol class="sv">
+        <li><i>Δ &gt; 0, y″ − 3y′ + 2y = 0:</i> λ² − 3λ + 2 = 0, Δ = 9 − 8 = 1, λ = (3 ± 1)/2 → λ = 1 e λ = 2 → y = c₁ eˣ + c₂ e<sup>2x</sup></li>
+        <li><i>Controllo con y = e<sup>2x</sup>:</i> y′ = 2e<sup>2x</sup>, y″ = 4e<sup>2x</sup>; 4e<sup>2x</sup> − 6e<sup>2x</sup> + 2e<sup>2x</sup> = 0 ✓</li>
+        <li><i>Δ = 0, y″ − 2y′ + y = 0:</i> λ² − 2λ + 1 = (λ − 1)² = 0, Δ = 4 − 4 = 0, λ = 1 → y = (c₁ + c₂ x)eˣ</li>
+        <li><i>Δ &lt; 0, y″ + 4y = 0:</i> λ² + 4 = 0 → λ² = −4 → λ = ±2i, quindi α = 0, β = 2 → y = c₁ cos 2x + c₂ sin 2x</li>
+        <li><i>Controllo con y = cos 2x:</i> y′ = −2 sin 2x, y″ = −4 cos 2x; −4 cos 2x + 4 cos 2x = 0 ✓</li>
+        <li><i>Cauchy per il primo, y(0) = 1 e y′(0) = 0:</i> c₁ + c₂ = 1 e c₁ + 2c₂ = 0. Sottraggo: c₂ = −1, quindi c₁ = 2 → y = 2eˣ − e<sup>2x</sup></li>
+      </ol>
       <p><b>Con il termine noto</b> y″ + a y′ + b y = f(x): soluzione = (soluzione dell'omogenea) + (una soluzione particolare). La particolare si cerca "simile" a f <span class="tag mem">a memoria</span>: f polinomio → polinomio dello stesso grado; f = k e<sup>mx</sup> → A e<sup>mx</sup> (se m non è radice); f = cos/sin(ωx) → A cos ωx + B sin ωx.</p>
+      <ol class="sv">
+        <li><i>Esempio y″ + y = x:</i> f è un polinomio di grado 1, provo y<sub>p</sub> = Ax + B</li>
+        <li><i>Derivate:</i> y<sub>p</sub>′ = A, y<sub>p</sub>″ = 0</li>
+        <li><i>Sostituisco:</i> 0 + Ax + B = x → A = 1 e B = 0, quindi y<sub>p</sub> = x</li>
+        <li><i>Omogenea:</i> λ² + 1 = 0 → λ = ±i → c₁ cos x + c₂ sin x</li>
+        <li><i>Soluzione:</i> y = c₁ cos x + c₂ sin x + x</li>
+      </ol>
       <p>Per il problema di Cauchy del secondo ordine servono <b>due</b> condizioni: y(x₀) e y′(x₀), perché ci sono due costanti c₁ e c₂.</p>
     </section>
 
