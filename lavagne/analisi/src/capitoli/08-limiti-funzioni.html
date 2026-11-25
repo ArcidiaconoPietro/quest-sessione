@@ -8,6 +8,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-limiti-funzioni"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · guardare vicino, non sopra</div>
       <p>Il limite <b>non</b> chiede quanto vale f in x₀. Chiede dove va f(x) quando x è <b>vicinissimo</b> a x₀, da sinistra e da destra. La funzione in x₀ può anche non esistere.</p>
       <canvas id="plotLF" aria-label="Grafico di una funzione vicino a un punto"></canvas>
@@ -33,6 +38,14 @@
         <div><span class="lim">lim<span>x→x₀⁺</span></span> f(x): arrivo da <b>destra</b> (x più grande di x₀).</div>
       </div>
       <p><b>Il limite esiste solo se destro e sinistro sono uguali.</b> Esempio 1/x vicino a 0: da sinistra va a −∞, da destra a +∞, quindi <span class="lim">lim<span>x→0</span></span> 1/x non esiste. Con |x|/x: da sinistra vale sempre −1, da destra sempre 1, quindi non esiste.</p>
+      <p>I calcoli, con i numeri:</p>
+      <ol class="sv">
+        <li><i>1/x da sinistra (x negativo, sempre più vicino a 0):</i> x = −0,1 → 1/(−0,1) = −10; x = −0,01 → −100; x = −0,001 → −1000. Va a −∞.</li>
+        <li><i>1/x da destra (x positivo):</i> x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000. Va a +∞.</li>
+        <li><i>|x|/x da sinistra:</i> x = −0,5 → |−0,5|/(−0,5) = 0,5/(−0,5) = −1; x = −0,01 → 0,01/(−0,01) = −1. Sempre −1.</li>
+        <li><i>|x|/x da destra:</i> x = 0,5 → 0,5/0,5 = 1; x = 0,01 → 0,01/0,01 = 1. Sempre 1.</li>
+        <li><i>Confronto:</i> −∞ ≠ +∞ e −1 ≠ 1: in tutti e due i casi <b>il limite per x → 0 non esiste</b>.</li>
+      </ol>
       <p>È la stessa idea delle sottosuccessioni del capitolo 5: due strade con risultati diversi ⇒ il limite non esiste.</p>
     </section>
 
@@ -40,9 +53,16 @@
       <div class="eyebrow">Come si calcola · lo schema</div>
       <h2>Quattro mosse, in quest'ordine</h2>
       <div class="steps">
-        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1) = 10.</p></div>
-        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p></div>
-        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p></div>
+        <div class="step"><h3>1 · Sostituisco</h3><p>Metto x₀ al posto di x. Se esce un numero (o ±∞ in modo chiaro), ho finito. Esempio: <span class="lim">lim<span>x→3</span></span> (x² + 1): sostituisco, 3² + 1 = 9 + 1 = 10. Il limite è 10.</p></div>
+        <div class="step"><h3>2 · Se esce 0/0 con polinomi: scompongo e semplifico</h3><p>Se sopra e sotto fanno 0 in x₀, entrambi contengono il fattore (x − x₀). Lo raccolgo e lo semplifico, poi risostituisco.</p>
+          <p><b>Perché c'è sempre (x − x₀)</b> <span class="tag cap">facile</span>: è il teorema di Ruffini. Se un polinomio vale 0 in x₀, allora si divide per (x − x₀). Esempio: x² − 1 vale 0 in x = 1, e infatti x² − 1 = (x − 1)(x + 1).</p></div>
+        <div class="step"><h3>3 · Se x → ±∞ ed esce ∞/∞: termine dominante</h3><p>Come con le successioni: <span class="lim">lim<span>x→+∞</span></span> (3x² + x)/(x² − 5) = 3.</p>
+          <ol class="sv">
+            <li><i>Sostituisco "x enorme":</i> sopra +∞, sotto +∞: forma ∞/∞</li>
+            <li><i>Divido sopra e sotto per x² (la potenza più alta):</i> <span class="fr"><span>3x²/x² + x/x²</span><span>x²/x² − 5/x²</span></span> = <span class="fr"><span>3 + 1/x</span><span>1 − 5/x²</span></span></li>
+            <li><i>Per x → +∞:</i> 1/x → 0 e 5/x² → 0, quindi tende a <span class="fr"><span>3 + 0</span><span>1 − 0</span></span> = 3</li>
+            <li><i>Controllo con i numeri:</i> x = 10 → (300 + 10)/(100 − 5) = 310/95 ≈ 3,26; x = 100 → 30 100/9995 ≈ 3,01. Si avvicina a 3 ✓</li>
+          </ol></div>
         <div class="step"><h3>4 · Se ci sono sin, cos, ln, e<sup>x</sup>: limiti notevoli</h3><p>Li trovi nel riquadro qui sotto. Più avanti (capitolo 11) avrai anche De L'Hôpital e Taylor.</p></div>
       </div>
       <p>Le forme indeterminate sono le stesse delle successioni: 0/0, ∞/∞, ∞ − ∞, 0 · ∞, 1<sup>∞</sup>, 0<sup>0</sup>, ∞<sup>0</sup>.</p>
@@ -59,8 +79,31 @@
         <div><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>(1 + x)<sup>a</sup> − 1</span><span>x</span></span> = a</div>
         <div><span class="lim">lim<span>x→±∞</span></span> (1 + <span class="fr"><span>1</span><span>x</span></span>)<sup>x</sup> = e</div>
       </div>
-      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x.</p>
-      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x = <span class="lim">lim<span>x→0</span></span> 5 · sin(5x)/(5x) = 5 · 1 = 5.</p>
+      <p><b>Controllo con i numeri</b> (metto x piccolo, prima 0,1 poi 0,01):</p>
+      <ol class="sv">
+        <li><i>sin x / x:</i> sin(0,1)/0,1 ≈ 0,09983/0,1 = 0,9983; sin(0,01)/0,01 ≈ 0,99998. Tende a 1.</li>
+        <li><i>(1 − cos x)/x²:</i> (1 − cos 0,1)/0,01 ≈ 0,0049958/0,01 ≈ 0,4996. Tende a 0,5 = 1/2.</li>
+        <li><i>ln(1 + x)/x:</i> ln(1,1)/0,1 ≈ 0,0953/0,1 = 0,953; ln(1,01)/0,01 ≈ 0,995. Tende a 1.</li>
+        <li><i>(eˣ − 1)/x:</i> (e<sup>0,1</sup> − 1)/0,1 ≈ 0,1052/0,1 = 1,052; (e<sup>0,01</sup> − 1)/0,01 ≈ 1,005. Tende a 1.</li>
+        <li><i>((1 + x)<sup>a</sup> − 1)/x con a = 2:</i> (1,1² − 1)/0,1 = (1,21 − 1)/0,1 = 0,21/0,1 = 2,1; (1,01² − 1)/0,01 = 0,0201/0,01 = 2,01. Tende a 2 = a.</li>
+        <li><i>(1 + 1/x)<sup>x</sup> per x → +∞:</i> x = 10 → 1,1¹⁰ ≈ 2,594; x = 100 → 1,01¹⁰⁰ ≈ 2,705; x = 1000 → ≈ 2,717. Tende a e ≈ 2,718.</li>
+      </ol>
+      <p><b>Perché sin x / x → 1</b> <span class="tag cap">da capire col disegno</span>: vicino a 0 il grafico di sin x è quasi la retta y = x (guarda il secondo esempio nel grafico sopra). Quindi sin x diviso x è quasi x diviso x = 1. Gli altri funzionano allo stesso modo: vicino a 0, ln(1 + x) ≈ x e eˣ − 1 ≈ x. Questi due, e (1 + 1/x)<sup>x</sup> → e, hanno una dimostrazione lunga: <span class="tag mem">conviene impararli a memoria</span>.</p>
+      <p><b>Perché (1 − cos x)/x² → 1/2</b> <span class="tag cap">facile, se sai già sin x / x</span>:</p>
+      <ol class="sv">
+        <li><i>Moltiplico sopra e sotto per (1 + cos x):</i> <span class="fr"><span>(1 − cos x)(1 + cos x)</span><span>x² (1 + cos x)</span></span></li>
+        <li><i>Sopra è una differenza di quadrati:</i> (1 − cos x)(1 + cos x) = 1 − cos²x = sin²x</li>
+        <li><i>Riscrivo:</i> <span class="fr"><span>sin²x</span><span>x²</span></span> · <span class="fr"><span>1</span><span>1 + cos x</span></span> = (<span class="fr"><span>sin x</span><span>x</span></span>)² · <span class="fr"><span>1</span><span>1 + cos x</span></span></li>
+        <li><i>Per x → 0:</i> sin x / x → 1, e cos x → cos 0 = 1, quindi tende a 1² · <span class="fr"><span>1</span><span>1 + 1</span></span> = <span class="fr"><span>1</span><span>2</span></span></li>
+      </ol>
+      <p><b>Trucco per usarli:</b> al posto di x può esserci qualsiasi cosa che tende a 0, purché sia <b>la stessa cosa</b> sopra e sotto. Esempio: <span class="lim">lim<span>x→0</span></span> sin(5x)/x.</p>
+      <ol class="sv">
+        <li><i>Sostituisco x = 0:</i> sin(0)/0 = 0/0, forma indeterminata</li>
+        <li><i>Sopra c'è sin(5x): per usare il notevole, sotto mi serve 5x, non x. Moltiplico e divido per 5:</i> <span class="fr"><span>sin(5x)</span><span>x</span></span> = 5 · <span class="fr"><span>sin(5x)</span><span>5x</span></span></li>
+        <li><i>Chiamo t = 5x:</i> se x → 0, anche t = 5x → 0, e <span class="fr"><span>sin t</span><span>t</span></span> → 1</li>
+        <li><i>Risultato:</i> 5 · 1 = <b>5</b></li>
+        <li><i>Controllo con i numeri:</i> x = 0,01 → sin(0,05)/0,01 ≈ 0,04998/0,01 ≈ 4,998 ✓</li>
+      </ol>
     </section>
 
     <section class="board">

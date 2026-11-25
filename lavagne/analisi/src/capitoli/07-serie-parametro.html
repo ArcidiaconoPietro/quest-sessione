@@ -11,6 +11,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-serie-parametro"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Attrezzo 1 <span class="tag mem">enunciato a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Il confronto asintotico</h2>
       <p><b>L'idea:</b> per n → +∞ conta solo come si comporta il termine "da lontano". Se due serie a termini positivi hanno termini che da lontano sono praticamente uguali (a meno di una costante), fanno la stessa fine.</p>
@@ -18,6 +23,16 @@
       <p>È l'equivalenza asintotica a<sub>n</sub> ~ b<sub>n</sub> che hai già visto nel blocco del 12/11. Lì ti sembrava teoria inutile: <b>qui serve davvero</b>.</p>
       <p><b>Ricetta:</b> 1) trovo il termine dominante sopra e sotto; 2) ottengo una cosa tipo 1/n<sup>p</sup>; 3) guardo p.</p>
       <div class="math">a<sub>n</sub> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> ~ <span class="fr"><span>n</span><span>n³</span></span> = <span class="fr"><span>1</span><span>n²</span></span> → p = 2 &gt; 1 → converge</div>
+      <p>Ecco tutti i calcoli di questo esempio:</p>
+      <ol class="sv">
+        <li><i>Scelgo b<sub>n</sub>:</i> il termine dominante sopra è n, sotto è n³, quindi provo b<sub>n</sub> = n/n³ = 1/n².</li>
+        <li><i>Faccio il rapporto (dividere per 1/n² è moltiplicare per n²):</i> <span class="fr"><span>a<sub>n</sub></span><span>b<sub>n</sub></span></span> = <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> · n² = <span class="fr"><span>n³ + 3n²</span><span>n³ + 1</span></span></li>
+        <li><i>Con i numeri:</i> n = 10 → 1300/1001 ≈ 1,30; n = 100 → 1 030 000/1 000 001 ≈ 1,03. Si avvicina a 1.</li>
+        <li><i>Limite (divido sopra e sotto per n³):</i> <span class="fr"><span>1 + 3/n</span><span>1 + 1/n³</span></span>, e 3/n e 1/n³ tendono a 0, quindi tende a <span class="fr"><span>1 + 0</span><span>1 + 0</span></span> = 1.</li>
+        <li><i>Controllo ℓ:</i> ℓ = 1 è un numero finito e diverso da 0 ✓</li>
+        <li><i>Conclusione:</i> Σ a<sub>n</sub> fa come Σ 1/n², che converge (p = 2 &gt; 1). Quindi <b>converge</b>.</li>
+      </ol>
+      <p><b>Perché funziona</b> <span class="tag cap">facile</span>: se a<sub>n</sub>/b<sub>n</sub> tende a 1, da un certo n in poi il rapporto sta tra 0,5 e 2, cioè 0,5 · b<sub>n</sub> ≤ a<sub>n</sub> ≤ 2 · b<sub>n</sub>. Se Σ b<sub>n</sub> converge, anche Σ 2b<sub>n</sub> converge, e a<sub>n</sub> è più piccolo: converge (confronto). Se Σ b<sub>n</sub> diverge, anche Σ 0,5 · b<sub>n</sub> diverge, e a<sub>n</sub> è più grande: diverge. Per questo ℓ non deve essere 0 né ∞: servono tutte e due le disuguaglianze.</p>
       <p>Nel grafico vedi il rapporto a<sub>n</sub>/b<sub>n</sub>: per n → +∞ si stabilizza su un numero (non 0, non ∞). Quello è il segnale che le due serie fanno la stessa fine.</p>
       <canvas id="plotAs" aria-label="Rapporto tra termini equivalenti"></canvas>
       <div class="controls"><label for="asS">Esempio: <select id="asS">
@@ -27,7 +42,8 @@
         <option value="3">1 − cos(1/n) confrontato con 1/n²</option>
       </select></label></div>
       <div class="readout" id="asOut"></div>
-      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span></div>
+      <div class="note"><b>Equivalenze che usi sempre</b> (per n → +∞, quando dentro c'è una cosa che tende a 0): sin(1/n) ~ 1/n · ln(1 + 1/n) ~ 1/n · e<sup>1/n</sup> − 1 ~ 1/n · 1 − cos(1/n) ~ 1/(2n²). Vengono dai limiti notevoli che conosci dal liceo. <span class="tag mem">a memoria</span><br>
+        Prova con n = 10, cioè 1/n = 0,1: sin(0,1) ≈ 0,0998 (quasi 0,1) · ln(1,1) ≈ 0,0953 (quasi 0,1) · e<sup>0,1</sup> − 1 ≈ 0,1052 (quasi 0,1) · 1 − cos(0,1) ≈ 0,0050, e 1/(2 · 100) = 0,005. Più n è grande, più i due numeri sono vicini.</div>
     </section>
 
     <section class="board">
@@ -37,9 +53,28 @@
       <div class="math left"><span class="box cop">Se b<sub>n</sub> è decrescente e <span class="lim">lim<span>n→+∞</span></span> b<sub>n</sub> = 0, allora Σ (−1)ⁿ b<sub>n</sub> converge.</span></div>
       <p><b>L'idea:</b> fai un passo avanti, uno indietro più corto, uno avanti ancora più corto… Ti avvicini sempre di più a un punto fisso. Guardalo:</p>
       <canvas id="plotLeib" aria-label="Somme parziali di una serie a segni alterni"></canvas>
-      <p>Le somme parziali di 1 − 1/2 + 1/3 − … fanno zig-zag, ma il zig-zag si stringe intorno a 0,693.</p>
+      <p>Le somme parziali di 1 − 1/2 + 1/3 − … calcolate una per una:</p>
+      <ol class="sv">
+        <li><i>S₁:</i> 1</li>
+        <li><i>S₂ = S₁ − 1/2:</i> 1 − 0,5 = 0,5</li>
+        <li><i>S₃ = S₂ + 1/3:</i> 0,5 + 0,333 = 0,833</li>
+        <li><i>S₄ = S₃ − 1/4:</i> 0,833 − 0,25 = 0,583</li>
+        <li><i>S₅ = S₄ + 1/5:</i> 0,583 + 0,2 = 0,783</li>
+        <li><i>S₆ = S₅ − 1/6:</i> 0,783 − 0,167 = 0,617</li>
+        <li><i>Cosa noto:</i> i dispari (1; 0,833; 0,783) scendono, i pari (0,5; 0,583; 0,617) salgono. La distanza tra due somme vicine è il termine aggiunto: 1/2, 1/3, 1/4, … che tende a 0. Le due file si stringono sullo stesso numero, 0,693…</li>
+      </ol>
+      <p><b>Perché funziona</b> <span class="tag cap">facile</span>: è proprio il conto qui sopra. Da S<sub>n</sub> a S<sub>n+2</sub> fai un passo di b<sub>n+1</sub> in un verso e uno di b<sub>n+2</sub> nell'altro; siccome b<sub>n+2</sub> ≤ b<sub>n+1</sub> (decrescente), il secondo passo non annulla il primo, quindi una fila scende sempre e l'altra sale sempre, senza mai superarsi. La distanza tra loro è b<sub>n</sub>, che tende a 0: finiscono sullo stesso numero.</p>
       <div class="warn"><b>Attenzione:</b> Σ 1/n diverge, ma Σ (−1)ⁿ/n converge. I segni alterni cambiano tutto. E se b<sub>n</sub> non tende a 0, la serie non converge (condizione necessaria del capitolo 6).</div>
       <p><b>Convergenza assoluta</b> <span class="tag mem">a memoria</span>: se Σ |a<sub>n</sub>| converge, allora converge anche Σ a<sub>n</sub>. Utile quando i segni sono "a caso", per esempio con sin n: metti il valore assoluto e usi i criteri per serie positive.</p>
+      <p>Esempio con i calcoli: Σ sin(n)/n².</p>
+      <ol class="sv">
+        <li><i>Perché serve:</i> sin 1 ≈ 0,84, sin 2 ≈ 0,91, sin 4 ≈ −0,76, sin 5 ≈ −0,96: i segni non si alternano con regola, Leibniz non si applica.</li>
+        <li><i>Metto il valore assoluto:</i> |sin(n)/n²| = |sin n|/n²</li>
+        <li><i>Maggioro:</i> |sin n| ≤ 1 sempre, quindi |sin n|/n² ≤ 1/n²</li>
+        <li><i>Confronto:</i> Σ 1/n² converge (p = 2 &gt; 1), quindi anche Σ |sin n|/n² converge</li>
+        <li><i>Convergenza assoluta:</i> Σ |a<sub>n</sub>| converge, quindi <b>Σ sin(n)/n² converge</b></li>
+      </ol>
+      <p><b>Perché vale</b> <span class="tag cap">abbastanza facile</span>: se togli i segni e la somma resta finita, rimettendo i meno puoi solo togliere qualcosa, non far esplodere la somma. (La dimostrazione formale è più lunga: <span class="tag mem">enunciato a memoria</span>.)</p>
     </section>
 
     <section class="board">
@@ -47,7 +82,8 @@
       <h2>Serie con parametro</h2>
       <p>La domanda è: "per quali valori di x (o di α) la serie converge?". Non c'è un criterio nuovo: usi quelli che sai, e <b>dividi in casi</b>.</p>
       <div class="steps">
-        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p></div>
+        <div class="step"><h3>1 · Uso rapporto o radice con il valore assoluto</h3><p>Di solito esce L = |x| (o qualcosa con x). Allora: |x| &lt; 1 converge, |x| &gt; 1 non converge.</p>
+          <p>Con i numeri, per Σ xⁿ/n: con x = 0,5 i termini sono 0,5; 0,125; 0,042; 0,016 → si rimpiccioliscono come 0,5ⁿ (L = 0,5 &lt; 1). Con x = 2 i termini sono 2; 2; 2,67; 4; 6,4 → crescono (L = 2 &gt; 1), non tendono a 0, non converge.</p></div>
         <div class="step"><h3>2 · I casi di confine li faccio a mano</h3><p>Dove L = 1 il criterio non dice niente: sostituisco quei valori di x (di solito x = 1 e x = −1) e studio le due serie che escono.</p></div>
         <div class="step"><h3>3 · Scrivo la risposta finale come insieme</h3><p>Per esempio: la serie converge per −1 ≤ x &lt; 1.</p></div>
       </div>

@@ -6,6 +6,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-sottosuccessioni"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Cos'è</div>
       <p>Una sottosuccessione è una successione fatta prendendo <b>solo alcuni termini</b>, sempre in avanti. Esempio: solo i termini con n pari, oppure solo quelli con n dispari.</p>
       <p><b>Regola:</b> se <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = L, allora ogni sua sottosuccessione ha limite L. Se tutta la fila arriva in caserma, ci arriva anche chiunque prendi dalla fila.</p>
@@ -16,13 +21,27 @@
         <label for="sD"><input type="checkbox" id="sD" checked> mostra i dispari</label>
       </div>
       <div class="legend"><span><i style="background:var(--cop)"></i>n pari: limite 1</span><span><i style="background:var(--thief)"></i>n dispari: limite −1</span></div>
-      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Per n → +∞ i pari tendono a 1 e i dispari a −1: due limiti diversi, quindi <b>il limite non esiste</b>.</p>
+      <p>Qui a<sub>n</sub> = (−1)ⁿ · n/(n+1). Ecco i calcoli:</p>
+      <ol class="sv">
+        <li><i>Cosa fa (−1)ⁿ:</i> (−1)² = (−1)·(−1) = 1; (−1)³ = (−1)·(−1)·(−1) = −1. Con n pari vale 1, con n dispari vale −1.</li>
+        <li><i>n pari, quindi a<sub>n</sub> = 1 · n/(n+1) = n/(n+1). Con i numeri:</i> n = 2 → 2/3 ≈ 0,67; n = 10 → 10/11 ≈ 0,91; n = 100 → 100/101 ≈ 0,99.</li>
+        <li><i>Limite dei pari (divido sopra e sotto per n):</i> <span class="fr"><span>n</span><span>n + 1</span></span> = <span class="fr"><span>1</span><span>1 + 1/n</span></span>, e 1/n tende a 0, quindi tende a <span class="fr"><span>1</span><span>1 + 0</span></span> = 1.</li>
+        <li><i>n dispari, quindi a<sub>n</sub> = −1 · n/(n+1) = −n/(n+1). Con i numeri:</i> n = 1 → −1/2 = −0,5; n = 9 → −9/10 = −0,9; n = 99 → −0,99.</li>
+        <li><i>Limite dei dispari:</i> è lo stesso conto con il meno davanti, quindi tende a −1.</li>
+        <li><i>Confronto:</i> 1 ≠ −1. Due sottosuccessioni con limiti diversi, quindi <b>il limite per n → +∞ di a<sub>n</sub> non esiste</b>.</li>
+      </ol>
+      <p><b>Perché la regola funziona</b> <span class="tag cap">facile</span>: se il limite fosse un numero L, da un certo punto in poi <b>tutti</b> i termini sarebbero vicinissimi a L, sia i pari sia i dispari. Ma i pari stanno vicino a 1 e i dispari vicino a −1, che distano 2: non possono essere tutti vicini allo stesso numero.</p>
     </section>
 
     <section class="board">
       <div class="eyebrow">Bolzano-Weierstrass · solo enunciato</div>
       <div class="math left"><span class="box cop">Ogni successione <b>limitata</b> ha almeno una sottosuccessione che converge.</span></div>
-      <p>Esempio: (−1)ⁿ non converge, ma è limitata (sta tra −1 e 1), e infatti i termini pari formano 1, 1, 1, … che converge a 1.</p>
+      <p>Esempio con i calcoli: a<sub>n</sub> = (−1)ⁿ.</p>
+      <ol class="sv">
+        <li><i>È limitata?</i> Vale solo −1 o 1, quindi −1 ≤ (−1)ⁿ ≤ 1 per ogni n: sì.</li>
+        <li><i>Converge?</i> I termini sono −1, 1, −1, 1, …: pari → 1, dispari → −1, limiti diversi, quindi no.</li>
+        <li><i>BW promette una sottosuccessione convergente. Eccola:</i> prendo solo gli n pari: a₂, a₄, a₆, … = 1, 1, 1, … che converge a 1.</li>
+      </ol>
       <p>Attenzione: BW non dice che tutta la successione converge. Dice solo che <b>una parte</b> converge.</p>
     </section>
 

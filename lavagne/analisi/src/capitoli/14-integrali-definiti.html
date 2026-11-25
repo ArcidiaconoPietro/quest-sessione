@@ -8,6 +8,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-integrali-definiti"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea · prima guardiamo i numeri</div>
       <h2>Tanti rettangoli sottili</h2>
       <p>Non so calcolare l'area sotto una curva, ma so calcolare quella dei rettangoli. Divido [a, b] in n pezzi, su ciascuno metto un rettangolo alto quanto f nel punto di mezzo, e sommo. Aumenta n: la somma si avvicina all'area vera.</p>
@@ -29,8 +34,15 @@
       <h2>Per l'area basta una primitiva</h2>
       <div class="math left"><span class="box cop">Se f è continua su [a, b] e F è una sua primitiva, allora <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = F(b) − F(a) = [F(x)]<sub>a</sub><sup>b</sup></span></div>
       <p><b>Perché (facile):</b> chiamo A(x) l'area da a fino a x. Se sposto x di un pochino h, aggiungo una striscia sottile alta circa f(x) e larga h: A(x + h) − A(x) ≈ f(x) · h. Divido per h e faccio il limite per h → 0: A′(x) = f(x). Quindi l'area A è una primitiva di f! E A(a) = 0, da cui A(b) = F(b) − F(a).</p>
+      <ol class="sv">
+        <li><i>Con i numeri, f(x) = x² da 0:</i> A(x) = x³/3. A(1) = 1/3 ≈ 0,3333; A(1,1) = 1,331/3 ≈ 0,4437</li>
+        <li><i>Striscia aggiunta:</i> A(1,1) − A(1) ≈ 0,4437 − 0,3333 = 0,1104</li>
+        <li><i>Rettangolo alto f(1) e largo h = 0,1:</i> 1 · 0,1 = 0,1. Quasi uguale, e con h più piccolo la differenza sparisce</li>
+        <li><i>Diviso h:</i> 0,1104/0,1 ≈ 1,10 → tende a f(1) = 1 per h → 0. Cioè A′(1) = f(1)</li>
+        <li><i>Perché A(b) = F(b) − F(a):</i> A e F sono primitive della stessa f, quindi A = F + k. Siccome A(a) = 0, k = −F(a). Allora A(b) = F(b) − F(a)</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Funzione integrale.</b> F(x) = <span class="sig"><span>x</span><b>∫</b><span>a</span></span> f(t) dt ha derivata F′(x) = f(x).</span></div>
-      <div class="math left"><b>Teorema della media</b> <span class="tag mem">a memoria</span>: se f è continua su [a, b], esiste c in [a, b] con <span class="fr"><span>1</span><span>b − a</span></span> <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = f(c). L'altezza media del grafico è raggiunta da qualche parte.</div>
+      <div class="math left"><b>Teorema della media</b> <span class="tag mem">a memoria</span>: se f è continua su [a, b], esiste c in [a, b] con <span class="fr"><span>1</span><span>b − a</span></span> <span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx = f(c). L'altezza media del grafico è raggiunta da qualche parte.<br>Esempio: x² su [0, 2]. Integrale 8/3, diviso la lunghezza 2: (8/3)/2 = 8/6 = 4/3 ≈ 1,33. Cerco c: c² = 4/3 → c = √(4/3) ≈ 1,155, che sta in [0, 2] ✓</div>
     </section>
 
     <section class="board">
@@ -38,10 +50,18 @@
       <h2>Cosa ti serve all'esame</h2>
       <div class="steps">
         <div class="step"><h3>Linearità e additività</h3><p>∫ (a f + b g) = a ∫ f + b ∫ g. Se a &lt; c &lt; b, l'integrale da a a b = da a a c + da c a b (spezzo l'area).</p></div>
-        <div class="step"><h3>Funzioni dispari su [−a, a]</h3><p>Se f(−x) = −f(x), l'integrale da −a ad a fa 0: l'area sopra e quella sotto si cancellano.</p></div>
-        <div class="step"><h3>Area vera (sempre positiva)</h3><p>Se f cambia segno, spezza nei punti dove f = 0 e prendi il valore assoluto di ogni pezzo. Area tra due curve: ∫ (sopra − sotto) dx.</p></div>
-        <div class="step"><h3>Sostituzione: cambia anche gli estremi</h3><p>Se pongo t = g(x), gli estremi diventano g(a) e g(b). Così non devi tornare alla x.</p></div>
-        <div class="step"><h3>Integrali impropri</h3><p>Se un estremo è ±∞: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> f dx = <span class="lim">lim<span>M→+∞</span></span> <span class="sig"><span>M</span><b>∫</b><span>1</span></span> f dx. Come le serie: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> 1/xᵖ dx converge solo se p &gt; 1.</p></div>
+        <div class="step"><h3>Funzioni dispari su [−a, a]</h3><p>Se f(−x) = −f(x), l'integrale da −a ad a fa 0: l'area sopra e quella sotto si cancellano.</p><p>Esempio: ∫ x³ da −1 a 1 = [x⁴/4] da −1 a 1 = 1/4 − (−1)⁴/4 = 1/4 − 1/4 = 0.</p></div>
+        <div class="step"><h3>Area vera (sempre positiva)</h3><p>Se f cambia segno, spezza nei punti dove f = 0 e prendi il valore assoluto di ogni pezzo. Area tra due curve: ∫ (sopra − sotto) dx.</p>
+          <p>Esempio: sin x su [0, 2π]. ∫ da 0 a π = −cos π + cos 0 = 1 + 1 = 2; ∫ da π a 2π = −cos 2π + cos π = −1 − 1 = −2. L'integrale fa 2 + (−2) = 0, ma l'area vera è 2 + |−2| = 4.</p></div>
+        <div class="step"><h3>Sostituzione: cambia anche gli estremi</h3><p>Se pongo t = g(x), gli estremi diventano g(a) e g(b). Così non devi tornare alla x.</p>
+          <p>Esempio: ∫ 2x e<sup>x²</sup> da 0 a 1. Pongo t = x², dt = 2x dx. Estremi: x = 0 → t = 0; x = 1 → t = 1. Diventa ∫ eᵗ da 0 a 1 = e¹ − e⁰ = e − 1 ≈ 1,718.</p></div>
+        <div class="step"><h3>Integrali impropri</h3><p>Se un estremo è ±∞: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> f dx = <span class="lim">lim<span>M→+∞</span></span> <span class="sig"><span>M</span><b>∫</b><span>1</span></span> f dx. Come le serie: <span class="sig"><span>+∞</span><b>∫</b><span>1</span></span> 1/xᵖ dx converge solo se p &gt; 1.</p>
+          <ol class="sv">
+            <li><i>p = 2, fino a M:</i> ∫ 1/x² da 1 a M = [−1/x] da 1 a M = −1/M − (−1/1) = 1 − 1/M</li>
+            <li><i>Per M → +∞:</i> 1/M → 0, quindi tende a 1: <b>converge</b>, vale 1. (M = 10 → 0,9; M = 100 → 0,99)</li>
+            <li><i>p = 1, fino a M:</i> ∫ 1/x da 1 a M = ln M − ln 1 = ln M</li>
+            <li><i>Per M → +∞:</i> ln M → +∞ (M = 100 → 4,6; M = 10⁶ → 13,8): <b>diverge</b></li>
+          </ol></div>
       </div>
     </section>
 

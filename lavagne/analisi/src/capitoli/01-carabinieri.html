@@ -7,6 +7,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-carabinieri"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea in una storia</div>
       <p>Un <span class="thief">ladro</span> cammina zigzagando. Ha un <span class="cop">carabiniere</span> a sinistra e un <span class="cop">carabiniere</span> a destra che lo tengono per le braccia.</p>
       <p>Se i due carabinieri arrivano <b>tutti e due</b> in caserma, il ladro in mezzo ci arriva per forza. Non importa quanto zigzaga.</p>
@@ -25,19 +30,21 @@
       <p>Esempio: <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span>. Premi "passo successivo".</p>
       <div class="steps" data-recipe>
         <div class="step"><h3>Passo 1 · Parti da quello che sai sempre</h3>
-          <p>Il seno sta sempre tra −1 e 1, per ogni n.</p>
+          <p>Il seno sta sempre tra −1 e 1, per ogni n. Con i numeri: sin 1 ≈ 0,84; sin 4 ≈ −0,76; sin 8 ≈ 0,99; sin 11 ≈ −1,00. Salta su e giù, ma non esce mai da −1 e 1.</p>
           <div class="math"><span class="box cop">−1</span> ≤ <span class="box thief">sin n</span> ≤ <span class="box cop">1</span></div>
         </div>
         <div class="step" hidden><h3>Passo 2 · Costruisci la tua espressione</h3>
           <p>Nella successione il seno è diviso per n. Divido <b>tutti e tre</b> i pezzi per n. Siccome n è positivo, i segni ≤ non cambiano.</p>
+          <p>Controllo con n = 10: −1/10 = −0,1; sin 10/10 ≈ −0,544/10 = −0,054; 1/10 = 0,1. E infatti −0,1 ≤ −0,054 ≤ 0,1 ✓</p>
           <div class="math"><span class="box cop"><span class="fr"><span>−1</span><span>n</span></span></span> ≤ <span class="box thief"><span class="fr"><span>sin n</span><span>n</span></span></span> ≤ <span class="box cop"><span class="fr"><span>1</span><span>n</span></span></span></div>
         </div>
         <div class="step" hidden><h3>Passo 3 · Dove vanno i carabinieri?</h3>
-          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Tutti e due vanno a 0.</p>
+          <p>Quando n → +∞, 1 diviso un numero enorme è quasi zero. Con i numeri: 1/10 = 0,1; 1/100 = 0,01; 1/1000 = 0,001; e −1/n fa −0,1; −0,01; −0,001. Tutti e due vanno a 0.</p>
           <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> −1/n = 0</span> <span class="box cop"><span class="lim">lim<span>n→+∞</span></span> 1/n = 0</span></div>
         </div>
         <div class="step" hidden><h3>Passo 4 · Conclusione</h3>
-          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì.</p>
+          <p>Stesso posto per tutti e due i carabinieri, quindi anche il ladro va lì. Con n = 1000 il ladro è chiuso tra −0,001 e 0,001: è a meno di un millesimo da 0.</p>
+          <p><b>Perché funziona</b> <span class="tag cap">facile</span>: se tutti e due i carabinieri sono a meno di 0,001 da 0, il ladro che sta in mezzo è anche lui a meno di 0,001 da 0. E lo stesso con 0,000001, o con qualsiasi distanza piccola che scegli: basta aspettare n abbastanza grande.</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> sin n / n = 0</span></div>
         </div>
       </div>
@@ -48,7 +55,7 @@
       <div class="eyebrow">Attenzione</div>
       <h2>Quando NON funziona</h2>
       <p>Quando n → +∞, i due carabinieri devono andare nello <b>stesso</b> posto. Se uno va a 0 e l'altro a 5, il ladro può stare ovunque in mezzo e non concludi niente.</p>
-      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre:</p>
+      <p>Esempio: −1 ≤ cos n ≤ 1. I carabinieri −1 e 1 restano −1 e 1: posti diversi. Infatti cos n non ha limite, oscilla per sempre: cos 1 ≈ 0,54; cos 3 ≈ −0,99; cos 6 ≈ 0,96; cos 22 ≈ −1,00; cos 25 ≈ 0,99.</p>
       <canvas id="plot2" aria-label="Grafico: cos n tra meno 1 e 1, non converge"></canvas>
     </section>
 

@@ -8,6 +8,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-integrali-indefiniti"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Perché + C · prima guardiamo <span class="tag cap">facile</span></div>
       <h2>Tante primitive, tutte "parallele"</h2>
       <p>Se F è una primitiva, anche F + 1, F − 3, F + C vanno bene: la derivata di una costante è 0. Nel grafico: sposta C, la curva sale e scende, ma nel punto x₀ la pendenza resta la stessa, e vale proprio f(x₀).</p>
@@ -38,7 +43,19 @@
         <div>∫ <span class="fr"><span>1</span><span>√(1 − x²)</span></span> dx = arcsin x + C</div>
       </div>
       <p>Linearità <span class="tag cap">facile</span>: ∫ (a f + b g) dx = a ∫ f dx + b ∫ g dx. <b>Il trucco per controllare sempre:</b> deriva il risultato. Se torna f, è giusto.</p>
+      <ol class="sv">
+        <li><i>∫ x² dx con la regola (a = 2):</i> x<sup>2+1</sup>/(2 + 1) = x³/3 + C. Controllo: (x³/3)′ = 3x²/3 = x² ✓</li>
+        <li><i>∫ sin x dx = −cos x + C.</i> Controllo: (−cos x)′ = −(−sin x) = sin x ✓ (per questo c'è il meno)</li>
+        <li><i>∫ √x dx, cioè a = 1/2:</i> x<sup>3/2</sup>/(3/2) = (2/3) x<sup>3/2</sup> + C. Controllo: (2/3) · (3/2) x<sup>1/2</sup> = √x ✓</li>
+        <li><i>∫ (4x³ − 6x + 5) dx, pezzo per pezzo:</i> 4 · x⁴/4 − 6 · x²/2 + 5x = x⁴ − 3x² + 5x + C. Controllo: 4x³ − 6x + 5 ✓</li>
+      </ol>
       <p><b>Immediati "generalizzati"</b>: se dentro c'è g(x) e fuori c'è g′(x), è la catena al contrario. ∫ g′(x)/g(x) dx = ln |g(x)| + C, ∫ g′(x) e<sup>g(x)</sup> dx = e<sup>g(x)</sup> + C. Esempio: ∫ 2x/(x² + 1) dx = ln(x² + 1) + C.</p>
+      <ol class="sv">
+        <li><i>Chi è g:</i> sotto c'è g(x) = x² + 1</li>
+        <li><i>La sua derivata:</i> g′(x) = 2x, ed è proprio quello che c'è sopra</li>
+        <li><i>Quindi è g′/g:</i> ∫ g′/g dx = ln |g| + C = ln(x² + 1) + C (x² + 1 è sempre positivo, il modulo si toglie)</li>
+        <li><i>Controllo con la catena:</i> (ln(x² + 1))′ = 1/(x² + 1) · 2x = 2x/(x² + 1) ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -47,6 +64,13 @@
       <p>Pongo t = g(x), quindi dt = g′(x) dx. Riscrivo tutto con t, integro, rimetto x.</p>
       <div class="math left">∫ cos(3x) dx: &nbsp; t = 3x, dt = 3 dx, dx = dt/3 &nbsp;→&nbsp; ∫ cos t · dt/3 = (1/3) sin t + C = (1/3) sin(3x) + C</div>
       <p>Regola pratica: con f(ax + b) dentro, il risultato è F(ax + b)/a. Esempio: ∫ e<sup>2x</sup> dx = e<sup>2x</sup>/2 + C.</p>
+      <ol class="sv">
+        <li><i>Controllo il primo con la catena:</i> ((1/3) sin(3x))′ = (1/3) · cos(3x) · 3 = cos(3x) ✓</li>
+        <li><i>Il secondo, con la sostituzione:</i> t = 2x, dt = 2 dx, dx = dt/2 → ∫ eᵗ dt/2 = eᵗ/2 + C = e<sup>2x</sup>/2 + C</li>
+        <li><i>Controllo:</i> (e<sup>2x</sup>/2)′ = e<sup>2x</sup> · 2/2 = e<sup>2x</sup> ✓</li>
+        <li><i>Un esempio senza regola pratica, ∫ x · cos(x²) dx:</i> t = x², dt = 2x dx, quindi x dx = dt/2 → ∫ cos t · dt/2 = (1/2) sin t + C = (1/2) sin(x²) + C</li>
+        <li><i>Controllo:</i> ((1/2) sin(x²))′ = (1/2) cos(x²) · 2x = x cos(x²) ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -56,6 +80,14 @@
       <p><b>Perché (una riga):</b> (f g)′ = f′g + f g′ (regola del prodotto). Integro tutti e due i lati: f g = ∫ f′g dx + ∫ f g′ dx. Sposto un pezzo e ho la formula.</p>
       <p><b>Chi scegliere come f (da derivare):</b> quella che derivata diventa più semplice. Polinomi: da derivare (x → 1). eˣ, sin, cos: da integrare (restano uguali). ln x e arctan x: sempre da derivare (diventano 1/x e 1/(1 + x²)).</p>
       <div class="math left">∫ ln x dx = ∫ ln x · 1 dx: f = ln x, g′ = 1 → x ln x − ∫ (1/x) · x dx = x ln x − x + C</div>
+      <ol class="sv">
+        <li><i>Scelgo:</i> f = ln x (da derivare), g′ = 1 (da integrare)</li>
+        <li><i>Calcolo i pezzi:</i> f′ = 1/x, g = ∫ 1 dx = x</li>
+        <li><i>Formula f g − ∫ f′ g:</i> ln x · x − ∫ (1/x) · x dx</li>
+        <li><i>Semplifico dentro:</i> (1/x) · x = 1, quindi − ∫ 1 dx = −x</li>
+        <li><i>Risultato:</i> x ln x − x + C</li>
+        <li><i>Controllo:</i> (x ln x − x)′ = (1 · ln x + x · 1/x) − 1 = ln x + 1 − 1 = ln x ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -67,6 +99,17 @@
         <div class="step"><h3>2 · Scompongo Q</h3><p>Radici distinte: <span class="fr"><span>1</span><span>(x − a)(x − b)</span></span> = <span class="fr"><span>A</span><span>x − a</span></span> + <span class="fr"><span>B</span><span>x − b</span></span>. Trovo A e B facendo il denominatore comune e uguagliando i numeratori.</p></div>
         <div class="step"><h3>3 · Integro i pezzi</h3><p>∫ A/(x − a) dx = A ln |x − a| + C. Se Q ha radice doppia: ∫ 1/(x − a)² dx = −1/(x − a) + C. Se Q non ha radici (Δ &lt; 0): si arriva a un arctan.</p></div>
       </div>
+      <p>Esempio con tutti i calcoli: ∫ <span class="fr"><span>1</span><span>x² − 1</span></span> dx.</p>
+      <ol class="sv">
+        <li><i>Gradi:</i> sopra 0, sotto 2: niente divisione</li>
+        <li><i>Scompongo sotto:</i> x² − 1 = (x − 1)(x + 1)</li>
+        <li><i>Scrivo i fratti:</i> <span class="fr"><span>1</span><span>(x − 1)(x + 1)</span></span> = <span class="fr"><span>A</span><span>x − 1</span></span> + <span class="fr"><span>B</span><span>x + 1</span></span></li>
+        <li><i>Denominatore comune:</i> 1 = A(x + 1) + B(x − 1)</li>
+        <li><i>Metto x = 1:</i> 1 = A · 2 + B · 0 → A = 1/2</li>
+        <li><i>Metto x = −1:</i> 1 = A · 0 + B · (−2) → B = −1/2</li>
+        <li><i>Integro i pezzi:</i> (1/2) ln |x − 1| − (1/2) ln |x + 1| + C</li>
+        <li><i>Controllo in x = 2:</i> la funzione vale 1/(4 − 1) = 1/3; la derivata del risultato vale (1/2) · 1/(2 − 1) − (1/2) · 1/(2 + 1) = 1/2 − 1/6 = 3/6 − 1/6 = 2/6 = 1/3 ✓</li>
+      </ol>
     </section>
 
     <section class="board">

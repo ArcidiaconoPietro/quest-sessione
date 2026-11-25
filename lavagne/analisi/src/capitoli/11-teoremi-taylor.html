@@ -10,16 +10,32 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Rolle e Lagrange <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Da qualche parte la pendenza è quella media</h2>
       <div class="math left"><span class="box cop"><b>Rolle.</b> f continua su [a, b], derivabile in (a, b), e f(a) = f(b). Allora esiste c in (a, b) con f′(c) = 0.</span></div>
       <p><b>Idea (facile):</b> parti a una quota e torni alla stessa quota. Da qualche parte hai una cima (o un fondo), e lì la tangente è orizzontale.</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² − 2x su [0, 2]:</i> f(0) = 0 − 0 = 0, f(2) = 4 − 4 = 0, stessa quota ✓</li>
+        <li><i>Derivata:</i> f′(x) = 2x − 2</li>
+        <li><i>Dove fa 0:</i> 2c − 2 = 0 → 2c = 2 → c = 1, che sta in (0, 2) ✓ (è il fondo della parabola: f(1) = 1 − 2 = −1)</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Lagrange.</b> f continua su [a, b], derivabile in (a, b). Allora esiste c in (a, b) con <span class="fr"><span>f(b) − f(a)</span><span>b − a</span></span> = f′(c).</span></div>
       <p><b>Idea (facile):</b> fai 120 km in un'ora. La velocità media è 120 km/h. In almeno un istante il tachimetro ha segnato esattamente 120. Nel disegno: la secante da A a B (arancione) e, in un punto c, una tangente parallela (blu).</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² su [1, 3]:</i> f(1) = 1, f(3) = 9</li>
+        <li><i>Pendenza media:</i> (9 − 1)/(3 − 1) = 8/2 = 4</li>
+        <li><i>Cerco c:</i> f′(x) = 2x, quindi 2c = 4 → c = 2, che sta in (1, 3) ✓</li>
+      </ol>
       <canvas id="plotLG" aria-label="Teorema di Lagrange"></canvas>
       <div class="controls"><label for="lgB">Sposta b: <input type="range" id="lgB" min="0" max="100" value="80"></label></div>
       <div class="readout" id="lgOut"></div>
       <p><b>Conseguenze</b> <span class="tag mem">a memoria</span>, sono quelle che usi davvero: se f′ &gt; 0 su un intervallo, f è crescente lì; se f′ &lt; 0, è decrescente; se f′ = 0 su tutto un intervallo, f è costante.</p>
+      <p><b>Perché</b> <span class="tag cap">facile, è Lagrange</span>: prendo x₁ &lt; x₂. Lagrange dice f(x₂) − f(x₁) = f′(c) · (x₂ − x₁). Se f′ &gt; 0, allora f′(c) &gt; 0 e x₂ − x₁ &gt; 0, quindi il prodotto è positivo: f(x₂) &gt; f(x₁), cioè f cresce. Esempio: f = x² su [1, 3], f(3) − f(1) = 8 = f′(2) · 2 = 4 · 2 ✓</p>
       <div class="note"><b>Dimostrazioni.</b> Lagrange si dimostra applicando Rolle alla differenza tra f e la retta secante (che vale 0 in a e in b): è corta, <b>capiscila se Albano la chiede</b>. Rolle usa Weierstrass e il fatto che in una cima la derivata è 0 (Fermat): più lunga, <b>a memoria solo se richiesta</b>.</div>
     </section>
 
@@ -29,6 +45,23 @@
       <div class="math left"><span class="box cop">Se <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f(x)</span><span>g(x)</span></span> è nella forma 0/0 oppure ∞/∞, e <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f′(x)</span><span>g′(x)</span></span> esiste, allora i due limiti sono uguali.</span></div>
       <p><b>Perché (caso 0/0, facile):</b> vicino a x₀ ogni funzione è quasi la sua tangente. Se f(x₀) = g(x₀) = 0, allora f(x) ≈ f′(x₀)(x − x₀) e g(x) ≈ g′(x₀)(x − x₀). Dividendo, (x − x₀) si semplifica e resta f′/g′. Vale anche x₀ = ±∞.</p>
       <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> → forma 0/0 → <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>cos x</span><span>1</span></span> = 1</div>
+      <p>Un esempio dove serve applicarlo due volte, con tutti i calcoli: <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>1 − cos x</span><span>x²</span></span>.</p>
+      <ol class="sv">
+        <li><i>Sostituisco x = 0:</i> sopra 1 − cos 0 = 1 − 1 = 0, sotto 0² = 0: forma 0/0 ✓</li>
+        <li><i>Derivo sopra e sotto, separatamente:</i> (1 − cos x)′ = 0 − (−sin x) = sin x; (x²)′ = 2x. Nuovo limite: sin x / (2x)</li>
+        <li><i>Sostituisco di nuovo:</i> sin 0 / 0 = 0/0, ancora indeterminata</li>
+        <li><i>Derivo ancora:</i> (sin x)′ = cos x; (2x)′ = 2. Nuovo limite: cos x / 2</li>
+        <li><i>Sostituisco:</i> cos 0 / 2 = 1/2. Il limite è <b>1/2</b></li>
+        <li><i>Controllo con x = 0,1:</i> (1 − cos 0,1)/0,01 ≈ 0,0049958/0,01 ≈ 0,4996 ✓</li>
+      </ol>
+      <p>Il caso 0 · ∞: <span class="lim">lim<span>x→0⁺</span></span> x ln x.</p>
+      <ol class="sv">
+        <li><i>Forma:</i> x → 0 e ln x → −∞: forma 0 · ∞, non si può derivare così</li>
+        <li><i>Riscrivo come frazione:</i> x ln x = ln x / (1/x), forma −∞/+∞ ✓</li>
+        <li><i>Derivo:</i> (ln x)′ = 1/x; (1/x)′ = −1/x². Nuovo limite: (1/x)/(−1/x²) = (1/x) · (−x²) = −x</li>
+        <li><i>Limite:</i> −x → 0. Quindi <b>x ln x → 0</b></li>
+        <li><i>Controllo:</i> x = 0,01 → 0,01 · ln 0,01 ≈ 0,01 · (−4,605) ≈ −0,046; x = 0,001 → 0,001 · (−6,908) ≈ −0,0069 ✓</li>
+      </ol>
       <div class="warn"><b>Tre errori classici.</b> 1) Derivi sopra e sotto <b>separatamente</b>, non con la regola del quoziente. 2) Prima controlla che sia davvero 0/0 o ∞/∞: con (x + 1)/x per x → 0 non si può (è 1/0). 3) Con 0 · ∞ o ∞ − ∞ prima riscrivi come frazione: x ln x = ln x / (1/x).</div>
     </section>
 
@@ -54,6 +87,7 @@
       <h2>Sviluppo di Mac Laurin (Taylor in x₀ = 0)</h2>
       <div class="math left"><span class="box cop">f(x) = f(0) + f′(0) x + <span class="fr"><span>f″(0)</span><span>2</span></span> x² + … + <span class="fr"><span>f<sup>(n)</sup>(0)</span><span>n!</span></span> xⁿ + o(xⁿ) &nbsp; per x → 0</span></div>
       <p><b>o-piccolo</b> <span class="tag cap">da capire</span>: o(xⁿ) vuol dire "un pezzo che, per x → 0, va a 0 più in fretta di xⁿ", cioè <span class="lim">lim<span>x→0</span></span> o(xⁿ)/xⁿ = 0. È l'errore che commetti fermandoti al grado n. Regole: o(xⁿ) + o(xⁿ) = o(xⁿ); x · o(xⁿ) = o(x<sup>n+1</sup>); un termine x<sup>m</sup> con m &gt; n si "mangia" dentro o(xⁿ).</p>
+      <p>Con i numeri: x³ è o(x²), perché x³/x² = x → 0: con x = 0,1 il rapporto è 0,1, con x = 0,01 è 0,01. Invece 5x² non è o(x²): 5x²/x² = 5, non va a 0.</p>
       <p><b>Sviluppi da sapere</b> <span class="tag mem">a memoria</span> (tutti per x → 0):</p>
       <div class="when">
         <div>eˣ = 1 + x + x²/2 + x³/6 + … + xⁿ/n! + o(xⁿ)</div>
@@ -64,10 +98,25 @@
         <div>arctan x = x − x³/3 + o(x⁴)</div>
       </div>
       <p><b>Perché i coefficienti sono quelli</b> <span class="tag cap">facile per eˣ</span>: tutte le derivate di eˣ in 0 valgono 1, quindi il coefficiente di xⁿ è 1/n!. Per sin e cos le derivate in 0 girano 0, 1, 0, −1: per questo compaiono solo potenze dispari (sin) o pari (cos).</p>
+      <ol class="sv">
+        <li><i>eˣ, derivate in 0:</i> f(0) = e⁰ = 1, f′(0) = e⁰ = 1, f″(0) = 1, … tutte 1</li>
+        <li><i>Coefficienti:</i> 1/0! = 1, 1/1! = 1, 1/2! = 1/2, 1/3! = 1/6, quindi 1 + x + x²/2 + x³/6 + …</li>
+        <li><i>Controllo in x = 0,5:</i> 1 + 0,5 + 0,25/2 + 0,125/6 = 1 + 0,5 + 0,125 + 0,0208 = 1,6458, e e<sup>0,5</sup> ≈ 1,6487 ✓</li>
+        <li><i>sin x, derivate in 0:</i> sin 0 = 0, cos 0 = 1, −sin 0 = 0, −cos 0 = −1: coefficienti 0, 1, 0, −1/3! = −1/6 → x − x³/6</li>
+        <li><i>Controllo in x = 0,5:</i> 0,5 − 0,125/6 = 0,5 − 0,0208 = 0,4792, e sin 0,5 ≈ 0,4794 ✓</li>
+      </ol>
       <div class="steps">
         <div class="step"><h3>Come si usa nei limiti</h3><p>1) Controllo la forma (di solito 0/0). 2) Sviluppo ogni pezzo fino al primo termine che non si cancella. 3) Tengo il termine più basso sopra e sotto, il resto finisce nell'o-piccolo. 4) Faccio il limite per x → 0.</p></div>
       </div>
       <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − (x − x³/6 + o(x³))</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x³/6 + o(x³)</span><span>x³</span></span> = <span class="fr"><span>1</span><span>6</span></span></div>
+      <ol class="sv">
+        <li><i>Forma:</i> sopra 0 − sin 0 = 0, sotto 0: 0/0</li>
+        <li><i>Sotto c'è x³, sviluppo sin x fino a x³:</i> sin x = x − x³/6 + o(x³)</li>
+        <li><i>Sopra:</i> x − (x − x³/6 + o(x³)) = x − x + x³/6 − o(x³) = x³/6 + o(x³) (il segno dell'o-piccolo non conta)</li>
+        <li><i>Divido per x³:</i> (x³/6)/x³ + o(x³)/x³ = 1/6 + o(x³)/x³</li>
+        <li><i>Limite:</i> o(x³)/x³ → 0, quindi 1/6 + 0 = <b>1/6</b></li>
+        <li><i>Controllo con x = 0,1:</i> (0,1 − 0,0998334)/0,001 = 0,0001666/0,001 ≈ 0,1666 ≈ 1/6 ✓</li>
+      </ol>
     </section>
 
     <section class="board">

@@ -7,6 +7,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-rapporto"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea</div>
       <p>Confronta ogni termine con quello prima: <b>quanto diventa più grande o più piccolo a ogni passo?</b></p>
       <p>Se da un certo punto ogni termine è, per esempio, la <b>metà</b> del precedente, la successione si dimezza ogni volta e crolla a 0. Se invece ogni termine è il <b>doppio</b>, esplode a +∞.</p>
@@ -17,6 +22,18 @@
         <li><b>L = 1</b>: il criterio <b>non dice niente</b>, usa un altro metodo</li>
       </ul>
       <p>Vale per successioni con termini positivi.</p>
+      <div class="note"><b>Perché L &lt; 1 vuol dire "si rimpicciolisce" e il limite è 0: il calcolo</b> <span class="tag cap">facile coi numeri</span>
+        <ol class="sv">
+          <li><i>Cosa vuol dire L = <span class="lim">lim<span>n→+∞</span></span> a<sub>n+1</sub>/a<sub>n</sub>:</i> da un certo punto in poi il rapporto a<sub>n+1</sub>/a<sub>n</sub> è vicinissimo a L. Esempio: L = 0,5, da un certo n in poi il rapporto sta sotto 0,6.</li>
+          <li><i>Moltiplico per a<sub>n</sub> (positivo):</i> a<sub>n+1</sub>/a<sub>n</sub> ≤ 0,6 diventa a<sub>n+1</sub> ≤ 0,6 · a<sub>n</sub>. Ogni termine è al massimo il 60% del precedente.</li>
+          <li><i>Lo applico più volte, partendo da un termine, per esempio a<sub>N</sub> = 100:</i> a<sub>N+1</sub> ≤ 0,6 · 100 = 60; a<sub>N+2</sub> ≤ 0,6 · 60 = 36; a<sub>N+3</sub> ≤ 0,6 · 36 = 21,6; a<sub>N+4</sub> ≤ 12,96 …</li>
+          <li><i>In generale, dopo k passi ho moltiplicato k volte per 0,6:</i> a<sub>N+k</sub> ≤ 0,6<sup>k</sup> · 100.</li>
+          <li><i>Quanto fa 0,6<sup>k</sup> quando k cresce?</i> 0,6<sup>10</sup> ≈ 0,006; 0,6<sup>20</sup> ≈ 0,00004. Un numero tra 0 e 1 moltiplicato per sé stesso diventa sempre più piccolo: <span class="lim">lim<span>k→+∞</span></span> 0,6<sup>k</sup> = 0.</li>
+          <li><i>Metto insieme (carabinieri):</i> 0 &lt; a<sub>N+k</sub> ≤ 0,6<sup>k</sup> · 100. Sotto c'è 0, sopra una cosa che tende a 0. Quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</li>
+          <li><i>Con un L qualsiasi minore di 1</i> funziona uguale: al posto di 0,6 metto un numero q tra L e 1. Se L = 0 posso prendere q piccolo quanto voglio: si rimpicciolisce ancora più in fretta.</li>
+        </ol>
+        <b>Per L &gt; 1 è lo stesso calcolo al contrario.</b> Esempio L = 2: da un certo punto a<sub>n+1</sub> ≥ 1,5 · a<sub>n</sub>, quindi a<sub>N+k</sub> ≥ 1,5<sup>k</sup> · a<sub>N</sub>. Siccome 1,5<sup>10</sup> ≈ 58 e 1,5<sup>20</sup> ≈ 3325, e <span class="lim">lim<span>k→+∞</span></span> 1,5<sup>k</sup> = +∞, anche <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞.
+      </div>
       <p>Nel grafico vedi il <b>rapporto</b> tra un termine e il precedente, per alcune successioni. Guarda se finisce sotto o sopra la linea 1.</p>
       <canvas id="plotQ" aria-label="Grafico del rapporto tra termini consecutivi"></canvas>
       <div class="controls">
@@ -29,6 +46,25 @@
         </select></label>
       </div>
       <div class="readout" id="qOut"></div>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Cosa vuol dire L · prima guardiamo i numeri <span class="tag cap">facile</span></div>
+      <h2>L è il "moltiplicatore" da lontano</h2>
+      <p>Il rapporto a<sub>n+1</sub>/a<sub>n</sub> risponde a una domanda: <b>per quanto devo moltiplicare un termine per ottenere il successivo?</b> Se a<sub>n+1</sub>/a<sub>n</sub> = 0,5, il termine dopo è la metà. Se fa 2, è il doppio.</p>
+      <p>Gioca con un moltiplicatore fisso. Parto da 100 e ogni volta moltiplico per lo stesso numero:</p>
+      <canvas id="plotQM" aria-label="Successione con moltiplicatore fisso"></canvas>
+      <div class="controls"><label for="qM">Moltiplicatore: <input type="range" id="qM" min="0" max="150" value="50"></label></div>
+      <div class="readout" id="qMOut"></div>
+      <div class="when">
+        <div><b>Moltiplicatore minore di 1</b> (0,5; 0,9; anche 0,99): ogni passo rimpicciolisce. Per n → +∞ arrivi a 0.</div>
+        <div><b>Moltiplicatore 0 o quasi 0</b>: rimpicciolisce ancora più in fretta. Quindi <b>L = 0 è il caso migliore di L &lt; 1</b>, non un caso a parte.</div>
+        <div><b>Moltiplicatore maggiore di 1</b>: ogni passo ingrandisce. Per n → +∞ vai a +∞.</div>
+        <div><b>Moltiplicatore esattamente 1</b>: resta tutto uguale. È il caso in cui non si può concludere (sotto vedi perché).</div>
+      </div>
+      <p><b>E se il moltiplicatore cambia a ogni passo?</b> Succede quasi sempre. Per esempio con a<sub>n</sub> = 5ⁿ/n! il moltiplicatore è 5/(n + 1): all'inizio è più di 1 (la successione cresce), poi scende sotto 1 e continua a scendere. L = <span class="lim">lim<span>n→+∞</span></span> 5/(n + 1) = 0 dice cosa fa il moltiplicatore <b>da lontano</b>, ed è quello che decide la fine:</p>
+      <div style="overflow-x:auto"><table class="vals" id="qTab"></table></div>
+      <p><b>Perché con L = 1 non si può dire niente:</b> il moltiplicatore si avvicina a 1, ma può stare appena sotto o appena sopra. Con a<sub>n</sub> = 1/n il rapporto è n/(n + 1), appena sotto 1, e <span class="lim">lim<span>n→+∞</span></span> 1/n = 0. Con a<sub>n</sub> = n il rapporto è (n + 1)/n, appena sopra 1, e <span class="lim">lim<span>n→+∞</span></span> n = +∞. Stesso L = 1, finali opposti.</p>
     </section>
 
     <section class="board">

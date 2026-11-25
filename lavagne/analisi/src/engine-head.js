@@ -146,7 +146,57 @@
     });
   }
   const inp = (lbl, w) => '<input type="text" inputmode="decimal" aria-label="'+lbl+'"'+(w?' style="width:'+w+'"':'')+'>';
+  // svolgimento completo: ogni riga = cosa faccio + formula
+  const SV = (...r) => '<b class="svh">Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
   const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
+
+  /* ---------------- videolezione ---------------- */
+  // scenes: [{show: html sulla lavagna, say: testo letto dalla voce (parole, niente simboli)}]
+  function video(ch, scenes){
+    const box = $('video-'+ch); if (!box) return;
+    box.className = 'video';
+    box.innerHTML = '<div class="vboard" aria-live="polite"></div><p class="vsub"></p>'
+      + '<div class="row vctl"><button data-vb aria-label="Passo indietro">⟨ Indietro</button><button class="primary" data-vp>▶ Avvia</button><button data-vn aria-label="Passo avanti">Avanti ⟩</button></div>'
+      + '<div class="controls"><span class="vcount"></span><label>Voce <input type="checkbox" data-vv checked></label>'
+      + '<label>Velocità <select data-vs><option value="0.85">lenta</option><option value="1" selected>normale</option><option value="1.15">veloce</option></select></label></div>';
+    const board = box.querySelector('.vboard'), sub = box.querySelector('.vsub'), cnt = box.querySelector('.vcount');
+    const bP = box.querySelector('[data-vp]'), vv = box.querySelector('[data-vv]'), vs = box.querySelector('[data-vs]');
+    const synth = window.speechSynthesis;
+    let i = -1, playing = false, timer = null, token = 0;
+    const voice = () => { try { const v = synth.getVoices(); return v.find(x=>/^it/i.test(x.lang)) || null; } catch(e){ return null; } };
+    if (!synth) { vv.checked = false; vv.disabled = true; }
+    const stop = () => { token++; clearTimeout(timer); try { synth && synth.cancel(); } catch(e){} };
+    const render = () => {
+      board.innerHTML = scenes.slice(0, i+1).map((sc,k)=>'<div class="vstep'+(k===i?' cur':'')+'">'+sc.show+'</div>').join('') || '<p class="vhint">Premi ▶ Avvia: ogni calcolo compare uno alla volta e la voce lo spiega. Puoi fermarti e tornare indietro quando vuoi.</p>';
+      sub.textContent = i>=0 ? scenes[i].say : '';
+      cnt.textContent = 'Passo '+Math.max(0,i+1)+' di '+scenes.length;
+      const cur = board.querySelector('.cur'); if (cur) board.scrollTop = cur.offsetTop - board.offsetTop - 8;
+    };
+    const after = (t) => { if (!playing || t!==token) return; if (i < scenes.length-1) { timer = setTimeout(()=>{ if (t===token) { i++; render(); speak(); } }, 700); } else { playing = false; bP.textContent = '↺ Ricomincia'; } };
+    const speak = () => {
+      const t = ++token, txt = scenes[i].say, rate = +vs.value;
+      if (vv.checked && synth){
+        try { synth.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'it-IT'; u.rate = rate; const v = voice(); if (v) u.voice = v;
+          const t0 = Date.now(), minT = txt.length*55/rate; const done = () => { const left = minT - (Date.now()-t0); if (left > 300) timer = setTimeout(()=>after(t), left); else after(t); };
+          u.onend = done; u.onerror = done; synth.speak(u);
+          // rete di sicurezza: se la voce non parte, vado avanti a tempo
+          timer = setTimeout(()=>{ if (t===token && !synth.speaking) after(t); }, 1500 + txt.length*90/rate);
+        } catch(e){ timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate); }
+      } else timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate);
+    };
+    bP.onclick = () => {
+      if (playing){ playing = false; stop(); bP.textContent = '▶ Continua'; return; }
+      if (i >= scenes.length-1) i = -1;
+      playing = true; bP.textContent = '⏸ Pausa';
+      if (i < 0) i = 0; render(); speak();
+    };
+    box.querySelector('[data-vn]').onclick = () => { if (i < scenes.length-1){ stop(); i++; render(); if (playing) speak(); else if (vv.checked) { playing = false; speakOnce(); } } };
+    box.querySelector('[data-vb]').onclick = () => { if (i > 0){ stop(); i--; render(); if (playing) speak(); else if (vv.checked) speakOnce(); } };
+    const speakOnce = () => { if (!synth) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(scenes[i].say); u.lang='it-IT'; u.rate=+vs.value; const v=voice(); if (v) u.voice=v; synth.speak(u); } catch(e){} };
+    vv.onchange = () => { if (!vv.checked) { try { synth && synth.cancel(); } catch(e){} } };
+    window.addEventListener('hashchange', () => { if (playing){ playing=false; stop(); bP.textContent='▶ Continua'; } });
+    render();
+  }
 
   /* ---------------- esercizi da solo ---------------- */
   // e: {id, q, type:'num'|'exp'|'choice', a, opts, hint, sol, lbl (etichetta della casella, default 'limite')}
@@ -159,7 +209,7 @@
       else ans = '<div class="row">'+(e.type==='exp' ? 'limite = e<sup>'+inp('esponente','3.5em')+'</sup>' : (e.lbl||'limite')+' = '+inp('risultato'))+'<button data-c>Controlla</button></div>';
       d.innerHTML = '<div class="head"><b>Esercizio '+(i+1)+'</b><span class="badge"></span></div><div class="math left">'+e.q+'</div>'+ans
         +'<div class="row"><button data-h>Aiuto</button><button data-s>Soluzione</button></div><span class="feedback"></span>'
-        +'<p class="note" data-hint hidden>'+e.hint+'</p><p class="note" data-sol hidden>'+e.sol+'</p>';
+        +'<p class="note" data-hint hidden>'+e.hint+'</p><div class="note" data-sol hidden>'+e.sol+'</div>';
       box.appendChild(d);
       const fb = d.querySelector('.feedback'), bd = d.querySelector('.badge');
       const badge = () => { const r=res[e.id];

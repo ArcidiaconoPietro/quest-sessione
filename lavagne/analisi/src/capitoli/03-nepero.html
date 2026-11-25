@@ -7,11 +7,23 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-nepero"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea con i soldi</div>
       <p>Metti 1 € in banca al 100% di interesse all'anno.</p>
       <p>Se te lo danno in <b>una</b> volta: 1 · 2 = 2 €. Se te lo danno in <b>n rate</b>, ognuna da 1/n, e ogni rata frutta anche sugli interessi già presi, alla fine hai</p>
       <div class="math"><span class="box thief">(1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup></span></div>
-      <p>Più rate fai, più guadagni, ma <b>non all'infinito</b>: ti fermi a 2,718… Quel numero si chiama <b>e</b>:</p>
+      <ol class="sv">
+        <li><i>1 rata (n = 1):</i> (1 + 1/1)¹ = 2¹ = 2 €</li>
+        <li><i>2 rate (n = 2):</i> (1 + 1/2)² = 1,5² = 1,5 · 1,5 = 2,25 €</li>
+        <li><i>4 rate (n = 4):</i> (1 + 1/4)⁴ = 1,25⁴ = 1,5625 · 1,5625 ≈ 2,441 €</li>
+        <li><i>12 rate, una al mese:</i> (1 + 1/12)¹² ≈ 1,0833¹² ≈ 2,613 €</li>
+        <li><i>365 rate, una al giorno:</i> (1 + 1/365)³⁶⁵ ≈ 2,7146 €</li>
+      </ol>
+      <p>Più rate fai, più guadagni, ma <b>non all'infinito</b>: da 12 a 365 rate guadagni solo 10 centesimi in più. Ti fermi a 2,718… Quel numero si chiama <b>e</b>:</p>
       <div class="math"><span class="box cop"><span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = e ≈ 2,718</span></div>
       <canvas id="plotE" aria-label="Grafico: 1 più 1 su n alla n che sale verso e"></canvas>
       <div class="controls">
@@ -23,7 +35,13 @@
     <section class="board">
       <div class="eyebrow">Perché 1<sup>∞</sup> non fa 1</div>
       <p>È un tiro alla fune: la base è <b>un pelo più di 1</b> e tira verso 1, l'esponente è <b>enorme</b> e tira verso infinito. Chi vince dipende da quanto sono veloci. Quindi può venire qualsiasi cosa: 1, e, e², e<sup>−1</sup>…</p>
-      <div class="warn">Esempio trappola: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>7</sup> = 1, perché l'esponente 7 è fisso. Non è una forma 1<sup>∞</sup>. Controlla sempre che per n → +∞ l'esponente tenda davvero a +∞.</div>
+      <ol class="sv">
+        <li><i>Base veloce, (1 + 1/n²)ⁿ:</i> n = 10 → 1,01¹⁰ ≈ 1,105; n = 100 → 1,0001¹⁰⁰ ≈ 1,010. Vince la base: tende a 1.</li>
+        <li><i>Pari, (1 + 1/n)ⁿ:</i> n = 10 → 1,1¹⁰ ≈ 2,594; n = 100 → 1,01¹⁰⁰ ≈ 2,705. Pareggio: tende a e.</li>
+        <li><i>Esponente veloce, (1 + 1/n)<sup>n²</sup>:</i> n = 10 → 1,1¹⁰⁰ ≈ 13 781; n = 20 → 1,05⁴⁰⁰ ≈ 3 · 10⁸. Vince l'esponente: tende a +∞.</li>
+        <li><i>Conclusione:</i> tutte e tre sono 1<sup>∞</sup>, e danno 1, e, +∞. Per questo 1<sup>∞</sup> è indeterminata.</li>
+      </ol>
+      <div class="warn">Esempio trappola: <span class="lim">lim<span>n→+∞</span></span> (1 + 1/n)<sup>7</sup> = 1, perché l'esponente 7 è fisso: n = 100 → 1,01⁷ ≈ 1,072; n = 1000 → 1,001⁷ ≈ 1,007; la base va a 1 e 1⁷ = 1. Non è una forma 1<sup>∞</sup>. Controlla sempre che per n → +∞ l'esponente tenda davvero a +∞.</div>
     </section>
 
     <section class="board">
@@ -44,7 +62,12 @@
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
-      <div class="note">Regola rapida: <b><span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup></b>. Per esempio <span class="lim">lim<span>n→+∞</span></span> (1 + 3/n)<sup>n</sup> = e³ e <span class="lim">lim<span>n→+∞</span></span> (1 − 2/n)<sup>n</sup> = e<sup>−2</sup>.</div>
+      <div class="note">Regola rapida: <b><span class="lim">lim<span>n→+∞</span></span> (1 + a/n)<sup>n</sup> = e<sup>a</sup></b>. Per esempio <span class="lim">lim<span>n→+∞</span></span> (1 + 3/n)<sup>n</sup> = e³ e <span class="lim">lim<span>n→+∞</span></span> (1 − 2/n)<sup>n</sup> = e<sup>−2</sup>.
+        <ol class="sv">
+          <li><i>Da dove viene (pezzo · esponente):</i> 3/n · n = 3, quindi e³; (−2/n) · n = −2, quindi e<sup>−2</sup></li>
+          <li><i>Controllo (1 + 3/n)ⁿ:</i> n = 100 → 1,03¹⁰⁰ ≈ 19,22; n = 1000 → 1,003¹⁰⁰⁰ ≈ 19,99; e³ ≈ 20,09 ✓</li>
+          <li><i>Controllo (1 − 2/n)ⁿ:</i> n = 100 → 0,98¹⁰⁰ ≈ 0,1326; e<sup>−2</sup> ≈ 0,1353 ✓</li>
+        </ol></div>
     </section>
 
     <section class="board">
@@ -69,7 +92,7 @@
         <div class="step" hidden><h3>Passo 3 · Guardo i due pezzi separatamente</h3>
           <p>Per n → +∞: la parte <span class="cop">blu</span> tende a e (passo 1). L'esponente <span class="thief">giallo</span>, u · esponente, tende a L. Quindi tutto tende a e elevato a L.</p>
           <div class="math"><span class="box thief"><span class="lim">lim<span>n→+∞</span></span> (1 + u)<sup>esponente</sup> = e<sup>L</sup></span></div>
-          <p>Esempio: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup>. Dentro va a e, fuori c'è 10: risultato e<sup>10</sup>. È proprio il numero che trovi con la ricetta (5/n · 2n = 10).</p>
+          <p>Esempio: (1 + 5/n)<sup>2n</sup> = ((1 + 5/n)<sup>n/5</sup>)<sup>10</sup>. Dentro va a e, fuori c'è 10: risultato e<sup>10</sup>. È proprio il numero che trovi con la ricetta (5/n · 2n = 10). Controllo con n = 1000: 1,005²⁰⁰⁰ ≈ 21 500, ed e¹⁰ ≈ 22 026 ✓</p>
         </div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>

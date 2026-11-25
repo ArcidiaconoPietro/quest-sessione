@@ -11,6 +11,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Continuità <span class="tag mem">definizione a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Disegnare senza staccare la penna</h2>
       <div class="math left"><span class="box cop">f è continua in x₀ se <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀)</span></div>
@@ -31,8 +36,16 @@
       <h2>Teorema degli zeri e Weierstrass</h2>
       <div class="math left"><span class="box cop"><b>Zeri.</b> Se f è continua su [a, b] e f(a), f(b) hanno segni opposti, allora esiste c in (a, b) con f(c) = 0.</span></div>
       <p><b>Perché è vero (facile):</b> parti sotto l'asse x e arrivi sopra senza staccare la penna. Per forza attraversi l'asse da qualche parte. Serve a dire "l'equazione f(x) = 0 ha una soluzione" senza trovarla.</p>
+      <p>Esempio con i calcoli: x³ + x − 1 = 0 ha una soluzione tra 0 e 1?</p>
+      <ol class="sv">
+        <li><i>f è continua:</i> è un polinomio</li>
+        <li><i>In a = 0:</i> f(0) = 0 + 0 − 1 = −1, negativo</li>
+        <li><i>In b = 1:</i> f(1) = 1 + 1 − 1 = 1, positivo</li>
+        <li><i>Teorema degli zeri:</i> segni opposti, quindi esiste c tra 0 e 1 con f(c) = 0</li>
+        <li><i>Posso anche stringere (bisezione):</i> f(0,5) = 0,125 + 0,5 − 1 = −0,375 &lt; 0, quindi c è tra 0,5 e 1; f(0,75) ≈ 0,422 + 0,75 − 1 = 0,172 &gt; 0, quindi c è tra 0,5 e 0,75</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Weierstrass.</b> Se f è continua su un intervallo chiuso e limitato [a, b], allora f ha massimo e minimo su [a, b].</span></div>
-      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0: l'intervallo non è chiuso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
+      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0 (x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000): l'intervallo non è chiuso, 0 è escluso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
     </section>
 
     <section class="board">
@@ -61,6 +74,12 @@
       <p>f′(x₀) è la pendenza della tangente in x₀. La tangente è la retta che passa per (x₀, f(x₀)) con quella pendenza:</p>
       <div class="math"><span class="box thief">y = f(x₀) + f′(x₀) · (x − x₀)</span></div>
       <p>Perché è così (facile): una retta con pendenza m che passa per (x₀, y₀) è y = y₀ + m(x − x₀). Qui y₀ = f(x₀) e m = f′(x₀).</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² in x₀ = 1:</i> f(1) = 1, f′(1) = 2 (calcolato nel grafico sopra)</li>
+        <li><i>Sostituisco:</i> y = 1 + 2(x − 1) = 1 + 2x − 2 = 2x − 1</li>
+        <li><i>Controllo che passa per (1, 1):</i> 2 · 1 − 1 = 1 ✓</li>
+        <li><i>Controllo che è vicina alla curva:</i> in x = 1,1 la tangente vale 2,2 − 1 = 1,2 e la curva 1,1² = 1,21. Quasi uguali ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -69,12 +88,13 @@
       <p><b>Teorema:</b> se f è derivabile in x₀, allora è continua in x₀. La dimostrazione sta in una riga, ed è di quelle che si chiedono:</p>
       <div class="math left">f(x₀ + h) − f(x₀) = <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> · h &nbsp;→&nbsp; f′(x₀) · 0 = 0 &nbsp; per h → 0</div>
       <p>Quindi f(x₀ + h) tende a f(x₀) per h → 0: è proprio la continuità.</p>
+      <p>Con i numeri, f(x) = x² in x₀ = 1 (f′(1) = 2): con h = 0,1, f(1,1) − f(1) = 1,21 − 1 = 0,21, e 0,21 = 2,1 · 0,1 (rapporto per h). Con h = 0,01: 1,0201 − 1 = 0,0201 = 2,01 · 0,01. Il rapporto resta vicino a 2, h va a 0, il prodotto va a 2 · 0 = 0.</p>
       <div class="warn"><b>Il contrario è falso.</b> |x| è continua in 0 ma non derivabile: nel grafico sopra, con h &gt; 0 la secante ha pendenza 1, con h &lt; 0 ha pendenza −1. Destra e sinistra diverse, il limite per h → 0 non esiste.</div>
       <p><b>Punti dove f è continua ma non derivabile</b> <span class="tag mem">nomi a memoria</span>:</p>
       <div class="when">
         <div><b>Punto angoloso:</b> derivata destra e sinistra finite ma diverse. Esempio |x| in 0.</div>
-        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0.</div>
-        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0.</div>
+        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0: per h &gt; 0 il rapporto è √h / h = 1/√h, con h = 0,01 vale 10, con h = 0,0001 vale 100 → +∞; per h &lt; 0 viene −∞.</div>
+        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0: il rapporto è ∛h / h = 1/∛(h²), con h = 0,001 vale 1/0,01 = 100, con h = −0,001 vale ancora 100 → +∞ da tutte e due le parti.</div>
       </div>
     </section>
 
