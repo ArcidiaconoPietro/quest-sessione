@@ -146,6 +146,8 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
 .video .vctl button { flex: 1; }
 .video .vcount { color: var(--muted); font-size: .9rem; }
+.problema { border-left: 5px solid var(--thief); background: var(--soft); border-radius: 10px; padding: 12px 14px; margin: 12px 0; }
+.problema .ptit { font-weight: 700; font-size: 1.05em; margin-bottom: 4px; }
 </style>
 
 <div class="wrap">
@@ -177,6 +179,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 1 · blocco del 12/11</div>
       <h2>Il teorema dei due carabinieri</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span> = ?</li><li><i>Provo con quello che so:</i> Limite di un prodotto = prodotto dei limiti: <span class="fr"><span>sin n</span><span>n</span></span> = sin n · <span class="fr"><span>1</span><span>n</span></span>. <span class="lim">lim<span>n→+∞</span></span> 1/n = 0, ma <span class="lim">lim<span>n→+∞</span></span> sin n <b>non esiste</b>: sin 1 ≈ 0,84; sin 4 ≈ −0,76; sin 8 ≈ 0,99; sin 11 ≈ −1,00, salta per sempre.</li><li><i>Perché si inceppa:</i> La regola "limite del prodotto = prodotto dei limiti" vale solo se <b>tutti e due</b> i limiti esistono. Qui uno non esiste, quindi la regola non si può usare. E la gerarchia degli infiniti non c'entra: sin n non va all'infinito.</li><li><i>Quindi serve:</i> Un modo per trovare il limite <b>senza calcolarlo direttamente</b>: chiudo sin n / n tra due successioni facili che hanno lo stesso limite. È il teorema dei due carabinieri.</li><li><i>Lo userai per:</i> Tutti i limiti con un pezzo che oscilla ma resta limitato: (−1)ⁿ/n, (3 + cos n)/n, sin(n²)/√n, n/(n² + sin n). E nel capitolo 2 per <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>.</li></ol></div>
       <p class="big">Serve quando una successione <b>non sta ferma</b>, perché dentro c'è un pezzo che oscilla (sin n, cos n, (−1)ⁿ), e quindi non puoi calcolare il limite direttamente.</p>
       <p>Il trucco: non la calcoli. La <b>chiudi in mezzo</b> a due successioni facili che, per n → +∞, hanno lo stesso limite.</p>
     </section>
@@ -266,6 +269,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 2 · blocco del 12/11 · Mughetti lez. 5 pp. 51-63 e lez. 6 pp. 23-31</div>
       <h2>Le radici n-esime</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = ?</li><li><i>Provo con quello che so:</i> Spezzo la radice? <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ</span></span> + <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 2 + 3 = 5? <b>No</b>: la radice di una somma non è la somma delle radici. Con n = 2: √(4 + 9) = √13 ≈ 3,6, non 5.</li><li><i>Provo ancora:</i> Lo scrivo come potenza: (2ⁿ + 3ⁿ)<sup>1/n</sup>. La base va a +∞, l'esponente 1/n va a 0: è la forma ∞⁰, <b>indeterminata</b>. Non so dire chi vince.</li><li><i>Quindi serve:</i> Sapere quanto fa <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> e <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> per n → +∞ (tutte e due tendono a 1), e chiudere la radice tra due carabinieri (capitolo 1) che so calcolare.</li><li><i>Lo userai per:</i> <span class="rt"><sup>n</sup>√<span class="ov">aⁿ + bⁿ</span></span> (vince il più grande), <span class="rt"><sup>n</sup>√<span class="ov">n² + 5</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">3n</span></span>, e soprattutto per il <b>criterio della radice</b> per le serie.</li></ol></div>
       <p class="big">Qui la radice ha come indice <b>n stesso</b>: <span class="rt"><sup>n</sup>√<span class="ov">2</span></span> vuol dire radice quadrata, poi cubica, poi quarta… sempre più "forte".</p>
       <p>Serve per due motivi: negli esercizi d'esame compaiono limiti come <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>, e il <b>criterio della radice per le serie</b>, che fai subito dopo (16/11), è costruito tutto su questo.</p>
     </section>
@@ -390,6 +394,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 3 · blocco del 12/11 · Mughetti lez. 6 p. 42 · dispensa 4.6.4</div>
       <h2>Il numero e e la forma 1<sup>∞</sup></h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = ?</li><li><i>Provo con quello che so:</i> La base 1 + 1/n tende a 1, e 1 elevato a qualsiasi cosa fa 1. Quindi fa 1? Provo i numeri: n = 10 → 1,1¹⁰ ≈ 2,594; n = 100 → 1,01¹⁰⁰ ≈ 2,705. <b>Non fa 1.</b></li><li><i>Provo ancora:</i> Allora l'esponente enorme vince e va a +∞? Ma i numeri si fermano sotto 2,72. Base che va a 1 ed esponente che va a +∞: forma 1<sup>∞</sup>, <b>indeterminata</b>. Né la gerarchia né i carabinieri dicono quanto fa.</li><li><i>Quindi serve:</i> Dare un nome a quel numero, <b>e ≈ 2,718</b>, e una ricetta per tutte le forme 1<sup>∞</sup>: pezzo piccolo × esponente → e elevato a quello.</li><li><i>Lo userai per:</i> (1 + 3/n)ⁿ = e³, (1 − 2/n)ⁿ = e<sup>−2</sup>, (1 + 5/n)<sup>2n</sup> = e¹⁰, ((n + 1)/(n − 1))ⁿ, e più avanti per i limiti notevoli delle funzioni.</li></ol></div>
       <p class="big">Serve per una forma indeterminata nuova: quando n → +∞, <b>la base tende a 1 e l'esponente tende a +∞</b>. Sembra che debba fare 1, e invece no.</p>
       <p>La dimostrazione completa del prof (lez. 6 da p. 45) è <b>facoltativa</b>, l'ha scritto lui. A te serve saper fare i conti.</p>
     </section>
@@ -518,6 +523,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 4 · blocco del 12/11 · dispensa 4.5.3</div>
       <h2>Il criterio del rapporto</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>5ⁿ</span><span>n!</span></span> = ?</li><li><i>Provo con quello che so:</i> Sopra 5ⁿ → +∞, sotto n! → +∞: forma ∞/∞. Raccolgo la potenza più alta come con i polinomi? Non ci sono potenze di n da raccogliere. Carabinieri? Non c'è un pezzo limitato che oscilla. E i numeri prima <b>salgono</b>: 5; 12,5; 20,8; 26; 26; poi 21,7…</li><li><i>Perché si inceppa:</i> La gerarchia dice "n! vince su 5ⁿ", ma è una regola da ricordare, non un calcolo: non dice <b>perché</b>, e non funziona con casi misti come n² · 3ⁿ/n! o nⁿ/n!, dove non sai chi vince.</li><li><i>Quindi serve:</i> Guardare <b>di quanto si moltiplica</b> un termine per passare al successivo: a<sub>n+1</sub>/a<sub>n</sub>. Con fattoriali e potenze questo rapporto si semplifica tantissimo. È il criterio del rapporto.</li><li><i>Lo userai per:</i> Tutti i limiti con n!, aⁿ, nⁿ insieme: nⁿ/n!, n!/nⁿ, n² · 3ⁿ/n!, 2ⁿ/n⁵. E nel capitolo 6 per le serie.</li></ol></div>
       <p class="big">Serve quando ci sono <b>fattoriali e potenze</b> (n!, 5ⁿ, nⁿ) e vuoi una prova di chi vince, non solo "per gerarchia".</p>
       <p>Ti prepara anche a domani: il criterio del rapporto per le <b>serie</b> funziona allo stesso modo.</p>
     </section>
@@ -621,6 +627,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 5 · blocco del 12/11 · dispensa 4.5.4</div>
       <h2>Sottosuccessioni e Bolzano-Weierstrass</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ · <span class="fr"><span>n</span><span>n + 1</span></span> = ?</li><li><i>Provo con quello che so:</i> Prodotto dei limiti? <span class="lim">lim<span>n→+∞</span></span> n/(n + 1) = 1, ma <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ non esiste (−1, 1, −1, 1, …). Carabinieri? −1 ≤ (−1)ⁿ · n/(n + 1) ≤ 1, ma −1 e 1 sono limiti <b>diversi</b>: non concludo niente.</li><li><i>Perché si inceppa:</i> I numeri saltano: −0,5; 0,67; −0,75; 0,8; −0,9; 0,91. Sembra che il limite <b>non esista</b>. Ma "sembra" non basta: tutti gli strumenti che hai servono a <b>trovare</b> un limite, nessuno a dimostrare che non c'è.</li><li><i>Quindi serve:</i> Spezzare la successione in due file (n pari e n dispari). Se le due file hanno limiti diversi, il limite non esiste. Sono le <b>sottosuccessioni</b>.</li><li><i>Lo userai per:</i> Dimostrare che non esistono <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ, cos(nπ), sin(nπ/2), (−1)ⁿ + 1/n. Poi Bolzano-Weierstrass dice cosa resta vero anche quando il limite non c'è.</li></ol></div>
       <p class="big">Serve soprattutto a <b>dimostrare che un limite NON esiste</b>. All'esame la domanda tipica è: "il limite esiste?" e la risposta è no.</p>
     </section>
 
@@ -695,6 +702,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 6 · blocco del 16/11 · Mughetti lez. 7, 8, 9 · dispensa pp. 49-51 e pagine gialle</div>
       <h2>Le serie numeriche</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> 1/2 + 1/4 + 1/8 + 1/16 + … (per sempre) = ?</li><li><i>Provo con quello che so:</i> Sommare si sa fare con un numero finito di termini. Con infiniti termini non finisci mai di sommare: la somma "alla fine" non esiste come operazione.</li><li><i>Perché è difficile:</i> Sembra ovvio che se i termini diventano piccoli la somma è finita. E invece 1 + 1/2 + 1/3 + 1/4 + … ha termini che tendono a 0 ma la somma va a +∞ (lo vedrai). L'intuito non basta.</li><li><i>Quindi serve:</i> Sommare i primi n termini (S<sub>n</sub>, un numero vero) e fare il limite per n → +∞: i limiti di successioni li sai fare. Qui: S₁ = 0,5; S₂ = 0,75; S₃ = 0,875 → 1.</li><li><i>Lo userai per:</i> Serie geometriche, armonica generalizzata 1/nᵖ, e i criteri (rapporto, radice, confronto) per decidere se Σ a<sub>n</sub> converge senza calcolare la somma.</li></ol></div>
       <p class="big">Una serie è una <b>somma di infiniti numeri</b>: a<sub>1</sub> + a<sub>2</sub> + a<sub>3</sub> + … per sempre.</p>
       <p>A cosa serve: a capire se sommando infiniti pezzi ottieni un numero preciso oppure qualcosa che esplode. È una delle domande più frequenti nei temi d'esame di Analisi: "studiare il carattere della serie".</p>
       <p>Si scrive così: <span class="sig"><span>+∞</span><b>Σ</b><span>n=1</span></span> a<sub>n</sub>. Si legge "somma per n da 1 a più infinito di a<sub>n</sub>".</p>
@@ -886,6 +894,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 7 · blocco del 19/11 · Mughetti lez. 10 e 11 · dispensa pp. 40-41 (equivalenze)</div>
       <h2>Confronto asintotico, Leibniz, serie con parametro</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Σ <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> converge? E Σ (−1)ⁿ/n?</li><li><i>Provo con quello che so:</i> Criterio del rapporto sulla prima: <span class="fr"><span>n + 4</span><span>(n + 1)³ + 1</span></span> · <span class="fr"><span>n³ + 1</span><span>n + 3</span></span> → 1 (sopra e sotto comanda n⁴). Con L = 1 il criterio <b>non dice niente</b>. Anche la radice dà 1.</li><li><i>Provo ancora:</i> Sulla seconda: i termini non sono tutti positivi, e i criteri del capitolo 6 valgono solo per serie a termini positivi. Senza segni diventa Σ 1/n, che diverge: ma con i segni?</li><li><i>Quindi serve:</i> <b>Confronto asintotico</b>: riporto la prima a 1/n², che conosco. <b>Leibniz</b>: un criterio fatto apposta per i segni alterni. E uno schema per le serie con un parametro x.</li><li><i>Lo userai per:</i> Serie con polinomi, radici, sin(1/n), ln(1 + 1/n) dentro; serie con (−1)ⁿ; "per quali x converge Σ xⁿ/n?".</li></ol></div>
       <p class="big">Tre attrezzi per le serie che compaiono di più all'esame:</p>
       <ul class="recap">
         <li><b>Confronto asintotico</b>: per le serie con polinomi, radici, sin, ln… dentro. Le riporti a 1/n<sup>p</sup>.</li>
@@ -1004,6 +1013,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 8 · blocco del 23/11 · Albano lezioni 20 e 22 ottobre · dispensa pp. 60-72, 79-86</div>
       <h2>I limiti di funzioni</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>x→1</span></span> <span class="fr"><span>x² − 1</span><span>x − 1</span></span> = ?</li><li><i>Provo con quello che so:</i> Finora n andava solo a +∞, e qui x va a un <b>numero</b>, 1: la gerarchia e il termine dominante non c'entrano. Sostituisco x = 1: (1 − 1)/(1 − 1) = 0/0, che non è un numero.</li><li><i>Perché si inceppa:</i> In x = 1 la funzione non esiste proprio. Ma vicino a 1 esiste: f(0,9) = 1,9; f(0,99) = 1,99; f(1,01) = 2,01. Va da qualche parte, e ti manca il modo di dirlo e calcolarlo.</li><li><i>Quindi serve:</i> Il <b>limite di funzione</b> per x → x₀ (guardare vicino, non sopra) e uno schema: sostituisco → se 0/0 scompongo e semplifico → limiti notevoli.</li><li><i>Lo userai per:</i> Limiti con 0/0, ∞/∞, sin x/x, destra e sinistra diverse (1/x), e poi per continuità e derivate (capitolo 9).</li></ol></div>
       <p class="big">Finora avevi successioni: n era un numero intero e andava solo a +∞. Adesso hai funzioni f(x): x è un numero reale qualsiasi e può avvicinarsi <b>a un numero</b>, per esempio x → 2.</p>
       <div class="math"><span class="lim">lim<span>x→x₀</span></span> f(x) = L</div>
       <p>Si legge: "quando x si avvicina a x₀, f(x) si avvicina a L". A cosa serve: a capire cosa fa una funzione vicino a un punto dove non puoi semplicemente sostituire (un buco, una divisione per 0), e cosa fa all'infinito. Ti serve per continuità, derivate e studio di funzione: è la base di tutto il resto del corso.</p>
@@ -1140,6 +1150,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 9 · blocco del 26/11 · Albano lezioni 23 e 27 ottobre · dispensa pp. 73-78, 86-92</div>
       <h2>Continuità e derivata</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Qual è la <b>pendenza</b> della curva y = x² nel punto x = 1?</li><li><i>Provo con quello che so:</i> La pendenza di una retta la sai: (y₂ − y₁)/(x₂ − x₁), servono <b>due</b> punti. Qui ho un punto solo, (1, 1): (1 − 1)/(1 − 1) = 0/0. E la curva non è una retta, la pendenza cambia da punto a punto.</li><li><i>Provo ancora:</i> Prendo un secondo punto vicino, x = 1,1: (1,21 − 1)/0,1 = 2,1. Con x = 1,01: 2,01. Si avvicina a 2, ma ogni volta è una approssimazione: serve il <b>limite</b> (capitolo 8).</li><li><i>Quindi serve:</i> La <b>derivata</b>: limite per h → 0 della pendenza tra x₀ e x₀ + h. E prima la <b>continuità</b>, che dice quando una funzione non fa salti.</li><li><i>Lo userai per:</i> Rette tangenti, velocità, crescenza e massimi nello studio di funzione (capitolo 12). Con la continuità: dire che x³ + x − 1 = 0 ha una soluzione senza trovarla.</li></ol></div>
       <p class="big">Due domande su una funzione vicino a un punto x₀:</p>
       <ul class="recap">
         <li><b>Continuità:</b> il grafico in x₀ è "attaccato" o c'è un buco, un salto?</li>
@@ -1268,6 +1279,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 10 · blocco del 30/11 · Albano lezioni 30 ottobre e 3 novembre · dispensa pp. 92-95</div>
       <h2>Le regole di derivazione</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Derivata di f(x) = (3x + 1)⁵ in x = 0.</li><li><i>Provo con quello che so:</i> Con la definizione: <span class="lim">lim<span>h→0</span></span> [(3h + 1)⁵ − 1]/h. Devo sviluppare (3h + 1)⁵: sono 6 termini con coefficienti 1, 5, 10, 10, 5, 1 e potenze di 3. Si può, ma è lunghissimo, e con sin(x²) · eˣ non si fa proprio.</li><li><i>Perché si inceppa:</i> La definizione funziona sempre, ma ogni funzione nuova richiede un limite nuovo. All'esame non c'è tempo.</li><li><i>Quindi serve:</i> Una <b>tabellina</b> di derivate fatte una volta per tutte, e <b>regole</b> per combinarle (somma, prodotto, quoziente, catena). Qui: 5(3x + 1)⁴ · 3, in 0 fa 15.</li><li><i>Lo userai per:</i> Tutte le derivate dell'esame: studio di funzione, De L'Hôpital, Taylor, e al contrario negli integrali.</li></ol></div>
       <p class="big">Nel capitolo 9 hai calcolato le derivate con la definizione, cioè il limite per h → 0 del rapporto incrementale. Funziona, ma è lento. Qui impari le scorciatoie: una tabellina di derivate base e cinque regole per combinarle.</p>
       <p>A cosa serve: all'esame non si deriva mai con la definizione (salvo richiesta esplicita). Si usano queste regole, nello studio di funzione, nei limiti con De L'Hôpital e negli integrali (al contrario).</p>
     </section>
@@ -1391,6 +1403,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 11 · blocco del 3/12 · Albano lezioni 5, 6 e 10 novembre · dispensa pp. 96-102, 109-115</div>
       <h2>Rolle, Lagrange, De L'Hôpital, Taylor</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = ?</li><li><i>Provo con quello che so:</i> Sostituisco: (0 − 0)/0 = 0/0. Scompongo? Non è un polinomio. Limite notevole sin x/x → 1? Divido per x: (1 − sin x/x)/x² → (1 − 1)/0 = 0/0 di nuovo.</li><li><i>Perché si inceppa:</i> Il limite notevole dice solo che sin x ≈ x vicino a 0. Ma qui x − sin x cancella proprio quella parte: serve sapere <b>di quanto</b> sin x è diverso da x. Con x = 0,1: 0,1 − 0,0998334 = 0,0001666, un numero piccolissimo.</li><li><i>Quindi serve:</i> <b>Taylor</b>: sin x = x − x³/6 + o(x³), un polinomio più preciso della sola x. Oppure <b>De L'Hôpital</b>: con 0/0 derivo sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.</li><li><i>Lo userai per:</i> Tutti i limiti con sin, cos, eˣ, ln mescolati, dove i notevoli non bastano. Lagrange per dimostrare che f′ &gt; 0 vuol dire f crescente.</li></ol></div>
       <p class="big">Quattro attrezzi, due "di teoria" e due "da calcolo":</p>
       <ul class="recap">
         <li><b>Rolle e Lagrange</b>: legano la derivata alla crescita della funzione. Servono a giustificare lo studio di funzione (capitolo 12) e sono domande di teoria tipiche.</li>
@@ -1540,6 +1553,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 12 · blocco del 7/12 · dispensa pp. 103-108, 116-117</div>
       <h2>Lo studio di funzione</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Disegna il grafico di f(x) = <span class="fr"><span>x²</span><span>x − 1</span></span>.</li><li><i>Provo con quello che so:</i> Tabella di punti: f(0) = 0; f(2) = 4; f(3) = 4,5; f(−1) = −0,5. Li unisco? Tra 0 e 2 passerei per x = 1, dove la funzione <b>non esiste</b> e va a ±∞: f(0,9) = −8,1 e f(1,1) = 12,1.</li><li><i>Perché si inceppa:</i> Con i punti non sai cosa succede <b>tra</b> un punto e l'altro: dove sono i massimi esatti, se ci sono asintoti, cosa fa all'infinito. Ne servirebbero infiniti.</li><li><i>Quindi serve:</i> Uno schema in 6 passi che usa tutto quello che sai: dominio, segno, limiti (capitolo 8) → asintoti, derivata (capitoli 9-10) → crescenza e massimi, derivata seconda → concavità.</li><li><i>Lo userai per:</i> L'esercizio più frequente dello scritto: polinomi, frazioni, funzioni con eˣ e ln.</li></ol></div>
       <p class="big">Ti danno una formula, tu devi disegnarne il grafico. Non punto per punto: raccogli indizi (dove esiste, dove è positiva, cosa fa ai bordi, dove sale e scende) e alla fine il disegno viene da solo.</p>
       <p>A cosa serve: è l'esercizio più frequente nello scritto di Analisi 1. Usa tutto quello che hai fatto finora: limiti (capitoli 8 e 11), derivate (9 e 10), Lagrange per crescenza (11).</p>
     </section>
@@ -1625,6 +1639,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 13 · blocco del 10/12 · Albano lezioni 12 e 13 novembre · dispensa pp. 127-140</div>
       <h2>Gli integrali indefiniti</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Quale funzione F ha derivata F′(x) = x eˣ?</li><li><i>Provo con quello che so:</i> Sai derivare, cioè andare da F a F′. Qui devi andare al contrario. Provo a indovinare F = x eˣ: F′ = eˣ + x eˣ (regola del prodotto). C'è un eˣ di troppo.</li><li><i>Perché si inceppa:</i> Per 2x indovini subito x², ma appena la funzione è un prodotto o una composta, indovinare a caso non funziona: non c'è una "regola del prodotto al contrario" ovvia.</li><li><i>Quindi serve:</i> Gli <b>integrali</b>: una tabellina (le derivate lette al contrario) e metodi per i casi difficili: sostituzione (catena al contrario), <b>per parti</b> (prodotto al contrario), fratti semplici. Qui per parti: x eˣ − eˣ.</li><li><i>Lo userai per:</i> Calcolare aree (capitolo 14) e risolvere equazioni differenziali (capitolo 15).</li></ol></div>
       <p class="big">Derivare: da f trovo f′. Integrare è il viaggio al contrario: ti do f, trovi una funzione F che derivata dà f. F si chiama <b>primitiva</b>.</p>
       <div class="math">∫ f(x) dx = F(x) + C &nbsp; significa &nbsp; F′(x) = f(x)</div>
       <p>A cosa serve: è il passo che ti serve per calcolare aree (capitolo 14) e per risolvere le equazioni differenziali (capitolo 15). All'esame c'è quasi sempre un integrale da calcolare.</p>
@@ -1767,6 +1782,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 14 · blocco del 14/12 · Albano lezione 19 novembre · dispensa pp. 118-126</div>
       <h2>Gli integrali definiti</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Quanto è grande l'area sotto y = x², tra x = 0 e x = 2?</li><li><i>Provo con quello che so:</i> Sai le aree di rettangoli, triangoli, trapezi: figure con i lati <b>dritti</b>. Il triangolo con vertici (0, 0), (2, 0), (2, 4) ha area 2 · 4/2 = 4, ma è più grande: la parabola sta sotto la retta.</li><li><i>Perché si inceppa:</i> Il bordo è curvo, e nessuna formula di geometria lo copre. Puoi solo approssimare.</li><li><i>Quindi serve:</i> Tanti rettangoli sottili (approssimazione sempre migliore) e il <b>teorema fondamentale</b>: l'area esatta è F(2) − F(0), con F primitiva (capitolo 13). Qui 8/3 ≈ 2,67.</li><li><i>Lo userai per:</i> Aree sotto curve e tra due curve, valori medi, integrali fino a +∞.</li></ol></div>
       <p class="big">Domanda: quanto è grande l'area sotto il grafico di f, tra x = a e x = b? La risposta si scrive</p>
       <div class="math"><span class="sig"><span>b</span><b>∫</b><span>a</span></span> f(x) dx</div>
       <p>A cosa serve: aree, ma anche medie, lavoro, spazio percorso da una velocità. E il teorema fondamentale lega tutto agli integrali indefiniti del capitolo 13: per calcolare un'area basta una primitiva.</p>
@@ -1862,6 +1878,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     <section class="board">
       <div class="eyebrow">Capitolo 15 · blocco del 17/12 · dispensa pp. 153-155, 158-162</div>
       <h2>Le equazioni differenziali</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> Trova y(x) sapendo che y′ = 2y e y(0) = 3.</li><li><i>Provo con quello che so:</i> Integro tutti e due i lati? y = ∫ 2y dx: ma per integrare 2y dovrei già sapere chi è y. Gira in tondo. Le equazioni che sai risolvere hanno come incognita un <b>numero</b>, qui è una <b>funzione</b>.</li><li><i>Provo ancora:</i> Indovino: y = 3eˣ? y′ = 3eˣ, ma 2y = 6eˣ: non torna. y = 3x²? y′ = 6x, 2y = 6x²: no.</li><li><i>Quindi serve:</i> Metodi per tipo di equazione: <b>variabili separabili</b> (porto le y da una parte, le x dall'altra e integro), <b>lineari</b> (una formula), <b>secondo ordine</b> (equazione caratteristica). Qui: y = 3e<sup>2x</sup>.</li><li><i>Lo userai per:</i> I problemi di Cauchy dello scritto: y′ = a(x)b(y), y′ + a(x)y = f(x), y″ + ay′ + by = f(x).</li></ol></div>
       <p class="big">Finora le incognite erano numeri. Qui l'incognita è una <b>funzione</b> y(x), e l'equazione lega y alle sue derivate. Esempio: y′ = y. Chi è una funzione uguale alla sua derivata? eˣ (e anche 2eˣ, 5eˣ, C eˣ).</p>
       <p>A cosa serve: descrivono tutto ciò che cambia nel tempo (raffreddamento, molle, circuiti, popolazioni). All'esame c'è quasi sempre un problema di Cauchy da risolvere: è l'ultima parte del programma, e usa gli integrali dei capitoli 13 e 14.</p>
     </section>
@@ -2233,7 +2250,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('n1').addEventListener('input', () => { $('n1v').textContent = $('n1').value; draws.carabinieri(); });
   $('c1').addEventListener('change', () => draws.carabinieri());
 
-  video('carabinieri', [
+  video('carabinieri', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span> = ?', say:'Ecco un limite che con quello che sai non riesci a calcolare: limite per n che tende a più infinito di seno di n diviso n.' },
+    { show:'<b>Provo con quello che so</b><br>Limite di un prodotto = prodotto dei limiti: <span class="fr"><span>sin n</span><span>n</span></span> = sin n · <span class="fr"><span>1</span><span>n</span></span>. <span class="lim">lim<span>n→+∞</span></span> 1/n = 0, ma <span class="lim">lim<span>n→+∞</span></span> sin n <b>non esiste</b>: sin 1 ≈ 0,84; sin 4 ≈ −0,76; sin 8 ≈ 0,99; sin 11 ≈ −1,00, salta per sempre.', say:'Provo con la regola del prodotto: seno di n per uno su n. Uno su n tende a zero, ma il seno di n non ha limite: vale zero virgola ottantaquattro, poi meno zero virgola settantasei, poi zero virgola novantanove, salta per sempre.' },
+    { show:'<b>Perché si inceppa</b><br>La regola "limite del prodotto = prodotto dei limiti" vale solo se <b>tutti e due</b> i limiti esistono. Qui uno non esiste, quindi la regola non si può usare. E la gerarchia degli infiniti non c\'entra: sin n non va all\'infinito.', say:'La regola del prodotto funziona solo se esistono tutti e due i limiti. Qui uno non esiste, quindi non posso usarla. E la gerarchia degli infiniti non aiuta, perché il seno non va all\'infinito.' },
+    { show:'<b>Quindi serve</b><br>Un modo per trovare il limite <b>senza calcolarlo direttamente</b>: chiudo sin n / n tra due successioni facili che hanno lo stesso limite. È il teorema dei due carabinieri.', say:'Serve un modo per trovare il limite senza calcolarlo direttamente: chiudere la successione tra due successioni facili con lo stesso limite. È il teorema dei due carabinieri.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con un pezzo che oscilla ma resta limitato: (−1)ⁿ/n, (3 + cos n)/n, sin(n²)/√n, n/(n² + sin n). E nel capitolo 2 per <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>.', say:'Lo userai per tutti i limiti con un pezzo che oscilla ma resta limitato: meno uno alla n su n, tre più coseno di n su n, e così via. E nel prossimo capitolo per le radici n-esime.' },
     { show:'<h3>Il teorema dei due carabinieri</h3>Esempio: '+LIM+' '+FR('sin n','n'),
       say:'Il teorema dei due carabinieri. Esempio: limite per n che tende a più infinito di seno di n diviso n.' },
     { show:'sin 1 ≈ 0,84 · sin 4 ≈ −0,76 · sin 8 ≈ 0,99 · sin 11 ≈ −1,00',
@@ -2320,7 +2342,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('rA').addEventListener('change', () => draws.radici());
   $('rN').addEventListener('input', () => { $('rNv').textContent = $('rN').value; draws.radici(); });
 
-  video('radici', [
+  video('radici', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = ?', say:'Il caso: limite per n che tende a più infinito della radice n-esima di due alla n più tre alla n.' },
+    { show:'<b>Provo con quello che so</b><br>Spezzo la radice? <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ</span></span> + <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 2 + 3 = 5? <b>No</b>: la radice di una somma non è la somma delle radici. Con n = 2: √(4 + 9) = √13 ≈ 3,6, non 5.', say:'Provo a spezzare la radice in due: verrebbe due più tre, cinque. Ma è sbagliato: la radice di una somma non è la somma delle radici. Con n uguale a due, radice di tredici fa circa tre virgola sei, non cinque.' },
+    { show:'<b>Provo ancora</b><br>Lo scrivo come potenza: (2ⁿ + 3ⁿ)<sup>1/n</sup>. La base va a +∞, l\'esponente 1/n va a 0: è la forma ∞⁰, <b>indeterminata</b>. Non so dire chi vince.', say:'Provo a scriverlo come potenza: due alla n più tre alla n, elevato a uno su n. La base va a infinito, l\'esponente va a zero: infinito alla zero è indeterminato.' },
+    { show:'<b>Quindi serve</b><br>Sapere quanto fa <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> e <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> per n → +∞ (tutte e due tendono a 1), e chiudere la radice tra due carabinieri (capitolo 1) che so calcolare.', say:'Servono due fatti: la radice n-esima di un numero fisso e la radice n-esima di n tendono a uno. Poi chiudo la radice tra due carabinieri, come nel capitolo uno.' },
+    { show:'<b>Lo userai per</b><br><span class="rt"><sup>n</sup>√<span class="ov">aⁿ + bⁿ</span></span> (vince il più grande), <span class="rt"><sup>n</sup>√<span class="ov">n² + 5</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">3n</span></span>, e soprattutto per il <b>criterio della radice</b> per le serie.', say:'Lo userai per tutte le radici n-esime di somme di potenze, dove vince il più grande, e per il criterio della radice per le serie.' },
     { show:'<h3>Le radici n-esime</h3>'+R('n','a')+' = a<sup>1/n</sup>',
       say:'Le radici n-esime. La radice n-esima di a è a elevato a uno su n. Due fatti da sapere, e poi l\'esercizio del professore.' },
     { show:'Fatto 1: '+LIM+' '+R('n','a')+' = 1 · 2<sup>1/10</sup> ≈ 1,072 · 2<sup>1/100</sup> ≈ 1,007',
@@ -2407,7 +2434,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   };
   $('eN').addEventListener('input', () => { $('eNv').textContent = $('eN').value; draws.nepero(); });
 
-  video('nepero', [
+  video('nepero', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = ?', say:'Il caso: limite per n che tende a più infinito di uno più uno su n, tutto elevato alla n.' },
+    { show:'<b>Provo con quello che so</b><br>La base 1 + 1/n tende a 1, e 1 elevato a qualsiasi cosa fa 1. Quindi fa 1? Provo i numeri: n = 10 → 1,1¹⁰ ≈ 2,594; n = 100 → 1,01¹⁰⁰ ≈ 2,705. <b>Non fa 1.</b>', say:'Ragiono: la base tende a uno, e uno elevato a qualsiasi cosa fa uno. Ma provo i numeri: con n uguale a dieci viene due virgola cinque nove, con cento due virgola sette. Non fa uno.' },
+    { show:'<b>Provo ancora</b><br>Allora l\'esponente enorme vince e va a +∞? Ma i numeri si fermano sotto 2,72. Base che va a 1 ed esponente che va a +∞: forma 1<sup>∞</sup>, <b>indeterminata</b>. Né la gerarchia né i carabinieri dicono quanto fa.', say:'Allora vince l\'esponente e va a infinito? No, i numeri si fermano sotto due virgola settantadue. È la forma uno alla infinito, indeterminata, e niente di quello che sai dice quanto fa.' },
+    { show:'<b>Quindi serve</b><br>Dare un nome a quel numero, <b>e ≈ 2,718</b>, e una ricetta per tutte le forme 1<sup>∞</sup>: pezzo piccolo × esponente → e elevato a quello.', say:'Serve dare un nome a quel numero, e, circa due virgola settecentodiciotto, e una ricetta per tutte le forme uno alla infinito.' },
+    { show:'<b>Lo userai per</b><br>(1 + 3/n)ⁿ = e³, (1 − 2/n)ⁿ = e<sup>−2</sup>, (1 + 5/n)<sup>2n</sup> = e¹⁰, ((n + 1)/(n − 1))ⁿ, e più avanti per i limiti notevoli delle funzioni.', say:'Lo userai per tutte le potenze con base che tende a uno ed esponente che tende a infinito, e più avanti per i limiti notevoli.' },
     { show:'<h3>Il numero e</h3>'+LIM+' (1 + '+FR('1','n')+')<sup>n</sup> = e ≈ 2,718',
       say:'Il numero e. È il limite per n che tende a più infinito di uno più uno su n, tutto elevato alla n. Vale circa due virgola settecentodiciotto. Vediamo da dove viene, con i soldi.' },
     { show:'1 rata: 2¹ = 2 · 2 rate: 1,5² = 1,5 · 1,5 = 2,25 · 4 rate: 1,25⁴ ≈ 2,441',
@@ -2528,7 +2560,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('qM').addEventListener('input', drawQM);
 
 
-  video('rapporto', [
+  video('rapporto', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>5ⁿ</span><span>n!</span></span> = ?', say:'Ecco un limite che con quello che sai non riesci a risolvere davvero: limite per n che tende a più infinito di cinque alla n diviso n fattoriale.' },
+    { show:'<b>Provo con quello che so</b><br>Sopra 5ⁿ → +∞, sotto n! → +∞: forma ∞/∞. Raccolgo la potenza più alta come con i polinomi? Non ci sono potenze di n da raccogliere. Carabinieri? Non c\'è un pezzo limitato che oscilla. E i numeri prima <b>salgono</b>: 5; 12,5; 20,8; 26; 26; poi 21,7…', say:'Sopra e sotto vanno a infinito: infinito su infinito. Raccogliere la potenza più alta non si può, non ci sono potenze di n. I carabinieri non si vedono. E i numeri prima salgono, cinque, dodici e mezzo, venti, ventisei, e poi scendono.' },
+    { show:'<b>Perché si inceppa</b><br>La gerarchia dice "n! vince su 5ⁿ", ma è una regola da ricordare, non un calcolo: non dice <b>perché</b>, e non funziona con casi misti come n² · 3ⁿ/n! o nⁿ/n!, dove non sai chi vince.', say:'La gerarchia dice che il fattoriale vince, ma è una regola da ricordare, non un calcolo. Non spiega perché, e con casi misti come n alla n su n fattoriale non sai chi vince.' },
+    { show:'<b>Quindi serve</b><br>Guardare <b>di quanto si moltiplica</b> un termine per passare al successivo: a<sub>n+1</sub>/a<sub>n</sub>. Con fattoriali e potenze questo rapporto si semplifica tantissimo. È il criterio del rapporto.', say:'Serve guardare di quanto si moltiplica un termine per passare al successivo: a con n più uno diviso a con n. Con fattoriali e potenze questo rapporto si semplifica tantissimo. È il criterio del rapporto.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con n!, aⁿ, nⁿ insieme: nⁿ/n!, n!/nⁿ, n² · 3ⁿ/n!, 2ⁿ/n⁵. E nel capitolo 6 per le serie.', say:'Lo userai per tutti i limiti dove compaiono insieme fattoriali e potenze, e poi per le serie.' },
     { show:'<h3>Il criterio del rapporto</h3>Serve per i limiti con fattoriali e potenze: n!, 5ⁿ, nⁿ.',
       say:'Il criterio del rapporto serve per calcolare i limiti di successioni con fattoriali e potenze, per esempio n fattoriale, cinque alla n, n alla n.' },
     { show:'Esempio: a<sub>n</sub> = '+FR('5ⁿ','n!'),
@@ -2628,7 +2665,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('sP').addEventListener('change', () => draws.sottosuccessioni());
   $('sD').addEventListener('change', () => draws.sottosuccessioni());
 
-  video('sottosuccessioni', [
+  video('sottosuccessioni', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ · <span class="fr"><span>n</span><span>n + 1</span></span> = ?', say:'Il caso: limite per n che tende a più infinito di meno uno alla n per n su n più uno.' },
+    { show:'<b>Provo con quello che so</b><br>Prodotto dei limiti? <span class="lim">lim<span>n→+∞</span></span> n/(n + 1) = 1, ma <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ non esiste (−1, 1, −1, 1, …). Carabinieri? −1 ≤ (−1)ⁿ · n/(n + 1) ≤ 1, ma −1 e 1 sono limiti <b>diversi</b>: non concludo niente.', say:'Prodotto dei limiti: n su n più uno tende a uno, ma meno uno alla n non ha limite. Carabinieri: la successione sta tra meno uno e uno, ma meno uno e uno sono diversi, quindi non concludo niente.' },
+    { show:'<b>Perché si inceppa</b><br>I numeri saltano: −0,5; 0,67; −0,75; 0,8; −0,9; 0,91. Sembra che il limite <b>non esista</b>. Ma "sembra" non basta: tutti gli strumenti che hai servono a <b>trovare</b> un limite, nessuno a dimostrare che non c\'è.', say:'I numeri saltano da una parte all\'altra. Sembra che il limite non esista, ma sembra non basta: tutti gli strumenti che conosci servono a trovare un limite, nessuno a dimostrare che non esiste.' },
+    { show:'<b>Quindi serve</b><br>Spezzare la successione in due file (n pari e n dispari). Se le due file hanno limiti diversi, il limite non esiste. Sono le <b>sottosuccessioni</b>.', say:'Serve spezzare la successione in due file, n pari e n dispari. Se hanno limiti diversi, il limite non esiste. Sono le sottosuccessioni.' },
+    { show:'<b>Lo userai per</b><br>Dimostrare che non esistono <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ, cos(nπ), sin(nπ/2), (−1)ⁿ + 1/n. Poi Bolzano-Weierstrass dice cosa resta vero anche quando il limite non c\'è.', say:'Lo userai ogni volta che devi dimostrare che un limite non esiste, con meno uno alla n, coseno di n pi greco e simili.' },
     { show:'<h3>Sottosuccessioni: a cosa servono</h3>Servono a dimostrare che un limite NON esiste.',
       say:'Le sottosuccessioni servono soprattutto a dimostrare che un limite non esiste. All\'esame la domanda tipica è: il limite esiste? E la risposta è no.' },
     { show:'Esempio: a<sub>n</sub> = (−1)ⁿ · '+FR('n','n + 1'),
@@ -2713,7 +2755,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('serS').addEventListener('change', () => draws.serie());
   $('serN').addEventListener('input', () => { $('serNv').textContent = $('serN').value; draws.serie(); });
 
-  video('serie', [
+  video('serie', [/*problema*/
+    { show:'<b>Il caso</b><br>1/2 + 1/4 + 1/8 + 1/16 + … (per sempre) = ?', say:'Il caso: un mezzo più un quarto più un ottavo più un sedicesimo, e così via per sempre. Quanto fa?' },
+    { show:'<b>Provo con quello che so</b><br>Sommare si sa fare con un numero finito di termini. Con infiniti termini non finisci mai di sommare: la somma "alla fine" non esiste come operazione.', say:'Sommare lo sai fare con un numero finito di termini. Ma qui i termini sono infiniti: non finisci mai.' },
+    { show:'<b>Perché è difficile</b><br>Sembra ovvio che se i termini diventano piccoli la somma è finita. E invece 1 + 1/2 + 1/3 + 1/4 + … ha termini che tendono a 0 ma la somma va a +∞ (lo vedrai). L\'intuito non basta.', say:'Sembra ovvio che se i termini diventano piccoli la somma resta finita. Ma uno più un mezzo più un terzo più un quarto ha termini che tendono a zero e la somma va a infinito. L\'intuito non basta.' },
+    { show:'<b>Quindi serve</b><br>Sommare i primi n termini (S<sub>n</sub>, un numero vero) e fare il limite per n → +∞: i limiti di successioni li sai fare. Qui: S₁ = 0,5; S₂ = 0,75; S₃ = 0,875 → 1.', say:'Serve sommare solo i primi n termini, che è un numero vero, e poi fare il limite per n che tende a più infinito, che sai fare. Qui le somme parziali sono zero virgola cinque, zero virgola settantacinque, zero virgola ottocentosettantacinque, e tendono a uno.' },
+    { show:'<b>Lo userai per</b><br>Serie geometriche, armonica generalizzata 1/nᵖ, e i criteri (rapporto, radice, confronto) per decidere se Σ a<sub>n</sub> converge senza calcolare la somma.', say:'Lo userai per le serie geometriche, la serie armonica, e i criteri per capire se una serie converge senza calcolarne la somma.' },
     { show:'<h3>Le serie: sommare infiniti numeri</h3>'+SUM(1)+' a<sub>n</sub> = a₁ + a₂ + a₃ + …',
       say:'Una serie è una somma di infiniti numeri: a uno più a due più a tre, e così via per sempre. La domanda è: questa somma fa un numero preciso, oppure esplode?' },
     { show:'Come si fa: somme parziali S<sub>n</sub> = a₁ + … + a<sub>n</sub>, poi '+LIM+' S<sub>n</sub>',
@@ -2862,7 +2909,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   };
   $('asS').addEventListener('change', () => draws['serie-parametro']());
 
-  video('serie-parametro', [
+  video('serie-parametro', [/*problema*/
+    { show:'<b>Il caso</b><br>Σ <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> converge? E Σ (−1)ⁿ/n?', say:'Due casi: la serie di n più tre su n al cubo più uno converge? E la serie di meno uno alla n su n?' },
+    { show:'<b>Provo con quello che so</b><br>Criterio del rapporto sulla prima: <span class="fr"><span>n + 4</span><span>(n + 1)³ + 1</span></span> · <span class="fr"><span>n³ + 1</span><span>n + 3</span></span> → 1 (sopra e sotto comanda n⁴). Con L = 1 il criterio <b>non dice niente</b>. Anche la radice dà 1.', say:'Provo il criterio del rapporto sulla prima: viene un rapporto che tende a uno. Con L uguale a uno il criterio non dice niente. Anche la radice dà uno.' },
+    { show:'<b>Provo ancora</b><br>Sulla seconda: i termini non sono tutti positivi, e i criteri del capitolo 6 valgono solo per serie a termini positivi. Senza segni diventa Σ 1/n, che diverge: ma con i segni?', say:'Sulla seconda serie i termini cambiano segno, e i criteri che conosci valgono solo per termini positivi. Senza segni è la serie armonica, che diverge. Ma con i segni non lo sai.' },
+    { show:'<b>Quindi serve</b><br><b>Confronto asintotico</b>: riporto la prima a 1/n², che conosco. <b>Leibniz</b>: un criterio fatto apposta per i segni alterni. E uno schema per le serie con un parametro x.', say:'Servono il confronto asintotico, che riporta la prima serie a uno su n al quadrato, il criterio di Leibniz, fatto apposta per i segni alterni, e uno schema per le serie con parametro.' },
+    { show:'<b>Lo userai per</b><br>Serie con polinomi, radici, sin(1/n), ln(1 + 1/n) dentro; serie con (−1)ⁿ; "per quali x converge Σ xⁿ/n?".', say:'Lo userai per le serie con polinomi, radici e funzioni di uno su n, per quelle con meno uno alla n, e per le serie con parametro.' },
     { show:'<h3>Serie con parametro</h3>Tre attrezzi: confronto asintotico, Leibniz, schema con parametro',
       say:'In questa lezione vediamo tre attrezzi: il confronto asintotico, il criterio di Leibniz, e lo schema per le serie con parametro. Facciamo tutti i calcoli.' },
     { show:'Attrezzo 1. Esempio: '+SUM(1)+' '+FR('n + 3','n³ + 1'),
@@ -3008,7 +3060,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('lfS').addEventListener('change', () => draws['limiti-funzioni']());
   $('lfD').addEventListener('input', () => draws['limiti-funzioni']());
 
-  video('limiti-funzioni', [
+  video('limiti-funzioni', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>x→1</span></span> <span class="fr"><span>x² − 1</span><span>x − 1</span></span> = ?', say:'Il caso: limite per x che tende a uno di x al quadrato meno uno, diviso x meno uno.' },
+    { show:'<b>Provo con quello che so</b><br>Finora n andava solo a +∞, e qui x va a un <b>numero</b>, 1: la gerarchia e il termine dominante non c\'entrano. Sostituisco x = 1: (1 − 1)/(1 − 1) = 0/0, che non è un numero.', say:'Finora n andava solo a più infinito. Qui x va a un numero, uno: la gerarchia non c\'entra. Se sostituisco uno viene zero su zero, che non è un numero.' },
+    { show:'<b>Perché si inceppa</b><br>In x = 1 la funzione non esiste proprio. Ma vicino a 1 esiste: f(0,9) = 1,9; f(0,99) = 1,99; f(1,01) = 2,01. Va da qualche parte, e ti manca il modo di dirlo e calcolarlo.', say:'In uno la funzione non esiste, ma vicino a uno sì: uno virgola nove, uno virgola novantanove, due virgola zero uno. Va da qualche parte, ma ti manca il modo di calcolarlo.' },
+    { show:'<b>Quindi serve</b><br>Il <b>limite di funzione</b> per x → x₀ (guardare vicino, non sopra) e uno schema: sostituisco → se 0/0 scompongo e semplifico → limiti notevoli.', say:'Serve il limite di funzione, che guarda vicino al punto e non sopra, e uno schema per calcolarlo: sostituisco, se viene zero su zero scompongo, poi i limiti notevoli.' },
+    { show:'<b>Lo userai per</b><br>Limiti con 0/0, ∞/∞, sin x/x, destra e sinistra diverse (1/x), e poi per continuità e derivate (capitolo 9).', say:'Lo userai per tutti i limiti di funzioni, e poi per la continuità e le derivate.' },
     { show:'<h3>Limiti di funzioni</h3>'+LIMX('x₀')+' f(x) = L',
       say:'Limiti di funzioni. Si legge: limite per x che tende a x zero di f di x uguale a L. Vuol dire: quando x si avvicina a x zero, f di x si avvicina a L.' },
     { show:'Esempio: '+LIMX('1')+' '+FR('x² − 1','x − 1')+' · sostituisco: '+FR('1 − 1','1 − 1')+' = '+FR('0','0'),
@@ -3166,7 +3223,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('dvS').addEventListener('change', () => draws['continuita-derivata']());
   $('dvH').addEventListener('input', () => draws['continuita-derivata']());
 
-  video('continuita-derivata', [
+  video('continuita-derivata', [/*problema*/
+    { show:'<b>Il caso</b><br>Qual è la <b>pendenza</b> della curva y = x² nel punto x = 1?', say:'Il caso: qual è la pendenza della curva y uguale x al quadrato nel punto x uguale a uno?' },
+    { show:'<b>Provo con quello che so</b><br>La pendenza di una retta la sai: (y₂ − y₁)/(x₂ − x₁), servono <b>due</b> punti. Qui ho un punto solo, (1, 1): (1 − 1)/(1 − 1) = 0/0. E la curva non è una retta, la pendenza cambia da punto a punto.', say:'La pendenza di una retta la sai calcolare, ma servono due punti. Qui ne ho uno solo: verrebbe zero su zero. E la curva non è una retta, quindi la pendenza cambia da punto a punto.' },
+    { show:'<b>Provo ancora</b><br>Prendo un secondo punto vicino, x = 1,1: (1,21 − 1)/0,1 = 2,1. Con x = 1,01: 2,01. Si avvicina a 2, ma ogni volta è una approssimazione: serve il <b>limite</b> (capitolo 8).', say:'Prendo un secondo punto vicino: con uno virgola uno la pendenza è due virgola uno, con uno virgola zero uno è due virgola zero uno. Si avvicina a due, ma è un\'approssimazione: serve un limite.' },
+    { show:'<b>Quindi serve</b><br>La <b>derivata</b>: limite per h → 0 della pendenza tra x₀ e x₀ + h. E prima la <b>continuità</b>, che dice quando una funzione non fa salti.', say:'Serve la derivata, il limite della pendenza tra due punti sempre più vicini. E prima la continuità, che dice quando una funzione non fa salti.' },
+    { show:'<b>Lo userai per</b><br>Rette tangenti, velocità, crescenza e massimi nello studio di funzione (capitolo 12). Con la continuità: dire che x³ + x − 1 = 0 ha una soluzione senza trovarla.', say:'Lo userai per le rette tangenti, per sapere dove una funzione cresce e dove ha i massimi, e con la continuità per dire che un\'equazione ha una soluzione senza trovarla.' },
     { show:'<h3>Continuità e derivata</h3>Continua in x₀: '+LIMX('x₀')+' f(x) = f(x₀)',
       say:'Continuità e derivata. Una funzione è continua in x zero se il limite per x che tende a x zero di f di x è uguale a f di x zero. In pratica: si disegna senza staccare la penna.' },
     { show:'Salto: f(x) = x se x &lt; 1, x + 1 se x ≥ 1 · sinistra: 0,9 · 0,99 → 1 · destra: 2,1 · 2,01 → 2',
@@ -3290,7 +3352,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('rdS').addEventListener('change', () => draws['regole-derivazione']());
   $('rdX').addEventListener('input', () => draws['regole-derivazione']());
 
-  video('regole-derivazione', [
+  video('regole-derivazione', [/*problema*/
+    { show:'<b>Il caso</b><br>Derivata di f(x) = (3x + 1)⁵ in x = 0.', say:'Il caso: la derivata di tre x più uno alla quinta, in x uguale a zero.' },
+    { show:'<b>Provo con quello che so</b><br>Con la definizione: <span class="lim">lim<span>h→0</span></span> [(3h + 1)⁵ − 1]/h. Devo sviluppare (3h + 1)⁵: sono 6 termini con coefficienti 1, 5, 10, 10, 5, 1 e potenze di 3. Si può, ma è lunghissimo, e con sin(x²) · eˣ non si fa proprio.', say:'Con la definizione dovrei sviluppare tre h più uno alla quinta: sei termini con coefficienti e potenze di tre. Si può, ma è lunghissimo, e con funzioni come seno di x al quadrato per e alla x non si fa proprio.' },
+    { show:'<b>Perché si inceppa</b><br>La definizione funziona sempre, ma ogni funzione nuova richiede un limite nuovo. All\'esame non c\'è tempo.', say:'La definizione funziona sempre, ma ogni funzione nuova richiede un limite nuovo, e all\'esame non c\'è tempo.' },
+    { show:'<b>Quindi serve</b><br>Una <b>tabellina</b> di derivate fatte una volta per tutte, e <b>regole</b> per combinarle (somma, prodotto, quoziente, catena). Qui: 5(3x + 1)⁴ · 3, in 0 fa 15.', say:'Serve una tabellina di derivate fatte una volta per tutte, e regole per combinarle. Qui con la regola della catena viene quindici in un attimo.' },
+    { show:'<b>Lo userai per</b><br>Tutte le derivate dell\'esame: studio di funzione, De L\'Hôpital, Taylor, e al contrario negli integrali.', say:'Lo userai per tutte le derivate dell\'esame: studio di funzione, De L\'Hôpital, Taylor, e al contrario per gli integrali.' },
     { show:'<h3>Regole di derivazione</h3>Una tabellina + cinque regole, invece del limite per h → 0',
       say:'Le regole di derivazione. Con la definizione ogni derivata è un limite lungo. Con una tabellina e cinque regole si fa in un attimo.' },
     { show:'(xᵃ)′ = a · x<sup>a−1</sup> → (x³)′ = 3x² → in x = 2: 3 · 4 = 12',
@@ -3422,7 +3489,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('tyS').addEventListener('change', () => draws['teoremi-taylor']());
   $('tyN').addEventListener('input', () => draws['teoremi-taylor']());
 
-  video('teoremi-taylor', [
+  video('teoremi-taylor', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = ?', say:'Il caso: limite per x che tende a zero di x meno seno di x, diviso x al cubo.' },
+    { show:'<b>Provo con quello che so</b><br>Sostituisco: (0 − 0)/0 = 0/0. Scompongo? Non è un polinomio. Limite notevole sin x/x → 1? Divido per x: (1 − sin x/x)/x² → (1 − 1)/0 = 0/0 di nuovo.', say:'Sostituisco: zero su zero. Scomporre non si può, non è un polinomio. Uso il limite notevole seno di x su x? Dividendo per x torno a zero su zero.' },
+    { show:'<b>Perché si inceppa</b><br>Il limite notevole dice solo che sin x ≈ x vicino a 0. Ma qui x − sin x cancella proprio quella parte: serve sapere <b>di quanto</b> sin x è diverso da x. Con x = 0,1: 0,1 − 0,0998334 = 0,0001666, un numero piccolissimo.', say:'Il limite notevole dice solo che seno di x è circa x. Ma qui x meno seno di x cancella proprio quella parte: serve sapere di quanto seno di x è diverso da x.' },
+    { show:'<b>Quindi serve</b><br><b>Taylor</b>: sin x = x − x³/6 + o(x³), un polinomio più preciso della sola x. Oppure <b>De L\'Hôpital</b>: con 0/0 derivo sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.', say:'Serve Taylor, che scrive seno di x come x meno x al cubo sesti più un errore piccolissimo. Oppure De L\'Hôpital, che con zero su zero deriva sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con sin, cos, eˣ, ln mescolati, dove i notevoli non bastano. Lagrange per dimostrare che f′ &gt; 0 vuol dire f crescente.', say:'Lo userai per i limiti con seno, coseno, esponenziale e logaritmo mescolati, e Lagrange per dimostrare che derivata positiva vuol dire funzione crescente.' },
     { show:'<h3>Rolle, Lagrange, De L\'Hôpital, Taylor</h3>Due teoremi di teoria, due attrezzi per i limiti',
       say:'Quattro attrezzi: Rolle e Lagrange per la teoria, De L\'Hôpital e Taylor per calcolare i limiti.' },
     { show:'Rolle: f(a) = f(b) ⇒ f′(c) = 0 · x² − 2x su [0, 2]: f(0) = 0, f(2) = 4 − 4 = 0 · 2c − 2 = 0 → c = 1',
@@ -3634,7 +3706,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('sfS').addEventListener('change', () => { $('sfN').value = 1; draws['studio-funzione'](); });
   $('sfN').addEventListener('input', () => draws['studio-funzione']());
 
-  video('studio-funzione', [
+  video('studio-funzione', [/*problema*/
+    { show:'<b>Il caso</b><br>Disegna il grafico di f(x) = <span class="fr"><span>x²</span><span>x − 1</span></span>.', say:'Il caso: disegna il grafico di x al quadrato diviso x meno uno.' },
+    { show:'<b>Provo con quello che so</b><br>Tabella di punti: f(0) = 0; f(2) = 4; f(3) = 4,5; f(−1) = −0,5. Li unisco? Tra 0 e 2 passerei per x = 1, dove la funzione <b>non esiste</b> e va a ±∞: f(0,9) = −8,1 e f(1,1) = 12,1.', say:'Con una tabella di punti: zero, quattro, quattro e mezzo, meno zero virgola cinque. Ma se li unisco passo per x uguale a uno, dove la funzione non esiste e va all\'infinito.' },
+    { show:'<b>Perché si inceppa</b><br>Con i punti non sai cosa succede <b>tra</b> un punto e l\'altro: dove sono i massimi esatti, se ci sono asintoti, cosa fa all\'infinito. Ne servirebbero infiniti.', say:'Con i punti non sai cosa succede tra un punto e l\'altro: dove sono i massimi esatti, se ci sono asintoti, cosa fa all\'infinito.' },
+    { show:'<b>Quindi serve</b><br>Uno schema in 6 passi che usa tutto quello che sai: dominio, segno, limiti (capitolo 8) → asintoti, derivata (capitoli 9-10) → crescenza e massimi, derivata seconda → concavità.', say:'Serve uno schema in sei passi che usa tutto quello che sai: dominio, segno, limiti e asintoti, derivata prima per crescenza e massimi, derivata seconda per la concavità.' },
+    { show:'<b>Lo userai per</b><br>L\'esercizio più frequente dello scritto: polinomi, frazioni, funzioni con eˣ e ln.', say:'Lo userai per l\'esercizio più frequente dello scritto.' },
     { show:'<h3>Studio di funzione</h3>f(x) = '+FR('x²','x − 1'),
       say:'Studio di funzione completo, con tutti i calcoli. La funzione è x al quadrato diviso x meno uno.' },
     { show:'1 · Dominio: x − 1 ≠ 0 → <b>x ≠ 1</b>',
@@ -3755,7 +3832,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('iiS').addEventListener('change', () => draws['integrali-indefiniti']());
   $('iiC').addEventListener('input', () => draws['integrali-indefiniti']());
 
-  video('integrali-indefiniti', [
+  video('integrali-indefiniti', [/*problema*/
+    { show:'<b>Il caso</b><br>Quale funzione F ha derivata F′(x) = x eˣ?', say:'Il caso: quale funzione ha come derivata x per e alla x?' },
+    { show:'<b>Provo con quello che so</b><br>Sai derivare, cioè andare da F a F′. Qui devi andare al contrario. Provo a indovinare F = x eˣ: F′ = eˣ + x eˣ (regola del prodotto). C\'è un eˣ di troppo.', say:'Sai derivare, cioè andare da F a F primo. Qui devi fare il contrario. Provo a indovinare x per e alla x: la derivata è e alla x più x e alla x, c\'è un pezzo di troppo.' },
+    { show:'<b>Perché si inceppa</b><br>Per 2x indovini subito x², ma appena la funzione è un prodotto o una composta, indovinare a caso non funziona: non c\'è una "regola del prodotto al contrario" ovvia.', say:'Per due x indovini subito x al quadrato, ma con prodotti e composte indovinare non funziona.' },
+    { show:'<b>Quindi serve</b><br>Gli <b>integrali</b>: una tabellina (le derivate lette al contrario) e metodi per i casi difficili: sostituzione (catena al contrario), <b>per parti</b> (prodotto al contrario), fratti semplici. Qui per parti: x eˣ − eˣ.', say:'Servono gli integrali: una tabellina e metodi per i casi difficili, sostituzione, per parti, fratti semplici. Qui con il metodo per parti viene x e alla x meno e alla x.' },
+    { show:'<b>Lo userai per</b><br>Calcolare aree (capitolo 14) e risolvere equazioni differenziali (capitolo 15).', say:'Lo userai per le aree e per le equazioni differenziali.' },
     { show:'<h3>Integrali indefiniti</h3>∫ f(x) dx = F(x) + C ⟺ F′(x) = f(x)',
       say:'Integrali indefiniti. Integrare è il contrario di derivare: cerco una funzione F la cui derivata è f. Si scrive integrale di f di x in d x uguale F di x più C.' },
     { show:'∫ 2x dx = x² + C · controllo: (x² + 5)′ = 2x + 0 = 2x',
@@ -3874,7 +3956,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('idN').addEventListener('input', () => draws['integrali-definiti']());
 
   const INT = (a,b) => '<span class="sig"><span>'+b+'</span><b>∫</b><span>'+a+'</span></span>';
-  video('integrali-definiti', [
+  video('integrali-definiti', [/*problema*/
+    { show:'<b>Il caso</b><br>Quanto è grande l\'area sotto y = x², tra x = 0 e x = 2?', say:'Il caso: quanto è grande l\'area sotto la parabola y uguale x al quadrato, tra zero e due?' },
+    { show:'<b>Provo con quello che so</b><br>Sai le aree di rettangoli, triangoli, trapezi: figure con i lati <b>dritti</b>. Il triangolo con vertici (0, 0), (2, 0), (2, 4) ha area 2 · 4/2 = 4, ma è più grande: la parabola sta sotto la retta.', say:'Sai calcolare le aree di figure con i lati dritti. Il triangolo con vertici zero zero, due zero, due quattro ha area quattro, ma la parabola sta sotto, quindi l\'area vera è più piccola.' },
+    { show:'<b>Perché si inceppa</b><br>Il bordo è curvo, e nessuna formula di geometria lo copre. Puoi solo approssimare.', say:'Il bordo è curvo, e nessuna formula di geometria lo copre. Puoi solo approssimare.' },
+    { show:'<b>Quindi serve</b><br>Tanti rettangoli sottili (approssimazione sempre migliore) e il <b>teorema fondamentale</b>: l\'area esatta è F(2) − F(0), con F primitiva (capitolo 13). Qui 8/3 ≈ 2,67.', say:'Servono tanti rettangoli sottili, e il teorema fondamentale: l\'area esatta è F di due meno F di zero, con F primitiva. Qui otto terzi.' },
+    { show:'<b>Lo userai per</b><br>Aree sotto curve e tra due curve, valori medi, integrali fino a +∞.', say:'Lo userai per le aree sotto le curve e tra due curve, i valori medi, e gli integrali fino a infinito.' },
     { show:'<h3>Integrali definiti</h3>'+INT('a','b')+' f(x) dx = area sotto il grafico tra a e b',
       say:'Integrali definiti. L\'integrale da a a b di f di x è l\'area sotto il grafico di f, tra x uguale a e x uguale b.' },
     { show:'x² su [0, 2] con 2 rettangoli: larghezza 2/2 = 1 · mezzi 0,5 e 1,5',
@@ -4017,7 +4104,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   $('edS').addEventListener('change', () => draws['equazioni-differenziali']());
   $('edY').addEventListener('input', () => draws['equazioni-differenziali']());
 
-  video('equazioni-differenziali', [
+  video('equazioni-differenziali', [/*problema*/
+    { show:'<b>Il caso</b><br>Trova y(x) sapendo che y′ = 2y e y(0) = 3.', say:'Il caso: trova la funzione y sapendo che la sua derivata è due volte se stessa, e che in zero vale tre.' },
+    { show:'<b>Provo con quello che so</b><br>Integro tutti e due i lati? y = ∫ 2y dx: ma per integrare 2y dovrei già sapere chi è y. Gira in tondo. Le equazioni che sai risolvere hanno come incognita un <b>numero</b>, qui è una <b>funzione</b>.', say:'Provo a integrare tutti e due i lati: ma per integrare due y dovrei già sapere chi è y. Si gira in tondo. Le equazioni che sai risolvere cercano un numero, qui si cerca una funzione.' },
+    { show:'<b>Provo ancora</b><br>Indovino: y = 3eˣ? y′ = 3eˣ, ma 2y = 6eˣ: non torna. y = 3x²? y′ = 6x, 2y = 6x²: no.', say:'Indovino: tre e alla x? La derivata è tre e alla x, ma due y è sei e alla x. Non torna.' },
+    { show:'<b>Quindi serve</b><br>Metodi per tipo di equazione: <b>variabili separabili</b> (porto le y da una parte, le x dall\'altra e integro), <b>lineari</b> (una formula), <b>secondo ordine</b> (equazione caratteristica). Qui: y = 3e<sup>2x</sup>.', say:'Servono metodi per tipo di equazione: variabili separabili, lineari, secondo ordine. Qui separando le variabili viene tre e alla due x.' },
+    { show:'<b>Lo userai per</b><br>I problemi di Cauchy dello scritto: y′ = a(x)b(y), y′ + a(x)y = f(x), y″ + ay′ + by = f(x).', say:'Lo userai per i problemi di Cauchy dello scritto.' },
     { show:'<h3>Equazioni differenziali</h3>L\'incognita è una funzione y(x). Esempio: y′ = y',
       say:'Equazioni differenziali. Qui l\'incognita è una funzione, y di x, e l\'equazione lega y alle sue derivate. Esempio: y primo uguale y. Una funzione uguale alla sua derivata.' },
     { show:'y = eˣ → y′ = eˣ = y ✓ · y = 5eˣ → y′ = 5eˣ = y ✓ · tutte: y = K eˣ',

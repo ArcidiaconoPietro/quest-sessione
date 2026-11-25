@@ -112,7 +112,12 @@
   $('sfS').addEventListener('change', () => { $('sfN').value = 1; draws['studio-funzione'](); });
   $('sfN').addEventListener('input', () => draws['studio-funzione']());
 
-  video('studio-funzione', [
+  video('studio-funzione', [/*problema*/
+    { show:'<b>Il caso</b><br>Disegna il grafico di f(x) = <span class="fr"><span>x²</span><span>x − 1</span></span>.', say:'Il caso: disegna il grafico di x al quadrato diviso x meno uno.' },
+    { show:'<b>Provo con quello che so</b><br>Tabella di punti: f(0) = 0; f(2) = 4; f(3) = 4,5; f(−1) = −0,5. Li unisco? Tra 0 e 2 passerei per x = 1, dove la funzione <b>non esiste</b> e va a ±∞: f(0,9) = −8,1 e f(1,1) = 12,1.', say:'Con una tabella di punti: zero, quattro, quattro e mezzo, meno zero virgola cinque. Ma se li unisco passo per x uguale a uno, dove la funzione non esiste e va all\'infinito.' },
+    { show:'<b>Perché si inceppa</b><br>Con i punti non sai cosa succede <b>tra</b> un punto e l\'altro: dove sono i massimi esatti, se ci sono asintoti, cosa fa all\'infinito. Ne servirebbero infiniti.', say:'Con i punti non sai cosa succede tra un punto e l\'altro: dove sono i massimi esatti, se ci sono asintoti, cosa fa all\'infinito.' },
+    { show:'<b>Quindi serve</b><br>Uno schema in 6 passi che usa tutto quello che sai: dominio, segno, limiti (capitolo 8) → asintoti, derivata (capitoli 9-10) → crescenza e massimi, derivata seconda → concavità.', say:'Serve uno schema in sei passi che usa tutto quello che sai: dominio, segno, limiti e asintoti, derivata prima per crescenza e massimi, derivata seconda per la concavità.' },
+    { show:'<b>Lo userai per</b><br>L\'esercizio più frequente dello scritto: polinomi, frazioni, funzioni con eˣ e ln.', say:'Lo userai per l\'esercizio più frequente dello scritto.' },
     { show:'<h3>Studio di funzione</h3>f(x) = '+FR('x²','x − 1'),
       say:'Studio di funzione completo, con tutti i calcoli. La funzione è x al quadrato diviso x meno uno.' },
     { show:'1 · Dominio: x − 1 ≠ 0 → <b>x ≠ 1</b>',

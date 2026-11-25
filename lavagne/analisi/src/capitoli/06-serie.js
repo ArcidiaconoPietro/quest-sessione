@@ -15,7 +15,12 @@
   $('serS').addEventListener('change', () => draws.serie());
   $('serN').addEventListener('input', () => { $('serNv').textContent = $('serN').value; draws.serie(); });
 
-  video('serie', [
+  video('serie', [/*problema*/
+    { show:'<b>Il caso</b><br>1/2 + 1/4 + 1/8 + 1/16 + … (per sempre) = ?', say:'Il caso: un mezzo più un quarto più un ottavo più un sedicesimo, e così via per sempre. Quanto fa?' },
+    { show:'<b>Provo con quello che so</b><br>Sommare si sa fare con un numero finito di termini. Con infiniti termini non finisci mai di sommare: la somma "alla fine" non esiste come operazione.', say:'Sommare lo sai fare con un numero finito di termini. Ma qui i termini sono infiniti: non finisci mai.' },
+    { show:'<b>Perché è difficile</b><br>Sembra ovvio che se i termini diventano piccoli la somma è finita. E invece 1 + 1/2 + 1/3 + 1/4 + … ha termini che tendono a 0 ma la somma va a +∞ (lo vedrai). L\'intuito non basta.', say:'Sembra ovvio che se i termini diventano piccoli la somma resta finita. Ma uno più un mezzo più un terzo più un quarto ha termini che tendono a zero e la somma va a infinito. L\'intuito non basta.' },
+    { show:'<b>Quindi serve</b><br>Sommare i primi n termini (S<sub>n</sub>, un numero vero) e fare il limite per n → +∞: i limiti di successioni li sai fare. Qui: S₁ = 0,5; S₂ = 0,75; S₃ = 0,875 → 1.', say:'Serve sommare solo i primi n termini, che è un numero vero, e poi fare il limite per n che tende a più infinito, che sai fare. Qui le somme parziali sono zero virgola cinque, zero virgola settantacinque, zero virgola ottocentosettantacinque, e tendono a uno.' },
+    { show:'<b>Lo userai per</b><br>Serie geometriche, armonica generalizzata 1/nᵖ, e i criteri (rapporto, radice, confronto) per decidere se Σ a<sub>n</sub> converge senza calcolare la somma.', say:'Lo userai per le serie geometriche, la serie armonica, e i criteri per capire se una serie converge senza calcolarne la somma.' },
     { show:'<h3>Le serie: sommare infiniti numeri</h3>'+SUM(1)+' a<sub>n</sub> = a₁ + a₂ + a₃ + …',
       say:'Una serie è una somma di infiniti numeri: a uno più a due più a tre, e così via per sempre. La domanda è: questa somma fa un numero preciso, oppure esplode?' },
     { show:'Come si fa: somme parziali S<sub>n</sub> = a₁ + … + a<sub>n</sub>, poi '+LIM+' S<sub>n</sub>',

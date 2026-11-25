@@ -24,7 +24,12 @@
   $('idN').addEventListener('input', () => draws['integrali-definiti']());
 
   const INT = (a,b) => '<span class="sig"><span>'+b+'</span><b>∫</b><span>'+a+'</span></span>';
-  video('integrali-definiti', [
+  video('integrali-definiti', [/*problema*/
+    { show:'<b>Il caso</b><br>Quanto è grande l\'area sotto y = x², tra x = 0 e x = 2?', say:'Il caso: quanto è grande l\'area sotto la parabola y uguale x al quadrato, tra zero e due?' },
+    { show:'<b>Provo con quello che so</b><br>Sai le aree di rettangoli, triangoli, trapezi: figure con i lati <b>dritti</b>. Il triangolo con vertici (0, 0), (2, 0), (2, 4) ha area 2 · 4/2 = 4, ma è più grande: la parabola sta sotto la retta.', say:'Sai calcolare le aree di figure con i lati dritti. Il triangolo con vertici zero zero, due zero, due quattro ha area quattro, ma la parabola sta sotto, quindi l\'area vera è più piccola.' },
+    { show:'<b>Perché si inceppa</b><br>Il bordo è curvo, e nessuna formula di geometria lo copre. Puoi solo approssimare.', say:'Il bordo è curvo, e nessuna formula di geometria lo copre. Puoi solo approssimare.' },
+    { show:'<b>Quindi serve</b><br>Tanti rettangoli sottili (approssimazione sempre migliore) e il <b>teorema fondamentale</b>: l\'area esatta è F(2) − F(0), con F primitiva (capitolo 13). Qui 8/3 ≈ 2,67.', say:'Servono tanti rettangoli sottili, e il teorema fondamentale: l\'area esatta è F di due meno F di zero, con F primitiva. Qui otto terzi.' },
+    { show:'<b>Lo userai per</b><br>Aree sotto curve e tra due curve, valori medi, integrali fino a +∞.', say:'Lo userai per le aree sotto le curve e tra due curve, i valori medi, e gli integrali fino a infinito.' },
     { show:'<h3>Integrali definiti</h3>'+INT('a','b')+' f(x) dx = area sotto il grafico tra a e b',
       say:'Integrali definiti. L\'integrale da a a b di f di x è l\'area sotto il grafico di f, tra x uguale a e x uguale b.' },
     { show:'x² su [0, 2] con 2 rettangoli: larghezza 2/2 = 1 · mezzi 0,5 e 1,5',

@@ -38,7 +38,12 @@
   $('tyS').addEventListener('change', () => draws['teoremi-taylor']());
   $('tyN').addEventListener('input', () => draws['teoremi-taylor']());
 
-  video('teoremi-taylor', [
+  video('teoremi-taylor', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = ?', say:'Il caso: limite per x che tende a zero di x meno seno di x, diviso x al cubo.' },
+    { show:'<b>Provo con quello che so</b><br>Sostituisco: (0 − 0)/0 = 0/0. Scompongo? Non è un polinomio. Limite notevole sin x/x → 1? Divido per x: (1 − sin x/x)/x² → (1 − 1)/0 = 0/0 di nuovo.', say:'Sostituisco: zero su zero. Scomporre non si può, non è un polinomio. Uso il limite notevole seno di x su x? Dividendo per x torno a zero su zero.' },
+    { show:'<b>Perché si inceppa</b><br>Il limite notevole dice solo che sin x ≈ x vicino a 0. Ma qui x − sin x cancella proprio quella parte: serve sapere <b>di quanto</b> sin x è diverso da x. Con x = 0,1: 0,1 − 0,0998334 = 0,0001666, un numero piccolissimo.', say:'Il limite notevole dice solo che seno di x è circa x. Ma qui x meno seno di x cancella proprio quella parte: serve sapere di quanto seno di x è diverso da x.' },
+    { show:'<b>Quindi serve</b><br><b>Taylor</b>: sin x = x − x³/6 + o(x³), un polinomio più preciso della sola x. Oppure <b>De L\'Hôpital</b>: con 0/0 derivo sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.', say:'Serve Taylor, che scrive seno di x come x meno x al cubo sesti più un errore piccolissimo. Oppure De L\'Hôpital, che con zero su zero deriva sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con sin, cos, eˣ, ln mescolati, dove i notevoli non bastano. Lagrange per dimostrare che f′ &gt; 0 vuol dire f crescente.', say:'Lo userai per i limiti con seno, coseno, esponenziale e logaritmo mescolati, e Lagrange per dimostrare che derivata positiva vuol dire funzione crescente.' },
     { show:'<h3>Rolle, Lagrange, De L\'Hôpital, Taylor</h3>Due teoremi di teoria, due attrezzi per i limiti',
       say:'Quattro attrezzi: Rolle e Lagrange per la teoria, De L\'Hôpital e Taylor per calcolare i limiti.' },
     { show:'Rolle: f(a) = f(b) ⇒ f′(c) = 0 · x² − 2x su [0, 2]: f(0) = 0, f(2) = 4 − 4 = 0 · 2c − 2 = 0 → c = 1',

@@ -20,7 +20,12 @@
   $('rA').addEventListener('change', () => draws.radici());
   $('rN').addEventListener('input', () => { $('rNv').textContent = $('rN').value; draws.radici(); });
 
-  video('radici', [
+  video('radici', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = ?', say:'Il caso: limite per n che tende a più infinito della radice n-esima di due alla n più tre alla n.' },
+    { show:'<b>Provo con quello che so</b><br>Spezzo la radice? <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span> = <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ</span></span> + <span class="rt"><sup>n</sup>√<span class="ov">3ⁿ</span></span> = 2 + 3 = 5? <b>No</b>: la radice di una somma non è la somma delle radici. Con n = 2: √(4 + 9) = √13 ≈ 3,6, non 5.', say:'Provo a spezzare la radice in due: verrebbe due più tre, cinque. Ma è sbagliato: la radice di una somma non è la somma delle radici. Con n uguale a due, radice di tredici fa circa tre virgola sei, non cinque.' },
+    { show:'<b>Provo ancora</b><br>Lo scrivo come potenza: (2ⁿ + 3ⁿ)<sup>1/n</sup>. La base va a +∞, l\'esponente 1/n va a 0: è la forma ∞⁰, <b>indeterminata</b>. Non so dire chi vince.', say:'Provo a scriverlo come potenza: due alla n più tre alla n, elevato a uno su n. La base va a infinito, l\'esponente va a zero: infinito alla zero è indeterminato.' },
+    { show:'<b>Quindi serve</b><br>Sapere quanto fa <span class="rt"><sup>n</sup>√<span class="ov">a</span></span> e <span class="rt"><sup>n</sup>√<span class="ov">n</span></span> per n → +∞ (tutte e due tendono a 1), e chiudere la radice tra due carabinieri (capitolo 1) che so calcolare.', say:'Servono due fatti: la radice n-esima di un numero fisso e la radice n-esima di n tendono a uno. Poi chiudo la radice tra due carabinieri, come nel capitolo uno.' },
+    { show:'<b>Lo userai per</b><br><span class="rt"><sup>n</sup>√<span class="ov">aⁿ + bⁿ</span></span> (vince il più grande), <span class="rt"><sup>n</sup>√<span class="ov">n² + 5</span></span>, <span class="rt"><sup>n</sup>√<span class="ov">3n</span></span>, e soprattutto per il <b>criterio della radice</b> per le serie.', say:'Lo userai per tutte le radici n-esime di somme di potenze, dove vince il più grande, e per il criterio della radice per le serie.' },
     { show:'<h3>Le radici n-esime</h3>'+R('n','a')+' = a<sup>1/n</sup>',
       say:'Le radici n-esime. La radice n-esima di a è a elevato a uno su n. Due fatti da sapere, e poi l\'esercizio del professore.' },
     { show:'Fatto 1: '+LIM+' '+R('n','a')+' = 1 · 2<sup>1/10</sup> ≈ 1,072 · 2<sup>1/100</sup> ≈ 1,007',

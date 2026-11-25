@@ -10,7 +10,12 @@
   };
   $('eN').addEventListener('input', () => { $('eNv').textContent = $('eN').value; draws.nepero(); });
 
-  video('nepero', [
+  video('nepero', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> (1 + <span class="fr"><span>1</span><span>n</span></span>)<sup>n</sup> = ?', say:'Il caso: limite per n che tende a più infinito di uno più uno su n, tutto elevato alla n.' },
+    { show:'<b>Provo con quello che so</b><br>La base 1 + 1/n tende a 1, e 1 elevato a qualsiasi cosa fa 1. Quindi fa 1? Provo i numeri: n = 10 → 1,1¹⁰ ≈ 2,594; n = 100 → 1,01¹⁰⁰ ≈ 2,705. <b>Non fa 1.</b>', say:'Ragiono: la base tende a uno, e uno elevato a qualsiasi cosa fa uno. Ma provo i numeri: con n uguale a dieci viene due virgola cinque nove, con cento due virgola sette. Non fa uno.' },
+    { show:'<b>Provo ancora</b><br>Allora l\'esponente enorme vince e va a +∞? Ma i numeri si fermano sotto 2,72. Base che va a 1 ed esponente che va a +∞: forma 1<sup>∞</sup>, <b>indeterminata</b>. Né la gerarchia né i carabinieri dicono quanto fa.', say:'Allora vince l\'esponente e va a infinito? No, i numeri si fermano sotto due virgola settantadue. È la forma uno alla infinito, indeterminata, e niente di quello che sai dice quanto fa.' },
+    { show:'<b>Quindi serve</b><br>Dare un nome a quel numero, <b>e ≈ 2,718</b>, e una ricetta per tutte le forme 1<sup>∞</sup>: pezzo piccolo × esponente → e elevato a quello.', say:'Serve dare un nome a quel numero, e, circa due virgola settecentodiciotto, e una ricetta per tutte le forme uno alla infinito.' },
+    { show:'<b>Lo userai per</b><br>(1 + 3/n)ⁿ = e³, (1 − 2/n)ⁿ = e<sup>−2</sup>, (1 + 5/n)<sup>2n</sup> = e¹⁰, ((n + 1)/(n − 1))ⁿ, e più avanti per i limiti notevoli delle funzioni.', say:'Lo userai per tutte le potenze con base che tende a uno ed esponente che tende a infinito, e più avanti per i limiti notevoli.' },
     { show:'<h3>Il numero e</h3>'+LIM+' (1 + '+FR('1','n')+')<sup>n</sup> = e ≈ 2,718',
       say:'Il numero e. È il limite per n che tende a più infinito di uno più uno su n, tutto elevato alla n. Vale circa due virgola settecentodiciotto. Vediamo da dove viene, con i soldi.' },
     { show:'1 rata: 2¹ = 2 · 2 rate: 1,5² = 1,5 · 1,5 = 2,25 · 4 rate: 1,25⁴ ≈ 2,441',

@@ -8,7 +8,12 @@
   $('n1').addEventListener('input', () => { $('n1v').textContent = $('n1').value; draws.carabinieri(); });
   $('c1').addEventListener('change', () => draws.carabinieri());
 
-  video('carabinieri', [
+  video('carabinieri', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>sin n</span><span>n</span></span> = ?', say:'Ecco un limite che con quello che sai non riesci a calcolare: limite per n che tende a più infinito di seno di n diviso n.' },
+    { show:'<b>Provo con quello che so</b><br>Limite di un prodotto = prodotto dei limiti: <span class="fr"><span>sin n</span><span>n</span></span> = sin n · <span class="fr"><span>1</span><span>n</span></span>. <span class="lim">lim<span>n→+∞</span></span> 1/n = 0, ma <span class="lim">lim<span>n→+∞</span></span> sin n <b>non esiste</b>: sin 1 ≈ 0,84; sin 4 ≈ −0,76; sin 8 ≈ 0,99; sin 11 ≈ −1,00, salta per sempre.', say:'Provo con la regola del prodotto: seno di n per uno su n. Uno su n tende a zero, ma il seno di n non ha limite: vale zero virgola ottantaquattro, poi meno zero virgola settantasei, poi zero virgola novantanove, salta per sempre.' },
+    { show:'<b>Perché si inceppa</b><br>La regola "limite del prodotto = prodotto dei limiti" vale solo se <b>tutti e due</b> i limiti esistono. Qui uno non esiste, quindi la regola non si può usare. E la gerarchia degli infiniti non c\'entra: sin n non va all\'infinito.', say:'La regola del prodotto funziona solo se esistono tutti e due i limiti. Qui uno non esiste, quindi non posso usarla. E la gerarchia degli infiniti non aiuta, perché il seno non va all\'infinito.' },
+    { show:'<b>Quindi serve</b><br>Un modo per trovare il limite <b>senza calcolarlo direttamente</b>: chiudo sin n / n tra due successioni facili che hanno lo stesso limite. È il teorema dei due carabinieri.', say:'Serve un modo per trovare il limite senza calcolarlo direttamente: chiudere la successione tra due successioni facili con lo stesso limite. È il teorema dei due carabinieri.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con un pezzo che oscilla ma resta limitato: (−1)ⁿ/n, (3 + cos n)/n, sin(n²)/√n, n/(n² + sin n). E nel capitolo 2 per <span class="rt"><sup>n</sup>√<span class="ov">2ⁿ + 3ⁿ</span></span>.', say:'Lo userai per tutti i limiti con un pezzo che oscilla ma resta limitato: meno uno alla n su n, tre più coseno di n su n, e così via. E nel prossimo capitolo per le radici n-esime.' },
     { show:'<h3>Il teorema dei due carabinieri</h3>Esempio: '+LIM+' '+FR('sin n','n'),
       say:'Il teorema dei due carabinieri. Esempio: limite per n che tende a più infinito di seno di n diviso n.' },
     { show:'sin 1 ≈ 0,84 · sin 4 ≈ −0,76 · sin 8 ≈ 0,99 · sin 11 ≈ −1,00',

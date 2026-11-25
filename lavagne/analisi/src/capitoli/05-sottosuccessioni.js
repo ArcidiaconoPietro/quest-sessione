@@ -11,7 +11,12 @@
   $('sP').addEventListener('change', () => draws.sottosuccessioni());
   $('sD').addEventListener('change', () => draws.sottosuccessioni());
 
-  video('sottosuccessioni', [
+  video('sottosuccessioni', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ · <span class="fr"><span>n</span><span>n + 1</span></span> = ?', say:'Il caso: limite per n che tende a più infinito di meno uno alla n per n su n più uno.' },
+    { show:'<b>Provo con quello che so</b><br>Prodotto dei limiti? <span class="lim">lim<span>n→+∞</span></span> n/(n + 1) = 1, ma <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ non esiste (−1, 1, −1, 1, …). Carabinieri? −1 ≤ (−1)ⁿ · n/(n + 1) ≤ 1, ma −1 e 1 sono limiti <b>diversi</b>: non concludo niente.', say:'Prodotto dei limiti: n su n più uno tende a uno, ma meno uno alla n non ha limite. Carabinieri: la successione sta tra meno uno e uno, ma meno uno e uno sono diversi, quindi non concludo niente.' },
+    { show:'<b>Perché si inceppa</b><br>I numeri saltano: −0,5; 0,67; −0,75; 0,8; −0,9; 0,91. Sembra che il limite <b>non esista</b>. Ma "sembra" non basta: tutti gli strumenti che hai servono a <b>trovare</b> un limite, nessuno a dimostrare che non c\'è.', say:'I numeri saltano da una parte all\'altra. Sembra che il limite non esista, ma sembra non basta: tutti gli strumenti che conosci servono a trovare un limite, nessuno a dimostrare che non esiste.' },
+    { show:'<b>Quindi serve</b><br>Spezzare la successione in due file (n pari e n dispari). Se le due file hanno limiti diversi, il limite non esiste. Sono le <b>sottosuccessioni</b>.', say:'Serve spezzare la successione in due file, n pari e n dispari. Se hanno limiti diversi, il limite non esiste. Sono le sottosuccessioni.' },
+    { show:'<b>Lo userai per</b><br>Dimostrare che non esistono <span class="lim">lim<span>n→+∞</span></span> (−1)ⁿ, cos(nπ), sin(nπ/2), (−1)ⁿ + 1/n. Poi Bolzano-Weierstrass dice cosa resta vero anche quando il limite non c\'è.', say:'Lo userai ogni volta che devi dimostrare che un limite non esiste, con meno uno alla n, coseno di n pi greco e simili.' },
     { show:'<h3>Sottosuccessioni: a cosa servono</h3>Servono a dimostrare che un limite NON esiste.',
       say:'Le sottosuccessioni servono soprattutto a dimostrare che un limite non esiste. All\'esame la domanda tipica è: il limite esiste? E la risposta è no.' },
     { show:'Esempio: a<sub>n</sub> = (−1)ⁿ · '+FR('n','n + 1'),

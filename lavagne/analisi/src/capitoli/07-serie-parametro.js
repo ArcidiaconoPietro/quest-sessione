@@ -36,7 +36,12 @@
   };
   $('asS').addEventListener('change', () => draws['serie-parametro']());
 
-  video('serie-parametro', [
+  video('serie-parametro', [/*problema*/
+    { show:'<b>Il caso</b><br>Σ <span class="fr"><span>n + 3</span><span>n³ + 1</span></span> converge? E Σ (−1)ⁿ/n?', say:'Due casi: la serie di n più tre su n al cubo più uno converge? E la serie di meno uno alla n su n?' },
+    { show:'<b>Provo con quello che so</b><br>Criterio del rapporto sulla prima: <span class="fr"><span>n + 4</span><span>(n + 1)³ + 1</span></span> · <span class="fr"><span>n³ + 1</span><span>n + 3</span></span> → 1 (sopra e sotto comanda n⁴). Con L = 1 il criterio <b>non dice niente</b>. Anche la radice dà 1.', say:'Provo il criterio del rapporto sulla prima: viene un rapporto che tende a uno. Con L uguale a uno il criterio non dice niente. Anche la radice dà uno.' },
+    { show:'<b>Provo ancora</b><br>Sulla seconda: i termini non sono tutti positivi, e i criteri del capitolo 6 valgono solo per serie a termini positivi. Senza segni diventa Σ 1/n, che diverge: ma con i segni?', say:'Sulla seconda serie i termini cambiano segno, e i criteri che conosci valgono solo per termini positivi. Senza segni è la serie armonica, che diverge. Ma con i segni non lo sai.' },
+    { show:'<b>Quindi serve</b><br><b>Confronto asintotico</b>: riporto la prima a 1/n², che conosco. <b>Leibniz</b>: un criterio fatto apposta per i segni alterni. E uno schema per le serie con un parametro x.', say:'Servono il confronto asintotico, che riporta la prima serie a uno su n al quadrato, il criterio di Leibniz, fatto apposta per i segni alterni, e uno schema per le serie con parametro.' },
+    { show:'<b>Lo userai per</b><br>Serie con polinomi, radici, sin(1/n), ln(1 + 1/n) dentro; serie con (−1)ⁿ; "per quali x converge Σ xⁿ/n?".', say:'Lo userai per le serie con polinomi, radici e funzioni di uno su n, per quelle con meno uno alla n, e per le serie con parametro.' },
     { show:'<h3>Serie con parametro</h3>Tre attrezzi: confronto asintotico, Leibniz, schema con parametro',
       say:'In questa lezione vediamo tre attrezzi: il confronto asintotico, il criterio di Leibniz, e lo schema per le serie con parametro. Facciamo tutti i calcoli.' },
     { show:'Attrezzo 1. Esempio: '+SUM(1)+' '+FR('n + 3','n³ + 1'),
