@@ -87,6 +87,7 @@ button.primary { background: var(--ink); color: var(--board); border-color: var(
 button:disabled { opacity: .45; cursor: default; }
 button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--fon); outline-offset: 2px; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+ol.pass { margin: 6px 0 4px 20px; padding: 0; } ol.pass li { margin: 5px 0; }
 .steps { display: flex; flex-direction: column; gap: 12px; }
 .step { border-left: 3px solid var(--line); padding-left: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 input[type=text], textarea {
@@ -160,6 +161,16 @@ table.t th { color: var(--muted); font-size: .85rem; }
 .bits small.neg { color: var(--bad); font-weight: 700; }
 .readout { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: no-preference) { .reveal { animation: up .3s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+.video .vboard { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 220px; max-height: 440px; overflow-y: auto; }
+.video .vstep { padding: 8px 10px; margin: 4px 0; border-left: 3px solid transparent; opacity: .55; line-height: 1.7; }
+.video .vstep.cur { opacity: 1; border-left-color: var(--fon); background: var(--board); border-radius: 6px; }
+.video .vstep h3 { margin: 0; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+.video .vhint { color: var(--muted); }
+.video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
+.video .vctl button { flex: 1; }
+.video .vcount { color: var(--muted); font-size: .9rem; }
+.video .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: .92rem; color: var(--muted); }
+.video .vstep h3 { color: var(--fon); }
 </style>
 
 <div class="wrap">

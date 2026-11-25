@@ -74,14 +74,14 @@ printf("%s %s %d\n", s, t, (int) strlen(t));`), steps:[
       { h:'Dopo strcpy e t[0] = \'r\', cosa c\'è in t?', type:'text', ans:['rasa'], ok:'Sì: t è una copia, cambiare t non cambia s.', bad:'t è una copia di "casa", poi la prima lettera diventa r.' },
       { h:'Il ciclo aggiunge 1 a ogni carattere di s. Cosa diventa "casa"?', type:'text', ans:['dbtb'], ok:'Giusto: c→d, a→b, s→t, a→b.', bad:'Ogni lettera diventa la successiva dell\'alfabeto.' },
       { h:'Cosa stampa l\'ultima riga?', type:'text', ans:['dbtb rasa 4'], ok:'Perfetto.', bad:'s, poi t, poi la lunghezza di t.' }
-    ], done:'<b>Fatto!</b> Stampa <code>dbtb rasa 4</code>. Il ciclo <code>for (i = 0; s[i] != \'\\0\'; i++)</code> è lo schema per scorrere una stringa: ricordatelo.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>s = "casa": caselle c, a, s, a, \\0.</li><li>strcpy(t, s): copio carattere per carattere → t = "casa".</li><li>t[0] = \'r\' → t = "rasa". s non cambia.</li><li>Ciclo su s: i = 0: \'c\' + 1 = \'d\'; i = 1: \'a\' + 1 = \'b\'; i = 2: \'s\' + 1 = \'t\'; i = 3: \'a\' + 1 = \'b\'; i = 4: s[4] = \'\\0\' → esco. Ora s = "dbtb".</li><li>strlen(t) = caratteri prima del \\0 in "rasa" = 4.</li><li>printf → <b>dbtb rasa 4</b>.</li></ol>Stampa <code>dbtb rasa 4</code>. Il ciclo <code>for (i = 0; s[i] != \'\\0\'; i++)</code> è lo schema per scorrere una stringa: ricordatelo.' },
   ex:[
     { id:'e1', type:'out', q:'Cosa stampa?'+code(String.raw`
 int v[6] = {3, 8, 1, 9, 4, 6};
 int i, s = 0;
 for (i = 0; i < 6; i = i + 2)
     s = s + v[i];
-printf("%d %d\n", s, v[i - 1]);`), a:'8 6', hint:'i prende 0, 2, 4. Dopo il ciclo i vale 6.', sol:'<pre class="code">8 6</pre>s = v[0] + v[2] + v[4] = 3 + 1 + 4 = 8. Dopo il ciclo i = 6, quindi v[5] = 6.' },
+printf("%d %d\n", s, v[i - 1]);`), a:'8 6', hint:'i prende 0, 2, 4. Dopo il ciclo i vale 6.', sol:'<pre class="code">8 6</pre><ol class="pass"><li>v = {3, 8, 1, 9, 4, 6}: v[0] = 3, v[1] = 8, v[2] = 1, v[3] = 9, v[4] = 4, v[5] = 6. s = 0.</li><li>i = 0: 0 &lt; 6 vero → s = 0 + v[0] = 0 + 3 = 3. i = 0 + 2 = 2.</li><li>i = 2: vero → s = 3 + v[2] = 3 + 1 = 4. i = 4.</li><li>i = 4: vero → s = 4 + v[4] = 4 + 4 = 8. i = 6.</li><li>i = 6: 6 &lt; 6 falso → esco. i vale 6.</li><li>v[i − 1] = v[6 − 1] = v[5] = 6.</li><li>printf → <b>8 6</b>.</li></ol>' },
     { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
 void azzera_negativi(int v[], int dim) {
     int i;
@@ -95,9 +95,9 @@ int main(void) {
     for (i = 0; i < 4; i++) printf("%d ", a[i]);
     printf("\n");
     return 0;
-}`), a:'5 0 7 0', hint:'L\'array passato alla funzione è l\'originale.', sol:'<pre class="code">5 0 7 0 </pre>La funzione modifica proprio a, perché riceve il suo indirizzo.' },
+}`), a:'5 0 7 0', hint:'L\'array passato alla funzione è l\'originale.', sol:'<pre class="code">5 0 7 0 </pre><ol class="pass"><li>a = {5, −2, 7, −1}. azzera_negativi riceve l\'indirizzo di a, quindi lavora sull\'originale.</li><li>i = 0: 5 &lt; 0 falso, resta 5.</li><li>i = 1: −2 &lt; 0 vero → a[1] = 0.</li><li>i = 2: 7 &lt; 0 falso, resta 7.</li><li>i = 3: −1 &lt; 0 vero → a[3] = 0.</li><li>Nel main a = {5, 0, 7, 0}; il ciclo stampa ogni valore seguito da uno spazio → <b>5 0 7 0 </b>, poi a capo.</li></ol>' },
     { id:'e3', type:'choice', q:'Come controlli se la stringa <code>nome</code> è uguale a "Rossi"?', opts:['if (nome == "Rossi")','if (strcmp(nome, "Rossi") == 0)','if (strcmp(nome, "Rossi") == 1)'], a:1, hint:'strcmp restituisce 0 se sono uguali.', sol:'<code>if (strcmp(nome, "Rossi") == 0)</code>. Con == confronteresti gli indirizzi, non il testo.' },
-    { id:'e4', type:'text', q:'Quante caselle occupa <code>char s[] = "esame";</code> ?', a:['6'], hint:'Conta le lettere e aggiungi il terminatore.', sol:'5 lettere + \\0 = <b>6</b>.' },
+    { id:'e4', type:'text', q:'Quante caselle occupa <code>char s[] = "esame";</code> ?', a:['6'], hint:'Conta le lettere e aggiungi il terminatore.', sol:'<ol class="pass"><li>Lettere: e, s, a, m, e → 5.</li><li>Il C aggiunge in fondo il terminatore \\0 → 1 casella in più.</li><li>5 + 1 = <b>6</b> caselle: s[0] = \'e\' … s[4] = \'e\', s[5] = \'\\0\'.</li></ol>' },
     { id:'e5', type:'code', tag:'al PC', q:'Scrivi <code>int conta_maggiori(int v[], int dim, int soglia)</code> che restituisce quanti elementi di v sono maggiori di soglia, e un main che la prova su {4, 12, 7, 20, 3} con soglia 5 (risultato 3).', hint:'Ciclo da 0 a dim − 1, contatore.', sol:code(String.raw`
 #include <stdio.h>
 
@@ -113,7 +113,7 @@ int main(void) {
     int a[5] = {4, 12, 7, 20, 3};
     printf("%d\n", conta_maggiori(a, 5, 5));
     return 0;
-}`) }
+}`)+'<ol class="pass"><li>i = 0: 4 &gt; 5 falso → cont = 0</li><li>i = 1: 12 &gt; 5 vero → cont = 1</li><li>i = 2: 7 &gt; 5 vero → cont = 2</li><li>i = 3: 20 &gt; 5 vero → cont = 3</li><li>i = 4: 3 &gt; 5 falso → cont resta 3</li><li>i = 5: 5 &lt; 5 falso → esco, return <b>3</b></li></ol>' }
   ],
   quaderno:[
     '<b>Indici da 0 a dim − 1.</b> Ciclo tipo: <code>for (i = 0; i &lt; dim; i++)</code>.',
@@ -217,14 +217,14 @@ int main(void) {
     prova(a);
     printf("%s %d\n", a.nome, a.voto);
     return 0;
-}`), a:'Ugo 19', hint:'promuovi riceve l\'indirizzo, prova riceve una copia.', sol:'<pre class="code">Ugo 19</pre>promuovi cambia l\'originale (17 + 2). prova azzera solo la sua copia.' },
+}`), a:'Ugo 19', hint:'promuovi riceve l\'indirizzo, prova riceve una copia.', sol:'<pre class="code">Ugo 19</pre><ol class="pass"><li>a = {nome "Ugo", voto 17}.</li><li>promuovi(&amp;a): s punta ad a. s-&gt;voto = s-&gt;voto + 2 = 17 + 2 = 19 → cambia l\'originale: a.voto = 19.</li><li>prova(a): s è una copia di a. s.voto = 0 cambia solo la copia; a.voto resta 19.</li><li>printf → <b>Ugo 19</b>.</li></ol>' },
     { id:'e2', type:'out', q:'Cosa stampa?'+code(String.raw`
 int m[2][3] = { {1, 2, 3}, {4, 5, 6} };
 int i, j, s = 0;
 for (i = 0; i < 2; i++)
     for (j = 0; j < 3; j++)
         if (i != j) s = s + m[i][j];
-printf("%d %d\n", s, m[1][0]);`), a:'15 4', hint:'Si saltano gli elementi con i uguale a j: m[0][0] e m[1][1].', sol:'<pre class="code">15 4</pre>Somma di tutti = 21, meno m[0][0] = 1 e m[1][1] = 5 → 15. m[1][0] = 4.' },
+printf("%d %d\n", s, m[1][0]);`), a:'15 4', hint:'Si saltano gli elementi con i uguale a j: m[0][0] e m[1][1].', sol:'<pre class="code">15 4</pre><ol class="pass"><li>i = 0, j = 0: i == j → salto (m[0][0] = 1).</li><li>i = 0, j = 1: s = 0 + m[0][1] = 0 + 2 = 2.</li><li>i = 0, j = 2: s = 2 + m[0][2] = 2 + 3 = 5.</li><li>i = 1, j = 0: s = 5 + m[1][0] = 5 + 4 = 9.</li><li>i = 1, j = 1: i == j → salto (m[1][1] = 5).</li><li>i = 1, j = 2: s = 9 + m[1][2] = 9 + 6 = 15.</li><li>m[1][0] = riga 1, colonna 0 = 4.</li><li>printf → <b>15 4</b>.</li></ol>' },
     { id:'e3', type:'choice', q:'<code>Prodotto *q;</code> Come leggi il prezzo del prodotto puntato da q?', opts:['q.prezzo','q-&gt;prezzo','*q.prezzo'], a:1, hint:'Puntatore a struct = freccia.', sol:'<code>q-&gt;prezzo</code> (oppure <code>(*q).prezzo</code>, con le parentesi). <code>*q.prezzo</code> senza parentesi è sbagliato.' },
     { id:'e4', type:'code', tag:'al PC', q:'Definisci <code>typedef struct { int id; char nome[31]; float prezzo; int quantita; } Prodotto;</code> e scrivi <code>float valore_totale(Prodotto v[], int dim)</code> che restituisce la somma di prezzo · quantita di tutti i prodotti.', hint:'Accumulatore float che parte da 0, ciclo su v[i].prezzo * v[i].quantita.', sol:code(String.raw`
 float valore_totale(Prodotto v[], int dim) {
@@ -233,7 +233,7 @@ float valore_totale(Prodotto v[], int dim) {
     for (i = 0; i < dim; i++)
         tot = tot + v[i].prezzo * v[i].quantita;
     return tot;
-}`) }
+}`)+'<p>Prova a mano con v = { {1, "mouse", 19.5, 4}, {2, "cavo", 4.0, 10} } e dim = 2:</p><ol class="pass"><li>tot = 0.</li><li>i = 0: tot = 0 + 19.5 * 4 = 0 + 78.0 = 78.0</li><li>i = 1: tot = 78.0 + 4.0 * 10 = 78.0 + 40.0 = 118.0</li><li>i = 2: 2 &lt; 2 falso → esco, return <b>118.0</b></li></ol>' }
   ],
   quaderno:[
     '<b>Struct:</b> <code>typedef struct { campi } Nome;</code> nel .h (all\'esame in element.h).',
@@ -325,7 +325,7 @@ while (fscanf(f, "%s %d", id, &n) == 2) {
       { h:'Prima riga: cosa legge il primo fscanf in id e n?', type:'choice', opts:['id = "ORD1", n = 2','id = "ORD1", n = 11','id = "ORD1 2", n = 11'], ans:0, ok:'Giusto: %s si ferma allo spazio.', bad:'%s legge fino allo spazio, poi %d legge il numero seguente.' },
       { h:'Poi il for legge 2 coppie: 11-1 e 35-2. Quanto vale tot?', type:'text', ans:['3'], ok:'Sì: 1 + 2.', bad:'Si sommano le quantità, cioè il numero dopo il trattino.' },
       { h:'Cosa stampa per la seconda riga?', type:'text', ans:['ORD2 6'], ok:'Perfetto: 4 + 1 + 1.', bad:'Tre coppie: le quantità sono 4, 1, 1.' }
-    ], done:'<b>Fatto!</b> Stampa <code>ORD1 3</code> e <code>ORD2 6</code>. Schema "parte fissa + ciclo per le parti variabili": è proprio il cuore della funzione leggi_singolo_ordine del tema.' },
+    ], done:'<b>Fatto!</b> Tutti i passaggi:<ol class="pass"><li>Riga 1, fscanf("%s %d"): id = "ORD1", n = 2. Restituisce 2 → entro. tot = 0.</li><li>i = 0: fscanf("%d-%d") legge 11-1 → prod = 11, qta = 1 → tot = 0 + 1 = 1.</li><li>i = 1: legge 35-2 → prod = 35, qta = 2 → tot = 1 + 2 = 3. i = 2: 2 &lt; 2 falso, esco dal for.</li><li>printf → <b>ORD1 3</b>.</li><li>Riga 2: id = "ORD2", n = 3. tot = 0.</li><li>21-4 → tot = 0 + 4 = 4; 22-1 → tot = 4 + 1 = 5; 41-1 → tot = 5 + 1 = 6.</li><li>printf → <b>ORD2 6</b>.</li><li>fscanf non trova altro → restituisce EOF, non 2 → esco dal while.</li></ol>Stampa <code>ORD1 3</code> e <code>ORD2 6</code>. Schema "parte fissa + ciclo per le parti variabili": è proprio il cuore della funzione leggi_singolo_ordine del tema.' },
   ex:[
     { id:'e1', type:'choice', q:'Cosa restituisce fscanf quando il file è finito?', opts:['0 sempre','EOF (un numero negativo)','NULL'], a:1, hint:'NULL è di fopen.', sol:'EOF. Per questo si controlla <code>== numero di campi</code>, che copre sia EOF sia una riga scritta male.' },
     { id:'e2', type:'choice', q:'Vuoi aggiungere una riga in fondo a un file senza perdere quelle che ci sono. Che modo usi?', opts:['"r"','"w"','"a"'], a:2, hint:'a come append (aggiungi).', sol:'<code>"a"</code>. Con "w" il file verrebbe svuotato.' },
@@ -352,7 +352,7 @@ int main(void) {
     if (n > 0)
         printf("Media %.2f, promossi %d\n", (float) somma / n, promossi);
     return 0;
-}`)+'<p>Nota il <code>(float)</code>: senza, la media sarebbe una divisione intera (capitolo 3).</p>' }
+}`)+'<p>Prova a mano con il file <code>Ugo 24</code> / <code>Ada 15</code> / <code>Leo 30</code>:</p><ol class="pass"><li>Riga 1: nome = "Ugo", voto = 24 → somma = 0 + 24 = 24, n = 1. 24 &gt;= 18 → promossi = 1.</li><li>Riga 2: "Ada", 15 → somma = 24 + 15 = 39, n = 2. 15 &gt;= 18 falso → promossi resta 1.</li><li>Riga 3: "Leo", 30 → somma = 39 + 30 = 69, n = 3. 30 &gt;= 18 → promossi = 2.</li><li>fscanf restituisce EOF → esco, fclose.</li><li>(float) somma / n = 69.0 / 3 = 23.00 → stampa <b>Media 23.00, promossi 2</b>.</li></ol><p>Nota il <code>(float)</code>: senza, la media sarebbe una divisione intera (capitolo 3). Qui 69 / 3 = 23 esatto, ma con 70 / 3 avresti 23 invece di 23.33.</p>' }
   ],
   quaderno:[
     '<b>Schema lettura:</b> <code>f = fopen(nome, "r"); if (f == NULL) {...} while (fscanf(f, "...", ...) == N) {...} fclose(f);</code>',
@@ -378,7 +378,13 @@ CH.push({
    +'<tr><td><code>head(l)</code></td><td>il primo valore</td><td>4</td></tr>'
    +'<tr><td><code>tail(l)</code></td><td>la lista senza il primo vagone</td><td>[9, 2]</td></tr>'
    +'<tr><td><code>cons(x, l)</code></td><td>una nuova lista con x attaccato <b>davanti</b></td><td>cons(1, l) = [1, 4, 9, 2]</td></tr></table></div>'
-   +'<div class="note">La lista [4, 9, 2, 7] si costruisce dall\'interno verso l\'esterno: <code>cons(4, cons(9, cons(2, cons(7, emptylist()))))</code>. Il primo cons scritto è il primo elemento.</div>' },
+   +'<div class="note">La lista [4, 9, 2, 7] si costruisce dall\'interno verso l\'esterno: <code>cons(4, cons(9, cons(2, cons(7, emptylist()))))</code>. Il primo cons scritto è il primo elemento.</div>'
+   +'<p>Passo passo, partendo dal cons più interno:</p><ol class="pass">'
+   +'<li><code>emptylist()</code> = [ ]</li>'
+   +'<li><code>cons(7, [ ])</code> = [7]</li>'
+   +'<li><code>cons(2, [7])</code> = [2, 7]</li>'
+   +'<li><code>cons(9, [2, 7])</code> = [9, 2, 7]</li>'
+   +'<li><code>cons(4, [9, 2, 7])</code> = <b>[4, 9, 2, 7]</b></li></ol>' },
   widgets:[
     { type:'tracer', title:'Lo schema dell\'esame: tenere solo alcuni elementi', intro:'maggiori(l, s) restituisce una nuova lista con gli elementi di l maggiori di s. È lo stesso schema di almenoDue, filtra, listBuild dei temi.',
       code:String.raw`
@@ -463,19 +469,29 @@ list comuni(list a, list b) {
     if (conta(head(a), b) > 0)
         return cons(head(a), comuni(tail(a), b));
     return comuni(tail(a), b);
-}`)+'<p>Ricetta: caso base, condizione con la funzione di aiuto, cons + ricorsione oppure solo ricorsione.</p>' },
+}`)+'<p><b>Svolgimento completo</b> con a = [3, 5, 1, 3] e b = [1, 2, 3]. Prima scendo (una chiamata per ogni elemento di a), poi risalgo.</p><ol class="pass">'
+   +'<li>comuni([3, 5, 1, 3], b): a non è vuota. head(a) = 3. conta(3, [1, 2, 3]) = 1, e 1 &gt; 0 è vero → <b>tengo il 3</b>: risultato = cons(3, comuni([5, 1, 3], b)).</li>'
+   +'<li>comuni([5, 1, 3], b): head = 5. conta(5, [1, 2, 3]) = 0, e 0 &gt; 0 è falso → <b>salto il 5</b>: risultato = comuni([1, 3], b).</li>'
+   +'<li>comuni([1, 3], b): head = 1. conta(1, [1, 2, 3]) = 1 &gt; 0 vero → <b>tengo l\'1</b>: risultato = cons(1, comuni([3], b)).</li>'
+   +'<li>comuni([3], b): head = 3. conta(3, [1, 2, 3]) = 1 &gt; 0 vero → <b>tengo il 3</b>: risultato = cons(3, comuni([ ], b)).</li>'
+   +'<li>comuni([ ], b): a è vuota → <b>caso base</b>, restituisco [ ].</li>'
+   +'<li>Risalgo: comuni([3], b) = cons(3, [ ]) = [3].</li>'
+   +'<li>comuni([1, 3], b) = cons(1, [3]) = [1, 3].</li>'
+   +'<li>comuni([5, 1, 3], b) = comuni([1, 3], b) = [1, 3] (il 5 era saltato).</li>'
+   +'<li>comuni([3, 5, 1, 3], b) = cons(3, [1, 3]) = <b>[3, 1, 3]</b>.</li></ol>'
+   +'<p>Ricetta: caso base, condizione con la funzione di aiuto, cons + ricorsione oppure solo ricorsione.</p>' },
   ex:[
-    { id:'e1', type:'text', q:'l = cons(1, cons(2, cons(3, emptylist()))). Quanto vale head(tail(l))?', a:['2'], hint:'tail(l) = [2, 3].', sol:'tail(l) = [2, 3], head di quella = <b>2</b>.' },
+    { id:'e1', type:'text', q:'l = cons(1, cons(2, cons(3, emptylist()))). Quanto vale head(tail(l))?', a:['2'], hint:'tail(l) = [2, 3].', sol:'<ol class="pass"><li>Costruisco l dal cons più interno: cons(3, [ ]) = [3]; cons(2, [3]) = [2, 3]; cons(1, [2, 3]) = [1, 2, 3]. Quindi l = [1, 2, 3].</li><li>Calcolo prima la funzione più interna: tail(l) = tail([1, 2, 3]) = [2, 3] (tolgo il primo vagone, l\'1).</li><li>head([2, 3]) = il primo valore = <b>2</b>.</li></ol>' },
     { id:'e2', type:'text', q:code(String.raw`
 int lung(list l) {
     if (empty(l)) return 0;
     return 1 + lung(tail(l));
-}`)+'Con l = [1, 2, 3], quanto restituisce lung(l)?', a:['3'], hint:'Ogni chiamata aggiunge 1, la lista vuota vale 0.', sol:'1 + 1 + 1 + 0 = <b>3</b>.' },
+}`)+'Con l = [1, 2, 3], quanto restituisce lung(l)?', a:['3'], hint:'Ogni chiamata aggiunge 1, la lista vuota vale 0.', sol:'Scendo:<ol class="pass"><li>lung([1, 2, 3]): non vuota → 1 + lung([2, 3])</li><li>lung([2, 3]): non vuota → 1 + lung([3])</li><li>lung([3]): non vuota → 1 + lung([ ])</li><li>lung([ ]): vuota → <b>caso base</b>, restituisce 0</li></ol>Risalgo:<ol class="pass"><li>lung([3]) = 1 + 0 = 1</li><li>lung([2, 3]) = 1 + 1 = 2</li><li>lung([1, 2, 3]) = 1 + 2 = <b>3</b></li></ol>' },
     { id:'e3', type:'text', q:code(String.raw`
 list doppi(list l) {
     if (empty(l)) return emptylist();
     return cons(2 * head(l), doppi(tail(l)));
-}`)+'Con l = [1, 2, 3], quale lista restituisce? (scrivi come [a, b, c])', a:['[2,4,6]','2,4,6'], hint:'Ogni elemento raddoppiato, stesso ordine.', sol:'<b>[2, 4, 6]</b>.' },
+}`)+'Con l = [1, 2, 3], quale lista restituisce? (scrivi come [a, b, c])', a:['[2,4,6]','2,4,6'], hint:'Ogni elemento raddoppiato, stesso ordine.', sol:'Scendo:<ol class="pass"><li>doppi([1, 2, 3]) = cons(2 * 1, doppi([2, 3])) = cons(2, doppi([2, 3]))</li><li>doppi([2, 3]) = cons(2 * 2, doppi([3])) = cons(4, doppi([3]))</li><li>doppi([3]) = cons(2 * 3, doppi([ ])) = cons(6, doppi([ ]))</li><li>doppi([ ]) = [ ] (caso base)</li></ol>Risalgo:<ol class="pass"><li>doppi([3]) = cons(6, [ ]) = [6]</li><li>doppi([2, 3]) = cons(4, [6]) = [4, 6]</li><li>doppi([1, 2, 3]) = cons(2, [4, 6]) = <b>[2, 4, 6]</b></li></ol>' },
     { id:'e4', type:'text', q:code(String.raw`
 list mistero(list l) {
     list r = emptylist();
@@ -484,7 +500,7 @@ list mistero(list l) {
         l = tail(l);
     }
     return r;
-}`)+'Con l = [1, 2, 3], cosa restituisce?', a:['[3,2,1]','3,2,1'], hint:'cons attacca davanti: il primo letto finisce in fondo.', sol:'<b>[3, 2, 1]</b>: la lista al contrario. Con un ciclo iterativo e cons l\'ordine si inverte; con la ricorsione no.' },
+}`)+'Con l = [1, 2, 3], cosa restituisce?', a:['[3,2,1]','3,2,1'], hint:'cons attacca davanti: il primo letto finisce in fondo.', sol:'Seguo il ciclo giro per giro:<ol class="pass"><li>Prima del ciclo: r = [ ], l = [1, 2, 3].</li><li>Giro 1: l non è vuota. head(l) = 1 → r = cons(1, [ ]) = [1]. l = tail(l) = [2, 3].</li><li>Giro 2: head(l) = 2 → r = cons(2, [1]) = [2, 1]. l = [3].</li><li>Giro 3: head(l) = 3 → r = cons(3, [2, 1]) = [3, 2, 1]. l = [ ].</li><li>Controllo !empty(l): l è vuota, quindi la condizione è falsa → esco dal ciclo e restituisco r.</li></ol>Risultato <b>[3, 2, 1]</b>: la lista al contrario. Con un ciclo iterativo e cons l\'ordine si inverte; con la ricorsione no.' },
     { id:'e5', type:'code', tag:'come allo scritto, 6 punti', q:'Si definisca una funzione RICORSIVA <code>list almenoK(list v, list conteggi, int k)</code> che restituisce gli elementi di v che compaiono almeno k volte nella lista conteggi, usando una funzione ITERATIVA <code>int conta(int x, list l)</code>. Si scriva il main che costruisce v = [5, 3, 17, 29] e conteggi = [5, 17, 5, 29, 17, 17], chiama almenoK(v, conteggi, 2) e stampa il risultato [5, 17].', hint:'È lo schema di comuni, con la condizione conta(head(v), conteggi) &gt;= k. Nel main ti serve anche una showlist tua.', sol:code(String.raw`
 #include <stdio.h>
 #include "element.h"
@@ -526,7 +542,26 @@ int main(void) {
     freelist(c);
     freelist(r);
     return 0;
-}`)+'<p>Confronta con la soluzione del prof del 9 feb 2026 (almenoDue): è identica, con 2 al posto di k.</p>' }
+}`)+'<p><b>Svolgimento completo</b> con v = [5, 3, 17, 29], conteggi = [5, 17, 5, 29, 17, 17], k = 2.</p>'
+   +'<p>1) Come lavora conta(5, conteggi), giro per giro:</p><ol class="pass">'
+   +'<li>c = 0. head = 5, 5 == 5 → c = 1. Passo alla coda.</li>'
+   +'<li>head = 17, 17 == 5 no → c resta 1.</li>'
+   +'<li>head = 5, 5 == 5 → c = 2.</li>'
+   +'<li>head = 29 no, head = 17 no, head = 17 no → c resta 2.</li>'
+   +'<li>Lista vuota → esco dal while, restituisco <b>2</b>.</li></ol>'
+   +'<p>Allo stesso modo: conta(3, conteggi) = 0, conta(17, conteggi) = 3 (posizioni 2, 5, 6), conta(29, conteggi) = 1.</p>'
+   +'<p>2) La ricorsione, scendendo:</p><ol class="pass">'
+   +'<li>almenoK([5, 3, 17, 29]): conta(5) = 2, e 2 &gt;= 2 vero → tengo 5: cons(5, almenoK([3, 17, 29])).</li>'
+   +'<li>almenoK([3, 17, 29]): conta(3) = 0, e 0 &gt;= 2 falso → salto 3: almenoK([17, 29]).</li>'
+   +'<li>almenoK([17, 29]): conta(17) = 3, e 3 &gt;= 2 vero → tengo 17: cons(17, almenoK([29])).</li>'
+   +'<li>almenoK([29]): conta(29) = 1, e 1 &gt;= 2 falso → salto 29: almenoK([ ]).</li>'
+   +'<li>almenoK([ ]): v vuota → caso base, [ ].</li></ol>'
+   +'<p>3) Risalendo:</p><ol class="pass">'
+   +'<li>almenoK([29]) = [ ]</li>'
+   +'<li>almenoK([17, 29]) = cons(17, [ ]) = [17]</li>'
+   +'<li>almenoK([3, 17, 29]) = [17]</li>'
+   +'<li>almenoK([5, 3, 17, 29]) = cons(5, [17]) = <b>[5, 17]</b> → showlist stampa "5 17 ".</li></ol>'
+   +'<p>Confronta con la soluzione del prof del 9 feb 2026 (almenoDue): è identica, con 2 al posto di k.</p>' }
   ],
   quaderno:[
     '<b>Primitive:</b> emptylist(), empty(l), head(l), tail(l), cons(x, l). showlist e member <b>non</b> sono primitive: se le usi le scrivi.',
