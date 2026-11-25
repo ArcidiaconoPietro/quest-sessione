@@ -1,0 +1,62 @@
+<script>
+Lav.video('spazi', 'vid-spazi', [
+  { h:'1. Che cos\'è un sottospazio', steps:[
+    { m:'W ⊆ V è un <b>sottospazio</b> se valgono tre cose:', s:'Partiamo dalla definizione. Un sottoinsieme W di uno spazio vettoriale V è un sottospazio se valgono tre condizioni.' },
+    { m:'① 0 ∈ W', s:'Prima condizione: il vettore nullo deve stare in W.' },
+    { m:'② u, w ∈ W ⇒ u + w ∈ W', s:'Seconda: se prendo due vettori di W e li sommo, il risultato deve restare in W. Si dice chiuso per somma.' },
+    { m:'③ w ∈ W, λ ∈ K ⇒ λ·w ∈ W', s:'Terza: se moltiplico un vettore di W per un numero qualsiasi, il risultato deve restare in W. Si dice chiuso per prodotto per scalare.' },
+    { m:'Basta che una delle tre sia falsa ⇒ <b>non</b> è un sottospazio.', s:'Per dire di no basta trovare una sola condizione che non vale, con un esempio con i numeri.' }
+  ]},
+  { h:'2. W = {(x, y, z) ∈ R³ : x + y = 2z}', steps:[
+    { m:'① Zero: x = y = z = 0 ⇒ 0 + 0 = 2·0 ⇒ 0 = 0 ✓', s:'Controllo lo zero. Metto zero al posto di x, y e z: a sinistra zero più zero fa zero, a destra due per zero fa zero. Zero uguale zero è vero, quindi lo zero sta in W.' },
+    { m:'② Prendo u = (x₁, y₁, z₁) e w = (x₂, y₂, z₂) in W:', s:'Per la somma prendo due vettori generici di W, u e w.' },
+    { m:'x₁ + y₁ = 2z₁ &nbsp; e &nbsp; x₂ + y₂ = 2z₂', s:'Stare in W vuol dire che per ognuno vale l\'equazione: x uno più y uno uguale due z uno, e x due più y due uguale due z due.' },
+    { m:'u + w = (x₁ + x₂, y₁ + y₂, z₁ + z₂)', s:'La somma si fa componente per componente.' },
+    { m:'(x₁ + x₂) + (y₁ + y₂) = (x₁ + y₁) + (x₂ + y₂) = 2z₁ + 2z₂ = 2·(z₁ + z₂) ✓', s:'Controllo l\'equazione sulla somma. Riordino: x uno più y uno, più x due più y due. Il primo pezzo vale due z uno, il secondo due z due. Raccolgo il due: due per z uno più z due. È proprio due volte la terza componente della somma, quindi la somma sta in W.' },
+    { m:'③ λ·u = (λx₁, λy₁, λz₁): &nbsp; λx₁ + λy₁ = λ·(x₁ + y₁) = λ·2z₁ = 2·(λz₁) ✓', s:'Per il prodotto: lambda per u ha componenti lambda x uno, lambda y uno, lambda z uno. Raccolgo lambda: lambda per x uno più y uno, che vale lambda per due z uno, cioè due per lambda z uno. L\'equazione vale, quindi anche lambda per u sta in W.' },
+    { m:'Tutte e tre vere ⇒ W è un sottospazio di R³.', s:'Le tre condizioni sono vere, quindi W è un sottospazio.' }
+  ]},
+  { h:'3. U = {(x, y, z) ∈ R³ : x + y = 2}', steps:[
+    { m:'① Zero: 0 + 0 = 2 ⇒ 0 = 2 ✗', s:'Stesso controllo per U. Metto zero: zero più zero fa zero, ma l\'equazione chiede due. Zero uguale due è falso.' },
+    { m:'0 ∉ U ⇒ U <b>non</b> è un sottospazio.', s:'Lo zero non sta in U, quindi U non è un sottospazio. Il motivo è il termine noto 2: quando c\'è un numero da solo diverso da zero, lo zero non soddisfa l\'equazione.' }
+  ]},
+  { h:'4. Un controesempio: x·y = 0 in R²', steps:[
+    { m:'(1, 0): 1·0 = 0 ✓ &nbsp; (0, 1): 0·1 = 0 ✓', s:'Prendo l\'insieme dei punti con x per y uguale zero. Il punto uno zero ci sta, perché uno per zero fa zero. Anche zero uno ci sta.' },
+    { m:'(1, 0) + (0, 1) = (1 + 0, 0 + 1) = (1, 1)', s:'Li sommo componente per componente: viene uno uno.' },
+    { m:'1·1 = 1 ≠ 0 ⇒ (1, 1) ∉ W ✗', s:'Per uno uno il prodotto fa uno, che è diverso da zero. Quindi la somma non sta nell\'insieme: non è chiuso per somma, non è un sottospazio.' },
+    { m:'Regola: prodotti tra incognite, quadrati, ≥ ⇒ cerca un controesempio.', s:'Quando vedi prodotti tra le incognite, quadrati o disuguaglianze, quasi sempre non è un sottospazio: cerca due vettori come questi.' }
+  ]},
+  { h:'5. Combinazioni lineari e Span', steps:[
+    { m:'Span(v₁, v₂) = { a·v₁ + b·v₂ : a, b ∈ R }', s:'Lo Span di due vettori è l\'insieme di tutte le loro combinazioni: a per v uno più b per v due, con a e b numeri qualsiasi.' },
+    { m:'Esempio: 2·(1, 0, 1) + 3·(0, 1, 1)', s:'Facciamo un esempio di combinazione: due volte uno zero uno, più tre volte zero uno uno.' },
+    { m:'= (2·1, 2·0, 2·1) + (3·0, 3·1, 3·1) = (2, 0, 2) + (0, 3, 3)', s:'Prima moltiplico ogni componente per il suo numero: due zero due, e zero tre tre.' },
+    { m:'= (2 + 0, 0 + 3, 2 + 3) = (2, 3, 5)', s:'Poi sommo componente per componente: due, tre, cinque. Quindi due tre cinque sta nello Span di quei due vettori.' }
+  ]},
+  { h:'6. Indipendenti o dipendenti?', steps:[
+    { m:'v₁, …, v<sub>k</sub> indipendenti ⇔ (λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 ⇒ tutti i λ = 0)', s:'Dei vettori sono indipendenti se l\'unico modo di combinarli per ottenere zero è usare tutti coefficienti zero.' },
+    { m:'(1, 2, 3) e (2, 4, 6): &nbsp; 2·1 = 2, 2·2 = 4, 2·3 = 6', s:'Guardo uno due tre e due quattro sei. Due per uno fa due, due per due fa quattro, due per tre fa sei.' },
+    { m:'⇒ (2, 4, 6) = 2·(1, 2, 3) ⇒ 2·(1, 2, 3) − 1·(2, 4, 6) = (0, 0, 0)', s:'Quindi il secondo è il doppio del primo. Allora due volte il primo meno una volta il secondo fa zero.' },
+    { m:'Coefficienti 2 e −1, non nulli ⇒ <b>dipendenti</b>.', s:'Ho trovato una combinazione uguale a zero con coefficienti due e meno uno, che non sono zero. Quindi sono dipendenti.' },
+    { m:'(1, 0, 1), (0, 1, 1): &nbsp; a·(1, 0, 1) + b·(0, 1, 1) = (a, b, a + b)', s:'Ora uno zero uno e zero uno uno. Faccio la combinazione generica: viene a, b, a più b.' },
+    { m:'= (0, 0, 0) ⇒ prima componente a = 0, seconda b = 0', s:'Se deve fare zero, la prima componente dice a uguale zero e la seconda dice b uguale zero.' },
+    { m:'Solo a = b = 0 ⇒ <b>indipendenti</b>.', s:'L\'unica possibilità è a e b zero: sono indipendenti.' }
+  ]},
+  { h:'7. Base di W = {x − y + 2t = 0} ⊆ R⁴', steps:[
+    { m:'x − y + 2t = 0 ⇒ x = y − 2t', s:'Ricavo x: porto meno y e più due t dall\'altra parte cambiando il segno. x uguale y meno due t.' },
+    { m:'Parametri liberi: y, z, t &nbsp; (z non compare ⇒ libera)', s:'Le altre incognite, y, z e t, sono libere. z non compare proprio nell\'equazione, quindi può essere qualsiasi numero.' },
+    { m:'(x, y, z, t) = (y − 2t, y, z, t)', s:'Scrivo il vettore generico di W mettendo al posto di x quello che ho ricavato.' },
+    { m:'= (y, y, 0, 0) + (0, 0, z, 0) + (−2t, 0, 0, t)', s:'Lo spezzo in tre pezzi: uno con solo y, uno con solo z, uno con solo t. Dove un parametro non c\'è, metto zero.' },
+    { m:'= y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)', s:'Da ogni pezzo raccolgo il suo parametro. Restano tre vettori fissi.' },
+    { m:'Base: (1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) &nbsp; ⇒ dim W = 3', s:'Questi tre vettori generano W, perché ogni vettore di W si scrive così. Sono indipendenti, perché ognuno ha un uno nel posto del suo parametro dove gli altri hanno zero. Quindi sono una base e la dimensione è tre.' },
+    { m:'Controllo: 4 incognite − 1 equazione = 3 ✓', s:'Controllo veloce: quattro incognite meno un\'equazione fa tre. Torna.' }
+  ]},
+  { h:'8. L\'esercizio guidato: x − 2y + z = 0', steps:[
+    { m:'Zero: 0 − 2·0 + 0 = 0 ✓ &nbsp; equazione lineare omogenea ⇒ sottospazio', s:'Lo zero ci sta: zero meno due per zero più zero fa zero. Ed è un\'equazione lineare omogenea, quindi W è un sottospazio.' },
+    { m:'x − 2y + z = 0 ⇒ z = −x + 2y', s:'Ricavo z: tolgo x a entrambi i membri e aggiungo due y. z uguale meno x più due y.' },
+    { m:'(x, y, z) = (x, y, −x + 2y)', s:'Vettore generico: x, y, e al posto di z metto meno x più due y.' },
+    { m:'= (x, 0, −x) + (0, y, 2y)', s:'Spezzo: il pezzo con x è x, zero, meno x. Il pezzo con y è zero, y, due y.' },
+    { m:'= x·(1, 0, −1) + y·(0, 1, 2)', s:'Raccolgo x dal primo e y dal secondo.' },
+    { m:'Base (1, 0, −1), (0, 1, 2) ⇒ dim W = 2 = 3 − 1', s:'La base è uno zero meno uno e zero uno due. La dimensione è due, e infatti tre incognite meno un\'equazione fa due. W è un piano che passa per l\'origine.' }
+  ]}
+]);
+</script>

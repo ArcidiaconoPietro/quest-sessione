@@ -7,6 +7,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-sistemi"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Due rette nel piano: 1, 0 o infinite soluzioni</h2>
       <p>La retta blu è fissa: x + y = 2. Muovi la retta arancione a·x + b·y = c. Le soluzioni del sistema sono i punti in comune.</p>
@@ -102,22 +110,22 @@
 
   guided('sistemi', [
     { h:'Passo 1 · Gauss: R2 ← R2 − R1 e R3 ← R3 − R1. Che riga diventa la terza?', type:'choice', ans:1, opts:['(0, 0, k | 2)','(0, 0, k − 1 | 2)','(0, 1, k − 1 | 2)'],
-      ok:'Sì: (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). La seconda riga diventa (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
+      ok:'Sì: R3 − R1 = (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2). E R2 − R1 = (1 − 1, 2 − 1, 1 − 1 | 2 − 1) = (0, 1, 0 | 1).', bad:'Sottrai componente per componente: (1, 1, k | 3) − (1, 1, 1 | 1).' },
     { h:'Passo 2 · Vorrei dividere per k − 1. Prima cosa?', type:'choice', ans:2, opts:['Divido subito, tanto è un numero','Pongo k − 1 = 1','Studio a parte il caso k = 1, dove k − 1 = 0'],
       ok:'Bravo, è la regola d\'oro. Con k = 1 la terza riga è (0, 0, 0 | 2), cioè 0 = 2.', bad:'k − 1 vale 0 quando k = 1: dividere per 0 non si può. Quel caso va studiato da solo.' },
     { h:'Passo 3 · Caso k = 1: rk A e rk(A | b)', type:'nums', ans:[2,3], html:'rk A = '+inp('rango di A')+' &nbsp; rk(A | b) = '+inp('rango della completa'),
       ok:'Esatto: 2 ≠ 3, quindi per k = 1 <b>nessuna soluzione</b>.', bad:'A ha due righe non nulle a scala; la completa ha anche la riga (0, 0, 0 | 2).' },
     { h:'Passo 4 · Caso k ≠ 1, per esempio k = 3: trova (x, y, z)', type:'nums', ans:[-1,1,1], html:'x = '+inp('x')+' &nbsp; y = '+inp('y')+' &nbsp; z = '+inp('z'),
-      ok:'Perfetto: z = 2/(k − 1) = 1, y = 1, x = 1 − y − z = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
+      ok:'Perfetto. Terza riga con k = 3: (3 − 1)·z = 2, cioè 2z = 2, quindi z = 1. Seconda riga: y = 1. Prima riga: x + y + z = 1, cioè x + 1 + 1 = 1, quindi x = 1 − 2 = −1.', bad:'Terza riga: (k − 1)·z = 2, con k = 3 dà 2z = 2. Seconda riga: y = 1. Poi sostituisci nella prima.' }
   ], '<b>Fatto!</b> Per k = 1 nessuna soluzione; per k ≠ 1 una sola soluzione: (x, y, z) = (−2/(k − 1), 1, 2/(k − 1)). Controllo veloce: det A = k − 1, che è ≠ 0 proprio per k ≠ 1.');
 
   exercises('sistemi', [
     { id:'e1', type:'choice', q:'Dopo Gauss: rk A = 2 e rk(A | b) = 3.', opts:['Una soluzione','Infinite soluzioni','Nessuna soluzione'], a:2, hint:'Rouché-Capelli.', sol:'Ranghi diversi: nessuna soluzione.' },
-    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'5 − 3 = 2.' },
-    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'2x = 4 ⇒ x = 2, y = 1.' },
+    { id:'e2', type:'num', label:'parametri =', q:'Sistema in 5 incognite con rk A = rk(A | b) = 3. Quanti parametri liberi?', a:2, hint:'n − rk.', sol:'Parametri liberi = n − rk A = 5 − 3 = 2.' },
+    { id:'e3', type:'nums', labels:['x =','y ='], q:'x + y = 3, x − y = 1', a:[2,1], hint:'Somma le due equazioni.', sol:'Sommo le due equazioni: (x + y) + (x − y) = 3 + 1, cioè 2x = 4, quindi x = 2. Dalla prima: 2 + y = 3, quindi y = 1. Verifica: 2 − 1 = 1 ✓.' },
     { id:'e4', type:'choice', q:'Un sistema omogeneo A·x = 0…', opts:['può non avere soluzioni','ha sempre almeno la soluzione x = 0','ha sempre infinite soluzioni'], a:1, hint:'Prova x = 0.', sol:'A·0 = 0 sempre. Infinite solo se rk A &lt; n.' },
-    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1 − k² ≠ 0 ⇔ k ≠ ±1.' },
-    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Sommando: 0 = 2. Impossibile.' },
+    { id:'e5', type:'choice', src:'esame', q:'x + k·y = 1, k·x + y = 1. Per quali k c\'è una sola soluzione?', opts:['k ≠ 0','k ≠ 1 e k ≠ −1','per ogni k'], a:1, hint:'det A = 1 − k².', sol:'det A = 1·1 − k·k = 1 − k². Una sola soluzione ⇔ det A ≠ 0 ⇔ 1 − k² ≠ 0 ⇔ k² ≠ 1 ⇔ k ≠ 1 e k ≠ −1.' },
+    { id:'e6', type:'choice', q:'Stesso sistema con k = −1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:0, hint:'Diventa x − y = 1, −x + y = 1.', sol:'Con k = −1: x + (−1)·y = 1 e (−1)·x + y = 1, cioè x − y = 1 e −x + y = 1. Sommo: (x − y) + (−x + y) = 1 + 1, cioè 0 = 2. Impossibile: nessuna soluzione.' },
     { id:'e7', type:'choice', q:'Stesso sistema con k = 1.', opts:['Nessuna soluzione','Infinite soluzioni'], a:1, hint:'Le due equazioni diventano uguali.', sol:'x + y = 1 due volte: rk A = rk(A | b) = 1, infinite soluzioni con 1 parametro.' },
     { id:'e8', type:'choice', src:'trappola', q:'Da (k − 2)·z = k − 2 scrivo z = 1. Va bene?', opts:['Sì, sempre','Solo per k ≠ 2; per k = 2 l\'equazione è 0 = 0 e z è libero'], a:1, hint:'Cosa succede con k = 2?', sol:'Per k = 2 non si può dividere: 0·z = 0 vale per ogni z, quindi z diventa un parametro libero.' }
   ]);

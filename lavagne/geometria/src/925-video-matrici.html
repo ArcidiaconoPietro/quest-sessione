@@ -1,0 +1,30 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('matrici', 'video-matrici', [
+  { h:'1. Prodotto righe per colonne', steps:[
+    { m:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), s:'Moltiplico queste due matrici. Ogni casella del risultato è una riga della prima per una colonna della seconda.' },
+    { m:'(1,1): riga 1 · colonna 1 = 1·3 + 2·1 = 3 + 2 = 5', s:'Casella riga uno colonna uno: riga uno è uno due, colonna uno è tre uno. Uno per tre più due per uno: tre più due, cinque.' },
+    { m:'(1,2): riga 1 · colonna 2 = 1·0 + 2·2 = 0 + 4 = 4', s:'Riga uno per colonna due, che è zero due: uno per zero più due per due, quattro.' },
+    { m:'(2,1): riga 2 · colonna 1 = 0·3 + 1·1 = 0 + 1 = 1', s:'Riga due, zero uno, per colonna uno: zero per tre più uno per uno, uno.' },
+    { m:'(2,2): riga 2 · colonna 2 = 0·0 + 1·2 = 0 + 2 = 2', s:'Riga due per colonna due: zero per zero più uno per due, due.' },
+    { m:'Risultato '+M([[5,4],[1,2]]), s:'Il risultato è cinque quattro, uno due.' }
+  ]},
+  { h:'2. Inversa 2 × 2 di A = '+M([[3,1],[4,2]]), steps:[
+    { m:'A⁻¹ = (1/det A)·'+M([['d','−b'],['−c','a']]), s:'Formula: scambio i due numeri sulla diagonale, cambio segno agli altri due, e divido tutto per il determinante.' },
+    { m:'det A = 3·2 − 1·4 = 6 − 4 = 2 ≠ 0 ⇒ invertibile', s:'Determinante: tre per due meno uno per quattro, sei meno quattro, due. Non è zero, quindi A è invertibile.' },
+    { m:'Scambio la diagonale: 3 e 2 → '+M([[2,1],[4,3]]), s:'Scambio tre e due sulla diagonale.' },
+    { m:'Cambio segno agli altri: '+M([[2,-1],[-4,3]]), s:'Uno diventa meno uno e quattro diventa meno quattro, restando al loro posto.' },
+    { m:'Divido per 2: 2/2 = 1, −1/2, −4/2 = −2, 3/2 ⇒ A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']]), s:'Divido ogni numero per due: due mezzi fa uno, meno uno mezzo resta meno un mezzo, meno quattro mezzi fa meno due, tre mezzi resta tre mezzi.' },
+    { m:'Controllo (1,1): 3·1 + 1·(−2) = 3 − 2 = 1 ✓; &nbsp; (1,2): 3·(−1/2) + 1·(3/2) = −3/2 + 3/2 = 0 ✓', s:'Controllo A per A inversa. Prima casella: tre per uno più uno per meno due, uno. Seconda: tre per meno un mezzo più uno per tre mezzi, meno tre mezzi più tre mezzi, zero. Come l\'identità.' }
+  ]},
+  { h:'3. Inversa con Gauss-Jordan', steps:[
+    { m:'(A | I) → mosse di riga → (I | A⁻¹)', s:'Per matrici più grandi scrivo A e accanto l\'identità. Faccio mosse di riga finché a sinistra c\'è l\'identità: a destra trovo l\'inversa.' },
+    { m:M([[3,1,'| 1',0],[4,2,'| 0',1]]), s:'Rifaccio la stessa A con questo metodo.' },
+    { m:'R2 ← R2 − (4/3)·R1: (4 − 4, 2 − 4/3 | 0 − 4/3, 1 − 0) = (0, 2/3 | −4/3, 1)', s:'Alla riga due tolgo quattro terzi della riga uno. Quattro meno quattro fa zero, due meno quattro terzi fa due terzi, a destra zero meno quattro terzi e uno meno zero.' },
+    { m:'R2 ← R2 · (3/2): (0, 1 | −2, 3/2)', s:'Moltiplico la riga due per tre mezzi per avere il pivot uguale a uno: due terzi per tre mezzi fa uno, meno quattro terzi per tre mezzi fa meno due, uno per tre mezzi fa tre mezzi.' },
+    { m:'R1 ← R1 − 1·R2: (3, 0 | 1 + 2, 0 − 3/2) = (3, 0 | 3, −3/2)', s:'Alla riga uno tolgo la riga due per fare zero sopra il pivot: tre resta tre, uno meno uno fa zero, a destra uno meno meno due fa tre, zero meno tre mezzi fa meno tre mezzi.' },
+    { m:'R1 ← R1 · (1/3): (1, 0 | 1, −1/2)', s:'Divido la riga uno per tre: uno, zero, uno, meno un mezzo.' },
+    { m:'A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+' ✓ uguale alla formula', s:'A destra leggo uno, meno un mezzo, meno due, tre mezzi. È la stessa inversa trovata con la formula.' }
+  ]}
+]); })();
+</script>

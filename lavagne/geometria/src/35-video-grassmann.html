@@ -1,0 +1,40 @@
+<script>
+Lav.video('grassmann', 'video-grassmann', [
+  { h:'1. Somma e intersezione', steps:[
+    { m:'U ∩ W = vettori che stanno in U <b>e</b> in W', s:'L\'intersezione di U e W sono i vettori che stanno in tutti e due.' },
+    { m:'U + W = { u + w : u ∈ U, w ∈ W } = Span(generatori di U e di W)', s:'La somma U più W sono tutti i vettori che si scrivono come un vettore di U più uno di W. Si ottiene mettendo insieme i generatori di U e quelli di W.' },
+    { m:'Grassmann: dim(U + W) = dim U + dim W − dim(U ∩ W)', s:'La formula di Grassmann lega le quattro dimensioni: la dimensione della somma è dim U più dim W meno la dimensione dell\'intersezione.' },
+    { m:'Perché il "−": i vettori di U ∩ W li conto due volte', s:'Il meno serve perché la parte in comune la conterei due volte, una dentro U e una dentro W.' }
+  ]},
+  { h:'2. Esempio guidato: U = {x + y + z = 0}, W = Span((1, 1, 1))', steps:[
+    { m:'dim U = 3 incognite − 1 equazione = 2', s:'U è dato da un\'equazione in tre incognite: dimensione tre meno uno, cioè due. È un piano.' },
+    { m:'dim W = 1 &nbsp; (un vettore non nullo)', s:'W è generato da un solo vettore diverso da zero: dimensione uno. È una retta.' },
+    { m:'Vettore generico di W: t·(1, 1, 1) = (t, t, t)', s:'Per l\'intersezione prendo il vettore generico di W: t, t, t.' },
+    { m:'In U? &nbsp; t + t + t = 0 ⇒ 3t = 0 ⇒ t = 0', s:'Lo metto nell\'equazione di U: t più t più t fa tre t, che deve essere zero. Divido per tre: t uguale zero.' },
+    { m:'U ∩ W = {(0, 0, 0)} ⇒ dim(U ∩ W) = 0', s:'L\'unico vettore comune è lo zero. L\'intersezione ha dimensione zero.' },
+    { m:'dim(U + W) = 2 + 1 − 0 = 3 = dim R³ ⇒ U + W = R³', s:'Grassmann: due più uno meno zero fa tre. Tre è la dimensione di R tre, quindi la somma è tutto R tre.' },
+    { m:'U ∩ W = {0} e U + W = R³ ⇒ R³ = U ⊕ W', s:'Intersezione solo zero e somma uguale a tutto lo spazio: la somma è diretta, R tre è U somma diretta W.' }
+  ]},
+  { h:'3. Esempio in R⁴: U ⊆ W', steps:[
+    { m:'U = Span((1, 0, 1, 0), (0, 1, 0, 1)), &nbsp; W = {x − z = 0}', s:'Ora in R quattro: U generato da due vettori, W dato da un\'equazione.' },
+    { m:'a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b) = 0 ⇒ a = 0, b = 0 ⇒ dim U = 2', s:'Controllo che i generatori di U siano indipendenti: la combinazione dà a, b, a, b. Se è zero, a e b sono zero. Quindi dim U è due.' },
+    { m:'dim W = 4 − 1 = 3', s:'W: quattro incognite meno un\'equazione, dimensione tre.' },
+    { m:'Vettore generico di U: (a, b, a, b) ⇒ x = a, z = a', s:'Il vettore generico di U ha x uguale a e z uguale a.' },
+    { m:'x − z = a − a = 0 ✓ per ogni a, b ⇒ U ⊆ W', s:'Nell\'equazione di W: a meno a fa zero, sempre. Quindi ogni vettore di U sta in W.' },
+    { m:'U ∩ W = U ⇒ dim = 2; &nbsp; dim(U + W) = 2 + 3 − 2 = 3', s:'L\'intersezione è U stesso, dimensione due. Grassmann: due più tre meno due fa tre. Infatti U più W è W.' }
+  ]},
+  { h:'4. Le coordinate in una base', steps:[
+    { m:'B = ((1, 1), (1, −1)), &nbsp; v = (5, 1). Cerco λ₁, λ₂:', s:'Le coordinate di un vettore in una base sono i numeri che servono per scriverlo con i vettori della base. Base uno uno, uno meno uno. Vettore cinque uno.' },
+    { m:'λ₁·(1, 1) + λ₂·(1, −1) = (λ₁ + λ₂, λ₁ − λ₂) = (5, 1)', s:'Lambda uno per uno uno più lambda due per uno meno uno fa lambda uno più lambda due, lambda uno meno lambda due.' },
+    { m:'λ₁ + λ₂ = 5 &nbsp; e &nbsp; λ₁ − λ₂ = 1', s:'Uguaglio componente per componente: due equazioni.' },
+    { m:'Sommo: 2λ₁ = 6 ⇒ λ₁ = 3', s:'Sommo le due equazioni: i lambda due si cancellano e resta due lambda uno uguale sei. Quindi lambda uno è tre.' },
+    { m:'3 + λ₂ = 5 ⇒ λ₂ = 2', s:'Sostituisco nella prima: tre più lambda due uguale cinque, quindi lambda due è due.' },
+    { m:'Verifica: 3·(1, 1) + 2·(1, −1) = (3 + 2, 3 − 2) = (5, 1) ✓ &nbsp; [v]<sub>B</sub> = (3, 2)', s:'Verifica: tre per uno uno più due per uno meno uno fa cinque uno. Le coordinate sono tre e due.' }
+  ]},
+  { h:'5. Un trucco da quiz', steps:[
+    { m:'U, W ⊆ R⁵ con dim U = dim W = 3', s:'Domanda tipo quiz: due sottospazi di R cinque, ognuno di dimensione tre.' },
+    { m:'dim(U ∩ W) = 3 + 3 − dim(U + W) = 6 − dim(U + W)', s:'Da Grassmann ricavo l\'intersezione: sei meno la dimensione della somma.' },
+    { m:'dim(U + W) ≤ 5 ⇒ dim(U ∩ W) ≥ 6 − 5 = 1', s:'La somma sta dentro R cinque, quindi ha dimensione al massimo cinque. Allora l\'intersezione ha dimensione almeno uno: non è mai solo lo zero.' }
+  ]}
+]);
+</script>

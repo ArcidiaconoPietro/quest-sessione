@@ -1,0 +1,43 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('rango', 'video-rango', [
+  { h:'1. Che cos\'è il rango', steps:[
+    { m:'rk A = numero di pivot dopo Gauss', s:'Il rango di una matrice è il numero di pivot che restano dopo averla ridotta a scala con Gauss. Il pivot è il primo numero diverso da zero di ogni riga non nulla.' },
+    { m:'rk A = dim Span(colonne di A) = dim Span(righe di A)', s:'Il rango dice anche quante colonne indipendenti ci sono, cioè la dimensione dello Span delle colonne. Ed è uguale al numero di righe indipendenti.' }
+  ]},
+  { h:'2. Gauss su A = '+M([[1,2,0],[2,4,1],[1,2,1]]), steps:[
+    { m:'R2 ← R2 − 2·R1: (2 − 2·1, 4 − 2·2, 1 − 2·0) = (0, 0, 1)', s:'Voglio uno zero sotto il primo pivot, che è l\'uno in alto a sinistra. Alla riga due tolgo due volte la riga uno. Due meno due per uno fa zero. Quattro meno due per due fa zero. Uno meno due per zero fa uno. La nuova riga due è zero zero uno.' },
+    { m:'R3 ← R3 − R1: (1 − 1, 2 − 2, 1 − 0) = (0, 0, 1)', s:'Alla riga tre tolgo la riga uno. Uno meno uno fa zero, due meno due fa zero, uno meno zero fa uno. La nuova riga tre è zero zero uno.' },
+    { m:M([[1,2,0],[0,0,1],[0,0,1]]), s:'Ecco la matrice dopo i primi due passaggi.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 0 − 0, 1 − 1) = (0, 0, 0)', s:'Le righe due e tre sono uguali. Alla riga tre tolgo la riga due: viene tutta zero.' },
+    { m:M([[1,2,0],[0,0,1],[0,0,0]])+' &nbsp; pivot in colonna 1 e colonna 3', s:'Matrice a scala. Il primo pivot è l\'uno nella colonna uno, il secondo è l\'uno nella colonna tre. La terza riga è nulla.' },
+    { m:'2 pivot ⇒ rk A = 2', s:'Due pivot, quindi il rango è due.' }
+  ]},
+  { h:'3. Dimensione e base di uno Span', steps:[
+    { m:'W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1))', s:'Le colonne della matrice di prima sono i vettori uno due uno, due quattro due, zero uno uno. W è il loro Span.' },
+    { m:'dim W = rk = 2', s:'La dimensione di W è il rango della matrice con questi vettori in colonna: due.' },
+    { m:'Base = colonne <b>originali</b> con pivot: (1, 2, 1), (0, 1, 1)', s:'Per la base prendo le colonne di partenza che hanno il pivot: la prima e la terza. Attenzione, quelle originali, non quelle ridotte.' },
+    { m:'Infatti (2, 4, 2) = 2·(1, 2, 1): 2·1 = 2, 2·2 = 4, 2·1 = 2', s:'E in effetti la seconda colonna è il doppio della prima: due per uno fa due, due per due fa quattro, due per uno fa due. Per questo era di troppo.' }
+  ]},
+  { h:'4. Dallo Span all\'equazione cartesiana', steps:[
+    { m:'(x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) = (a, 2a + b, a + b)', s:'Un vettore di W è a volte il primo più b volte il secondo. Calcolo componente per componente: a, due a più b, a più b.' },
+    { m:'x = a, &nbsp; y = 2a + b, &nbsp; z = a + b', s:'Quindi x è a, y è due a più b, z è a più b.' },
+    { m:'a = x; &nbsp; da z = a + b: b = z − a = z − x', s:'Elimino i parametri. Dalla prima, a è uguale a x. Dalla terza, b è z meno a, cioè z meno x.' },
+    { m:'y = 2a + b = 2x + (z − x) = 2x − x + z = x + z', s:'Sostituisco nella seconda: y uguale due x più z meno x, cioè x più z.' },
+    { m:'x − y + z = 0', s:'Porto tutto a sinistra: x meno y più z uguale zero. È l\'equazione di W.' },
+    { m:'Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 ✓ &nbsp; (0, 1, 1) → 0 − 1 + 1 = 0 ✓', s:'Controllo con i due vettori della base. Uno meno due più uno fa zero. Zero meno uno più uno fa zero. Torna.' }
+  ]},
+  { h:'5. Completare a una base di R³', steps:[
+    { m:'Ho (1, 1, 0), (0, 1, 1). Aggiungo e₁, e₂, e₃ in colonna:', s:'Voglio completare uno uno zero e zero uno uno a una base di R tre. Li metto in colonna e accodo i vettori della base canonica.' },
+    { m:M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]]), s:'Questa è la matrice con cinque colonne.' },
+    { m:'R2 ← R2 − R1: (1 − 1, 1 − 0, 0 − 1, 1 − 0, 0 − 0) = (0, 1, −1, 1, 0)', s:'Alla riga due tolgo la riga uno, numero per numero: zero, uno, meno uno, uno, zero.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 1 − 1, 0 − (−1), 0 − 1, 1 − 0) = (0, 0, 1, −1, 1)', s:'Alla riga tre tolgo la nuova riga due: zero, zero, zero meno meno uno che fa più uno, meno uno, uno.' },
+    { m:M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])+' &nbsp; pivot nelle colonne 1, 2, 3', s:'I pivot sono nelle colonne uno, due e tre.' },
+    { m:'Base: (1, 1, 0), (0, 1, 1), (1, 0, 0)', s:'Prendo le colonne originali uno, due e tre: i miei due vettori più e uno. Sono tre vettori indipendenti in R tre, quindi sono una base.' }
+  ]},
+  { h:'6. Il teorema da ricordare', steps:[
+    { m:'Sistema omogeneo A·x = 0 in n incognite: dim soluzioni = n − rk A', s:'Ultima cosa: per un sistema omogeneo, la dimensione delle soluzioni è il numero di incognite meno il rango.' },
+    { m:'Esempio: 2 equazioni indipendenti in 5 incognite ⇒ 5 − 2 = 3', s:'Esempio: due equazioni indipendenti in cinque incognite. Il rango è due, quindi le soluzioni hanno dimensione cinque meno due, cioè tre.' }
+  ]}
+]); })();
+</script>

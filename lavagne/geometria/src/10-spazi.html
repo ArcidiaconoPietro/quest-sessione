@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-spazi"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Combinazioni lineari e Span</h2>
       <p>Hai due frecce del piano R²: <span class="cu">u = (2, 1)</span> e <span class="cv">v = (−1, 2)</span>. Con due numeri reali λ e μ costruisci la freccia <span class="cw">λ·u + μ·v</span>: si chiama <b>combinazione lineare</b> di u e v.</p>
@@ -98,9 +106,9 @@
       <h2>Trovare una base di W dato con equazioni</h2>
       <p>Esempio: W = {(x, y, z, t) ∈ R⁴ : x − y + 2t = 0}.</p>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri.</p></div>
+        <div class="step"><h3>Passo 1 · Ricava una incognita</h3><p>x − y + 2t = 0. Porto −y e +2t a destra cambiando segno: x = y − 2t. Le altre (y, z, t) sono libere: sono i parametri. (z non compare nell'equazione, quindi è libera.)</p></div>
         <div class="step"><h3>Passo 2 · Scrivi il vettore generico di W</h3><p class="math">(x, y, z, t) = (y − 2t, y, z, t)</p></div>
-        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p class="math">(y − 2t, y, z, t) = y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
+        <div class="step"><h3>Passo 3 · Spezza per parametri</h3><p>Separo i pezzi con y, con z e con t (ogni pezzo ha 0 dove quel parametro non compare):</p><p class="math">(y − 2t, y, z, t) = (y, y, 0, 0) + (0, 0, z, 0) + (−2t, 0, 0, t)</p><p>Raccolgo il parametro da ogni pezzo:</p><p class="math">= y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)</p></div>
         <div class="step"><h3>Passo 4 · Ecco la base</h3><p>(1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) generano W (passo 3) e sono indipendenti (ognuno ha un 1 nel posto del suo parametro, dove gli altri hanno 0). Sono una base di W e <b>dim W = 3</b> = 4 incognite − 1 equazione.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -191,10 +199,10 @@
       opts:['Ha un quadrato, quindi non è un sottospazio','Lineare omogenea: è un sistema omogeneo, quindi W è un sottospazio','Ha un termine noto, quindi non è un sottospazio'],
       ok:'Esatto: incognite alla prima potenza, nessun termine noto. Le soluzioni di un sistema omogeneo sono un sottospazio.', bad:'Guarda bene: ci sono potenze? C\'è un numero da solo dopo l\'uguale?' },
     { h:'Passo 3 · Ricava z in funzione di x e y', type:'choice', ans:2,
-      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: porti x e −2y dall\'altra parte cambiando segno.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
+      opts:['z = x − 2y','z = 2y + x','z = −x + 2y'], ok:'Giusto: x − 2y + z = 0. Tolgo x a entrambi i membri: −2y + z = −x. Aggiungo 2y a entrambi: z = −x + 2y.', bad:'Da x − 2y + z = 0 porta x e −2y a destra: cambiano segno.' },
     { h:'Passo 4 · Spezza (x, y, −x + 2y) per parametri: completa i due vettori', type:'nums', ans:[-1,2],
       html:'(x, y, −x + 2y) = x·(1, 0, '+inp('terza componente del primo','3.5em')+') + y·(0, 1, '+inp('terza componente del secondo','3.5em')+')',
-      ok:'Perfetto: (1, 0, −1) e (0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
+      ok:'Perfetto. Tutti i passaggi: (x, y, −x + 2y) = (x, 0, −x) + (0, y, 2y) = x·(1, 0, −1) + y·(0, 1, 2).', bad:'La terza componente è −x + 2y: il pezzo con x ha coefficiente −1, quello con y ha coefficiente 2.' },
     { h:'Passo 5 · Quanto vale dim W?', type:'nums', ans:[2], html:'dim W = '+inp('dimensione'),
       ok:'Sì: 2 vettori nella base. Torna anche col conto 3 incognite − 1 equazione = 2.', bad:'Conta i vettori della base del passo 4.' }
   ], '<b>Fatto!</b> W è un sottospazio di R³, una base è (1, 0, −1), (0, 1, 2) e dim W = 2. Geometricamente W è un <b>piano</b> per l\'origine dentro R³.');
@@ -203,18 +211,18 @@
     { id:'e1', type:'choice', src:'tipo quiz', q:'Per quali k ∈ R l\'insieme S<sub>k</sub> = {(x, y) ∈ R² : x + (k − 1)·y² = k² − 1} è un sottospazio di R²?',
       opts:['k = 1','k = −1','k = ±1','per nessun k'], a:0,
       hint:'Servono due cose insieme: niente quadrato (il coefficiente di y² deve essere 0) e niente termine noto (k² − 1 = 0).',
-      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1 il termine noto è 1 − 1 = 0, quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1 resta x − 2y² = 0, che ha un quadrato: (2, 1) ci sta (2 − 2·1 = 0), ma 2·(2, 1) = (4, 2) no (4 − 2·4 = −4 ≠ 0). Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
+      sol:'Il quadrato sparisce solo se k − 1 = 0, cioè k = 1. Con k = 1: x + (1 − 1)·y² = 1² − 1, cioè x + 0·y² = 0, cioè x = 0. Quindi S₁ = {x = 0}: lineare omogenea, sottospazio. Con k = −1: x + (−1 − 1)·y² = (−1)² − 1, cioè x − 2y² = 0, che ha un quadrato. (2, 1) ci sta: 2 − 2·1² = 2 − 2 = 0. Ma 2·(2, 1) = (4, 2) no: 4 − 2·2² = 4 − 8 = −4 ≠ 0. Non è chiuso per prodotto per scalare. Risposta: k = 1.' },
     { id:'e2', type:'choice', src:'tipo quiz', q:'Quale di questi è un sottospazio di M(2, 2, R)?',
       opts:['{A : a₁₁ + a₂₂ = 0}','{A : det A = 0}','{A : a₁₂ = 1}','{A : a₁₁ ≥ 0}'], a:0,
       hint:'Cerca la condizione lineare omogenea. det A = a₁₁a₂₂ − a₁₂a₂₁ ha prodotti tra le entrate.',
       sol:'a₁₁ + a₂₂ = 0 è lineare omogenea: sottospazio. det A = 0 no: ${M([[1,0],[0,0]])}$ e ${M([[0,0],[0,1]])}$ hanno det 0 ma la somma è I con det 1. a₁₂ = 1 non contiene la matrice nulla. a₁₁ ≥ 0 non è chiuso per λ = −1.' },
     { id:'e3', type:'choice', q:'I vettori (1, 2, 3) e (2, 4, 6) di R³ sono indipendenti?',
       opts:['Sì, perché sono diversi','No, perché (2, 4, 6) = 2·(1, 2, 3)','Sì, perché nessuno dei due è il vettore nullo'], a:1,
-      hint:'Uno dei due è multiplo dell\'altro?', sol:'2·(1, 2, 3) − 1·(2, 4, 6) = 0 con coefficienti non nulli: sono dipendenti.' },
+      hint:'Uno dei due è multiplo dell\'altro?', sol:'Controllo componente per componente: 2·1 = 2, 2·2 = 4, 2·3 = 6, quindi (2, 4, 6) = 2·(1, 2, 3). Allora 2·(1, 2, 3) − 1·(2, 4, 6) = (2 − 2, 4 − 4, 6 − 6) = (0, 0, 0) con coefficienti 2 e −1, non nulli: sono dipendenti.' },
     { id:'e4', type:'num', label:'dim =', q:'dim Span((1, 0, 1), (0, 1, 1), (1, 1, 2)) ⊆ R³',
-      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'(1, 1, 2) = (1, 0, 1) + (0, 1, 1), quindi è di troppo. I primi due sono indipendenti (non sono multipli). dim = 2.' },
+      a:2, hint:'Il terzo vettore è la somma dei primi due? Puoi anche usare il laboratorio sopra.', sol:'Passo 1: (1, 0, 1) + (0, 1, 1) = (1 + 0, 0 + 1, 1 + 1) = (1, 1, 2). Il terzo vettore è la somma dei primi due, quindi è di troppo: Span dei tre = Span dei primi due. Passo 2: a·(1, 0, 1) + b·(0, 1, 1) = (a, b, a + b). Se è (0, 0, 0), la prima componente dà a = 0 e la seconda b = 0: i primi due sono indipendenti. Passo 3: 2 vettori indipendenti che generano, quindi dim = 2.' },
     { id:'e5', type:'nums', labels:['a =','b ='], q:'Scrivi (3, 5) ∈ R² come a·(1, 1) + b·(1, 2). Quanto valgono a e b?',
-      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'Dalla differenza b = 2, poi a = 3 − 2 = 1. Infatti 1·(1, 1) + 2·(1, 2) = (3, 5). (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
+      a:[1,2], hint:'Componente per componente: a + b = 3 e a + 2b = 5. Sottrai la prima dalla seconda.', sol:'a·(1, 1) + b·(1, 2) = (a, a) + (b, 2b) = (a + b, a + 2b). Uguaglio a (3, 5): a + b = 3 e a + 2b = 5. Sottraggo la prima dalla seconda: (a + 2b) − (a + b) = 5 − 3, cioè b = 2. Sostituisco nella prima: a + 2 = 3, quindi a = 3 − 2 = 1. Verifica: 1·(1, 1) + 2·(1, 2) = (1, 1) + (2, 4) = (3, 5) ✓. (1, 1) e (1, 2) sono una base di R² e (1, 2) sono le coordinate di (3, 5) in questa base.' },
     { id:'e6', type:'choice', src:'Foglio 4 · quiz 3', q:'Se A·B = C, allora <sup>t</sup>C è uguale a…',
       opts:['<sup>t</sup>B · <sup>t</sup>A','<sup>t</sup>A · <sup>t</sup>B','<sup>t</sup>A · B'], a:0,
       hint:'La trasposta di un prodotto inverte l\'ordine. Controlla con le misure.', sol:'<sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A.' },

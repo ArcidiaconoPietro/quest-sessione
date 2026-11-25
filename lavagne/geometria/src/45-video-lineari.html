@@ -1,0 +1,36 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('lineari', 'video-lineari', [
+  { h:'1. Applicazione lineare', steps:[
+    { m:'f: V → W lineare ⇔ f(u + v) = f(u) + f(v) &nbsp; e &nbsp; f(λ·v) = λ·f(v)', s:'Una funzione tra spazi vettoriali è lineare se rispetta la somma e il prodotto per un numero.' },
+    { m:'Conseguenza: f(0) = f(0·v) = 0·f(v) = 0', s:'Conseguenza: una lineare manda sempre zero in zero. Infatti zero è zero per v, e allora f di zero è zero per f di v, cioè zero.' },
+    { m:'f(x, y) = (x + 1, y): f(0, 0) = (0 + 1, 0) = (1, 0) ≠ (0, 0) ⇒ non lineare', s:'Esempio: f di x y uguale x più uno, y. In zero zero vale uno zero, che non è zero. Quindi non è lineare.' },
+    { m:'L<sub>A</sub>(x) = A·x è sempre lineare', s:'Moltiplicare per una matrice è sempre lineare. Per le funzioni da R n a R m è anche l\'unico modo.' }
+  ]},
+  { h:'2. Nucleo e immagine', steps:[
+    { m:'ker f = { v : f(v) = 0 }', s:'Il nucleo è l\'insieme dei vettori che f manda in zero.' },
+    { m:'Im f = { f(v) : v ∈ V }; &nbsp; Im L<sub>A</sub> = Span(colonne di A)', s:'L\'immagine sono tutti i risultati di f. Per L A è lo Span delle colonne di A, perché A per x è x uno per la prima colonna più x due per la seconda, e così via.' },
+    { m:'Teorema della dimensione: dim ker f + dim Im f = dim V', s:'Il teorema della dimensione: la dimensione del nucleo più quella dell\'immagine è la dimensione dello spazio di partenza.' },
+    { m:'iniettiva ⇔ ker f = {0}; &nbsp; suriettiva ⇔ Im f = W', s:'f è iniettiva se il nucleo è solo lo zero, ed è suriettiva se l\'immagine è tutto lo spazio di arrivo.' }
+  ]},
+  { h:'3. Esempio: A = '+M([[1,1,2],[0,1,1],[1,2,3]]), steps:[
+    { m:'R3 ← R3 − R1: (1 − 1, 2 − 1, 3 − 2) = (0, 1, 1)', s:'Gauss. Alla riga tre tolgo la riga uno: uno meno uno fa zero, due meno uno fa uno, tre meno due fa uno.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 1 − 1, 1 − 1) = (0, 0, 0)', s:'Ora la riga tre è uguale alla riga due. La tolgo: viene zero zero zero.' },
+    { m:M([[1,1,2],[0,1,1],[0,0,0]])+' &nbsp; pivot in colonna 1 e 2 ⇒ rk A = 2', s:'Pivot nelle colonne uno e due: rango due.' },
+    { m:'Im L<sub>A</sub> = Span((1, 0, 1), (1, 1, 2)), dim Im = 2 &lt; 3 ⇒ non suriettiva', s:'L\'immagine è lo Span delle colonne originali uno e due. Ha dimensione due, meno di tre, quindi L A non è suriettiva.' },
+    { m:'Nucleo, riga 2: y + z = 0 ⇒ y = −z', s:'Per il nucleo risolvo A per x uguale zero dalla matrice ridotta. Riga due: y più z uguale zero, quindi y uguale meno z.' },
+    { m:'Riga 1: x + y + 2z = 0 ⇒ x = −y − 2z = −(−z) − 2z = z − 2z = −z', s:'Riga uno: x più y più due z uguale zero, quindi x uguale meno y meno due z. Metto y uguale meno z: meno meno z fa più z, meno due z, risultato meno z.' },
+    { m:'z = t: (x, y, z) = (−t, −t, t) = t·(−1, −1, 1)', s:'Chiamo z uguale t. Il vettore è meno t, meno t, t, cioè t volte meno uno meno uno uno.' },
+    { m:'ker L<sub>A</sub> = Span((−1, −1, 1)), dim 1 ⇒ non iniettiva', s:'Il nucleo ha dimensione uno, quindi non è solo zero: L A non è iniettiva.' },
+    { m:'Controllo: 1 + 2 = 3 = dim R³ ✓', s:'Controllo con il teorema: uno più due fa tre. Torna.' }
+  ]},
+  { h:'4. Matrice della derivata su R₂[x]', steps:[
+    { m:'f(p) = p′, base B = (1, x, x²)', s:'Ora una lineare tra polinomi: f di p è la derivata di p. Uso la base uno, x, x quadro.' },
+    { m:'f(1) = 0, &nbsp; f(x) = 1, &nbsp; f(x²) = 2x', s:'Calcolo f sui vettori della base. La derivata di uno è zero, di x è uno, di x quadro è due x.' },
+    { m:'0 → (0, 0, 0); &nbsp; 1 → (1, 0, 0); &nbsp; 2x → (0, 2, 0)', s:'Scrivo i risultati in coordinate. Zero ha coordinate zero zero zero. Uno è uno per uno: uno zero zero. Due x è due per x: zero due zero.' },
+    { m:'[f]<sup>B</sup><sub>B</sub> = '+M([[0,1,0],[0,0,2],[0,0,0]]), s:'Metto le coordinate in colonna, nell\'ordine: ecco la matrice di f.' },
+    { m:'p = 3 + 5x + 4x² → (3, 5, 4); &nbsp; M·(3, 5, 4) = (0·3 + 1·5 + 0·4, 0·3 + 0·5 + 2·4, 0) = (5, 8, 0)', s:'Controllo con un polinomio: tre più cinque x più quattro x quadro ha coordinate tre cinque quattro. La matrice per questo vettore dà cinque, otto, zero.' },
+    { m:'(5, 8, 0) → 5 + 8x = p′ ✓', s:'Cinque otto zero è il polinomio cinque più otto x. E la derivata di p è proprio cinque più due per quattro x, cioè cinque più otto x.' }
+  ]}
+]); })();
+</script>

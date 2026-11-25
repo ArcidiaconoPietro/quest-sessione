@@ -1,0 +1,35 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('autovalori', 'video-autovalori', [
+  { h:'1. Autovalori e autovettori', steps:[
+    { m:'A·v = λ·v &nbsp; con v ≠ 0', s:'Un autovettore è un vettore v diverso da zero che, moltiplicato per A, resta sulla sua retta: A per v è lambda per v. Il numero lambda è l\'autovalore.' },
+    { m:'A·v = λ·v ⇔ A·v − λ·I·v = 0 ⇔ (A − λ·I)·v = 0', s:'Porto tutto a sinistra: A per v meno lambda per v uguale zero. Scrivo lambda per v come lambda per I per v e raccolgo v: A meno lambda I, per v, uguale zero.' },
+    { m:'Esiste v ≠ 0 ⇔ A − λ·I non invertibile ⇔ det(A − λ·I) = 0', s:'Questo sistema omogeneo ha una soluzione diversa da zero solo se la matrice A meno lambda I non è invertibile, cioè se il suo determinante è zero.' },
+    { m:'Autovalori = radici di p<sub>A</sub>(λ) = det(A − λ·I)', s:'Quindi gli autovalori sono le radici del polinomio caratteristico.' },
+    { m:'V<sub>λ</sub> = ker(A − λ·I), &nbsp; mg(λ) = dim V<sub>λ</sub> = n − rk(A − λ·I)', s:'Gli autovettori di lambda, insieme allo zero, formano l\'autospazio: il nucleo di A meno lambda I. La sua dimensione si chiama molteplicità geometrica, ed è n meno il rango di A meno lambda I.' }
+  ]},
+  { h:'2. Diagonalizzare A = '+M([[2,1],[1,2]]), steps:[
+    { m:'p<sub>A</sub>(λ) = (2 − λ)(2 − λ) − 1·1 = 4 − 4λ + λ² − 1 = λ² − 4λ + 3', s:'Polinomio caratteristico: due meno lambda al quadrato meno uno per uno. Due meno lambda al quadrato fa quattro meno quattro lambda più lambda quadro. Tolgo uno: lambda quadro meno quattro lambda più tre.' },
+    { m:'Δ = 16 − 12 = 4, √Δ = 2, λ = (4 ± 2)/2 ⇒ λ = 1, λ = 3', s:'Delta: sedici meno dodici fa quattro, radice due. Lambda è quattro più o meno due, diviso due: uno e tre.' },
+    { m:'λ = 1: A − I = '+M([[1,1],[1,1]])+' ⇒ x + y = 0 ⇒ y = −x', s:'Per lambda uguale uno tolgo uno dalla diagonale: uno uno, uno uno. Il sistema dice x più y uguale zero, quindi y uguale meno x.' },
+    { m:'(x, −x) = x·(1, −1) ⇒ V<sub>1</sub> = Span((1, −1))', s:'Il vettore è x, meno x, cioè x per uno meno uno. Autospazio di uno: Span di uno meno uno.' },
+    { m:'λ = 3: A − 3I = '+M([[-1,1],[1,-1]])+' ⇒ −x + y = 0 ⇒ y = x', s:'Per lambda uguale tre tolgo tre: meno uno uno, uno meno uno. Il sistema dice meno x più y uguale zero, quindi y uguale x.' },
+    { m:'(x, x) = x·(1, 1) ⇒ V<sub>3</sub> = Span((1, 1))', s:'Il vettore è x, x, cioè x per uno uno. Autospazio di tre: Span di uno uno.' },
+    { m:'M = '+M([[1,1],[-1,1]])+', &nbsp; D = '+M([[1,0],[0,3]])+', &nbsp; M⁻¹·A·M = D', s:'M ha in colonna gli autovettori, D ha sulla diagonale gli autovalori nello stesso ordine: prima colonna con uno, seconda con tre.' },
+    { m:'Verifica: A·(1, −1) = (2 − 1, 1 − 2) = (1, −1) = 1·(1, −1) ✓; &nbsp; A·(1, 1) = (3, 3) = 3·(1, 1) ✓', s:'Verifica: A per uno meno uno dà uno meno uno, cioè una volta se stesso. A per uno uno dà tre tre, cioè tre volte se stesso.' }
+  ]},
+  { h:'3. Il criterio: mg = ma', steps:[
+    { m:'ma(λ) = quante volte λ è radice; &nbsp; 1 ≤ mg(λ) ≤ ma(λ)', s:'La molteplicità algebrica è quante volte lambda è radice del polinomio. La geometrica è sempre almeno uno e al massimo l\'algebrica.' },
+    { m:'Diagonalizzabile ⇔ radici tutte in K e mg(λ) = ma(λ) per ogni λ', s:'A è diagonalizzabile se tutte le radici stanno nel campo e per ogni autovalore la geometrica è uguale all\'algebrica.' },
+    { m:'Se ma = 1 ⇒ 1 ≤ mg ≤ 1 ⇒ mg = 1 automaticamente', s:'Se un autovalore ha molteplicità algebrica uno, la geometrica è schiacciata tra uno e uno, quindi è uno. Bisogna controllare solo gli autovalori con molteplicità due o più.' }
+  ]},
+  { h:'4. Guidato: A = '+M([[1,1,0],[0,1,0],[0,0,2]]), steps:[
+    { m:'Triangolare ⇒ p<sub>A</sub>(λ) = (1 − λ)(1 − λ)(2 − λ)', s:'A è triangolare, quindi il polinomio è il prodotto della diagonale meno lambda: uno meno lambda, uno meno lambda, due meno lambda.' },
+    { m:'λ = 1 con ma = 2; &nbsp; λ = 2 con ma = 1', s:'Uno compare due volte, quindi ha molteplicità algebrica due. Due compare una volta.' },
+    { m:'A − 1·I: diagonale (1 − 1, 1 − 1, 2 − 1) = (0, 0, 1) ⇒ '+M([[0,1,0],[0,0,0],[0,0,1]]), s:'Controllo solo lambda uguale uno. Tolgo uno dalla diagonale: zero, zero, uno. Ecco A meno I.' },
+    { m:'Righe non nulle (0, 1, 0), (0, 0, 1), indipendenti ⇒ rk = 2', s:'Ci sono due righe non nulle e indipendenti: il rango è due.' },
+    { m:'mg(1) = 3 − 2 = 1 ≠ 2 = ma(1)', s:'Molteplicità geometrica: tre meno due, uno. Ma l\'algebrica è due. Sono diverse.' },
+    { m:'⇒ A <b>non</b> è diagonalizzabile', s:'Quindi A non è diagonalizzabile: per l\'autovalore uno manca un autovettore.' }
+  ]}
+]); })();
+</script>

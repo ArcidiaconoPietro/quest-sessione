@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-spettrale"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Il cerchio diventa un'ellisse</h2>
       <p>Il cerchio grigio ha raggio 1; A lo trasforma nella curva viola. Se A è simmetrica (b = c) la curva è un'<b>ellisse</b> e i suoi assi sono le rette verdi degli autovettori: <b>perpendicolari</b>. Le semi-lunghezze degli assi sono |λ₁| e |λ₂|. Prova a rendere b ≠ c: le rette verdi non sono più perpendicolari.</p>
@@ -45,7 +53,7 @@
       <div class="eyebrow">La ricetta, un passo alla volta</div>
       <h2>A = ${M([[1,1,1],[1,1,1],[1,1,1]])}$: trova M ortogonale</h2>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Autovalori</h3><p>rk A = 1, quindi ker A ha dimensione 3 − 1 = 2: λ = 0 con mg = 2. tr A = 3 = somma degli autovalori = 0 + 0 + λ₃ ⇒ λ₃ = 3.</p><p>p<sub>A</sub>(λ) = −λ²·(λ − 3).</p></div>
+        <div class="step"><h3>Passo 1 · Autovalori</h3><p>Le tre righe sono uguali: R2 ← R2 − R1 = (0, 0, 0) e R3 ← R3 − R1 = (0, 0, 0). Resta una riga non nulla: rk A = 1.</p><p>λ = 0: V<sub>0</sub> = ker(A − 0·I) = ker A, dimensione 3 − rk A = 3 − 1 = 2. Quindi 0 è autovalore con mg = 2 (e allora ma ≥ 2).</p><p>Altro autovalore: provo il vettore (1, 1, 1). A·(1, 1, 1) = (1 + 1 + 1, 1 + 1 + 1, 1 + 1 + 1) = (3, 3, 3) = 3·(1, 1, 1). Quindi λ = 3 è autovalore.</p><p>p<sub>A</sub> ha grado 3: radici 0, 0, 3. p<sub>A</sub>(λ) = −λ²·(λ − 3). (Controllo: la somma degli autovalori 0 + 0 + 3 = 3 è uguale a tr A = 1 + 1 + 1 = 3.)</p></div>
         <div class="step"><h3>Passo 2 · Autospazio di λ = 3</h3><p>A·(1, 1, 1) = (3, 3, 3): V<sub>3</sub> = Span((1, 1, 1)). Normalizzo: (1/√3)·(1, 1, 1).</p></div>
         <div class="step"><h3>Passo 3 · Autospazio di λ = 0</h3><p>V<sub>0</sub> = ker A = { x + y + z = 0 }. Base dal sistema: (−1, 1, 0), (−1, 0, 1). Non sono ortogonali (prodotto = 1).</p></div>
         <div class="step"><h3>Passo 4 · Gram-Schmidt dentro V<sub>0</sub></h3><p>È proprio la ricetta del capitolo 8: (1/√2)·(−1, 1, 0) e (1/√6)·(−1, −1, 2).</p><p>Sono automaticamente ortogonali a (1, 1, 1) (teorema, punto 2).</p></div>
@@ -94,11 +102,11 @@
 
   guided('spettrale', [
     { h:'Passo 1 · Autovalori (prima il minore)', type:'nums', ans:[1,3], html:'λ₁ = '+inp('autovalore minore')+' &nbsp; λ₂ = '+inp('autovalore maggiore'),
-      ok:'Sì: λ² − 4λ + 3 = (λ − 1)(λ − 3).', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
+      ok:'Sì: tr A = 2 + 2 = 4, det A = 2·2 − 1·1 = 3, p<sub>A</sub>(λ) = λ² − 4λ + 3. Δ = 16 − 12 = 4, λ = (4 ± 2)/2: λ = 1 e λ = 3.', bad:'tr A = 4, det A = 3: p<sub>A</sub>(λ) = λ² − 4λ + 3.' },
     { h:'Passo 2 · Autovettori: V<sub>1</sub> = Span((1, −1)), V<sub>3</sub> = Span((1, 1)). Quanto vale ⟨(1, −1), (1, 1)⟩?', type:'nums', ans:[0], html:'⟨(1, −1), (1, 1)⟩ = '+inp('prodotto scalare'),
-      ok:'Zero: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
+      ok:'1·1 + (−1)·1 = 1 − 1 = 0: sono ortogonali, come promette il teorema.', bad:'1·1 + (−1)·1.' },
     { h:'Passo 3 · Per normalizzare divido ognuno per…', type:'choice', ans:1, opts:['2','√2','1/2'],
-      ok:'Giusto: ‖(1, −1)‖ = ‖(1, 1)‖ = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
+      ok:'Giusto: ‖(1, −1)‖ = √(1² + (−1)²) = √(1 + 1) = √2 e ‖(1, 1)‖ = √(1 + 1) = √2.', bad:'‖(1, 1)‖ = √(1 + 1).' },
     { h:'Passo 4 · Quale M dà <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'?', type:'choice', ans:0, opts:['(1/√2)·'+M([[1,1],[-1,1]]), '(1/√2)·'+M([[1,1],[1,-1]]), M([[1,1],[-1,1]])],
       ok:'Esatto: prima colonna = autovettore di 1, seconda = autovettore di 3, entrambe di norma 1.', bad:'L\'ordine delle colonne deve seguire D (prima λ = 1, poi λ = 3) e le colonne devono avere norma 1.' }
   ], '<b>Fatto!</b> M = (1/√2)·'+M([[1,1],[-1,1]])+' è ortogonale (M⁻¹ = <sup>t</sup>M) e <sup>t</sup>M·A·M = '+M([[1,0],[0,3]])+'.');
@@ -106,12 +114,12 @@
   exercises('spettrale', [
     { id:'e1', type:'choice', q:'A ∈ M(4, 4, R) simmetrica. Allora A è diagonalizzabile?', opts:['Sempre','Solo se ha 4 autovalori distinti','Dipende'], a:0, hint:'Teorema spettrale.', sol:'Sempre, e addirittura con M ortogonale.' },
     { id:'e2', type:'choice', q:'Quale matrice è diagonalizzabile con una M ortogonale?', opts:[M([[1,2],[0,3]]), M([[1,2],[2,3]]), M([[0,-1],[1,0]])], a:1, hint:'Serve la simmetria.', sol:M([[1,2],[2,3]])+' è simmetrica. La prima è diagonalizzabile (autovalori 1 e 3) ma non con M ortogonale; la terza non ha autovalori reali.' },
-    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'λ² − 25 = 0 ⇒ λ = −5 e λ = 5.' },
-    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'x = 2y: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
+    { id:'e3', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[3,4],[4,-3]]), a:[-5,5], hint:'tr A = 0, det A = −9 − 16 = −25.', sol:'tr A = 3 + (−3) = 0. det A = 3·(−3) − 4·4 = −9 − 16 = −25. p<sub>A</sub>(λ) = λ² − 0·λ − 25 = λ² − 25. λ² = 25 ⇒ λ = −5 e λ = 5.' },
+    { id:'e4', type:'choice', q:'A = '+M([[3,4],[4,-3]])+': un autovettore di λ = 5 è…', opts:['(2, 1)','(1, 2)','(1, −2)'], a:0, hint:'A − 5I = '+M([[-2,4],[4,-8]])+': −2x + 4y = 0.', sol:'A − 5I = (togli 5 dalla diagonale) '+M([[-2,4],[4,-8]])+'. Riga 1: −2x + 4y = 0, cioè 2x = 4y, cioè x = 2y (riga 2 = −2 volte riga 1). Con y = 1: (2, 1). L\'autovettore di −5 è (1, −2), ortogonale a (2, 1).' },
     { id:'e5', type:'choice', q:'M ortogonale. Allora M⁻¹ = …', opts:['M','<sup>t</sup>M','−M'], a:1, hint:'Definizione di ortogonale.', sol:'<sup>t</sup>M·M = I ⇒ M⁻¹ = <sup>t</sup>M.' },
     { id:'e6', type:'num', label:'mg(2) =', q:'A ∈ M(3, 3, R) simmetrica con p<sub>A</sub>(λ) = −(λ − 2)²·(λ − 7).', a:2, hint:'Per le simmetriche mg = ma sempre.', sol:'mg(2) = ma(2) = 2.' },
     { id:'e7', type:'choice', src:'trappola', q:'Autovettori (1, 1, 0) di λ = 1 e (1, 0, k) di λ = 4 di una A simmetrica. Allora k…', opts:['può essere qualsiasi','deve essere tale che (1, 0, k) ⊥ (1, 1, 0), ma questo è impossibile: allora non può succedere','k = 0'], a:1, hint:'⟨(1, 1, 0), (1, 0, k)⟩ = 1 per ogni k.', sol:'Autovettori di autovalori diversi devono essere ortogonali, ma il prodotto vale sempre 1 ≠ 0: una A simmetrica così non esiste.' },
-    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'(1/3, 2/3, 2/3).' }
+    { id:'e8', type:'nums', labels:['prima','seconda','terza'], q:'Normalizza (1, 2, 2) (scrivi frazioni, es. 1/3)', a:[1/3,2/3,2/3], hint:'‖(1, 2, 2)‖ = √9 = 3.', sol:'‖(1, 2, 2)‖ = √(1 + 4 + 4) = √9 = 3. Divido ogni componente per 3: (1/3, 2/3, 2/3).' }
   ]);
 })();
 </script>

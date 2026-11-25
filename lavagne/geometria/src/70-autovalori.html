@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-autovalori"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Gira v finché A·v diventa verde</h2>
       <p>La freccia nera è v, quella colorata è A·v. Quando A·v cade sulla <b>stessa retta</b> di v diventa verde: v è un autovettore. Le rette verdi tratteggiate sono gli autospazi (in R²).</p>
@@ -60,10 +68,10 @@
       <div class="eyebrow">La ricetta, un passo alla volta</div>
       <h2>Diagonalizzare A = ${M([[2,1],[1,2]])}$</h2>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Polinomio caratteristico</h3><p>p<sub>A</sub>(λ) = det ${M([["2 − λ",1],[1,"2 − λ"]])}$ = (2 − λ)² − 1 = λ² − 4λ + 3 = (λ − 1)(λ − 3).</p></div>
+        <div class="step"><h3>Passo 1 · Polinomio caratteristico</h3><p>p<sub>A</sub>(λ) = det ${M([["2 − λ",1],[1,"2 − λ"]])}$ = (2 − λ)·(2 − λ) − 1·1 = (4 − 4λ + λ²) − 1 = λ² − 4λ + 3.</p><p>Radici: Δ = 16 − 12 = 4, √Δ = 2, λ = (4 ± 2)/2, cioè λ = 1 e λ = 3. Quindi λ² − 4λ + 3 = (λ − 1)(λ − 3).</p></div>
         <div class="step"><h3>Passo 2 · Autovalori e ma</h3><p>λ₁ = 1 con ma = 1, λ₂ = 3 con ma = 1. Tutte reali, distinte: già so che A è diagonalizzabile.</p></div>
-        <div class="step"><h3>Passo 3 · Autospazio di λ = 1</h3><p>A − 1·I = ${M([[1,1],[1,1]])}$. Sistema x + y = 0 in R²: V<sub>1</sub> = Span((1, −1)).</p></div>
-        <div class="step"><h3>Passo 4 · Autospazio di λ = 3</h3><p>A − 3·I = ${M([[-1,1],[1,-1]])}$. Sistema −x + y = 0 in R²: V<sub>3</sub> = Span((1, 1)).</p></div>
+        <div class="step"><h3>Passo 3 · Autospazio di λ = 1</h3><p>A − 1·I = ${M([[1,1],[1,1]])}$. Sistema (A − I)·(x, y) = 0: riga 1 dà x + y = 0 (la riga 2 è uguale). Quindi y = −x: (x, −x) = x·(1, −1). V<sub>1</sub> = Span((1, −1)).</p></div>
+        <div class="step"><h3>Passo 4 · Autospazio di λ = 3</h3><p>A − 3·I = ${M([[-1,1],[1,-1]])}$. Sistema: riga 1 dà −x + y = 0 (la riga 2 è −1 volte la riga 1). Quindi y = x: (x, x) = x·(1, 1). V<sub>3</sub> = Span((1, 1)).</p></div>
         <div class="step"><h3>Passo 5 · Scrivi M e D</h3><p>M = ${M([[1,1],[-1,1]])}$ (colonne: autovettori), D = ${M([[1,0],[0,3]])}$. Prima colonna di M ↔ primo numero di D.</p><p>Controllo veloce: tr D = 4 = tr A, det D = 3 = det A.</p></div>
       </div>
       <div class="row"><button class="primary" data-next>Passo successivo</button><button data-reset>Ricomincia</button></div>
@@ -132,20 +140,20 @@
     { h:'Passo 2 · Quale autovalore devo controllare?', type:'choice', ans:0, opts:['Solo λ = 1, perché ha ma = 2','Solo λ = 2','Tutti e due allo stesso modo'],
       ok:'Esatto: per ma = 1 vale sempre mg = 1. Il rischio è solo dove ma ≥ 2.', bad:'Se ma = 1, allora 1 ≤ mg ≤ 1, quindi mg = 1 in automatico.' },
     { h:'Passo 3 · rk(A − 1·I) e mg(1)', type:'nums', ans:[2,1], html:'A − 1·I = '+M([[0,1,0],[0,0,0],[0,0,1]])+'<br>rk(A − 1·I) = '+inp('rango')+' &nbsp; mg(1) = 3 − rk = '+inp('mg'),
-      ok:'Sì: due righe non nulle e indipendenti, rk = 2, mg(1) = 3 − 2 = 1.', bad:'Conta le righe non nulle (sono già a scala). Poi mg = n − rk con n = 3.' },
+      ok:'Sì. A − 1·I: tolgo 1 dalla diagonale, (1 − 1, 1 − 1, 2 − 1) = (0, 0, 1). Righe (0, 1, 0), (0, 0, 0), (0, 0, 1): due righe non nulle e indipendenti, rk = 2. mg(1) = n − rk = 3 − 2 = 1.', bad:'Conta le righe non nulle (sono già a scala). Poi mg = n − rk con n = 3.' },
     { h:'Passo 4 · Conclusione', type:'choice', ans:1, opts:['Diagonalizzabile','Non diagonalizzabile: mg(1) = 1 ≠ 2 = ma(1)'],
       ok:'Giusto. Le radici sono tutte reali, ma per λ = 1 manca un autovettore: non c\'è una base di autovettori.', bad:'Il criterio chiede mg = ma per ogni λ. Per λ = 1: mg = 1, ma = 2.' }
   ], '<b>Fatto!</b> A non è diagonalizzabile: per λ = 1 si ha ma(1) = 2 ma mg(1) = 1. È lo stesso fenomeno del "taglio" nel disegno: un solo autospazio dove ne servirebbero due.');
 
   exercises('autovalori', [
     { id:'e1', type:'choice', q:'Per A = '+M([[3,0],[0,3]])+', il vettore v = 0 è un autovettore?', opts:['Sì, A·0 = 3·0','No: per definizione v ≠ 0'], a:1, hint:'Rileggi la definizione.', sol:'Gli autovettori sono non nulli per definizione. A·0 = λ·0 per ogni λ, quindi 0 non direbbe niente.' },
-    { id:'e2', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[5,4],[1,2]]), a:[1,6], hint:'tr A = 7, det A = 6: λ² − 7λ + 6.', sol:'λ² − 7λ + 6 = (λ − 1)(λ − 6): autovalori 1 e 6.' },
-    { id:'e3', type:'choice', q:'A = '+M([[5,4],[1,2]])+': un autovettore di λ = 6 è…', opts:['(4, 1)','(1, −1)','(1, 4)'], a:0, hint:'Prova A·v e guarda se è 6·v.', sol:'A·(4, 1) = (24, 6) = 6·(4, 1). (1, −1) è autovettore di λ = 1.' },
-    { id:'e4', type:'choice', q:'A = '+M([[0,-1],[1,0]])+' (rotazione di 90°) in M(2, 2, R) è diagonalizzabile?', opts:['Sì','No: p<sub>A</sub>(λ) = λ² + 1 non ha radici reali'], a:1, hint:'Calcola p<sub>A</sub>(λ).', sol:'λ² + 1 = 0 non ha soluzioni in R: manca la condizione 1). In M(2, 2, C) invece sì (autovalori i e −i).' },
+    { id:'e2', type:'nums', labels:['λ₁ (minore) =','λ₂ (maggiore) ='], q:'Autovalori di A = '+M([[5,4],[1,2]]), a:[1,6], hint:'tr A = 7, det A = 6: λ² − 7λ + 6.', sol:'tr A = 5 + 2 = 7, det A = 5·2 − 4·1 = 10 − 4 = 6. p<sub>A</sub>(λ) = λ² − 7λ + 6. Δ = 49 − 24 = 25, √Δ = 5, λ = (7 ± 5)/2: λ = 2/2 = 1 e λ = 12/2 = 6.' },
+    { id:'e3', type:'choice', q:'A = '+M([[5,4],[1,2]])+': un autovettore di λ = 6 è…', opts:['(4, 1)','(1, −1)','(1, 4)'], a:0, hint:'Prova A·v e guarda se è 6·v.', sol:'A·(4, 1) = (5·4 + 4·1, 1·4 + 2·1) = (20 + 4, 4 + 2) = (24, 6) = 6·(4, 1) ✓. Invece A·(1, −1) = (5 − 4, 1 − 2) = (1, −1) = 1·(1, −1): autovettore di λ = 1. A·(1, 4) = (5 + 16, 1 + 8) = (21, 9), non è multiplo di (1, 4).' },
+    { id:'e4', type:'choice', q:'A = '+M([[0,-1],[1,0]])+' (rotazione di 90°) in M(2, 2, R) è diagonalizzabile?', opts:['Sì','No: p<sub>A</sub>(λ) = λ² + 1 non ha radici reali'], a:1, hint:'Calcola p<sub>A</sub>(λ).', sol:'tr A = 0 + 0 = 0, det A = 0·0 − (−1)·1 = 1. p<sub>A</sub>(λ) = λ² − 0·λ + 1 = λ² + 1. λ² + 1 = 0 ⇒ λ² = −1, nessuna soluzione in R: manca la condizione 1). In M(2, 2, C) invece sì (autovalori i e −i).' },
     { id:'e5', type:'choice', q:'A ∈ M(3, 3, R) ha autovalori 1, 2, 7. È diagonalizzabile?', opts:['Sì, sempre','Dipende dagli autospazi','No'], a:0, hint:'Cor. 5.2.3.', sol:'Tre autovalori distinti per una 3 × 3: ognuno ha ma = mg = 1, quindi sì.' },
-    { id:'e6', type:'num', label:'mg(2) =', src:'esame', q:'A = '+M([[1,0,1],[0,2,0],[1,0,1]])+' ha p<sub>A</sub>(λ) = −λ·(λ − 2)², quindi ma(2) = 2. Calcola mg(2) = 3 − rk(A − 2·I).', a:2, hint:'A − 2I = '+M([[-1,0,1],[0,0,0],[1,0,-1]])+': la terza riga è −1 volte la prima.', sol:'rk(A − 2I) = 1, quindi mg(2) = 3 − 1 = 2 = ma(2). Con λ = 0 (ma = 1) tutto torna: A è diagonalizzabile.' },
-    { id:'e7', type:'choice', q:'Se λ = 0 è autovalore di A, allora…', opts:['det A = 0','A = 0','tr A = 0'], a:0, hint:'det(A − 0·I) = ?', sol:'p<sub>A</sub>(0) = det A = 0. A non è invertibile.' },
-    { id:'e8', type:'choice', src:'esame', q:'A = '+M([[2,0,0],[0,2,0],[0,0,5]])+' e B = '+M([[2,1,0],[0,2,0],[0,0,5]])+'. Quale è diagonalizzabile?', opts:['Tutte e due','Solo A','Solo B','Nessuna'], a:1, hint:'Stessi autovalori (2 doppio, 5). Calcola mg(2) per entrambe.', sol:'A è già diagonale. Per B: B − 2I = '+M([[0,1,0],[0,0,0],[0,0,3]])+' ha rango 2, mg(2) = 1 ≠ 2 = ma(2): B non è diagonalizzabile.' }
+    { id:'e6', type:'num', label:'mg(2) =', src:'esame', q:'A = '+M([[1,0,1],[0,2,0],[1,0,1]])+' ha p<sub>A</sub>(λ) = −λ·(λ − 2)², quindi ma(2) = 2. Calcola mg(2) = 3 − rk(A − 2·I).', a:2, hint:'A − 2I = '+M([[-1,0,1],[0,0,0],[1,0,-1]])+': la terza riga è −1 volte la prima.', sol:'A − 2I: tolgo 2 dalla diagonale: (1 − 2, 2 − 2, 1 − 2) = (−1, 0, −1). Righe (−1, 0, 1), (0, 0, 0), (1, 0, −1). R3 ← R3 + R1 = (0, 0, 0). Resta una riga non nulla: rk(A − 2I) = 1, quindi mg(2) = 3 − 1 = 2 = ma(2). Con λ = 0 (ma = 1) tutto torna: A è diagonalizzabile.' },
+    { id:'e7', type:'choice', q:'Se λ = 0 è autovalore di A, allora…', opts:['det A = 0','A = 0','tr A = 0'], a:0, hint:'det(A − 0·I) = ?', sol:'λ = 0 autovalore ⇔ p<sub>A</sub>(0) = 0. Ma p<sub>A</sub>(0) = det(A − 0·I) = det A. Quindi det A = 0: A non è invertibile.' },
+    { id:'e8', type:'choice', src:'esame', q:'A = '+M([[2,0,0],[0,2,0],[0,0,5]])+' e B = '+M([[2,1,0],[0,2,0],[0,0,5]])+'. Quale è diagonalizzabile?', opts:['Tutte e due','Solo A','Solo B','Nessuna'], a:1, hint:'Stessi autovalori (2 doppio, 5). Calcola mg(2) per entrambe.', sol:'A è già diagonale. Per B: B − 2I = (togli 2 dalla diagonale) '+M([[0,1,0],[0,0,0],[0,0,3]])+': righe non nulle (0, 1, 0) e (0, 0, 3), indipendenti, rango 2. mg(2) = 3 − 2 = 1, mg(2) = 1 ≠ 2 = ma(2): B non è diagonalizzabile.' }
   ]);
 })();
 </script>
