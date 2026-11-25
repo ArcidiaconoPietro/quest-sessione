@@ -274,8 +274,12 @@
     const m = $('main'); m.innerHTML = '';
     const head = board('Capitolo '+ch.n+' · '+ch.when, ch.title, ch.serve + (ch.exam?'<div class="exam"><b>All\'esame:</b> '+ch.exam+'</div>':''));
     m.appendChild(head);
+    const P = ch.problema;
+    if (P) m.appendChild(board('Prima il problema', 'Un caso che con quello che sai non riesci ancora a risolvere',
+      P.caso + '<h3>Perché non ci riesci</h3><ul>'+P.perche.map(x=>'<li>'+x+'</li>').join('')+'</ul><div class="note"><b>Cosa ti serve:</b> '+P.strumento+'</div>'));
     if (ch.idea) m.appendChild(board('L\'idea in una immagine', ch.idea.title, ch.idea.html));
-    if (ch.video){ m.appendChild(board('Videolezione · tutti i passaggi, uno alla volta', ch.video.title, '<div id="video-'+ch.id+'"></div>')); video(ch.id, scenes(ch.video.scenes)); }
+    if (ch.video){ const all = (P?P.scene:[]).concat(ch.video.scenes, P&&P.uso?[['P','Quando si usa']].concat(P.uso):[]);
+      m.appendChild(board('Videolezione · tutti i passaggi, uno alla volta', ch.video.title, '<div id="video-'+ch.id+'"></div>')); video(ch.id, scenes(all)); }
     (ch.widgets||[]).forEach(w => {
       if (w.type==='tracer') m.appendChild(tracer(w));
       else if (w.type==='bits') m.appendChild(bits(w));
@@ -286,6 +290,7 @@
     if (ch.warn) m.appendChild(board('Attenzione', ch.warn.title, '<div class="warn">'+ch.warn.html+'</div>'));
     if (ch.guided) m.appendChild(guided(ch, ch.guided));
     if (ch.ex) m.appendChild(exercises(ch));
+    if (P && P.uso) m.appendChild(board('Quando si usa', 'Che casi risolvi con questo capitolo', '<ul class="recap">'+P.uso.map(x=>'<li>'+x[0]+'</li>').join('')+'</ul>'));
     if (ch.quaderno) m.appendChild(notebook(ch));
     const i = CH.indexOf(ch);
     if (i < CH.length-1){ const nx = document.createElement('div'); nx.className='next';
