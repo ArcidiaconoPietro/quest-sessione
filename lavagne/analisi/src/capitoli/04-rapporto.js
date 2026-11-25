@@ -1,16 +1,41 @@
   /* ===== capitolo 4: Criterio del rapporto ===== */
   order.push('rapporto'); NAMES['rapporto'] = '4 Criterio del rapporto';
+  const RA = (an1, an, step2, simpl) => FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+an1+' · '+an+(step2?' = '+step2:'')+' = '+simpl;
   const Q = [
-    { r:n=>2/(n+1), L:'0', verdict:'L = 0 &lt; 1, quindi '+LIM+' 2ⁿ/n! = 0' },
-    { r:n=>(n+1)/3, L:'+∞', verdict:'L = +∞ &gt; 1, quindi '+LIM+' n!/3ⁿ = +∞' },
-    { r:n=>Math.pow((n+1)/n,2)/2, L:'1/2', verdict:'L = 1/2 &lt; 1, quindi '+LIM+' n²/2ⁿ = 0' },
-    { r:n=>Math.pow(n/(n+1),n), L:'1/e ≈ 0,37', verdict:'L = 1/e &lt; 1, quindi '+LIM+' n!/nⁿ = 0 (era l\'errore G5!)' },
-    { r:n=>Math.pow((n+1)/n,2), L:'1', verdict:'L = 1: il criterio non dice niente. (Lo sai per altra via: '+LIM+' n² = +∞.)' }
+    { r:n=>2/(n+1), L:'0', calc:[
+        'a<sub>n</sub> = '+FR('2ⁿ','n!')+', quindi a<sub>n+1</sub> = '+FR('2<sup>n+1</sup>','(n + 1)!'),
+        RA(FR('2<sup>n+1</sup>','(n + 1)!'), FR('n!','2ⁿ'), FR('2 · 2ⁿ','(n + 1) · n!')+' · '+FR('n!','2ⁿ'), FR('2','n + 1')),
+        'Con i numeri: n = 1 → 2/2 = 1; n = 9 → 2/10 = 0,2; n = 99 → 2/100 = 0,02',
+        'L = '+LIM+' '+FR('2','n + 1')+' = 0 (2 diviso un numero che cresce senza fine)',
+        'L = 0 &lt; 1, quindi '+LIM+' 2ⁿ/n! = <b>0</b>'] },
+    { r:n=>(n+1)/3, L:'+∞', calc:[
+        'a<sub>n</sub> = '+FR('n!','3ⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)!','3<sup>n+1</sup>'),
+        RA(FR('(n + 1)!','3<sup>n+1</sup>'), FR('3ⁿ','n!'), FR('(n + 1) · n!','3 · 3ⁿ')+' · '+FR('3ⁿ','n!'), FR('n + 1','3')),
+        'Con i numeri: n = 2 → 3/3 = 1; n = 8 → 9/3 = 3; n = 29 → 30/3 = 10',
+        'L = '+LIM+' '+FR('n + 1','3')+' = +∞',
+        'L = +∞ &gt; 1, quindi '+LIM+' n!/3ⁿ = <b>+∞</b>'] },
+    { r:n=>Math.pow((n+1)/n,2)/2, L:'1/2', calc:[
+        'a<sub>n</sub> = '+FR('n²','2ⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)²','2<sup>n+1</sup>'),
+        RA(FR('(n + 1)²','2<sup>n+1</sup>'), FR('2ⁿ','n²'), FR('(n + 1)²','2 · 2ⁿ')+' · '+FR('2ⁿ','n²'), FR('1','2')+' · ('+FR('n + 1','n')+')²'),
+        FR('n + 1','n')+' = 1 + '+FR('1','n')+', e 1/n tende a 0, quindi ('+FR('n + 1','n')+')² tende a 1² = 1',
+        'L = '+FR('1','2')+' · 1 = '+FR('1','2'),
+        'L = 1/2 &lt; 1, quindi '+LIM+' n²/2ⁿ = <b>0</b>'] },
+    { r:n=>Math.pow(n/(n+1),n), L:'1/e ≈ 0,37', calc:[
+        'a<sub>n</sub> = '+FR('n!','nⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)!','(n + 1)<sup>n+1</sup>'),
+        RA(FR('(n + 1)!','(n + 1)<sup>n+1</sup>'), FR('nⁿ','n!'), FR('(n + 1) · n! · nⁿ','(n + 1) · (n + 1)ⁿ · n!'), FR('nⁿ','(n + 1)ⁿ')+' = ('+FR('n','n + 1')+')ⁿ'),
+        '('+FR('n','n + 1')+')ⁿ = '+FR('1','(1 + 1/n)ⁿ')+' e (1 + 1/n)ⁿ tende a e (capitolo 3)',
+        'L = 1/e ≈ 0,37',
+        'L &lt; 1, quindi '+LIM+' n!/nⁿ = <b>0</b> (era l\'errore G5!)'] },
+    { r:n=>Math.pow((n+1)/n,2), L:'1', calc:[
+        'a<sub>n</sub> = n², quindi a<sub>n+1</sub> = (n + 1)²',
+        FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('(n + 1)²','n²')+' = ('+FR('n + 1','n')+')² = (1 + '+FR('1','n')+')²',
+        '1/n tende a 0, quindi L = (1 + 0)² = 1',
+        'L = 1: il criterio <b>non dice niente</b>. Lo sai per altra via: '+LIM+' n² = +∞'] }
   ];
   draws.rapporto = () => {
     const q = Q[+$('qS').value];
     plot($('plotQ'), { N:40, series:[{f:q.r, color:'--thief'}], hlines:[{y:1, color:'--bad', label:'1'}] });
-    $('qOut').innerHTML = 'Per n → +∞ il rapporto tende a <b>'+q.L+'</b>. '+q.verdict;
+    $('qOut').innerHTML = '<span style="font-size:1rem">'+SV(...q.calc)+'</span>';
   };
   $('qS').addEventListener('change', () => draws.rapporto());
   const drawQM = () => {
@@ -24,6 +49,44 @@
   };
   const oldR = draws.rapporto; draws.rapporto = () => { oldR(); drawQM(); };
   $('qM').addEventListener('input', drawQM);
+
+
+  video('rapporto', [
+    { show:'<h3>Il criterio del rapporto</h3>Serve per i limiti con fattoriali e potenze: n!, 5ⁿ, nⁿ.',
+      say:'Il criterio del rapporto serve per calcolare i limiti di successioni con fattoriali e potenze, per esempio n fattoriale, cinque alla n, n alla n.' },
+    { show:'Esempio: a<sub>n</sub> = '+FR('5ⁿ','n!'),
+      say:'Prendiamo un esempio: a con n uguale a cinque alla n, diviso n fattoriale.' },
+    { show:'a₁ = 5/1 = 5 · a₂ = 25/2 = 12,5 · a₃ = 125/6 ≈ 20,8 · a₄ = 625/24 ≈ 26 · a₅ = 3125/120 ≈ 26 · a₆ = 15625/720 ≈ 21,7',
+      say:'Prima guardiamo i numeri. a uno vale cinque. a due vale venticinque mezzi, cioè dodici e mezzo. a tre circa venti virgola otto. a quattro e a cinque circa ventisei. a sei circa ventuno virgola sette. Prima cresce, poi comincia a calare.' },
+    { show:'Domanda: per quanto moltiplico un termine per avere il successivo?<br>'+FR('a₂','a₁')+' = '+FR('12,5','5')+' = 2,5 · '+FR('a₆','a₅')+' ≈ '+FR('21,7','26')+' ≈ 0,83',
+      say:'La domanda del criterio è: per quanto devo moltiplicare un termine per ottenere il successivo? Da a uno ad a due moltiplico per due virgola cinque. Da a cinque ad a sei moltiplico per circa zero virgola ottantatré, cioè meno di uno: per questo cala.' },
+    { show:'Lo calcolo per un n qualsiasi. Scrivo a<sub>n+1</sub>: al posto di n metto n + 1<br>a<sub>n+1</sub> = '+FR('5<sup>n+1</sup>','(n + 1)!'),
+      say:'Adesso lo calcolo per un n qualsiasi. Scrivo a con n più uno: dappertutto al posto di n metto n più uno. Viene cinque alla n più uno, diviso n più uno fattoriale.' },
+    { show:FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('5<sup>n+1</sup>','(n + 1)!')+' · '+FR('n!','5ⁿ'),
+      say:'Faccio il rapporto. Dividere per una frazione vuol dire moltiplicare per la frazione capovolta: quindi cinque alla n più uno su n più uno fattoriale, per n fattoriale su cinque alla n.' },
+    { show:'Spezzo: 5<sup>n+1</sup> = 5 · 5ⁿ e (n + 1)! = (n + 1) · n!<br>= '+FR('5 · 5ⁿ','(n + 1) · n!')+' · '+FR('n!','5ⁿ'),
+      say:'Spezzo le potenze e i fattoriali. Cinque alla n più uno è cinque per cinque alla n. n più uno fattoriale è n più uno per n fattoriale.' },
+    { show:'Semplifico 5ⁿ con 5ⁿ e n! con n!:<br>'+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('5','n + 1'),
+      say:'Ora semplifico: cinque alla n sopra con cinque alla n sotto, n fattoriale sotto con n fattoriale sopra. Resta cinque diviso n più uno.' },
+    { show:'Controllo con i numeri: n = 1 → 5/2 = 2,5 ✓ · n = 5 → 5/6 ≈ 0,83 ✓',
+      say:'Controllo che sia giusto con i numeri di prima. Con n uguale a uno, cinque mezzi fa due virgola cinque: torna. Con n uguale a cinque, cinque sesti fa circa zero virgola ottantatré: torna.' },
+    { show:'L = '+LIM+' '+FR('5','n + 1')+' = 0<br><span style="font-size:.95rem">5 diviso un numero che cresce senza fine: n = 99 → 0,05; n = 999 → 0,005</span>',
+      say:'Ora faccio il limite per n che tende a più infinito di cinque diviso n più uno. Sopra c\'è cinque fisso, sotto un numero che cresce senza fine: con n uguale a novantanove fa zero virgola zero cinque, con novecentonovantanove fa zero virgola zero zero cinque. Quindi L è uguale a zero.' },
+    { show:'<h3>Perché L &lt; 1 vuol dire che va a 0</h3>Da n = 9 in poi il moltiplicatore 5/(n + 1) è al massimo 5/10 = 0,5:<br>a<sub>n+1</sub> ≤ 0,5 · a<sub>n</sub>',
+      say:'Perché L minore di uno vuol dire che la successione va a zero? Guardiamo il calcolo. Da n uguale a nove in poi, il moltiplicatore cinque su n più uno è al massimo cinque decimi, cioè zero virgola cinque. Quindi ogni termine è al massimo la metà del precedente.' },
+    { show:'a₉ ≈ 5,38 → a₁₀ ≤ 0,5 · 5,38 ≈ 2,69 → a₁₁ ≤ 0,5 · 2,69 ≈ 1,35 → a₁₂ ≤ 0,67 …<br>Dopo k passi: a<sub>9+k</sub> ≤ 0,5<sup>k</sup> · 5,38',
+      say:'Partiamo da a nove, che vale circa cinque virgola trentotto. a dieci è al massimo la metà, circa due virgola sessantanove. a undici al massimo la metà di questo, circa uno virgola trentacinque. Dopo k passi ho moltiplicato k volte per zero virgola cinque: a con nove più k è al massimo zero virgola cinque alla k, per cinque virgola trentotto.' },
+    { show:'0,5<sup>10</sup> ≈ 0,001 · 0,5<sup>20</sup> ≈ 0,000001 → <span class="lim">lim<span>k→+∞</span></span> 0,5<sup>k</sup> = 0',
+      say:'Quanto fa zero virgola cinque alla k quando k cresce? Alla dieci fa circa un millesimo, alla venti circa un milionesimo. Un numero tra zero e uno moltiplicato per sé stesso diventa sempre più piccolo: il limite è zero.' },
+    { show:'Carabinieri: 0 &lt; a<sub>9+k</sub> ≤ 0,5<sup>k</sup> · 5,38 → 0<br>Quindi '+LIM+' '+FR('5ⁿ','n!')+' = <b>0</b>',
+      say:'Ora uso i carabinieri. a con nove più k è positivo, quindi sta sopra zero, e sta sotto zero virgola cinque alla k per cinque virgola trentotto, che tende a zero. Tutti e due i carabinieri tendono a zero, quindi il limite per n che tende a più infinito di cinque alla n su n fattoriale è zero.' },
+    { show:'<h3>La regola</h3>L &lt; 1 (anche L = 0) → '+LIM+' a<sub>n</sub> = 0<br>L &gt; 1 (anche L = +∞) → '+LIM+' a<sub>n</sub> = +∞<br>L = 1 → il criterio non dice niente',
+      say:'Ecco la regola. Se L è minore di uno, anche zero, il limite di a con n è zero. Se L è maggiore di uno, anche più infinito, il limite è più infinito: è lo stesso calcolo al contrario, ogni termine è più grande del precedente. Se L è uguale a uno, il criterio non dice niente.' },
+    { show:'Perché L = 1 non decide:<br>a<sub>n</sub> = 1/n: '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('n','n + 1')+' → 1, ma '+LIM+' 1/n = 0<br>a<sub>n</sub> = n: '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('n + 1','n')+' → 1, ma '+LIM+' n = +∞',
+      say:'Perché con L uguale a uno non si decide? Due esempi. Con a n uguale a uno su n, il rapporto è n su n più uno, che tende a uno, ma la successione tende a zero. Con a n uguale a n, il rapporto è n più uno su n, che tende a uno, ma la successione tende a più infinito. Stesso L, finali opposti.' },
+    { show:'<h3>Ricetta</h3>1) scrivo a<sub>n+1</sub> · 2) faccio a<sub>n+1</sub>/a<sub>n</sub> e capovolgo · 3) spezzo (n + 1)! e potenze · 4) semplifico · 5) limite = L · 6) confronto L con 1',
+      say:'Riassunto della ricetta. Uno: scrivo a con n più uno. Due: faccio il rapporto e capovolgo la seconda frazione. Tre: spezzo i fattoriali e le potenze. Quattro: semplifico. Cinque: faccio il limite e trovo L. Sei: confronto L con uno. Adesso prova tu con l\'esercizio guidato.' }
+  ]);
 
   guided('rapporto', 'lavagna-rapporto', [
     { h:'Passo 1 · Scrivi a<sub>n+1</sub>: al posto di n metti n+1', type:'choice', ans:2,

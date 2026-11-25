@@ -136,6 +136,15 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .sv { margin: .4em 0 0; padding-left: 1.4em; }
 .sv li { margin: .45em 0; line-height: 1.6; }
 .sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }
+
+.video .vboard { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 220px; max-height: 440px; overflow-y: auto; }
+.video .vstep { padding: 8px 10px; margin: 4px 0; border-left: 3px solid transparent; opacity: .55; line-height: 1.7; }
+.video .vstep.cur { opacity: 1; border-left-color: var(--thief); background: var(--board); border-radius: 6px; }
+.video .vstep h3 { margin: 0; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+.video .vhint { color: var(--muted); }
+.video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
+.video .vctl button { flex: 1; }
+.video .vcount { color: var(--muted); font-size: .9rem; }
 </style>
 
 <div class="wrap">
@@ -471,6 +480,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-rapporto"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">L'idea</div>
       <p>Confronta ogni termine con quello prima: <b>quanto diventa più grande o più piccolo a ogni passo?</b></p>
       <p>Se da un certo punto ogni termine è, per esempio, la <b>metà</b> del precedente, la successione si dimezza ogni volta e crolla a 0. Se invece ogni termine è il <b>doppio</b>, esplode a +∞.</p>
@@ -481,6 +495,18 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <li><b>L = 1</b>: il criterio <b>non dice niente</b>, usa un altro metodo</li>
       </ul>
       <p>Vale per successioni con termini positivi.</p>
+      <div class="note"><b>Perché L &lt; 1 vuol dire "si rimpicciolisce" e il limite è 0: il calcolo</b> <span class="tag cap">facile coi numeri</span>
+        <ol class="sv">
+          <li><i>Cosa vuol dire L = <span class="lim">lim<span>n→+∞</span></span> a<sub>n+1</sub>/a<sub>n</sub>:</i> da un certo punto in poi il rapporto a<sub>n+1</sub>/a<sub>n</sub> è vicinissimo a L. Esempio: L = 0,5, da un certo n in poi il rapporto sta sotto 0,6.</li>
+          <li><i>Moltiplico per a<sub>n</sub> (positivo):</i> a<sub>n+1</sub>/a<sub>n</sub> ≤ 0,6 diventa a<sub>n+1</sub> ≤ 0,6 · a<sub>n</sub>. Ogni termine è al massimo il 60% del precedente.</li>
+          <li><i>Lo applico più volte, partendo da un termine, per esempio a<sub>N</sub> = 100:</i> a<sub>N+1</sub> ≤ 0,6 · 100 = 60; a<sub>N+2</sub> ≤ 0,6 · 60 = 36; a<sub>N+3</sub> ≤ 0,6 · 36 = 21,6; a<sub>N+4</sub> ≤ 12,96 …</li>
+          <li><i>In generale, dopo k passi ho moltiplicato k volte per 0,6:</i> a<sub>N+k</sub> ≤ 0,6<sup>k</sup> · 100.</li>
+          <li><i>Quanto fa 0,6<sup>k</sup> quando k cresce?</i> 0,6<sup>10</sup> ≈ 0,006; 0,6<sup>20</sup> ≈ 0,00004. Un numero tra 0 e 1 moltiplicato per sé stesso diventa sempre più piccolo: <span class="lim">lim<span>k→+∞</span></span> 0,6<sup>k</sup> = 0.</li>
+          <li><i>Metto insieme (carabinieri):</i> 0 &lt; a<sub>N+k</sub> ≤ 0,6<sup>k</sup> · 100. Sotto c'è 0, sopra una cosa che tende a 0. Quindi <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = 0.</li>
+          <li><i>Con un L qualsiasi minore di 1</i> funziona uguale: al posto di 0,6 metto un numero q tra L e 1. Se L = 0 posso prendere q piccolo quanto voglio: si rimpicciolisce ancora più in fretta.</li>
+        </ol>
+        <b>Per L &gt; 1 è lo stesso calcolo al contrario.</b> Esempio L = 2: da un certo punto a<sub>n+1</sub> ≥ 1,5 · a<sub>n</sub>, quindi a<sub>N+k</sub> ≥ 1,5<sup>k</sup> · a<sub>N</sub>. Siccome 1,5<sup>10</sup> ≈ 58 e 1,5<sup>20</sup> ≈ 3325, e <span class="lim">lim<span>k→+∞</span></span> 1,5<sup>k</sup> = +∞, anche <span class="lim">lim<span>n→+∞</span></span> a<sub>n</sub> = +∞.
+      </div>
       <p>Nel grafico vedi il <b>rapporto</b> tra un termine e il precedente, per alcune successioni. Guarda se finisce sotto o sopra la linea 1.</p>
       <canvas id="plotQ" aria-label="Grafico del rapporto tra termini consecutivi"></canvas>
       <div class="controls">
@@ -1709,6 +1735,54 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   const SV = (...r) => '<b>Svolgimento passo passo</b><ol class="sv">'+r.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
   const R = (idx, inner) => '<span class="rt"><sup>'+idx+'</sup>√<span class="ov">'+inner+'</span></span>';
 
+  /* ---------------- videolezione ---------------- */
+  // scenes: [{show: html sulla lavagna, say: testo letto dalla voce (parole, niente simboli)}]
+  function video(ch, scenes){
+    const box = $('video-'+ch); if (!box) return;
+    box.className = 'video';
+    box.innerHTML = '<div class="vboard" aria-live="polite"></div><p class="vsub"></p>'
+      + '<div class="row vctl"><button data-vb aria-label="Passo indietro">⟨ Indietro</button><button class="primary" data-vp>▶ Avvia</button><button data-vn aria-label="Passo avanti">Avanti ⟩</button></div>'
+      + '<div class="controls"><span class="vcount"></span><label>Voce <input type="checkbox" data-vv checked></label>'
+      + '<label>Velocità <select data-vs><option value="0.85">lenta</option><option value="1" selected>normale</option><option value="1.15">veloce</option></select></label></div>';
+    const board = box.querySelector('.vboard'), sub = box.querySelector('.vsub'), cnt = box.querySelector('.vcount');
+    const bP = box.querySelector('[data-vp]'), vv = box.querySelector('[data-vv]'), vs = box.querySelector('[data-vs]');
+    const synth = window.speechSynthesis;
+    let i = -1, playing = false, timer = null, token = 0;
+    const voice = () => { try { const v = synth.getVoices(); return v.find(x=>/^it/i.test(x.lang)) || null; } catch(e){ return null; } };
+    if (!synth) { vv.checked = false; vv.disabled = true; }
+    const stop = () => { token++; clearTimeout(timer); try { synth && synth.cancel(); } catch(e){} };
+    const render = () => {
+      board.innerHTML = scenes.slice(0, i+1).map((sc,k)=>'<div class="vstep'+(k===i?' cur':'')+'">'+sc.show+'</div>').join('') || '<p class="vhint">Premi ▶ Avvia: ogni calcolo compare uno alla volta e la voce lo spiega. Puoi fermarti e tornare indietro quando vuoi.</p>';
+      sub.textContent = i>=0 ? scenes[i].say : '';
+      cnt.textContent = 'Passo '+Math.max(0,i+1)+' di '+scenes.length;
+      const cur = board.querySelector('.cur'); if (cur) board.scrollTop = cur.offsetTop - board.offsetTop - 8;
+    };
+    const after = (t) => { if (!playing || t!==token) return; if (i < scenes.length-1) { timer = setTimeout(()=>{ if (t===token) { i++; render(); speak(); } }, 700); } else { playing = false; bP.textContent = '↺ Ricomincia'; } };
+    const speak = () => {
+      const t = ++token, txt = scenes[i].say, rate = +vs.value;
+      if (vv.checked && synth){
+        try { synth.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'it-IT'; u.rate = rate; const v = voice(); if (v) u.voice = v;
+          const t0 = Date.now(), minT = txt.length*55/rate; const done = () => { const left = minT - (Date.now()-t0); if (left > 300) timer = setTimeout(()=>after(t), left); else after(t); };
+          u.onend = done; u.onerror = done; synth.speak(u);
+          // rete di sicurezza: se la voce non parte, vado avanti a tempo
+          timer = setTimeout(()=>{ if (t===token && !synth.speaking) after(t); }, 1500 + txt.length*90/rate);
+        } catch(e){ timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate); }
+      } else timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate);
+    };
+    bP.onclick = () => {
+      if (playing){ playing = false; stop(); bP.textContent = '▶ Continua'; return; }
+      if (i >= scenes.length-1) i = -1;
+      playing = true; bP.textContent = '⏸ Pausa';
+      if (i < 0) i = 0; render(); speak();
+    };
+    box.querySelector('[data-vn]').onclick = () => { if (i < scenes.length-1){ stop(); i++; render(); if (playing) speak(); else if (vv.checked) { playing = false; speakOnce(); } } };
+    box.querySelector('[data-vb]').onclick = () => { if (i > 0){ stop(); i--; render(); if (playing) speak(); else if (vv.checked) speakOnce(); } };
+    const speakOnce = () => { if (!synth) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(scenes[i].say); u.lang='it-IT'; u.rate=+vs.value; const v=voice(); if (v) u.voice=v; synth.speak(u); } catch(e){} };
+    vv.onchange = () => { if (!vv.checked) { try { synth && synth.cancel(); } catch(e){} } };
+    window.addEventListener('hashchange', () => { if (playing){ playing=false; stop(); bP.textContent='▶ Continua'; } });
+    render();
+  }
+
   /* ---------------- esercizi da solo ---------------- */
   // e: {id, q, type:'num'|'exp'|'choice', a, opts, hint, sol, lbl (etichetta della casella, default 'limite')}
   function exercises(ch, key, list){
@@ -1926,17 +2000,42 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 
   /* ===== capitolo 4: Criterio del rapporto ===== */
   order.push('rapporto'); NAMES['rapporto'] = '4 Criterio del rapporto';
+  const RA = (an1, an, step2, simpl) => FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+an1+' · '+an+(step2?' = '+step2:'')+' = '+simpl;
   const Q = [
-    { r:n=>2/(n+1), L:'0', verdict:'L = 0 &lt; 1, quindi '+LIM+' 2ⁿ/n! = 0' },
-    { r:n=>(n+1)/3, L:'+∞', verdict:'L = +∞ &gt; 1, quindi '+LIM+' n!/3ⁿ = +∞' },
-    { r:n=>Math.pow((n+1)/n,2)/2, L:'1/2', verdict:'L = 1/2 &lt; 1, quindi '+LIM+' n²/2ⁿ = 0' },
-    { r:n=>Math.pow(n/(n+1),n), L:'1/e ≈ 0,37', verdict:'L = 1/e &lt; 1, quindi '+LIM+' n!/nⁿ = 0 (era l\'errore G5!)' },
-    { r:n=>Math.pow((n+1)/n,2), L:'1', verdict:'L = 1: il criterio non dice niente. (Lo sai per altra via: '+LIM+' n² = +∞.)' }
+    { r:n=>2/(n+1), L:'0', calc:[
+        'a<sub>n</sub> = '+FR('2ⁿ','n!')+', quindi a<sub>n+1</sub> = '+FR('2<sup>n+1</sup>','(n + 1)!'),
+        RA(FR('2<sup>n+1</sup>','(n + 1)!'), FR('n!','2ⁿ'), FR('2 · 2ⁿ','(n + 1) · n!')+' · '+FR('n!','2ⁿ'), FR('2','n + 1')),
+        'Con i numeri: n = 1 → 2/2 = 1; n = 9 → 2/10 = 0,2; n = 99 → 2/100 = 0,02',
+        'L = '+LIM+' '+FR('2','n + 1')+' = 0 (2 diviso un numero che cresce senza fine)',
+        'L = 0 &lt; 1, quindi '+LIM+' 2ⁿ/n! = <b>0</b>'] },
+    { r:n=>(n+1)/3, L:'+∞', calc:[
+        'a<sub>n</sub> = '+FR('n!','3ⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)!','3<sup>n+1</sup>'),
+        RA(FR('(n + 1)!','3<sup>n+1</sup>'), FR('3ⁿ','n!'), FR('(n + 1) · n!','3 · 3ⁿ')+' · '+FR('3ⁿ','n!'), FR('n + 1','3')),
+        'Con i numeri: n = 2 → 3/3 = 1; n = 8 → 9/3 = 3; n = 29 → 30/3 = 10',
+        'L = '+LIM+' '+FR('n + 1','3')+' = +∞',
+        'L = +∞ &gt; 1, quindi '+LIM+' n!/3ⁿ = <b>+∞</b>'] },
+    { r:n=>Math.pow((n+1)/n,2)/2, L:'1/2', calc:[
+        'a<sub>n</sub> = '+FR('n²','2ⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)²','2<sup>n+1</sup>'),
+        RA(FR('(n + 1)²','2<sup>n+1</sup>'), FR('2ⁿ','n²'), FR('(n + 1)²','2 · 2ⁿ')+' · '+FR('2ⁿ','n²'), FR('1','2')+' · ('+FR('n + 1','n')+')²'),
+        FR('n + 1','n')+' = 1 + '+FR('1','n')+', e 1/n tende a 0, quindi ('+FR('n + 1','n')+')² tende a 1² = 1',
+        'L = '+FR('1','2')+' · 1 = '+FR('1','2'),
+        'L = 1/2 &lt; 1, quindi '+LIM+' n²/2ⁿ = <b>0</b>'] },
+    { r:n=>Math.pow(n/(n+1),n), L:'1/e ≈ 0,37', calc:[
+        'a<sub>n</sub> = '+FR('n!','nⁿ')+', quindi a<sub>n+1</sub> = '+FR('(n + 1)!','(n + 1)<sup>n+1</sup>'),
+        RA(FR('(n + 1)!','(n + 1)<sup>n+1</sup>'), FR('nⁿ','n!'), FR('(n + 1) · n! · nⁿ','(n + 1) · (n + 1)ⁿ · n!'), FR('nⁿ','(n + 1)ⁿ')+' = ('+FR('n','n + 1')+')ⁿ'),
+        '('+FR('n','n + 1')+')ⁿ = '+FR('1','(1 + 1/n)ⁿ')+' e (1 + 1/n)ⁿ tende a e (capitolo 3)',
+        'L = 1/e ≈ 0,37',
+        'L &lt; 1, quindi '+LIM+' n!/nⁿ = <b>0</b> (era l\'errore G5!)'] },
+    { r:n=>Math.pow((n+1)/n,2), L:'1', calc:[
+        'a<sub>n</sub> = n², quindi a<sub>n+1</sub> = (n + 1)²',
+        FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('(n + 1)²','n²')+' = ('+FR('n + 1','n')+')² = (1 + '+FR('1','n')+')²',
+        '1/n tende a 0, quindi L = (1 + 0)² = 1',
+        'L = 1: il criterio <b>non dice niente</b>. Lo sai per altra via: '+LIM+' n² = +∞'] }
   ];
   draws.rapporto = () => {
     const q = Q[+$('qS').value];
     plot($('plotQ'), { N:40, series:[{f:q.r, color:'--thief'}], hlines:[{y:1, color:'--bad', label:'1'}] });
-    $('qOut').innerHTML = 'Per n → +∞ il rapporto tende a <b>'+q.L+'</b>. '+q.verdict;
+    $('qOut').innerHTML = '<span style="font-size:1rem">'+SV(...q.calc)+'</span>';
   };
   $('qS').addEventListener('change', () => draws.rapporto());
   const drawQM = () => {
@@ -1950,6 +2049,44 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   };
   const oldR = draws.rapporto; draws.rapporto = () => { oldR(); drawQM(); };
   $('qM').addEventListener('input', drawQM);
+
+
+  video('rapporto', [
+    { show:'<h3>Il criterio del rapporto</h3>Serve per i limiti con fattoriali e potenze: n!, 5ⁿ, nⁿ.',
+      say:'Il criterio del rapporto serve per calcolare i limiti di successioni con fattoriali e potenze, per esempio n fattoriale, cinque alla n, n alla n.' },
+    { show:'Esempio: a<sub>n</sub> = '+FR('5ⁿ','n!'),
+      say:'Prendiamo un esempio: a con n uguale a cinque alla n, diviso n fattoriale.' },
+    { show:'a₁ = 5/1 = 5 · a₂ = 25/2 = 12,5 · a₃ = 125/6 ≈ 20,8 · a₄ = 625/24 ≈ 26 · a₅ = 3125/120 ≈ 26 · a₆ = 15625/720 ≈ 21,7',
+      say:'Prima guardiamo i numeri. a uno vale cinque. a due vale venticinque mezzi, cioè dodici e mezzo. a tre circa venti virgola otto. a quattro e a cinque circa ventisei. a sei circa ventuno virgola sette. Prima cresce, poi comincia a calare.' },
+    { show:'Domanda: per quanto moltiplico un termine per avere il successivo?<br>'+FR('a₂','a₁')+' = '+FR('12,5','5')+' = 2,5 · '+FR('a₆','a₅')+' ≈ '+FR('21,7','26')+' ≈ 0,83',
+      say:'La domanda del criterio è: per quanto devo moltiplicare un termine per ottenere il successivo? Da a uno ad a due moltiplico per due virgola cinque. Da a cinque ad a sei moltiplico per circa zero virgola ottantatré, cioè meno di uno: per questo cala.' },
+    { show:'Lo calcolo per un n qualsiasi. Scrivo a<sub>n+1</sub>: al posto di n metto n + 1<br>a<sub>n+1</sub> = '+FR('5<sup>n+1</sup>','(n + 1)!'),
+      say:'Adesso lo calcolo per un n qualsiasi. Scrivo a con n più uno: dappertutto al posto di n metto n più uno. Viene cinque alla n più uno, diviso n più uno fattoriale.' },
+    { show:FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('5<sup>n+1</sup>','(n + 1)!')+' · '+FR('n!','5ⁿ'),
+      say:'Faccio il rapporto. Dividere per una frazione vuol dire moltiplicare per la frazione capovolta: quindi cinque alla n più uno su n più uno fattoriale, per n fattoriale su cinque alla n.' },
+    { show:'Spezzo: 5<sup>n+1</sup> = 5 · 5ⁿ e (n + 1)! = (n + 1) · n!<br>= '+FR('5 · 5ⁿ','(n + 1) · n!')+' · '+FR('n!','5ⁿ'),
+      say:'Spezzo le potenze e i fattoriali. Cinque alla n più uno è cinque per cinque alla n. n più uno fattoriale è n più uno per n fattoriale.' },
+    { show:'Semplifico 5ⁿ con 5ⁿ e n! con n!:<br>'+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('5','n + 1'),
+      say:'Ora semplifico: cinque alla n sopra con cinque alla n sotto, n fattoriale sotto con n fattoriale sopra. Resta cinque diviso n più uno.' },
+    { show:'Controllo con i numeri: n = 1 → 5/2 = 2,5 ✓ · n = 5 → 5/6 ≈ 0,83 ✓',
+      say:'Controllo che sia giusto con i numeri di prima. Con n uguale a uno, cinque mezzi fa due virgola cinque: torna. Con n uguale a cinque, cinque sesti fa circa zero virgola ottantatré: torna.' },
+    { show:'L = '+LIM+' '+FR('5','n + 1')+' = 0<br><span style="font-size:.95rem">5 diviso un numero che cresce senza fine: n = 99 → 0,05; n = 999 → 0,005</span>',
+      say:'Ora faccio il limite per n che tende a più infinito di cinque diviso n più uno. Sopra c\'è cinque fisso, sotto un numero che cresce senza fine: con n uguale a novantanove fa zero virgola zero cinque, con novecentonovantanove fa zero virgola zero zero cinque. Quindi L è uguale a zero.' },
+    { show:'<h3>Perché L &lt; 1 vuol dire che va a 0</h3>Da n = 9 in poi il moltiplicatore 5/(n + 1) è al massimo 5/10 = 0,5:<br>a<sub>n+1</sub> ≤ 0,5 · a<sub>n</sub>',
+      say:'Perché L minore di uno vuol dire che la successione va a zero? Guardiamo il calcolo. Da n uguale a nove in poi, il moltiplicatore cinque su n più uno è al massimo cinque decimi, cioè zero virgola cinque. Quindi ogni termine è al massimo la metà del precedente.' },
+    { show:'a₉ ≈ 5,38 → a₁₀ ≤ 0,5 · 5,38 ≈ 2,69 → a₁₁ ≤ 0,5 · 2,69 ≈ 1,35 → a₁₂ ≤ 0,67 …<br>Dopo k passi: a<sub>9+k</sub> ≤ 0,5<sup>k</sup> · 5,38',
+      say:'Partiamo da a nove, che vale circa cinque virgola trentotto. a dieci è al massimo la metà, circa due virgola sessantanove. a undici al massimo la metà di questo, circa uno virgola trentacinque. Dopo k passi ho moltiplicato k volte per zero virgola cinque: a con nove più k è al massimo zero virgola cinque alla k, per cinque virgola trentotto.' },
+    { show:'0,5<sup>10</sup> ≈ 0,001 · 0,5<sup>20</sup> ≈ 0,000001 → <span class="lim">lim<span>k→+∞</span></span> 0,5<sup>k</sup> = 0',
+      say:'Quanto fa zero virgola cinque alla k quando k cresce? Alla dieci fa circa un millesimo, alla venti circa un milionesimo. Un numero tra zero e uno moltiplicato per sé stesso diventa sempre più piccolo: il limite è zero.' },
+    { show:'Carabinieri: 0 &lt; a<sub>9+k</sub> ≤ 0,5<sup>k</sup> · 5,38 → 0<br>Quindi '+LIM+' '+FR('5ⁿ','n!')+' = <b>0</b>',
+      say:'Ora uso i carabinieri. a con nove più k è positivo, quindi sta sopra zero, e sta sotto zero virgola cinque alla k per cinque virgola trentotto, che tende a zero. Tutti e due i carabinieri tendono a zero, quindi il limite per n che tende a più infinito di cinque alla n su n fattoriale è zero.' },
+    { show:'<h3>La regola</h3>L &lt; 1 (anche L = 0) → '+LIM+' a<sub>n</sub> = 0<br>L &gt; 1 (anche L = +∞) → '+LIM+' a<sub>n</sub> = +∞<br>L = 1 → il criterio non dice niente',
+      say:'Ecco la regola. Se L è minore di uno, anche zero, il limite di a con n è zero. Se L è maggiore di uno, anche più infinito, il limite è più infinito: è lo stesso calcolo al contrario, ogni termine è più grande del precedente. Se L è uguale a uno, il criterio non dice niente.' },
+    { show:'Perché L = 1 non decide:<br>a<sub>n</sub> = 1/n: '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('n','n + 1')+' → 1, ma '+LIM+' 1/n = 0<br>a<sub>n</sub> = n: '+FR('a<sub>n+1</sub>','a<sub>n</sub>')+' = '+FR('n + 1','n')+' → 1, ma '+LIM+' n = +∞',
+      say:'Perché con L uguale a uno non si decide? Due esempi. Con a n uguale a uno su n, il rapporto è n su n più uno, che tende a uno, ma la successione tende a zero. Con a n uguale a n, il rapporto è n più uno su n, che tende a uno, ma la successione tende a più infinito. Stesso L, finali opposti.' },
+    { show:'<h3>Ricetta</h3>1) scrivo a<sub>n+1</sub> · 2) faccio a<sub>n+1</sub>/a<sub>n</sub> e capovolgo · 3) spezzo (n + 1)! e potenze · 4) semplifico · 5) limite = L · 6) confronto L con 1',
+      say:'Riassunto della ricetta. Uno: scrivo a con n più uno. Due: faccio il rapporto e capovolgo la seconda frazione. Tre: spezzo i fattoriali e le potenze. Quattro: semplifico. Cinque: faccio il limite e trovo L. Sei: confronto L con uno. Adesso prova tu con l\'esercizio guidato.' }
+  ]);
 
   guided('rapporto', 'lavagna-rapporto', [
     { h:'Passo 1 · Scrivi a<sub>n+1</sub>: al posto di n metti n+1', type:'choice', ans:2,

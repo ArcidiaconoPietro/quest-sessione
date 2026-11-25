@@ -124,3 +124,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
 .sv { margin: .4em 0 0; padding-left: 1.4em; }
 .sv li { margin: .45em 0; line-height: 1.6; }
 .sv li i { display: block; color: var(--muted); font-style: normal; font-size: .92em; }
+
+.video .vboard { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 220px; max-height: 440px; overflow-y: auto; }
+.video .vstep { padding: 8px 10px; margin: 4px 0; border-left: 3px solid transparent; opacity: .55; line-height: 1.7; }
+.video .vstep.cur { opacity: 1; border-left-color: var(--thief); background: var(--board); border-radius: 6px; }
+.video .vstep h3 { margin: 0; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+.video .vhint { color: var(--muted); }
+.video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
+.video .vctl button { flex: 1; }
+.video .vcount { color: var(--muted); font-size: .9rem; }
