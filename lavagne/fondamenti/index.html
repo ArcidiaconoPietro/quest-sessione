@@ -169,6 +169,16 @@ table.t th { color: var(--muted); font-size: .85rem; }
 .bits small.neg { color: var(--bad); font-weight: 700; }
 .readout { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: no-preference) { .reveal { animation: up .3s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+.video .vboard { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 220px; max-height: 440px; overflow-y: auto; }
+.video .vstep { padding: 8px 10px; margin: 4px 0; border-left: 3px solid transparent; opacity: .55; line-height: 1.7; }
+.video .vstep.cur { opacity: 1; border-left-color: var(--fon); background: var(--board); border-radius: 6px; }
+.video .vstep h3 { margin: 0; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+.video .vhint { color: var(--muted); }
+.video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
+.video .vctl button { flex: 1; }
+.video .vcount { color: var(--muted); font-size: .9rem; }
+.video .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: .92rem; color: var(--muted); }
+.video .vstep h3 { color: var(--fon); }
 </style>
 
 <div class="wrap">
@@ -1736,6 +1746,369 @@ list leggi_prodotti(char *fileName) {
   ]
 });
 
+/* Videolezioni dei capitoli 1-4.
+   Formato: V(id capitolo, titolo, scene). Ogni scena è [lavagna, voce]:
+   - lavagna = HTML scritto sulla lavagna in quel passo (si aggiunge sotto ai precedenti);
+   - voce = cosa legge la voce del browser (frasi intere, numeri e parole, niente simboli).
+   ['P', 'titolo'] apre una pagina nuova della lavagna. Ogni conclusione ha il suo calcolo prima. */
+window.V = (id, title, scenes) => { const ch = CH.find(c => c.id === id); if (ch) ch.video = { title, scenes }; };
+
+/* ---------- 1 · PRIMI PASSI ---------- */
+V('primi-passi', 'Dal file .c al programma che stampa', [
+  ['P', 'Che cosa succede quando scrivi un programma'],
+  ['<b>prog.c</b> = il testo che scrivi tu (sorgente)', 'Tu scrivi il programma in un file di testo che finisce con punto c. Si chiama sorgente.'],
+  ['<b>gcc -Wall -o prog prog.c</b> → controlla e traduce', 'Il compilatore gcc legge il file, controlla che sia scritto bene e lo traduce in linguaggio macchina. L\'opzione meno W all accende tutti gli avvisi.'],
+  ['errore → nessun eseguibile · warning → eseguibile, ma da correggere', 'Se trova un errore non produce niente. Se trova solo un warning produce il programma, ma ti avvisa che probabilmente c\'è un problema. All\'esame i warning vanno tolti tutti.'],
+  ['<b>./prog</b> → il programma gira e stampa', 'Alla fine esegui il programma, e vedi sullo schermo quello che stampa.'],
+  ['P', 'Il primo programma, riga per riga'],
+  ['<code>int a = 5;</code> → a vale 5', 'Prima riga del main: creo una variabile intera a e ci metto 5.'],
+  ['<code>int b = 2;</code> → b vale 2', 'Poi una variabile intera b, che vale 2.'],
+  ['<code>float media;</code> → media = ??? (valore a caso)', 'Poi creo media, di tipo float, cioè numero con la virgola. Non le do un valore, quindi dentro c\'è un numero a caso.'],
+  ['<code>media = (a + b) / 2.0;</code>', 'Ora calcolo la media. Si parte dalla parentesi.'],
+  ['a + b = 5 + 2 = 7', 'a più b fa 5 più 2, cioè 7.'],
+  ['7 / 2.0 → 2.0 ha la virgola → divisione con la virgola', 'Poi divido 7 per 2 punto 0. Siccome 2 punto 0 ha la virgola, il C fa la divisione con la virgola.'],
+  ['7 / 2.0 = 3.5 → media = 3.5', '7 diviso 2 fa 3 virgola 5. Quindi media vale 3 virgola 5.'],
+  ['<code>printf("a = %d, b = %d\\n", a, b);</code> → <b>a = 5, b = 2</b>', 'Nella prima printf, il primo percento d viene sostituito da a, cioè 5, il secondo da b, cioè 2. Barra n va a capo.'],
+  ['<code>printf("media = %f\\n", media);</code> → <b>media = 3.500000</b>', 'Percento f stampa un float con sei cifre dopo la virgola: 3 virgola 5 diventa 3 punto 5 0 0 0 0 0.'],
+  ['P', 'Un char è un numero'],
+  ['\'A\' = 65 · \'a\' = 97 · \'0\' = 48', 'Il computer conserva solo numeri. Ogni carattere ha il suo numero nella tabella ASCII: A maiuscola è 65, a minuscola è 97, il carattere zero è 48.'],
+  ['<code>char c = \'A\'; int k = c + 2;</code> → k = 65 + 2 = 67', 'Se c vale A, cioè 65, allora c più 2 fa 65 più 2, cioè 67.'],
+  ['%d di c → <b>65</b> · %c di 67 → A=65, B=66, C=67 → <b>C</b>', 'Con percento d stampo il numero, 65. Con percento c stampo il carattere: contando, A è 65, B è 66, C è 67. Quindi stampa C.'],
+  ['<b>Ricorda:</b> lo stesso numero si stampa come numero (%d) o come carattere (%c)', 'Ricorda: lo stesso numero si può stampare come numero con percento d, oppure come carattere con percento c.']
+]);
+
+/* ---------- 2 · COMPLEMENTO A 2 ---------- */
+V('complemento-a-2', 'Il tema del 9 febbraio 2026: −37 − 7 su 8 bit', [
+  ['P', 'I pesi degli 8 bit'],
+  ['pesi: <span class="mono">−128 64 32 16 8 4 2 1</span>', 'In complemento a 2 su 8 bit, ogni bit ha un peso. Il primo a sinistra pesa meno 128, gli altri 64, 32, 16, 8, 4, 2 e 1.'],
+  ['valore = somma dei pesi dei bit a 1', 'Il valore del numero è la somma dei pesi dei bit che valgono 1.'],
+  ['<span class="mono">11111111</span> = −128 + 64 + 32 + 16 + 8 + 4 + 2 + 1', 'Esempio: tutti i bit a 1. Sommo meno 128 più 64 più 32 più 16 più 8 più 4 più 2 più 1.'],
+  ['64 + 32 + 16 + 8 + 4 + 2 + 1 = 127 → −128 + 127 = <b>−1</b>', 'I positivi fanno 127. Meno 128 più 127 fa meno 1. Quindi 1 1 1 1 1 1 1 1 vale meno 1.'],
+  ['P', 'Passo 1 · la sottrazione diventa somma'],
+  ['−37 − 7 = (−37) + (−7)', 'La macchina sa solo sommare. Quindi meno 37 meno 7 diventa meno 37 più meno 7. Devo scrivere in binario sia meno 37 sia meno 7.'],
+  ['P', 'Passo 2 · scrivo −37'],
+  ['37 − 32 = 5 → bit del 32 a 1', 'Prima scrivo 37 in binario. Cerco il peso più grande che ci sta: 64 è troppo, 32 ci sta. 37 meno 32 fa 5.'],
+  ['5 − 4 = 1 → bit del 4 a 1', 'Resta 5. 16 e 8 sono troppo grandi, 4 ci sta. 5 meno 4 fa 1.'],
+  ['1 − 1 = 0 → bit dell\'1 a 1', 'Resta 1. Il 2 è troppo grande, l\'1 ci sta. 1 meno 1 fa 0: ho finito.'],
+  ['128 64 32 16 8 4 2 1 → 0 0 1 0 0 1 0 1 → <span class="mono">00100101</span>', 'Metto 1 sotto 32, 4 e 1, e 0 sotto gli altri: 0 0 1 0 0 1 0 1.'],
+  ['inverto ogni bit → <span class="mono">11011010</span>', 'Per fare il negativo inverto tutti i bit: ogni 0 diventa 1 e ogni 1 diventa 0. Ottengo 1 1 0 1 1 0 1 0.'],
+  ['+1: ultimo bit 0 + 1 = 1 → <b class="mono">11011011</b> = −37', 'Poi aggiungo 1. L\'ultimo bit è 0, 0 più 1 fa 1, senza riporto. Ottengo 1 1 0 1 1 0 1 1, che è meno 37.'],
+  ['verifica: −128 + 64 + 16 + 8 + 2 + 1 = −128 + 91 = −37 ✓', 'Verifico con i pesi: meno 128 più 64 più 16 più 8 più 2 più 1. I positivi fanno 91, e meno 128 più 91 fa meno 37. Giusto.'],
+  ['P', 'Passo 3 · scrivo −7'],
+  ['7 = 4 + 2 + 1 → <span class="mono">00000111</span>', '7 è 4 più 2 più 1: 7 meno 4 fa 3, 3 meno 2 fa 1, 1 meno 1 fa 0. In binario 0 0 0 0 0 1 1 1.'],
+  ['inverto → <span class="mono">11111000</span> · +1 → <b class="mono">11111001</b> = −7', 'Inverto: 1 1 1 1 1 0 0 0. Aggiungo 1: l\'ultimo bit 0 più 1 fa 1. Ottengo 1 1 1 1 1 0 0 1, cioè meno 7.'],
+  ['verifica: −128 + 121 = −7 ✓', 'Verifica: meno 128 più 64 più 32 più 16 più 8 più 1. I positivi fanno 121, meno 128 più 121 fa meno 7.'],
+  ['P', 'Passo 4 · somma in colonna, da destra'],
+  ['<pre class="code">  11011011\n+ 11111001</pre>', 'Scrivo i due numeri uno sotto l\'altro e sommo colonna per colonna, partendo da destra. Ricorda: 1 più 1 fa 2, che in binario si scrive 0 con riporto 1.'],
+  ['col. 1: 1 + 1 = 2 → scrivo 0, riporto 1', 'Prima colonna: 1 più 1 fa 2. Scrivo 0 e riporto 1.'],
+  ['col. 2: 1 + 0 + 1 = 2 → scrivo 0, riporto 1', 'Seconda colonna: 1 più 0 più il riporto 1 fa 2. Scrivo 0 e riporto 1.'],
+  ['col. 3: 0 + 0 + 1 = 1 → scrivo 1, riporto 0', 'Terza colonna: 0 più 0 più il riporto 1 fa 1. Scrivo 1, nessun riporto.'],
+  ['col. 4: 1 + 1 = 2 → scrivo 0, riporto 1', 'Quarta colonna: 1 più 1 fa 2. Scrivo 0 e riporto 1.'],
+  ['col. 5: 1 + 1 + 1 = 3 → scrivo 1, riporto 1', 'Quinta colonna: 1 più 1 più il riporto fa 3. 3 in binario è 1 1: scrivo 1 e riporto 1.'],
+  ['col. 6: 0 + 1 + 1 = 2 → scrivo 0, riporto 1', 'Sesta colonna: 0 più 1 più il riporto fa 2. Scrivo 0 e riporto 1.'],
+  ['col. 7: 1 + 1 + 1 = 3 → scrivo 1, riporto 1', 'Settima colonna: 1 più 1 più il riporto fa 3. Scrivo 1 e riporto 1.'],
+  ['col. 8: 1 + 1 + 1 = 3 → scrivo 1, riporto 1 (nono bit)', 'Ottava colonna: ancora 1 più 1 più il riporto, 3. Scrivo 1, e il riporto 1 finirebbe in un nono bit.'],
+  ['risultato <span class="mono">1|11010100</span> → butto il nono bit → <b class="mono">11010100</b>', 'La macchina ha solo 8 posti, quindi il nono bit si butta via. Resta 1 1 0 1 0 1 0 0.'],
+  ['P', 'Passo 5 · verifica in decimale'],
+  ['primo bit = 1 → negativo', 'Il primo bit è 1, quindi il risultato è negativo.'],
+  ['inverto <span class="mono">11010100</span> → <span class="mono">00101011</span>', 'Per leggerlo rifaccio la ricetta: inverto i bit e ottengo 0 0 1 0 1 0 1 1.'],
+  ['+1: 1+1 = 0 rip. 1 · 1+1 = 0 rip. 1 · 0+1 = 1 → <span class="mono">00101100</span>', 'Aggiungo 1: l\'ultimo bit 1 più 1 fa 0 con riporto 1, il penultimo 1 più 1 fa 0 con riporto 1, il terzultimo 0 più 1 fa 1. Ottengo 0 0 1 0 1 1 0 0.'],
+  ['<span class="mono">00101100</span> = 32 + 8 + 4 = 44 → risultato <b>−44</b>', 'Questo vale 32 più 8 più 4, cioè 44. Quindi il risultato è meno 44.'],
+  ['controllo: −37 − 7 = −44 ✓', 'Controllo in decimale: meno 37 meno 7 fa proprio meno 44. L\'esercizio è giusto.'],
+  ['P', 'E l\'overflow?'],
+  ['8 bit: da −128 a +127', 'Con 8 bit si va da meno 128 a più 127. Se il risultato vero esce da qui, c\'è overflow.'],
+  ['100 + 50 = 150 > 127 → overflow', 'Per esempio 100 più 50 fa 150, che è più grande di 127.'],
+  ['<span class="mono">01100100 + 00110010 = 10010110</span> = −128 + 22 = −106', 'In binario la somma dà 1 0 0 1 0 1 1 0, che vale meno 128 più 16 più 4 più 2, cioè meno 106.'],
+  ['due positivi → un negativo: <b>overflow</b>', 'Due numeri positivi hanno dato un negativo: è il segnale dell\'overflow. All\'esame lo scrivi e spieghi che 150 non sta tra meno 128 e 127.']
+]);
+
+/* ---------- 3 · ESPRESSIONI ---------- */
+V('espressioni', 'Le trappole delle espressioni, una alla volta', [
+  ['P', 'int a = 7, b = 2'],
+  ['<code>c = a / b;</code> → 7 / 2 tra due int', 'Prima trappola: a diviso b. Sono tutti e due interi, quindi il C fa la divisione intera.'],
+  ['7 / 2 = 3,5 → butto la parte dopo la virgola → <b>c = 3</b>', '7 diviso 2 farebbe 3 virgola 5, ma nella divisione intera la parte dopo la virgola si butta. Non si arrotonda: resta 3.'],
+  ['<code>x = a / b;</code> con x float → prima 7 / 2 = 3 → poi x = <b>3.0</b>', 'Seconda trappola: metto lo stesso calcolo in un float. Il C prima calcola 7 diviso 2 tra interi, che fa 3, e solo dopo mette 3 nel float. Quindi x vale 3 punto 0, non 3 punto 5.'],
+  ['<code>x = (float) a / b;</code> → a diventa 7.0 → 7.0 / 2 = <b>3.5</b>', 'Con il cast, float tra parentesi, trasformo a in 7 punto 0 prima di dividere. Adesso c\'è un numero con la virgola, quindi 7 punto 0 diviso 2 fa 3 virgola 5.'],
+  ['P', 'Il resto: %'],
+  ['<code>c = a % b;</code> → 7 / 2 = 3, 2 · 3 = 6, 7 − 6 = <b>1</b>', 'Percento è il resto della divisione intera. 7 diviso 2 fa 3. 2 per 3 fa 6. 7 meno 6 fa 1. Quindi 7 percento 2 vale 1.'],
+  ['pari: <code>n % 2 == 0</code> · ultima cifra: <code>n % 10</code>', 'Il resto serve tantissimo: un numero è pari se il resto della divisione per 2 è 0, e n percento 10 è la sua ultima cifra.'],
+  ['P', 'a++ e ++b'],
+  ['<code>c = a++ + ++b;</code> con a = 7, b = 2', 'Terza trappola: a più più, più, più più b.'],
+  ['a++ → nel calcolo uso 7, poi a diventa 8', 'a più più, con il più più dopo: prima uso il valore vecchio, 7, e solo dopo a diventa 8.'],
+  ['++b → prima b diventa 3, poi nel calcolo uso 3', 'Più più b, con il più più prima: prima b diventa 3, poi uso 3.'],
+  ['c = 7 + 3 = <b>10</b> · a = 8 · b = 3', 'Quindi c vale 7 più 3, cioè 10. Alla fine a vale 8 e b vale 3.'],
+  ['<code>printf("%d %d %d %.1f\\n", a, b, c, x);</code> → <b>8 3 10 3.5</b>', 'La printf stampa a, b, c e x con una cifra dopo la virgola: 8, 3, 10, 3 punto 5.'],
+  ['P', 'L\'operatore ? :'],
+  ['<code>m = (a > b) ? a : b;</code> con a = 3, b = 8', 'Il punto interrogativo è un if in una riga. Se la condizione è vera prendo quello prima dei due punti, altrimenti quello dopo.'],
+  ['3 > 8 → falso → prendo quello dopo i due punti → m = b = <b>8</b>', '3 è maggiore di 8? No, è falso. Quindi prendo quello dopo i due punti: m vale b, cioè 8.'],
+  ['<code>a = (b % a == 2) ? a * 10 : 0;</code> → 8 % 3: 3 · 2 = 6, 8 − 6 = 2', 'Secondo esempio. Calcolo b percento a, cioè 8 percento 3: 8 diviso 3 fa 2, 3 per 2 fa 6, 8 meno 6 fa 2.'],
+  ['2 == 2 → vero → a = a * 10 = 3 · 10 = <b>30</b>', '2 uguale 2 è vero, quindi prendo quello prima dei due punti: a per 10, cioè 3 per 10, 30.'],
+  ['vero = qualsiasi numero diverso da 0 · falso = 0', 'Ricorda: in C vero è qualsiasi numero diverso da zero, falso è zero.'],
+  ['P', 'Caratteri e aritmetica'],
+  ['<code>char c = \'g\' - 3;</code> → \'g\' = 103 → 103 − 3 = 100 = <b>\'d\'</b>', 'Un char è un numero: g minuscola vale 103. 103 meno 3 fa 100, che è la d. Quindi c contiene d, tre lettere prima della g.']
+]);
+
+/* ---------- 4 · CICLI ---------- */
+V('cicli', 'Il for della somma, giro per giro', [
+  ['P', 'Il programma'],
+  ['<code>scanf("%d", &n);</code> → scrivi 4 → n = 4', 'Il programma chiede un numero e lo legge con scanf. La e commerciale davanti a n dice dove metterlo. Supponiamo che tu scriva 4: n vale 4.'],
+  ['somma = 0 (accumulatore)', 'somma parte da 0: è un accumulatore, deve partire da zero.'],
+  ['<code>for (i = 1; i <= n; i++) somma = somma + i;</code>', 'Il for si legge così: parto con i uguale a 1; prima di ogni giro controllo che i sia minore o uguale a n; alla fine di ogni giro aumento i di 1.'],
+  ['P', 'Giro per giro'],
+  ['i = 1: 1 ≤ 4 vero → somma = 0 + 1 = 1', 'i vale 1. Controllo: 1 è minore o uguale a 4, vero. Entro: somma diventa 0 più 1, cioè 1.'],
+  ['i++ → i = 2: 2 ≤ 4 vero → somma = 1 + 2 = 3', 'Fine del giro, i diventa 2. 2 minore o uguale a 4, vero. somma diventa 1 più 2, cioè 3.'],
+  ['i = 3: 3 ≤ 4 vero → somma = 3 + 3 = 6', 'i diventa 3. 3 minore o uguale a 4, vero. somma diventa 3 più 3, cioè 6.'],
+  ['i = 4: 4 ≤ 4 vero → somma = 6 + 4 = 10', 'i diventa 4. 4 minore o uguale a 4 è vero, perché è uguale. somma diventa 6 più 4, cioè 10.'],
+  ['i = 5: 5 ≤ 4 <b>falso</b> → esco · i vale 5', 'i diventa 5. 5 minore o uguale a 4 è falso: esco dal ciclo. Attenzione, dopo il ciclo i vale 5, non 4.'],
+  ['<code>if (somma > MAX)</code> → 10 > 100 falso → else → <b>Somma = 10</b>', 'Poi l\'if: 10 è maggiore di 100? No. Quindi va all\'else e stampa Somma uguale 10.'],
+  ['P', 'Quante volte gira? (esercizio guidato)'],
+  ['<code>for (i = 10; i > 0; i = i - 3) if (i % 2 == 0) n++;</code> · n = 0', 'Altro ciclo: i parte da 10, va avanti finché è maggiore di 0, e a ogni giro toglie 3. Conto i numeri pari in n.'],
+  ['i = 10: 10 > 0 vero · 10 % 2 = 0 → pari → n = 1 · i = 10 − 3 = 7', 'i vale 10. 10 è maggiore di 0, entro. 10 percento 2 fa 0, quindi è pari: n diventa 1. Poi i diventa 10 meno 3, cioè 7.'],
+  ['i = 7: vero · 7 % 2 = 1 → dispari · i = 4', 'i vale 7. Entro. 7 percento 2 fa 1, dispari, n resta 1. i diventa 4.'],
+  ['i = 4: vero · 4 % 2 = 0 → n = 2 · i = 1', 'i vale 4. Entro. 4 percento 2 fa 0, pari: n diventa 2. i diventa 1.'],
+  ['i = 1: vero · 1 % 2 = 1 → dispari · i = 1 − 3 = −2', 'i vale 1. 1 è maggiore di 0, entro. Dispari, n resta 2. i diventa 1 meno 3, cioè meno 2.'],
+  ['i = −2: −2 > 0 falso → esco → stampa <b>-2 2</b>', 'meno 2 è maggiore di 0? No: esco. La printf stampa i, cioè meno 2, e n, cioè 2.'],
+  ['P', 'while e do-while'],
+  ['<code>while (cond) {...}</code> controlla <b>prima</b> → può fare 0 giri', 'Il while controlla la condizione prima del giro, quindi può non fare nessun giro.'],
+  ['<code>do {...} while (cond);</code> controlla <b>dopo</b> → almeno 1 giro', 'Il do while controlla dopo il giro, quindi fa sempre almeno un giro.'],
+  ['k = 10: stampo 10 · k = 10 − 4 = 6 · 6 > 10 falso → esco', 'Esempio: k vale 10. Il do while entra senza controllare, stampa 10, poi k diventa 10 meno 4, cioè 6. Ora controlla: 6 maggiore di 10 è falso, quindi esce. Ha fatto un giro solo.']
+]);
+
+/* Videolezioni dei capitoli 5-8 (formato in v01-04.js). */
+
+/* ---------- 5 · FUNZIONI ---------- */
+V('funzioni', 'Chiamare una funzione: cosa succede in memoria', [
+  ['P', 'La firma'],
+  ['<code>int quadrato(int x)</code>', 'Questa è la firma di una funzione. Si legge: la funzione quadrato riceve un intero, che dentro chiamerà x, e restituisce un intero.'],
+  ['tipo restituito · nome · (parametri) · <code>void</code> = non restituisce niente', 'Prima c\'è il tipo restituito, poi il nome, poi tra parentesi i parametri. Se non restituisce niente si scrive void.'],
+  ['prototipo <code>int quadrato(int x);</code> prima del main', 'Il prototipo, cioè la firma con il punto e virgola, va prima del main, così il compilatore la conosce quando main la usa.'],
+  ['P', 'La chiamata, passo passo'],
+  ['main: a = 3, r = ???', 'Nel main a vale 3, r non ha ancora un valore.'],
+  ['<code>r = quadrato(a + 1);</code> → prima calcolo a + 1 = 3 + 1 = 4', 'Prima di chiamare la funzione si calcola l\'argomento: a più 1 fa 3 più 1, cioè 4.'],
+  ['nasce il riquadro di quadrato: x = 4 (una copia)', 'Si entra in quadrato. In memoria nasce un riquadro nuovo, con x uguale a 4. È una copia del valore: x non è a.'],
+  ['q = x · x = 4 · 4 = 16', 'Dentro, q vale x per x, cioè 4 per 4, 16.'],
+  ['x = 0 → cambia solo la copia, a resta 3', 'Poi x diventa 0. Ma cambia solo la copia: la a del main resta 3.'],
+  ['return q → restituisce 16 e il riquadro sparisce', 'return q restituisce 16 a chi ha chiamato. Il riquadro di quadrato sparisce, con x e q.'],
+  ['r = 16 → printf → <b>3 16</b>', 'Il 16 va in r. La printf stampa a e r: 3 e 16. a non è cambiata.'],
+  ['P', 'Passaggio per valore'],
+  ['<code>raddoppia(k)</code> con k = 7 → n = 7 (copia)', 'Altro esempio: chiamo raddoppia con k uguale a 7. Il parametro n riceve una copia, 7.'],
+  ['n = n · 2 = 7 · 2 = 14 → <b>dentro: 14</b>', 'Dentro, n diventa 7 per 2, cioè 14, e la funzione stampa dentro 14.'],
+  ['la funzione finisce · k è ancora 7 → <b>fuori: 7</b>', 'La funzione finisce e n sparisce. Nel main k è ancora 7, quindi stampa fuori 7.'],
+  ['<b>Regola:</b> la funzione lavora su copie dei valori', 'La regola: una funzione riceve copie dei valori. Cambiarle non cambia le variabili di chi l\'ha chiamata.'],
+  ['P', 'Due funzioni insieme'],
+  ['massimo(4, 9): 4 > 9 falso → return 9', 'massimo di 4 e 9: 4 è maggiore di 9? No, quindi restituisce 9.'],
+  ['9 − 4 = 5 → stampa_riga(5) → i = 0,1,2,3,4 → <b>*****</b>', 'Poi 9 meno 4 fa 5, e stampa riga riceve 5. Il ciclo gira con i uguale a 0, 1, 2, 3, 4: cinque giri, cinque asterischi.'],
+  ['a · 3 = 4 · 3 = 12 → massimo(12, 9): 12 > 9 → <b>12</b>', 'Ultima riga: a per 3 fa 4 per 3, 12. massimo di 12 e 9: 12 è maggiore, stampa 12.']
+]);
+
+/* ---------- 6 · RICORSIONE ---------- */
+V('ricorsione', 'La ricorsione: scendere e risalire', [
+  ['P', 'Le due parti di ogni funzione ricorsiva'],
+  ['1) caso base: risposta subito, senza richiamarsi', 'Ogni funzione ricorsiva ha due parti. Primo: il caso base, un caso così semplice che la risposta si sa subito.'],
+  ['2) passo ricorsivo: mi richiamo su un problema <b>più piccolo</b>', 'Secondo: il passo ricorsivo. La funzione richiama se stessa su un problema più piccolo e usa il risultato.'],
+  ['<code>fatt(n): if (n <= 1) return 1; return n * fatt(n - 1);</code>', 'Esempio: il fattoriale. Se n è minore o uguale a 1 restituisce 1. Altrimenti restituisce n per fattoriale di n meno 1.'],
+  ['P', 'fatt(3): si scende'],
+  ['fatt(3): 3 ≤ 1? no → 3 · fatt(2), aspetto', 'fatt di 3. 3 è minore o uguale a 1? No. Deve calcolare 3 per fatt di 2, e resta in attesa.'],
+  ['fatt(2): 2 ≤ 1? no → 2 · fatt(1), aspetto', 'Nuovo record di attivazione per fatt di 2. 2 minore o uguale a 1? No. Deve calcolare 2 per fatt di 1, in attesa.'],
+  ['fatt(1): 1 ≤ 1? <b>sì</b> → caso base → return 1', 'fatt di 1. 1 minore o uguale a 1? Sì: è il caso base. Restituisce 1 senza richiamarsi.'],
+  ['P', 'fatt(3): si risale'],
+  ['fatt(2) = 2 · 1 = 2', 'Ora si risale. fatt di 2 riceve 1 e calcola 2 per 1, cioè 2.'],
+  ['fatt(3) = 3 · 2 = 6', 'fatt di 3 riceve 2 e calcola 3 per 2, cioè 6.'],
+  ['main: r = 6 → stampa <b>6</b>', 'Si torna al main, r vale 6 e viene stampato.'],
+  ['P', 'Traccia come all\'esame: f(20, 3)'],
+  ['<code>f(a, b): if (a < b) return a; return f(a - b, b + 1);</code>', 'Esercizio d\'esame. Se a è minore di b, restituisce a. Altrimenti si richiama con a meno b e b più 1.'],
+  ['f(20, 3): 20 < 3 falso → f(20 − 3, 3 + 1) = f(17, 4)', 'f di 20 e 3: 20 è minore di 3? No. Mi richiamo con 20 meno 3, cioè 17, e 3 più 1, cioè 4.'],
+  ['f(17, 4): falso → f(17 − 4, 4 + 1) = f(13, 5)', 'f di 17 e 4: 17 minore di 4? No. 17 meno 4 fa 13, 4 più 1 fa 5.'],
+  ['f(13, 5): falso → f(13 − 5, 5 + 1) = f(8, 6)', 'f di 13 e 5: no. 13 meno 5 fa 8, 5 più 1 fa 6.'],
+  ['f(8, 6): falso → f(8 − 6, 6 + 1) = f(2, 7)', 'f di 8 e 6: 8 minore di 6? No. 8 meno 6 fa 2, 6 più 1 fa 7.'],
+  ['f(2, 7): 2 < 7 <b>vero</b> → caso base → return 2', 'f di 2 e 7: 2 è minore di 7, sì. Caso base: restituisce a, cioè 2.'],
+  ['ogni chiamata restituisce quello che riceve → main stampa <b>2</b>', 'Risalendo, ogni chiamata restituisce lo stesso valore che riceve, quindi al main arriva 2.'],
+  ['P', 'Record di attivazione (1 punto di teoria)'],
+  ['creato nello <b>stack</b> a ogni chiamata, distrutto al return', 'Il record di attivazione è l\'area di memoria creata nello stack a ogni chiamata di funzione, e distrutta quando la funzione termina.'],
+  ['contiene: parametri · variabili locali · indirizzo di ritorno · valore restituito', 'Contiene quattro cose: i parametri, le variabili locali, l\'indirizzo di ritorno e lo spazio per il valore restituito.'],
+  ['politica LIFO: l\'ultimo creato è il primo distrutto', 'I record si impilano: l\'ultimo creato è il primo distrutto. Si chiama politica LIFO.']
+]);
+
+/* ---------- 7 · PUNTATORI ---------- */
+V('puntatori', 'Puntatori: arrivare a una variabile dal suo indirizzo', [
+  ['P', '& e *'],
+  ['a abita all\'indirizzo 1000 e vale 1', 'Ogni variabile abita in una casella di memoria con un indirizzo. Diciamo che a abita all\'indirizzo 1000 e vale 1.'],
+  ['<code>&a</code> = 1000 · <code>int *pa = &a;</code> → pa contiene 1000', 'E commerciale a vuol dire: l\'indirizzo di a, cioè 1000. pa è un puntatore: contiene 1000, quindi punta ad a.'],
+  ['<code>*pa = 5;</code> → vado all\'indirizzo 1000 e ci scrivo 5 → a = 5', 'Asterisco pa vuol dire: vai all\'indirizzo scritto in pa. Asterisco pa uguale 5 va all\'indirizzo 1000 e ci scrive 5. Quindi a diventa 5, senza nominarla.'],
+  ['P', 'scambia(&a, &b)'],
+  ['a = 5 (@1000), b = 2 (@1004)', 'Ora a vale 5 e sta al 1000, b vale 2 e sta al 1004.'],
+  ['chiamo scambia(&a, &b) → p = 1000, q = 1004', 'Chiamo scambia passando gli indirizzi. Dentro, p contiene 1000 e q contiene 1004.'],
+  ['t = *p = valore al 1000 = 5', 't uguale asterisco p: il valore all\'indirizzo 1000, cioè 5.'],
+  ['*p = *q → al 1000 metto il valore del 1004 (2) → a = 2', 'Asterisco p uguale asterisco q: all\'indirizzo 1000 metto il valore che c\'è al 1004, cioè 2. La a del main diventa 2.'],
+  ['*q = t → al 1004 metto 5 → b = 5', 'Asterisco q uguale t: all\'indirizzo 1004 metto 5. La b del main diventa 5.'],
+  ['printf → <b>2 5</b>: lo scambio resta', 'La funzione finisce, ma lo scambio resta, perché ha lavorato direttamente su a e b. Stampa 2 5.'],
+  ['P', 'Valore o indirizzo? (esercizio guidato)'],
+  ['<code>f(a, &b)</code> con a = 2, b = 10 · p = &b', 'Nel main a vale 2, b vale 10, e p punta a b. Chiamo f passando a per valore e b per indirizzo.'],
+  ['x = copia di a = 2 → x = 2 + 1 = 3 (a resta 2)', 'x è una copia di a, vale 2. x uguale x più 1 fa 3. La a del main resta 2.'],
+  ['*y = *y + x → b = 10 + 3 = 13', 'y punta a b. Asterisco y uguale asterisco y più x vuol dire b uguale 10 più 3, cioè 13.'],
+  ['printf a, b, *p → <b>2 13 13</b>', 'La printf stampa a, cioè 2, b, cioè 13, e asterisco p, che è il valore di b, 13.'],
+  ['*p = *p · 2 → b = 13 · 2 = 26 → <b>26</b>', 'Poi asterisco p uguale asterisco p per 2: b diventa 13 per 2, cioè 26.'],
+  ['P', 'Più risultati da una funzione'],
+  ['<code>dividi(17, 5, &q, &r)</code>', 'Una funzione può restituire più risultati con parametri puntatore. dividi riceve 17, 5 e gli indirizzi di q e r.'],
+  ['*q = 17 / 5: 5 · 3 = 15 ≤ 17, 5 · 4 = 20 > 17 → 3', 'Asterisco q uguale 17 diviso 5 tra interi. 5 per 3 fa 15, che ci sta. 5 per 4 fa 20, troppo. Quindi 3.'],
+  ['*r = 17 % 5 = 17 − 15 = 2 → stampa <b>3 2</b>', 'Asterisco r uguale 17 percento 5: 17 meno 15 fa 2. Il main stampa 3 e 2.']
+]);
+
+/* ---------- 8 · PIÙ FILE ---------- */
+V('piu-file', 'Un progetto su più file', [
+  ['P', 'Il menù e la cucina'],
+  ['<b>.h</b> = il menù: prototipi e tipi', 'Il file punto h è il menù: dice quali funzioni esistono, con i prototipi, e definisce i tipi come le struct.'],
+  ['<b>.c</b> = la cucina: il codice delle funzioni', 'Il file punto c con lo stesso nome è la cucina: contiene il codice vero delle funzioni.'],
+  ['<code>#include "matematica.h"</code> in chi usa le funzioni', 'Chi usa le funzioni, per esempio main punto c, include il punto h con le virgolette.'],
+  ['<code>&lt;stdio.h&gt;</code> sistema · <code>"mio.h"</code> file miei', 'Parentesi angolari per le librerie di sistema, virgolette per i file tuoi.'],
+  ['P', 'Le guardie'],
+  ['<code>#ifndef MATEMATICA_H</code> / <code>#define MATEMATICA_H</code> / … / <code>#endif</code>', 'In ogni punto h ci sono le guardie.'],
+  ['1ª inclusione: MATEMATICA_H non esiste → passa e lo definisco', 'La prima volta che il file viene incluso, MATEMATICA_H non è definito: il contenuto passa, e MATEMATICA_H viene definito.'],
+  ['2ª inclusione: esiste già → salto tutto → niente doppioni', 'La seconda volta MATEMATICA_H esiste già, quindi tutto il contenuto viene saltato. Così niente definizioni doppie.'],
+  ['P', 'Compilare ed eseguire'],
+  ['<code>gcc -Wall -o prog main.c matematica.c</code>', 'Si compilano tutti i file punto c insieme. I punto h no, vengono inclusi.'],
+  ['massimo(quadrato(3), 5): quadrato(3) = 3 · 3 = 9', 'Il main stampa massimo di quadrato di 3 e 5. Prima quadrato di 3: 3 per 3 fa 9.'],
+  ['massimo(9, 5): 9 > 5 vero → 9 → stampa <b>9</b>', 'Poi massimo di 9 e 5: 9 è maggiore di 5, quindi 9. Stampa 9.'],
+  ['P', 'I tre errori tipici'],
+  ['implicit declaration → manca l\'#include del .h', 'Implicit declaration vuol dire che usi una funzione che il compilatore non ha visto: manca l\'include del punto h.'],
+  ['undefined reference → manca un .c nella compilazione', 'Undefined reference vuol dire che il prototipo c\'è, ma il codice no: non hai compilato il punto c insieme, o non è nel progetto.'],
+  ['redefinition → mancano le guardie', 'Redefinition vuol dire che lo stesso punto h è stato incluso due volte: mancano le guardie.']
+]);
+
+/* Videolezioni dei capitoli 9-14 (formato in v01-04.js). */
+
+/* ---------- 9 · ARRAY E STRINGHE ---------- */
+V('array-stringhe', 'Array e stringhe, casella per casella', [
+  ['P', 'Un array'],
+  ['<code>int voti[5] = {24, 18, 30, 27, 21};</code>', 'Un array è una fila di caselle dello stesso tipo. Questo ha 5 interi.'],
+  ['indici 0 1 2 3 4 · voti[5] <b>non esiste</b>', 'Le caselle sono numerate da 0: voti di 0, 1, 2, 3, 4. La casella 5 non esiste, perché partendo da 0 l\'ultima è 5 meno 1, cioè 4.'],
+  ['P', 'Il massimo, giro per giro'],
+  ['max = v[0] = 24', 'Per trovare il massimo parto dicendo che il massimo è il primo elemento, 24.'],
+  ['i = 1: 18 > 24? no → max = 24', 'i uguale 1: 18 è maggiore di 24? No, max resta 24.'],
+  ['i = 2: 30 > 24? sì → max = 30', 'i uguale 2: 30 è maggiore di 24? Sì, max diventa 30.'],
+  ['i = 3: 27 > 30? no · i = 4: 21 > 30? no', 'i uguale 3: 27 maggiore di 30? No. i uguale 4: 21 maggiore di 30? No.'],
+  ['i = 5: 5 &lt; 5 falso → esco → <b>max = 30</b>', 'i uguale 5: 5 minore di 5 è falso, esco. Il ciclo si ferma prima di toccare la casella 5. Il massimo è 30.'],
+  ['P', 'Una stringa'],
+  ['<code>char nome[] = "Pia";</code> → P · i · a · \\0 → <b>4</b> caselle', 'Una stringa è un array di char che finisce con il terminatore barra zero. Pia ha 3 lettere, più il terminatore, quindi 4 caselle.'],
+  ['strlen("Pia") = caratteri prima di \\0 = 3', 'strlen conta i caratteri prima del terminatore: 3.'],
+  ['uguali? <code>strcmp(a, b) == 0</code> · copiare: <code>strcpy(dest, src)</code>', 'Per sapere se due stringhe sono uguali si usa strcmp uguale uguale zero. Per copiare si usa strcpy, non l\'uguale.'],
+  ['P', 'Stringhe come nello scritto'],
+  ['s = "casa" · strcpy(t, s) → t = "casa"', 's vale casa. strcpy copia s in t, carattere per carattere: anche t vale casa.'],
+  ['t[0] = \'r\' → t = "rasa" (s non cambia)', 't di 0 uguale r: la prima lettera di t diventa r, quindi t vale rasa. s non cambia, perché t è una copia.'],
+  ['c+1 = d · a+1 = b · s+1 = t · a+1 = b → s = "dbtb"', 'Il ciclo aggiunge 1 a ogni carattere di s fino al terminatore. c più 1 fa d, a più 1 fa b, s più 1 fa t, a più 1 fa b. s diventa d b t b.'],
+  ['strlen(t) = 4 → stampa <b>dbtb rasa 4</b>', 'strlen di rasa fa 4. La printf stampa d b t b, rasa, 4.']
+]);
+
+/* ---------- 10 · STRUCT E MATRICI ---------- */
+V('struct-matrici', 'Struct: la scheda con i campi', [
+  ['P', 'Definire la struct del tema'],
+  ['nome max 30 caratteri → <code>char nome[31];</code>', 'Il testo dice: nome, stringa di al massimo 30 caratteri. Servono 30 caselle più una per il terminatore, quindi 31.'],
+  ['categoria = un carattere → <code>char categoria;</code>', 'La categoria è un solo carattere, quindi un char semplice.'],
+  ['<pre class="code">typedef struct {\n    int id;\n    char nome[31];\n    char categoria;\n    float prezzo;\n    int quantita;\n} Prodotto;</pre>', 'Ecco la struct completa: id intero, nome, categoria, prezzo float, quantità intera. Da qui in poi Prodotto è un tipo come int.'],
+  ['P', 'Il più economico'],
+  ['v = mouse 19.5 · cavo 4.0 · monitor 129.9 · imin = 0', 'Ho tre prodotti: mouse a 19 e 50, cavo a 4, monitor a 129 e 90. imin è l\'indice del più economico finora: parto da 0.'],
+  ['i = 1: 4.0 &lt; 19.5? sì → imin = 1', 'i uguale 1: il prezzo del cavo, 4, è minore di 19 e 50? Sì, imin diventa 1.'],
+  ['i = 2: 129.9 &lt; 4.0? no → imin resta 1', 'i uguale 2: 129 e 90 è minore di 4? No, imin resta 1.'],
+  ['v[1].nome, v[1].prezzo → <b>cavo costa 4.00</b>', 'Stampo il nome e il prezzo della scheda in posizione 1: cavo costa 4 punto 0 0.'],
+  ['P', 'Punto e freccia'],
+  ['<code>p.prezzo</code> con la struct · <code>q->prezzo</code> con il puntatore', 'Con una struct si usa il punto. Con un puntatore alla struct si usa la freccia, che vuol dire: vai alla struct puntata e prendi il campo.'],
+  ['promuovi(&a): s->voto = 17 + 2 = 19 → cambia a', 'promuovi riceve l\'indirizzo di a: s freccia voto diventa 17 più 2, cioè 19, e cambia proprio a.'],
+  ['prova(a): s.voto = 0 sulla copia → a.voto resta 19 → <b>Ugo 19</b>', 'prova riceve una copia: azzera solo la copia. Quindi a punto voto resta 19, e stampa Ugo 19.'],
+  ['P', 'Matrice: due cicli'],
+  ['m = {1,2,3} / {4,5,6} · salto quando i == j', 'Matrice di 2 righe e 3 colonne. Sommo tutti gli elementi tranne quelli con riga uguale a colonna.'],
+  ['riga 0: salto m[0][0]=1 · 2 + 3 = 5', 'Riga 0: salto m di 0 0, che vale 1. Sommo 2 e 3: 5.'],
+  ['riga 1: 5 + 4 = 9 · salto m[1][1]=5 · 9 + 6 = <b>15</b>', 'Riga 1: aggiungo 4, fa 9. Salto m di 1 1, che vale 5. Aggiungo 6: 15.']
+]);
+
+/* ---------- 11 · FILE ---------- */
+V('file', 'Leggere un file riga per riga', [
+  ['P', 'Lo schema'],
+  ['<code>f = fopen("prodotti.txt", "r");</code>', 'fopen apre il file in lettura, con r. Il segnalibro è all\'inizio.'],
+  ['<code>if (f == NULL)</code> → file non trovato → esco', 'Se il file non c\'è, fopen restituisce NULL. Il controllo è obbligatorio, altrimenti il programma si blocca alla prima lettura.'],
+  ['<code>while (fscanf(f, "%d %s %f %d", ...) == 4)</code>', 'Poi un ciclo: finché fscanf riesce a leggere tutti e 4 i campi della riga, la riga è buona.'],
+  ['P', 'Riga per riga'],
+  ['riga 1: 1 mouse 19.50 4 → letti 4 → totale = 0 + 19.50 · 4 = 78.00', 'Prima riga: fscanf legge 4 valori e restituisce 4. totale diventa 0 più 19 e 50 per 4: 19 e 50 per 4 fa 78.'],
+  ['riga 2: 2 cavo 4.00 10 → totale = 78 + 4 · 10 = 78 + 40 = 118.00', 'Seconda riga: 4 per 10 fa 40. 78 più 40 fa 118.'],
+  ['riga 3: 3 monitor 129.90 1 → totale = 118 + 129.90 = 247.90', 'Terza riga: 129 e 90 per 1 fa 129 e 90. 118 più 129 e 90 fa 247 e 90.'],
+  ['fine file → fscanf restituisce EOF ≠ 4 → esco', 'Il file è finito: fscanf non legge niente e restituisce EOF, che non è 4. Esco dal ciclo.'],
+  ['<code>fclose(f);</code> → stampa <b>Valore magazzino: 247.90</b>', 'Chiudo il file con fclose e stampo il totale.'],
+  ['P', 'Righe con parti variabili'],
+  ['ORD1 2 11-1 35-2 → id = ORD1, n = 2', 'Riga del tema: prima leggo la parte fissa, id e n. Percento s si ferma allo spazio, quindi id vale ORD1 e n vale 2.'],
+  ['for 2 volte "%d-%d": 11-1 → tot = 1 · 35-2 → tot = 1 + 2 = 3', 'Poi un for che gira n volte. Il trattino nel formato si scrive com\'è. Prima coppia 11 trattino 1: tot vale 1. Seconda 35 trattino 2: tot vale 1 più 2, cioè 3. Stampa ORD1 3.'],
+  ['P', 'Teoria (1 punto)'],
+  ['fprintf / fscanf → testo, con formato, leggibile', 'fprintf e fscanf fanno input output con formato su file di testo: i numeri diventano caratteri leggibili.'],
+  ['fwrite / fread → binario, byte così come sono, a blocchi', 'fwrite e fread fanno input output binario: copiano i byte della memoria così come sono, a blocchi, senza conversione. Il file si apre con r b o w b.']
+]);
+
+/* ---------- 12 · LISTE ---------- */
+V('liste', 'L\'esercizio 1 dello scritto: maggiori(l, 5)', [
+  ['P', 'Le primitive'],
+  ['emptylist() · empty(l) · head(l) · tail(l) · cons(x, l)', 'Le liste si usano solo con cinque primitive: emptylist, empty, head, tail e cons.'],
+  ['l = [4, 9, 2] → head(l) = 4 · tail(l) = [9, 2] · cons(1, l) = [1, 4, 9, 2]', 'Con l uguale 4, 9, 2: head è il primo valore, 4. tail è la lista senza il primo, 9, 2. cons di 1 e l attacca 1 davanti: 1, 4, 9, 2.'],
+  ['cons(7, [ ]) = [7] → cons(2, [7]) = [2, 7] → cons(9, …) = [9, 2, 7] → cons(4, …) = [4, 9, 2, 7]', 'Per costruire 4, 9, 2, 7 si parte dal cons più interno: cons di 7 e la lista vuota dà 7. Poi cons di 2 dà 2, 7. Poi 9, 2, 7. Poi 4, 9, 2, 7.'],
+  ['P', 'La funzione'],
+  ['<code>if (empty(l)) return emptylist();</code>', 'Caso base: se la lista è vuota restituisco la lista vuota.'],
+  ['<code>if (head(l) > s) return cons(head(l), maggiori(tail(l), s));</code>', 'Se il primo elemento è maggiore di s lo tengo: cons del primo elemento e del risultato sulla coda.'],
+  ['<code>return maggiori(tail(l), s);</code>', 'Altrimenti lo salto: restituisco solo il risultato sulla coda.'],
+  ['P', 'Si scende: maggiori([4, 9, 2, 7], 5)'],
+  ['[4, 9, 2, 7]: head = 4 · 4 > 5? no → <b>salto</b> → maggiori([9, 2, 7])', 'Prima chiamata. head vale 4. 4 è maggiore di 5? No, lo salto: il risultato è quello della chiamata sulla coda, 9, 2, 7.'],
+  ['[9, 2, 7]: head = 9 · 9 > 5? sì → <b>tengo</b> → cons(9, maggiori([2, 7]))', 'Seconda chiamata. head vale 9. 9 maggiore di 5? Sì, lo tengo: cons di 9 e il risultato su 2, 7. Aspetto.'],
+  ['[2, 7]: head = 2 · 2 > 5? no → salto → maggiori([7])', 'Terza. head vale 2. 2 maggiore di 5? No, salto.'],
+  ['[7]: head = 7 · 7 > 5? sì → tengo → cons(7, maggiori([ ]))', 'Quarta. head vale 7. 7 maggiore di 5? Sì, lo tengo: cons di 7 e il risultato sulla lista vuota.'],
+  ['[ ]: vuota → <b>caso base</b> → [ ]', 'Quinta. La lista è vuota: caso base, restituisco la lista vuota. Ora si risale.'],
+  ['P', 'Si risale'],
+  ['maggiori([7]) = cons(7, [ ]) = [7]', 'La quarta chiamata riceve la lista vuota e fa cons di 7: ottiene 7.'],
+  ['maggiori([2, 7]) = [7] (il 2 era saltato)', 'La terza aveva saltato il 2: restituisce 7 così com\'è.'],
+  ['maggiori([9, 2, 7]) = cons(9, [7]) = [9, 7]', 'La seconda fa cons di 9 e 7: 9, 7.'],
+  ['maggiori([4, 9, 2, 7]) = [9, 7] → r = <b>[9, 7]</b>', 'La prima aveva saltato il 4: restituisce 9, 7. Il risultato è una lista nuova, e l è rimasta uguale.'],
+  ['P', 'La ricetta per l\'esame'],
+  ['1) if empty → emptylist() · 2) condizione su head · 3) tengo: cons(head, f(tail)) · 4) salto: f(tail)', 'La ricetta vale per tutti gli esercizi 1: caso base, condizione sul primo elemento, se lo tengo cons più ricorsione, se lo salto solo ricorsione.'],
+  ['condizione con funzione iterativa di aiuto (es. conta) · main con showlist tua · freelist', 'Spesso la condizione usa una funzione iterativa di aiuto, come conta. Nel main costruisci le liste dell\'esempio, stampi con una showlist scritta da te e liberi con freelist.']
+]);
+
+/* ---------- 13 · MALLOC E ORDINAMENTO ---------- */
+V('malloc-ordinamento', 'Vettori dinamici e bubble sort', [
+  ['P', 'Stack e heap'],
+  ['stack = variabili locali, spariscono al return', 'Le variabili locali stanno nello stack e spariscono quando la funzione finisce.'],
+  ['heap = <code>malloc(n * sizeof(int))</code>, resta fino a <code>free</code>', 'Con malloc prendi spazio nell\'heap: resta tuo finché non lo restituisci con free, anche dopo la fine della funzione.'],
+  ['P', 'leggi_positivi(4, &d) con 6, −2, 9, 0'],
+  ['malloc di 4 int · *dim = 0 → d = 0', 'La funzione prende spazio per 4 interi e mette a 0 la dimensione logica d del main, passando dal puntatore.'],
+  ['6 > 0 → v[0] = 6 · d = 1', 'Legge 6, positivo: v di 0 vale 6 e d diventa 1.'],
+  ['−2 > 0? no → salto', 'Legge meno 2: non è positivo, salto.'],
+  ['9 > 0 → v[1] = 9 · d = 2', 'Legge 9: v di 1 vale 9 e d diventa 2.'],
+  ['0 > 0? no → salto · return v', 'Legge 0: non è positivo. Il ciclo è finito e restituisco l\'indirizzo del blocco.'],
+  ['dimensione fisica 4 · logica 2 → stampa <b>6 9 (2)</b> · free(p)', 'Lo spazio chiesto è 4, ma ne uso 2. Il main stampa 6, 9 e la dimensione 2, poi libera la memoria con free.'],
+  ['P', 'Bubble sort su [5, 1, 4, 2]'],
+  ['giro 0: 5 > 1 scambio → [1, 5, 4, 2]', 'Primo giro. Confronto 5 e 1: 5 è maggiore, scambio. Ottengo 1, 5, 4, 2.'],
+  ['5 > 4 scambio → [1, 4, 5, 2] · 5 > 2 scambio → [1, 4, 2, 5]', 'Confronto 5 e 4: scambio. Poi 5 e 2: scambio. Il 5, il più grande, è arrivato in fondo.'],
+  ['giro 1: 1 > 4? no · 4 > 2 scambio → [1, 2, 4, 5]', 'Secondo giro, l\'ultimo è già a posto. 1 maggiore di 4? No. 4 maggiore di 2? Sì, scambio: 1, 2, 4, 5.'],
+  ['giro 2: 1 > 2? no → fine → <b>1 2 4 5</b>', 'Terzo giro: 1 maggiore di 2? No. Finito: 1, 2, 4, 5.'],
+  ['scambio con appoggio: t = v[j]; v[j] = v[j+1]; v[j+1] = t;', 'Lo scambio si fa sempre con una variabile di appoggio t e tre assegnazioni.'],
+  ['P', 'Ordinare con più criteri'],
+  ['prezzo decrescente → a parità quantità crescente → a parità id crescente', 'Il tema chiede: prezzo dal più alto, a parità di prezzo meno pezzi prima, a ulteriore parità id crescente.'],
+  ['B 1199 vs A 299.99 → prezzi diversi → più caro prima → B', 'B costa 1199, A 299 e 99. I prezzi sono diversi, quindi decide il prezzo: il più caro va prima, B.'],
+  ['A (15 pezzi) vs C (5 pezzi), stesso prezzo → meno pezzi prima → C', 'A e C costano uguale, quindi guardo la quantità: C ne ha 5, A 15. Prima C.'],
+  ['A (id 11) vs D (id 13), tutto uguale → id crescente → A', 'A e D hanno stesso prezzo e stessi pezzi: decide l\'id, 11 prima di 13.'],
+  ['ordine finale: <b>12, 14, 11, 13</b>', 'Ordine finale degli id: 12, 14, 11, 13.']
+]);
+
+/* ---------- 14 · LA PROVA AL PC ---------- */
+V('prova-pc', 'Le 2 ore della prova al PC', [
+  ['P', 'Il punteggio'],
+  ['servono <b>11 su 20</b> · non serve finire tutto', 'Servono 11 punti su 20. Non serve finire tutto: serve un progetto che compila, con le prime parti fatte bene e provate nel main.'],
+  ['P', 'Minuto per minuto'],
+  ['0-10 · leggo il testo e guardo le righe dei file', 'Nei primi 10 minuti leggi tutto e apri i file di esempio: guarda esattamente com\'è fatta una riga, spazi, trattini, numero di campi.'],
+  ['10-20 · creo i file e compilo il progetto vuoto', 'Dal minuto 10 al 20 crei i file richiesti, copi lo scheletro dai tuoi appunti e compili subito.'],
+  ['20-55 · Es. 1: struct + lettura + <b>stampa di quello che ho letto</b>', 'Dal 20 al 55 l\'esercizio 1: struct e lettura del file. Nel main stampi quello che hai letto, e non vai avanti finché non è identico al file.'],
+  ['55-75 · Es. 2: confronta + bubble sort', 'Dal 55 al 75 l\'ordinamento: una funzione confronta con i criteri del testo e il bubble sort.'],
+  ['75-105 · Es. 3: calcoli e filtri, uno alla volta, provati nel main', 'Dal 75 al 105 le funzioni di calcolo e di filtro, una alla volta, ognuna provata nel main.'],
+  ['105-120 · Es. 4: stampe finali, free, Rebuild All senza warning', 'Negli ultimi 15 minuti le stampe finali, la free di tutto, e Rebuild All: zero errori e zero warning.'],
+  ['P', 'Le regole d\'oro'],
+  ['compilo dopo ogni funzione', 'Compila dopo ogni funzione: così se c\'è un errore è per forza in quella appena scritta.'],
+  ['bloccato? lascio la funzione che compila e vado avanti', 'Se ti blocchi, lascia la funzione incompleta ma che compila, e passa all\'esercizio dopo.'],
+  ['mai consegnare un progetto che non compila · firme identiche al testo', 'Non consegnare mai un progetto che non compila, e copia le firme delle funzioni esattamente come nel testo.']
+]);
+
 /* Motore della Lavagna di Fondamenti.
    Ogni capitolo è un oggetto in CH (vedi capitoli/*.js). Questo file lo disegna:
    a cosa serve → idea → codice passo passo (tracer) → ricetta → perché delle regole → attenzione
@@ -1954,12 +2327,66 @@ list leggi_prodotti(char *fileName) {
     return s;
   }
 
+  /* ---------------- videolezione ---------------- */
+  // scenes: [{show: html sulla lavagna, say: testo letto dalla voce (parole, niente simboli)}]
+  function video(ch, scenes){
+    const box = $('video-'+ch); if (!box) return;
+    box.className = 'video';
+    box.innerHTML = '<div class="vboard" aria-live="polite"></div><p class="vsub"></p>'
+      + '<div class="row vctl"><button data-vb aria-label="Passo indietro">⟨ Indietro</button><button class="primary" data-vp>▶ Avvia</button><button data-vn aria-label="Passo avanti">Avanti ⟩</button></div>'
+      + '<div class="controls"><span class="vcount"></span><label>Voce <input type="checkbox" data-vv checked></label>'
+      + '<label>Velocità <select data-vs><option value="0.85">lenta</option><option value="1" selected>normale</option><option value="1.15">veloce</option></select></label></div>';
+    const board = box.querySelector('.vboard'), sub = box.querySelector('.vsub'), cnt = box.querySelector('.vcount');
+    const bP = box.querySelector('[data-vp]'), vv = box.querySelector('[data-vv]'), vs = box.querySelector('[data-vs]');
+    const synth = window.speechSynthesis;
+    let i = -1, playing = false, timer = null, token = 0;
+    const voice = () => { try { const v = synth.getVoices(); return v.find(x=>/^it/i.test(x.lang)) || null; } catch(e){ return null; } };
+    if (!synth) { vv.checked = false; vv.disabled = true; }
+    const stop = () => { token++; clearTimeout(timer); try { synth && synth.cancel(); } catch(e){} };
+    const render = () => {
+      board.innerHTML = scenes.slice(0, i+1).map((sc,k)=>'<div class="vstep'+(k===i?' cur':'')+'">'+sc.show+'</div>').join('') || '<p class="vhint">Premi ▶ Avvia: ogni calcolo compare uno alla volta e la voce lo spiega. Puoi fermarti e tornare indietro quando vuoi.</p>';
+      sub.textContent = i>=0 ? scenes[i].say : '';
+      cnt.textContent = 'Passo '+Math.max(0,i+1)+' di '+scenes.length;
+      const cur = board.querySelector('.cur'); if (cur) board.scrollTop = cur.offsetTop - board.offsetTop - 8;
+    };
+    const after = (t) => { if (!playing || t!==token) return; if (i < scenes.length-1) { timer = setTimeout(()=>{ if (t===token) { i++; render(); speak(); } }, 700); } else { playing = false; bP.textContent = '↺ Ricomincia'; } };
+    const speak = () => {
+      const t = ++token, txt = scenes[i].say, rate = +vs.value;
+      if (vv.checked && synth){
+        try { synth.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'it-IT'; u.rate = rate; const v = voice(); if (v) u.voice = v;
+          const t0 = Date.now(), minT = txt.length*55/rate; const done = () => { const left = minT - (Date.now()-t0); if (left > 300) timer = setTimeout(()=>after(t), left); else after(t); };
+          u.onend = done; u.onerror = done; synth.speak(u);
+          // rete di sicurezza: se la voce non parte, vado avanti a tempo
+          timer = setTimeout(()=>{ if (t===token && !synth.speaking) after(t); }, 1500 + txt.length*90/rate);
+        } catch(e){ timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate); }
+      } else timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate);
+    };
+    bP.onclick = () => {
+      if (playing){ playing = false; stop(); bP.textContent = '▶ Continua'; return; }
+      if (i >= scenes.length-1) i = -1;
+      playing = true; bP.textContent = '⏸ Pausa';
+      if (i < 0) i = 0; render(); speak();
+    };
+    box.querySelector('[data-vn]').onclick = () => { if (i < scenes.length-1){ stop(); i++; render(); if (playing) speak(); else if (vv.checked) { playing = false; speakOnce(); } } };
+    box.querySelector('[data-vb]').onclick = () => { if (i > 0){ stop(); i--; render(); if (playing) speak(); else if (vv.checked) speakOnce(); } };
+    const speakOnce = () => { if (!synth) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(scenes[i].say); u.lang='it-IT'; u.rate=+vs.value; const v=voice(); if (v) u.voice=v; synth.speak(u); } catch(e){} };
+    vv.onchange = () => { if (!vv.checked) { try { synth && synth.cancel(); } catch(e){} } };
+    window.addEventListener('hashchange', () => { if (playing){ playing=false; stop(); bP.textContent='▶ Continua'; } });
+    render();
+  }
+
+  /* scene dei capitoli: [lavagna, voce] oppure ['P', titolo] (pagina nuova → titolo sopra la scena dopo) */
+  function scenes(list){ const out=[]; let head='';
+    list.forEach(x=>{ if (x[0]==='P'){ head='<h3>'+x[1]+'</h3>'; } else { out.push({show:head+x[0], say:x[1]}); head=''; } });
+    return out; }
+
   /* ---------- montaggio del capitolo ---------- */
   function build(ch){
     const m = $('main'); m.innerHTML = '';
     const head = board('Capitolo '+ch.n+' · '+ch.when, ch.title, ch.serve + (ch.exam?'<div class="exam"><b>All\'esame:</b> '+ch.exam+'</div>':''));
     m.appendChild(head);
     if (ch.idea) m.appendChild(board('L\'idea in una immagine', ch.idea.title, ch.idea.html));
+    if (ch.video){ m.appendChild(board('Videolezione · tutti i passaggi, uno alla volta', ch.video.title, '<div id="video-'+ch.id+'"></div>')); video(ch.id, scenes(ch.video.scenes)); }
     (ch.widgets||[]).forEach(w => {
       if (w.type==='tracer') m.appendChild(tracer(w));
       else if (w.type==='bits') m.appendChild(bits(w));
