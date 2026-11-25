@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 4 · giorno 1/12 · libro p. 92 e pp. 115-134</div>
       <h2>Funzioni che rispettano somme e multipli</h2>
-      <p class="big">Un'applicazione lineare è una funzione tra spazi vettoriali che "va d'accordo" con le due operazioni: l'immagine di una somma è la somma delle immagini, l'immagine di un multiplo è il multiplo dell'immagine.</p>
-      <p>Il motivo per cui ti interessano: <b>ogni applicazione lineare è una matrice</b>, e viceversa. Così domande come "f è iniettiva?" o "quanto è grande l'immagine?" diventano conti di rango, che sai già fare.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">f: R³ → R³, <b>f(x, y, z) = (x + y, y + z, x + 2y + z)</b>. f è iniettiva? Quali vettori manda in (0, 0, 0)?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>f è una formula: Gauss si fa sulle matrici, non sulle formule. Provare vettori a caso non dimostra niente, e non sai dire quanto è grande l'immagine.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Ogni applicazione lineare ha una <b>matrice</b>: le colonne sono f(e₁), f(e₂), f(e₃). Così nucleo e immagine diventano conti di rango, che sai già fare.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>f(e₁) = f(1, 0, 0) = (1, 0, 1), &nbsp; f(e₂) = (1, 1, 2), &nbsp; f(e₃) = (0, 1, 1)</li><li>A = <span class="mx c3"><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>2</span><span>1</span></span></li><li>R3 ← R3 − R1 = (0, 1, 1); &nbsp; R3 ← R3 − R2 = (0, 0, 0) ⇒ rk A = 2</li><li>dim ker f = 3 − rk A = 3 − 2 = 1 ⇒ ker f ≠ {0} ⇒ non iniettiva</li><li>x + y = 0, y + z = 0 ⇒ y = −x, z = −y = x ⇒ ker f = Span((1, −1, 1))</li><li>Verifica: f(1, −1, 1) = (1 − 1, −1 + 1, 1 − 2 + 1) = (0, 0, 0) ✓</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>Colonne di A = f(e₁), …, f(e<sub>n</sub>). &nbsp; dim Im f = rk A. &nbsp; n = dim ker f + dim Im f.<br>f iniettiva ⇔ ker f = {0}.</p><span class="why mem">a memoria: n = dim ker + dim Im (la dimostrazione è lunga)</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>"f è iniettiva / suriettiva?"</li><li>Trovare base di ker f e di Im f.</li><li>Applicazioni con parametro k: diventano matrici con k.</li></ul>
+      
     </section>
 
     <section class="board">

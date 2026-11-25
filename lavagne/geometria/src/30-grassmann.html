@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 3 · giorno 27/11 · libro pp. 57-60, 64-65, 70-73</div>
       <h2>Due sottospazi insieme</h2>
-      <p class="big">Hai due sottospazi U e W dello stesso spazio V. Ti chiedi: cosa hanno <b>in comune</b> (l'intersezione U ∩ W)? Cosa ottieni <b>mettendoli insieme</b> (la somma U + W)? La formula di Grassmann lega le quattro dimensioni, così spesso ne calcoli tre e la quarta viene gratis.</p>
-      <p>Nello stesso giorno ci sono le <b>coordinate</b>: come si scrive un vettore usando una base che non è quella canonica.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">In R³ hai i piani <b>U = {x + y + z = 0}</b> e <b>W = {x − y = 0}</b>. Quanto è grande U + W, l'insieme di tutte le somme u + w?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>L'intersezione la sai trovare: metti le due equazioni a sistema. Ma U + W non ha equazioni pronte: dovresti trovare una base di U, una di W, metterle insieme e fare Gauss. Si può, ma è lungo.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>La <b>formula di Grassmann</b> lega le quattro dimensioni: conosci dim U, dim W e dim(U ∩ W), e dim(U + W) viene da sola.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>dim U = 3 − 1 = 2, &nbsp; dim W = 3 − 1 = 2</li><li>U ∩ W: x − y = 0 ⇒ y = x; &nbsp; x + x + z = 0 ⇒ z = −2x</li><li>(x, x, −2x) = x·(1, 1, −2) ⇒ dim(U ∩ W) = 1</li><li>dim(U + W) = dim U + dim W − dim(U ∩ W) = 2 + 2 − 1 = 3</li><li>dim 3 dentro R³ ⇒ U + W = R³</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>dim(U + W) = dim U + dim W − dim(U ∩ W).</p><span class="why easy">perché: facile, i vettori dell'intersezione li conteresti due volte, quindi li togli una volta</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Dimensione di U + W o di U ∩ W quando conosci le altre tre.</li><li>Somma diretta: U ⊕ W ⇔ U ∩ W = {0}.</li><li>Quiz con due sottospazi di R³ o R⁴.</li></ul>
+      
     </section>
 
     <section class="board">

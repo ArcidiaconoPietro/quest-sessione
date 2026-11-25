@@ -3,7 +3,16 @@
     <section class="board">
       <div class="eyebrow">Ripasso 1 · da usare quando serve</div>
       <h2>Sistemi lineari e Rouché-Capelli</h2>
-      <p class="big">Quasi ogni esercizio di Geometria finisce in un sistema lineare: nuclei, autospazi, intersezioni, coordinate. Qui ripassi il metodo completo e i sistemi <b>con un parametro k</b>, dove c'è la trappola che hai già incontrato: <b>dividere per un'espressione che può valere 0</b>.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big"><b>x + y = 2, &nbsp; 2x + 2y = 5</b>. Ha soluzioni? E se a destra metti 4 invece di 5, quante sono?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Provando numeri non trovi soluzioni, ma questo non dimostra che non ci sono. E quando ce ne sono infinite non sai dire "quanto infinite": con quanti parametri.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p><b>Rouché-Capelli</b>: confronti il rango di A con quello della matrice completa (A | b). Uguali ⇒ soluzioni, con n − rk parametri; diversi ⇒ nessuna.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li><span class="mx c3"><span>1</span><span>1</span><span>| 2</span><span>2</span><span>2</span><span>| 5</span></span> &nbsp; R2 ← R2 − 2·R1: (2 − 2, 2 − 2 | 5 − 4) = (0, 0 | 1)</li><li>rk A = 1, &nbsp; rk(A | b) = 2 ⇒ diversi ⇒ nessuna soluzione</li><li>Con 4: (0, 0 | 4 − 4) = (0, 0 | 0) ⇒ rk A = rk(A | b) = 1</li><li>n − rk = 2 − 1 = 1 parametro: y = t, x = 2 − t</li><li>Verifica t = 0: (2, 0) → 2 + 0 = 2 ✓, 2·2 + 0 = 4 ✓</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>A·x = b ha soluzioni ⇔ rk A = rk(A | b); in quel caso le soluzioni hanno n − rk A parametri liberi.</p><span class="why easy">perché: facile, una riga (0 … 0 | c ≠ 0) dice 0 = c, impossibile</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Sistemi con parametro k: per quali k ci sono soluzioni e quante.</li><li>Nuclei, autospazi, intersezioni: sono tutti sistemi.</li><li>Quiz "quante soluzioni ha?".</li></ul>
+      
     </section>
 
     <section class="board">

@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 1 · giorno 20/11 · libro pp. 43-54, 56-57, 60-64, 73-74</div>
       <h2>Spazi vettoriali: cose che si sommano e si allungano</h2>
-      <p class="big">Serve a usare <b>un solo linguaggio</b> per cose che sembrano diverse: le frecce nel piano, le soluzioni di un sistema omogeneo, i polinomi, le matrici. Hanno tutte due operazioni: le puoi <b>sommare</b> e le puoi <b>moltiplicare per un numero</b>.</p>
-      <p>Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Risolvi il sistema <b>x + y − z = 0</b> (una equazione, tre incognite). Le soluzioni sono infinite. Come le scrivi <b>tutte</b> in poco spazio? E perché con <b>x + y − z = 1</b> lo stesso trucco non funziona?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Con Gauss sai arrivare a "infinite soluzioni", ma non hai un modo per <b>descriverle tutte</b> con pochi vettori, e non hai un criterio per capire che cosa cambia quando a destra c'è 1 invece di 0.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Due parole nuove. Lo <b>Span</b> di alcuni vettori è l'insieme di tutte le loro combinazioni λ·u + μ·v: con 2 vettori descrivi infinite soluzioni. Un <b>sottospazio</b> è un insieme che contiene 0 ed è chiuso per somme e multipli: solo i sottospazi si possono scrivere come Span.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>x + y − z = 0 ⇒ z = x + y</li><li>(x, y, z) = (x, y, x + y) = (x, 0, x) + (0, y, y)</li><li>= x·(1, 0, 1) + y·(0, 1, 1)</li><li>Soluzioni = Span((1, 0, 1), (0, 1, 1))</li><li>Con = 1: (0, 0, 0) → 0 + 0 − 0 = 0 ≠ 1 ⇒ 0 non è soluzione</li><li>(1, 0, 0) e (0, 1, 0) sono soluzioni; somma (1, 1, 0): 1 + 1 − 0 = 2 ≠ 1</li><li>⇒ non è un sottospazio ⇒ non si scrive come Span</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>W ⊆ V è un sottospazio ⇔ ① 0 ∈ W, ② u, w ∈ W ⇒ u + w ∈ W, ③ w ∈ W, λ ∈ K ⇒ λ·w ∈ W.<br>Span(v₁, …, v<sub>k</sub>) = { λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> : λ₁, …, λ<sub>k</sub> ∈ K }.</p><span class="why easy">perché: facile, sono le operazioni che usi per costruire le combinazioni</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Quiz: "quale di questi insiemi è un sottospazio?" (prima prova se contiene 0).</li><li>Scrivere tutte le soluzioni di un sistema <b>omogeneo</b> (= 0) come Span di pochi vettori.</li><li>Trovare una base di un sottospazio dato con equazioni.</li></ul>
+      <p class="exam">Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
     </section>
 
     <section class="board">

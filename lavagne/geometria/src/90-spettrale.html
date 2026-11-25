@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 9 · giorno 18/12 · libro pp. 219-221 e 352-355</div>
       <h2>Le matrici simmetriche sono sempre "belle"</h2>
-      <p class="big">Nel capitolo 7 hai visto che non tutte le matrici sono diagonalizzabili. Il teorema spettrale dice che le matrici reali <b>simmetriche</b> (<sup>t</sup>A = A) lo sono <b>sempre</b>, e in più gli autovettori si possono scegliere <b>perpendicolari</b> tra loro e di lunghezza 1.</p>
-      <p>Unisce i capitoli 7 (autovalori) e 8 (prodotto scalare, Gram-Schmidt). All'esame: "trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Nel capitolo 7 hai diagonalizzato <b>A = <span class="mx c2"><span>2</span><span>1</span><span>1</span><span>2</span></span></b> con M = <span class="mx c2"><span>1</span><span>1</span><span>1</span><span>−1</span></span>. Per scrivere M⁻¹·A·M devi calcolare M⁻¹, e con una 3 × 3 serve Gauss-Jordan. Si può evitare?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Nel capitolo 7 l'unico modo è calcolare M⁻¹, e prima ancora controllare mg = ma per ogni autovalore per sapere se A è diagonalizzabile.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Il <b>teorema spettrale</b>: se A è <b>simmetrica</b> è sempre diagonalizzabile e gli autovettori si scelgono perpendicolari e lunghi 1. Allora M⁻¹ = <sup>t</sup>M: basta trasporre.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li><sup>t</sup>A = A ✓ (l'1 sopra = l'1 sotto)</li><li>⟨(1, 1), (1, −1)⟩ = 1·1 + 1·(−1) = 0 ✓ perpendicolari</li><li>‖(1, 1)‖ = ‖(1, −1)‖ = √(1 + 1) = √2 ⇒ divido per √2</li><li>M = (1/√2)·<span class="mx c2"><span>1</span><span>1</span><span>1</span><span>−1</span></span></li><li><sup>t</sup>M·M: (1·1 + 1·1)/2 = 1, &nbsp; (1·1 + 1·(−1))/2 = 0, &nbsp; (1·1 + (−1)·(−1))/2 = 1 ⇒ I</li><li>⇒ M⁻¹ = <sup>t</sup>M ⇒ <sup>t</sup>M·A·M = <span class="mx c2"><span>3</span><span>0</span><span>0</span><span>1</span></span></li></ol></div>
+      <div class="def"><b>La formula da usare</b><p><sup>t</sup>A = A (reale) ⇒ esiste M ortogonale (<sup>t</sup>M·M = I) con <sup>t</sup>M·A·M = D diagonale.</p><span class="why mem">a memoria: l'enunciato (la dimostrazione completa è lunga; il punto "perpendicolari" è facile, è nella videolezione)</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>"Trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</li><li>Quiz: "una matrice simmetrica reale è sempre diagonalizzabile?" (sì).</li><li>Autospazio di dimensione 2: Gram-Schmidt dentro l'autospazio.</li></ul>
+      <p class="exam">Unisce i capitoli 7 (autovalori) e 8 (prodotto scalare, Gram-Schmidt). All'esame: "trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</p>
     </section>
 
     <section class="board">

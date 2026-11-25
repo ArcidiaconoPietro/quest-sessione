@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 5 · giorno 4/12 · libro pp. 93-104 e 107-108</div>
       <h2>Un numero che dice tutto su una matrice quadrata</h2>
-      <p class="big">Il determinante det A è un solo numero, calcolato da una matrice <b>quadrata</b> A ∈ M(n, n, K). La cosa più importante che dice: <b>det A ≠ 0 ⇔ A è invertibile</b> ⇔ le colonne sono una base ⇔ rk A = n.</p>
-      <p>Geometricamente (in R²) è il fattore per cui L<sub>A</sub> moltiplica le aree, col segno meno se ribalta il piano. All'esame serve per invertibilità, rango con parametro e, dal 8/12, per autovalori.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Per quali k la matrice <b>A = <span class="mx c3"><span>1</span><span>2</span><span>0</span><span>0</span><span>1</span><span>k</span><span>1</span><span>0</span><span>1</span></span></b> è invertibile?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Con Gauss dovresti portare avanti k in ogni passaggio e, prima di dividere per un'espressione con k, studiare a parte il caso in cui vale 0. È la trappola dei sistemi con parametro: facile sbagliare.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Il <b>determinante</b>: un solo numero calcolato con una formula, senza divisioni. A è invertibile esattamente quando det A ≠ 0.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>det A = 1·det<span class="mx c2"><span>1</span><span>k</span><span>0</span><span>1</span></span> − 2·det<span class="mx c2"><span>0</span><span>k</span><span>1</span><span>1</span></span> + 0·(…)</li><li>det<span class="mx c2"><span>1</span><span>k</span><span>0</span><span>1</span></span> = 1·1 − k·0 = 1</li><li>det<span class="mx c2"><span>0</span><span>k</span><span>1</span><span>1</span></span> = 0·1 − k·1 = −k</li><li>det A = 1·1 − 2·(−k) = 1 + 2k</li><li>1 + 2k = 0 ⇔ k = −1/2 ⇒ invertibile per k ≠ −1/2</li><li>Controllo k = −1/2: R3 − R1 = (0, −2, 1); + 2·R2 = (0, −2 + 2, 1 − 1) = (0, 0, 0)</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>2 × 2: det<span class="mx c2"><span>a</span><span>b</span><span>c</span><span>d</span></span> = a·d − b·c. &nbsp; 3 × 3: sviluppo lungo una riga con i segni + − +.<br>det A ≠ 0 ⇔ A invertibile ⇔ rk A = n.</p><span class="why mem">a memoria: la formula dello sviluppo (il perché è lungo)</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Invertibilità o rango con un parametro k.</li><li>"Questi n vettori di Kⁿ sono una base?": det della matrice ≠ 0.</li><li>Dal capitolo 6: gli autovalori, con det(A − λ·I) = 0.</li></ul>
+      <p class="exam">Geometricamente (in R²) è il fattore per cui L<sub>A</sub> moltiplica le aree, col segno meno se ribalta il piano. All'esame serve per invertibilità, rango con parametro e, dal 8/12, per autovalori.</p>
     </section>
 
     <section class="board">
