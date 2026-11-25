@@ -30,7 +30,12 @@
   $('lfS').addEventListener('change', () => draws['limiti-funzioni']());
   $('lfD').addEventListener('input', () => draws['limiti-funzioni']());
 
-  video('limiti-funzioni', [
+  video('limiti-funzioni', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>x→1</span></span> <span class="fr"><span>x² − 1</span><span>x − 1</span></span> = ?', say:'Il caso: limite per x che tende a uno di x al quadrato meno uno, diviso x meno uno.' },
+    { show:'<b>Provo con quello che so</b><br>Finora n andava solo a +∞, e qui x va a un <b>numero</b>, 1: la gerarchia e il termine dominante non c\'entrano. Sostituisco x = 1: (1 − 1)/(1 − 1) = 0/0, che non è un numero.', say:'Finora n andava solo a più infinito. Qui x va a un numero, uno: la gerarchia non c\'entra. Se sostituisco uno viene zero su zero, che non è un numero.' },
+    { show:'<b>Perché si inceppa</b><br>In x = 1 la funzione non esiste proprio. Ma vicino a 1 esiste: f(0,9) = 1,9; f(0,99) = 1,99; f(1,01) = 2,01. Va da qualche parte, e ti manca il modo di dirlo e calcolarlo.', say:'In uno la funzione non esiste, ma vicino a uno sì: uno virgola nove, uno virgola novantanove, due virgola zero uno. Va da qualche parte, ma ti manca il modo di calcolarlo.' },
+    { show:'<b>Quindi serve</b><br>Il <b>limite di funzione</b> per x → x₀ (guardare vicino, non sopra) e uno schema: sostituisco → se 0/0 scompongo e semplifico → limiti notevoli.', say:'Serve il limite di funzione, che guarda vicino al punto e non sopra, e uno schema per calcolarlo: sostituisco, se viene zero su zero scompongo, poi i limiti notevoli.' },
+    { show:'<b>Lo userai per</b><br>Limiti con 0/0, ∞/∞, sin x/x, destra e sinistra diverse (1/x), e poi per continuità e derivate (capitolo 9).', say:'Lo userai per tutti i limiti di funzioni, e poi per la continuità e le derivate.' },
     { show:'<h3>Limiti di funzioni</h3>'+LIMX('x₀')+' f(x) = L',
       say:'Limiti di funzioni. Si legge: limite per x che tende a x zero di f di x uguale a L. Vuol dire: quando x si avvicina a x zero, f di x si avvicina a L.' },
     { show:'Esempio: '+LIMX('1')+' '+FR('x² − 1','x − 1')+' · sostituisco: '+FR('1 − 1','1 − 1')+' = '+FR('0','0'),

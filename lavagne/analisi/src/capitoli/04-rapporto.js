@@ -51,7 +51,12 @@
   $('qM').addEventListener('input', drawQM);
 
 
-  video('rapporto', [
+  video('rapporto', [/*problema*/
+    { show:'<b>Il caso</b><br><span class="lim">lim<span>n→+∞</span></span> <span class="fr"><span>5ⁿ</span><span>n!</span></span> = ?', say:'Ecco un limite che con quello che sai non riesci a risolvere davvero: limite per n che tende a più infinito di cinque alla n diviso n fattoriale.' },
+    { show:'<b>Provo con quello che so</b><br>Sopra 5ⁿ → +∞, sotto n! → +∞: forma ∞/∞. Raccolgo la potenza più alta come con i polinomi? Non ci sono potenze di n da raccogliere. Carabinieri? Non c\'è un pezzo limitato che oscilla. E i numeri prima <b>salgono</b>: 5; 12,5; 20,8; 26; 26; poi 21,7…', say:'Sopra e sotto vanno a infinito: infinito su infinito. Raccogliere la potenza più alta non si può, non ci sono potenze di n. I carabinieri non si vedono. E i numeri prima salgono, cinque, dodici e mezzo, venti, ventisei, e poi scendono.' },
+    { show:'<b>Perché si inceppa</b><br>La gerarchia dice "n! vince su 5ⁿ", ma è una regola da ricordare, non un calcolo: non dice <b>perché</b>, e non funziona con casi misti come n² · 3ⁿ/n! o nⁿ/n!, dove non sai chi vince.', say:'La gerarchia dice che il fattoriale vince, ma è una regola da ricordare, non un calcolo. Non spiega perché, e con casi misti come n alla n su n fattoriale non sai chi vince.' },
+    { show:'<b>Quindi serve</b><br>Guardare <b>di quanto si moltiplica</b> un termine per passare al successivo: a<sub>n+1</sub>/a<sub>n</sub>. Con fattoriali e potenze questo rapporto si semplifica tantissimo. È il criterio del rapporto.', say:'Serve guardare di quanto si moltiplica un termine per passare al successivo: a con n più uno diviso a con n. Con fattoriali e potenze questo rapporto si semplifica tantissimo. È il criterio del rapporto.' },
+    { show:'<b>Lo userai per</b><br>Tutti i limiti con n!, aⁿ, nⁿ insieme: nⁿ/n!, n!/nⁿ, n² · 3ⁿ/n!, 2ⁿ/n⁵. E nel capitolo 6 per le serie.', say:'Lo userai per tutti i limiti dove compaiono insieme fattoriali e potenze, e poi per le serie.' },
     { show:'<h3>Il criterio del rapporto</h3>Serve per i limiti con fattoriali e potenze: n!, 5ⁿ, nⁿ.',
       say:'Il criterio del rapporto serve per calcolare i limiti di successioni con fattoriali e potenze, per esempio n fattoriale, cinque alla n, n alla n.' },
     { show:'Esempio: a<sub>n</sub> = '+FR('5ⁿ','n!'),

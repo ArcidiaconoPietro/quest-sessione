@@ -20,7 +20,12 @@
   $('iiS').addEventListener('change', () => draws['integrali-indefiniti']());
   $('iiC').addEventListener('input', () => draws['integrali-indefiniti']());
 
-  video('integrali-indefiniti', [
+  video('integrali-indefiniti', [/*problema*/
+    { show:'<b>Il caso</b><br>Quale funzione F ha derivata F′(x) = x eˣ?', say:'Il caso: quale funzione ha come derivata x per e alla x?' },
+    { show:'<b>Provo con quello che so</b><br>Sai derivare, cioè andare da F a F′. Qui devi andare al contrario. Provo a indovinare F = x eˣ: F′ = eˣ + x eˣ (regola del prodotto). C\'è un eˣ di troppo.', say:'Sai derivare, cioè andare da F a F primo. Qui devi fare il contrario. Provo a indovinare x per e alla x: la derivata è e alla x più x e alla x, c\'è un pezzo di troppo.' },
+    { show:'<b>Perché si inceppa</b><br>Per 2x indovini subito x², ma appena la funzione è un prodotto o una composta, indovinare a caso non funziona: non c\'è una "regola del prodotto al contrario" ovvia.', say:'Per due x indovini subito x al quadrato, ma con prodotti e composte indovinare non funziona.' },
+    { show:'<b>Quindi serve</b><br>Gli <b>integrali</b>: una tabellina (le derivate lette al contrario) e metodi per i casi difficili: sostituzione (catena al contrario), <b>per parti</b> (prodotto al contrario), fratti semplici. Qui per parti: x eˣ − eˣ.', say:'Servono gli integrali: una tabellina e metodi per i casi difficili, sostituzione, per parti, fratti semplici. Qui con il metodo per parti viene x e alla x meno e alla x.' },
+    { show:'<b>Lo userai per</b><br>Calcolare aree (capitolo 14) e risolvere equazioni differenziali (capitolo 15).', say:'Lo userai per le aree e per le equazioni differenziali.' },
     { show:'<h3>Integrali indefiniti</h3>∫ f(x) dx = F(x) + C ⟺ F′(x) = f(x)',
       say:'Integrali indefiniti. Integrare è il contrario di derivare: cerco una funzione F la cui derivata è f. Si scrive integrale di f di x in d x uguale F di x più C.' },
     { show:'∫ 2x dx = x² + C · controllo: (x² + 5)′ = 2x + 0 = 2x',

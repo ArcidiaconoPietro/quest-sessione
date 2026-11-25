@@ -55,7 +55,12 @@
   $('dvS').addEventListener('change', () => draws['continuita-derivata']());
   $('dvH').addEventListener('input', () => draws['continuita-derivata']());
 
-  video('continuita-derivata', [
+  video('continuita-derivata', [/*problema*/
+    { show:'<b>Il caso</b><br>Qual è la <b>pendenza</b> della curva y = x² nel punto x = 1?', say:'Il caso: qual è la pendenza della curva y uguale x al quadrato nel punto x uguale a uno?' },
+    { show:'<b>Provo con quello che so</b><br>La pendenza di una retta la sai: (y₂ − y₁)/(x₂ − x₁), servono <b>due</b> punti. Qui ho un punto solo, (1, 1): (1 − 1)/(1 − 1) = 0/0. E la curva non è una retta, la pendenza cambia da punto a punto.', say:'La pendenza di una retta la sai calcolare, ma servono due punti. Qui ne ho uno solo: verrebbe zero su zero. E la curva non è una retta, quindi la pendenza cambia da punto a punto.' },
+    { show:'<b>Provo ancora</b><br>Prendo un secondo punto vicino, x = 1,1: (1,21 − 1)/0,1 = 2,1. Con x = 1,01: 2,01. Si avvicina a 2, ma ogni volta è una approssimazione: serve il <b>limite</b> (capitolo 8).', say:'Prendo un secondo punto vicino: con uno virgola uno la pendenza è due virgola uno, con uno virgola zero uno è due virgola zero uno. Si avvicina a due, ma è un\'approssimazione: serve un limite.' },
+    { show:'<b>Quindi serve</b><br>La <b>derivata</b>: limite per h → 0 della pendenza tra x₀ e x₀ + h. E prima la <b>continuità</b>, che dice quando una funzione non fa salti.', say:'Serve la derivata, il limite della pendenza tra due punti sempre più vicini. E prima la continuità, che dice quando una funzione non fa salti.' },
+    { show:'<b>Lo userai per</b><br>Rette tangenti, velocità, crescenza e massimi nello studio di funzione (capitolo 12). Con la continuità: dire che x³ + x − 1 = 0 ha una soluzione senza trovarla.', say:'Lo userai per le rette tangenti, per sapere dove una funzione cresce e dove ha i massimi, e con la continuità per dire che un\'equazione ha una soluzione senza trovarla.' },
     { show:'<h3>Continuità e derivata</h3>Continua in x₀: '+LIMX('x₀')+' f(x) = f(x₀)',
       say:'Continuità e derivata. Una funzione è continua in x zero se il limite per x che tende a x zero di f di x è uguale a f di x zero. In pratica: si disegna senza staccare la penna.' },
     { show:'Salto: f(x) = x se x &lt; 1, x + 1 se x ≥ 1 · sinistra: 0,9 · 0,99 → 1 · destra: 2,1 · 2,01 → 2',

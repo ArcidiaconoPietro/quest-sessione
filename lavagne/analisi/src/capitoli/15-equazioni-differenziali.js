@@ -47,7 +47,12 @@
   $('edS').addEventListener('change', () => draws['equazioni-differenziali']());
   $('edY').addEventListener('input', () => draws['equazioni-differenziali']());
 
-  video('equazioni-differenziali', [
+  video('equazioni-differenziali', [/*problema*/
+    { show:'<b>Il caso</b><br>Trova y(x) sapendo che y′ = 2y e y(0) = 3.', say:'Il caso: trova la funzione y sapendo che la sua derivata è due volte se stessa, e che in zero vale tre.' },
+    { show:'<b>Provo con quello che so</b><br>Integro tutti e due i lati? y = ∫ 2y dx: ma per integrare 2y dovrei già sapere chi è y. Gira in tondo. Le equazioni che sai risolvere hanno come incognita un <b>numero</b>, qui è una <b>funzione</b>.', say:'Provo a integrare tutti e due i lati: ma per integrare due y dovrei già sapere chi è y. Si gira in tondo. Le equazioni che sai risolvere cercano un numero, qui si cerca una funzione.' },
+    { show:'<b>Provo ancora</b><br>Indovino: y = 3eˣ? y′ = 3eˣ, ma 2y = 6eˣ: non torna. y = 3x²? y′ = 6x, 2y = 6x²: no.', say:'Indovino: tre e alla x? La derivata è tre e alla x, ma due y è sei e alla x. Non torna.' },
+    { show:'<b>Quindi serve</b><br>Metodi per tipo di equazione: <b>variabili separabili</b> (porto le y da una parte, le x dall\'altra e integro), <b>lineari</b> (una formula), <b>secondo ordine</b> (equazione caratteristica). Qui: y = 3e<sup>2x</sup>.', say:'Servono metodi per tipo di equazione: variabili separabili, lineari, secondo ordine. Qui separando le variabili viene tre e alla due x.' },
+    { show:'<b>Lo userai per</b><br>I problemi di Cauchy dello scritto: y′ = a(x)b(y), y′ + a(x)y = f(x), y″ + ay′ + by = f(x).', say:'Lo userai per i problemi di Cauchy dello scritto.' },
     { show:'<h3>Equazioni differenziali</h3>L\'incognita è una funzione y(x). Esempio: y′ = y',
       say:'Equazioni differenziali. Qui l\'incognita è una funzione, y di x, e l\'equazione lega y alle sue derivate. Esempio: y primo uguale y. Una funzione uguale alla sua derivata.' },
     { show:'y = eˣ → y′ = eˣ = y ✓ · y = 5eˣ → y′ = 5eˣ = y ✓ · tutte: y = K eˣ',

@@ -2,6 +2,7 @@
     <section class="board">
       <div class="eyebrow">Capitolo 11 · blocco del 3/12 · Albano lezioni 5, 6 e 10 novembre · dispensa pp. 96-102, 109-115</div>
       <h2>Rolle, Lagrange, De L'Hôpital, Taylor</h2>
+      <div class="problema"><div class="ptit">Il problema da cui partiamo</div><ol class="sv"><li><i>Il caso:</i> <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = ?</li><li><i>Provo con quello che so:</i> Sostituisco: (0 − 0)/0 = 0/0. Scompongo? Non è un polinomio. Limite notevole sin x/x → 1? Divido per x: (1 − sin x/x)/x² → (1 − 1)/0 = 0/0 di nuovo.</li><li><i>Perché si inceppa:</i> Il limite notevole dice solo che sin x ≈ x vicino a 0. Ma qui x − sin x cancella proprio quella parte: serve sapere <b>di quanto</b> sin x è diverso da x. Con x = 0,1: 0,1 − 0,0998334 = 0,0001666, un numero piccolissimo.</li><li><i>Quindi serve:</i> <b>Taylor</b>: sin x = x − x³/6 + o(x³), un polinomio più preciso della sola x. Oppure <b>De L'Hôpital</b>: con 0/0 derivo sopra e sotto. E i teoremi di Rolle e Lagrange che ci stanno dietro.</li><li><i>Lo userai per:</i> Tutti i limiti con sin, cos, eˣ, ln mescolati, dove i notevoli non bastano. Lagrange per dimostrare che f′ &gt; 0 vuol dire f crescente.</li></ol></div>
       <p class="big">Quattro attrezzi, due "di teoria" e due "da calcolo":</p>
       <ul class="recap">
         <li><b>Rolle e Lagrange</b>: legano la derivata alla crescita della funzione. Servono a giustificare lo studio di funzione (capitolo 12) e sono domande di teoria tipiche.</li>

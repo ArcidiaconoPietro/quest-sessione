@@ -22,7 +22,12 @@
   $('rdS').addEventListener('change', () => draws['regole-derivazione']());
   $('rdX').addEventListener('input', () => draws['regole-derivazione']());
 
-  video('regole-derivazione', [
+  video('regole-derivazione', [/*problema*/
+    { show:'<b>Il caso</b><br>Derivata di f(x) = (3x + 1)⁵ in x = 0.', say:'Il caso: la derivata di tre x più uno alla quinta, in x uguale a zero.' },
+    { show:'<b>Provo con quello che so</b><br>Con la definizione: <span class="lim">lim<span>h→0</span></span> [(3h + 1)⁵ − 1]/h. Devo sviluppare (3h + 1)⁵: sono 6 termini con coefficienti 1, 5, 10, 10, 5, 1 e potenze di 3. Si può, ma è lunghissimo, e con sin(x²) · eˣ non si fa proprio.', say:'Con la definizione dovrei sviluppare tre h più uno alla quinta: sei termini con coefficienti e potenze di tre. Si può, ma è lunghissimo, e con funzioni come seno di x al quadrato per e alla x non si fa proprio.' },
+    { show:'<b>Perché si inceppa</b><br>La definizione funziona sempre, ma ogni funzione nuova richiede un limite nuovo. All\'esame non c\'è tempo.', say:'La definizione funziona sempre, ma ogni funzione nuova richiede un limite nuovo, e all\'esame non c\'è tempo.' },
+    { show:'<b>Quindi serve</b><br>Una <b>tabellina</b> di derivate fatte una volta per tutte, e <b>regole</b> per combinarle (somma, prodotto, quoziente, catena). Qui: 5(3x + 1)⁴ · 3, in 0 fa 15.', say:'Serve una tabellina di derivate fatte una volta per tutte, e regole per combinarle. Qui con la regola della catena viene quindici in un attimo.' },
+    { show:'<b>Lo userai per</b><br>Tutte le derivate dell\'esame: studio di funzione, De L\'Hôpital, Taylor, e al contrario negli integrali.', say:'Lo userai per tutte le derivate dell\'esame: studio di funzione, De L\'Hôpital, Taylor, e al contrario per gli integrali.' },
     { show:'<h3>Regole di derivazione</h3>Una tabellina + cinque regole, invece del limite per h → 0',
       say:'Le regole di derivazione. Con la definizione ogni derivata è un limite lungo. Con una tabellina e cinque regole si fa in un attimo.' },
     { show:'(xᵃ)′ = a · x<sup>a−1</sup> → (x³)′ = 3x² → in x = 2: 3 · 4 = 12',
