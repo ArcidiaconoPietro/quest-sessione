@@ -7,6 +7,11 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Il grafico della derivata · prima guardiamo</div>
       <h2>f′(x) è la pendenza di f nel punto x</h2>
       <p>Sposta il punto: la tangente (blu) cambia pendenza. Quel numero, punto per punto, disegna una nuova funzione: la <b>derivata</b> f′ (arancione).</p>
@@ -42,6 +47,12 @@
         <div>(arcsin x)′ = 1/√(1 − x²)</div>
       </div>
       <p><b>Perché, per le più usate</b> <span class="tag cap">facile</span>: (x²)′ = 2x l'hai visto nel capitolo 9 con la definizione. (eˣ)′ = eˣ viene dal limite notevole: [e<sup>x+h</sup> − eˣ]/h = eˣ · (eʰ − 1)/h → eˣ · 1 per h → 0. (sin x)′ in 0 vale 1 per il limite notevole sin h / h → 1 per h → 0. Le altre: <b>a memoria</b>, il conto è lungo e non serve capirlo.</p>
+      <ol class="sv">
+        <li><i>(x³)′ = 3x², controllo in x = 2:</i> la regola dà 3 · 2² = 3 · 4 = 12</li>
+        <li><i>Con il rapporto incrementale, h = 0,01:</i> (2,01³ − 2³)/0,01 = (8,120601 − 8)/0,01 = 0,120601/0,01 ≈ 12,06 ✓</li>
+        <li><i>(eˣ)′ = eˣ passo per passo:</i> e<sup>x+h</sup> = eˣ · eʰ (proprietà delle potenze), quindi e<sup>x+h</sup> − eˣ = eˣ · eʰ − eˣ = eˣ(eʰ − 1)</li>
+        <li><i>Divido per h:</i> eˣ · (eʰ − 1)/h, e (eʰ − 1)/h → 1 per h → 0 (limite notevole), quindi resta eˣ · 1 = eˣ</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -49,10 +60,36 @@
       <h2>Come si combinano</h2>
       <div class="steps">
         <div class="step"><h3>Somma e costante <span class="tag cap">facile</span></h3><p>(f + g)′ = f′ + g′ e (c · f)′ = c · f′. Ovvio: se due cose salgono, la somma sale della somma delle pendenze.</p></div>
-        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p></div>
-        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p></div>
-        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p></div>
-        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p></div>
+        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p>
+          <ol class="sv">
+            <li><i>f = x, g = eˣ:</i> f′ = 1, g′ = eˣ</li>
+            <li><i>Regola:</i> f′ · g + f · g′ = 1 · eˣ + x · eˣ = eˣ(1 + x)</li>
+            <li><i>In x = 1:</i> e · (1 + 1) = 2e ≈ 5,44</li>
+            <li><i>Controllo con h = 0,01:</i> (1,01 · e<sup>1,01</sup> − 1 · e)/0,01 ≈ (2,7731 − 2,7183)/0,01 ≈ 5,48 ✓ (se avessi fatto f′ · g′ = 1 · e ≈ 2,72: sbagliato)</li>
+          </ol>
+          <p><b>Perché</b> <span class="tag cap">abbastanza facile</span>: pensa a f · g come all'area di un rettangolo di lati f e g. Se f cresce un po' e g cresce un po', l'area cresce di una striscia f′ · g più una striscia f · g′ (più un quadratino piccolissimo che sparisce). Con f = x, g = x² in x = 2: f′g + fg′ = 1 · 4 + 2 · 4 = 12, ed è proprio (x³)′ in 2 = 12.</p></div>
+        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p>
+          <ol class="sv">
+            <li><i>Esempio x/(x + 1):</i> f = x, f′ = 1; g = x + 1, g′ = 1</li>
+            <li><i>Regola:</i> <span class="fr"><span>1 · (x + 1) − x · 1</span><span>(x + 1)²</span></span> = <span class="fr"><span>x + 1 − x</span><span>(x + 1)²</span></span> = <span class="fr"><span>1</span><span>(x + 1)²</span></span></li>
+            <li><i>In x = 1:</i> 1/(1 + 1)² = 1/4 = 0,25</li>
+            <li><i>Controllo con h = 0,01:</i> (1,01/2,01 − 1/2)/0,01 = (0,50249 − 0,5)/0,01 ≈ 0,249 ✓</li>
+          </ol></div>
+        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p>
+          <ol class="sv">
+            <li><i>Esempio sin(3x):</i> fuori sin u, dentro u = 3x</li>
+            <li><i>Derivo il fuori lasciando dentro uguale:</i> cos(3x)</li>
+            <li><i>Moltiplico per la derivata del dentro:</i> (3x)′ = 3, quindi (sin(3x))′ = 3 cos(3x)</li>
+            <li><i>In x = 0:</i> 3 · cos 0 = 3 · 1 = 3</li>
+            <li><i>Controllo con h = 0,01:</i> (sin(0,03) − sin 0)/0,01 ≈ 0,029996/0,01 ≈ 3,00 ✓</li>
+          </ol></div>
+        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p>
+          <ol class="sv">
+            <li><i>ln è l'inversa di eˣ:</i> y = ln x vuol dire x = eʸ</li>
+            <li><i>Regola:</i> (ln)′(x) = 1/(eʸ)′ = 1/eʸ</li>
+            <li><i>Ma eʸ = x:</i> quindi (ln x)′ = 1/x</li>
+            <li><i>Controllo in x = 2:</i> 1/2 = 0,5; (ln 2,01 − ln 2)/0,01 ≈ (0,69813 − 0,69315)/0,01 ≈ 0,499 ✓</li>
+          </ol></div>
       </div>
       <div class="warn"><b>Errore classico con la catena:</b> (sin(3x))′ = cos(3x) · 3, non cos(3x). Ogni volta che "dentro" non c'è solo x, moltiplica per la derivata di quello che c'è dentro.</div>
     </section>

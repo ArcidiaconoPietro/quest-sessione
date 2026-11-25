@@ -1149,6 +1149,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-continuita-derivata"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Continuità <span class="tag mem">definizione a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Disegnare senza staccare la penna</h2>
       <div class="math left"><span class="box cop">f è continua in x₀ se <span class="lim">lim<span>x→x₀</span></span> f(x) = f(x₀)</span></div>
@@ -1169,8 +1174,16 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Teorema degli zeri e Weierstrass</h2>
       <div class="math left"><span class="box cop"><b>Zeri.</b> Se f è continua su [a, b] e f(a), f(b) hanno segni opposti, allora esiste c in (a, b) con f(c) = 0.</span></div>
       <p><b>Perché è vero (facile):</b> parti sotto l'asse x e arrivi sopra senza staccare la penna. Per forza attraversi l'asse da qualche parte. Serve a dire "l'equazione f(x) = 0 ha una soluzione" senza trovarla.</p>
+      <p>Esempio con i calcoli: x³ + x − 1 = 0 ha una soluzione tra 0 e 1?</p>
+      <ol class="sv">
+        <li><i>f è continua:</i> è un polinomio</li>
+        <li><i>In a = 0:</i> f(0) = 0 + 0 − 1 = −1, negativo</li>
+        <li><i>In b = 1:</i> f(1) = 1 + 1 − 1 = 1, positivo</li>
+        <li><i>Teorema degli zeri:</i> segni opposti, quindi esiste c tra 0 e 1 con f(c) = 0</li>
+        <li><i>Posso anche stringere (bisezione):</i> f(0,5) = 0,125 + 0,5 − 1 = −0,375 &lt; 0, quindi c è tra 0,5 e 1; f(0,75) ≈ 0,422 + 0,75 − 1 = 0,172 &gt; 0, quindi c è tra 0,5 e 0,75</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Weierstrass.</b> Se f è continua su un intervallo chiuso e limitato [a, b], allora f ha massimo e minimo su [a, b].</span></div>
-      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0: l'intervallo non è chiuso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
+      <p><b>Perché servono "chiuso" e "continua" (facile, con esempi):</b> 1/x su (0, 1] non ha massimo, sale a +∞ vicino a 0 (x = 0,1 → 10; x = 0,01 → 100; x = 0,001 → 1000): l'intervallo non è chiuso, 0 è escluso. Una funzione con un salto può "saltare" proprio il valore più alto. La dimostrazione vera è lunga: <b>conviene impararla a memoria solo se Albano la chiede</b>, altrimenti basta l'enunciato.</p>
     </section>
 
     <section class="board">
@@ -1199,6 +1212,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p>f′(x₀) è la pendenza della tangente in x₀. La tangente è la retta che passa per (x₀, f(x₀)) con quella pendenza:</p>
       <div class="math"><span class="box thief">y = f(x₀) + f′(x₀) · (x − x₀)</span></div>
       <p>Perché è così (facile): una retta con pendenza m che passa per (x₀, y₀) è y = y₀ + m(x − x₀). Qui y₀ = f(x₀) e m = f′(x₀).</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² in x₀ = 1:</i> f(1) = 1, f′(1) = 2 (calcolato nel grafico sopra)</li>
+        <li><i>Sostituisco:</i> y = 1 + 2(x − 1) = 1 + 2x − 2 = 2x − 1</li>
+        <li><i>Controllo che passa per (1, 1):</i> 2 · 1 − 1 = 1 ✓</li>
+        <li><i>Controllo che è vicina alla curva:</i> in x = 1,1 la tangente vale 2,2 − 1 = 1,2 e la curva 1,1² = 1,21. Quasi uguali ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1207,12 +1226,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <p><b>Teorema:</b> se f è derivabile in x₀, allora è continua in x₀. La dimostrazione sta in una riga, ed è di quelle che si chiedono:</p>
       <div class="math left">f(x₀ + h) − f(x₀) = <span class="fr"><span>f(x₀ + h) − f(x₀)</span><span>h</span></span> · h &nbsp;→&nbsp; f′(x₀) · 0 = 0 &nbsp; per h → 0</div>
       <p>Quindi f(x₀ + h) tende a f(x₀) per h → 0: è proprio la continuità.</p>
+      <p>Con i numeri, f(x) = x² in x₀ = 1 (f′(1) = 2): con h = 0,1, f(1,1) − f(1) = 1,21 − 1 = 0,21, e 0,21 = 2,1 · 0,1 (rapporto per h). Con h = 0,01: 1,0201 − 1 = 0,0201 = 2,01 · 0,01. Il rapporto resta vicino a 2, h va a 0, il prodotto va a 2 · 0 = 0.</p>
       <div class="warn"><b>Il contrario è falso.</b> |x| è continua in 0 ma non derivabile: nel grafico sopra, con h &gt; 0 la secante ha pendenza 1, con h &lt; 0 ha pendenza −1. Destra e sinistra diverse, il limite per h → 0 non esiste.</div>
       <p><b>Punti dove f è continua ma non derivabile</b> <span class="tag mem">nomi a memoria</span>:</p>
       <div class="when">
         <div><b>Punto angoloso:</b> derivata destra e sinistra finite ma diverse. Esempio |x| in 0.</div>
-        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0.</div>
-        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0.</div>
+        <div><b>Cuspide:</b> derivate destra e sinistra +∞ e −∞. Esempio √|x| in 0: per h &gt; 0 il rapporto è √h / h = 1/√h, con h = 0,01 vale 10, con h = 0,0001 vale 100 → +∞; per h &lt; 0 viene −∞.</div>
+        <div><b>Flesso a tangente verticale:</b> derivata destra e sinistra entrambe +∞ (o entrambe −∞). Esempio ∛x in 0: il rapporto è ∛h / h = 1/∛(h²), con h = 0,001 vale 1/0,01 = 100, con h = −0,001 vale ancora 100 → +∞ da tutte e due le parti.</div>
       </div>
     </section>
 
@@ -1253,6 +1273,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-regole-derivazione"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Il grafico della derivata · prima guardiamo</div>
       <h2>f′(x) è la pendenza di f nel punto x</h2>
       <p>Sposta il punto: la tangente (blu) cambia pendenza. Quel numero, punto per punto, disegna una nuova funzione: la <b>derivata</b> f′ (arancione).</p>
@@ -1288,6 +1313,12 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div>(arcsin x)′ = 1/√(1 − x²)</div>
       </div>
       <p><b>Perché, per le più usate</b> <span class="tag cap">facile</span>: (x²)′ = 2x l'hai visto nel capitolo 9 con la definizione. (eˣ)′ = eˣ viene dal limite notevole: [e<sup>x+h</sup> − eˣ]/h = eˣ · (eʰ − 1)/h → eˣ · 1 per h → 0. (sin x)′ in 0 vale 1 per il limite notevole sin h / h → 1 per h → 0. Le altre: <b>a memoria</b>, il conto è lungo e non serve capirlo.</p>
+      <ol class="sv">
+        <li><i>(x³)′ = 3x², controllo in x = 2:</i> la regola dà 3 · 2² = 3 · 4 = 12</li>
+        <li><i>Con il rapporto incrementale, h = 0,01:</i> (2,01³ − 2³)/0,01 = (8,120601 − 8)/0,01 = 0,120601/0,01 ≈ 12,06 ✓</li>
+        <li><i>(eˣ)′ = eˣ passo per passo:</i> e<sup>x+h</sup> = eˣ · eʰ (proprietà delle potenze), quindi e<sup>x+h</sup> − eˣ = eˣ · eʰ − eˣ = eˣ(eʰ − 1)</li>
+        <li><i>Divido per h:</i> eˣ · (eʰ − 1)/h, e (eʰ − 1)/h → 1 per h → 0 (limite notevole), quindi resta eˣ · 1 = eˣ</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -1295,10 +1326,36 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Come si combinano</h2>
       <div class="steps">
         <div class="step"><h3>Somma e costante <span class="tag cap">facile</span></h3><p>(f + g)′ = f′ + g′ e (c · f)′ = c · f′. Ovvio: se due cose salgono, la somma sale della somma delle pendenze.</p></div>
-        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p></div>
-        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p></div>
-        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p></div>
-        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p></div>
+        <div class="step"><h3>Prodotto <span class="tag mem">a memoria</span></h3><p>(f · g)′ = f′ · g + f · g′. Attenzione: <b>non</b> è f′ · g′. Esempio: (x · eˣ)′ = 1 · eˣ + x · eˣ.</p>
+          <ol class="sv">
+            <li><i>f = x, g = eˣ:</i> f′ = 1, g′ = eˣ</li>
+            <li><i>Regola:</i> f′ · g + f · g′ = 1 · eˣ + x · eˣ = eˣ(1 + x)</li>
+            <li><i>In x = 1:</i> e · (1 + 1) = 2e ≈ 5,44</li>
+            <li><i>Controllo con h = 0,01:</i> (1,01 · e<sup>1,01</sup> − 1 · e)/0,01 ≈ (2,7731 − 2,7183)/0,01 ≈ 5,48 ✓ (se avessi fatto f′ · g′ = 1 · e ≈ 2,72: sbagliato)</li>
+          </ol>
+          <p><b>Perché</b> <span class="tag cap">abbastanza facile</span>: pensa a f · g come all'area di un rettangolo di lati f e g. Se f cresce un po' e g cresce un po', l'area cresce di una striscia f′ · g più una striscia f · g′ (più un quadratino piccolissimo che sparisce). Con f = x, g = x² in x = 2: f′g + fg′ = 1 · 4 + 2 · 4 = 12, ed è proprio (x³)′ in 2 = 12.</p></div>
+        <div class="step"><h3>Quoziente <span class="tag mem">a memoria</span></h3><p>(f / g)′ = <span class="fr"><span>f′ · g − f · g′</span><span>g²</span></span>. Trucco: "sopra la derivata del sopra" viene per prima, poi il segno meno.</p>
+          <ol class="sv">
+            <li><i>Esempio x/(x + 1):</i> f = x, f′ = 1; g = x + 1, g′ = 1</li>
+            <li><i>Regola:</i> <span class="fr"><span>1 · (x + 1) − x · 1</span><span>(x + 1)²</span></span> = <span class="fr"><span>x + 1 − x</span><span>(x + 1)²</span></span> = <span class="fr"><span>1</span><span>(x + 1)²</span></span></li>
+            <li><i>In x = 1:</i> 1/(1 + 1)² = 1/4 = 0,25</li>
+            <li><i>Controllo con h = 0,01:</i> (1,01/2,01 − 1/2)/0,01 = (0,50249 − 0,5)/0,01 ≈ 0,249 ✓</li>
+          </ol></div>
+        <div class="step"><h3>Funzione composta (catena) <span class="tag mem">a memoria</span> <span class="tag cap">l'idea è facile</span></h3><p>[f(g(x))]′ = f′(g(x)) · g′(x). Si deriva "da fuori a dentro" e si moltiplica. Idea: se g va 3 volte più veloce di x, e f va 2 volte più veloce di g, allora f(g(x)) va 2 · 3 = 6 volte più veloce di x.</p>
+          <ol class="sv">
+            <li><i>Esempio sin(3x):</i> fuori sin u, dentro u = 3x</li>
+            <li><i>Derivo il fuori lasciando dentro uguale:</i> cos(3x)</li>
+            <li><i>Moltiplico per la derivata del dentro:</i> (3x)′ = 3, quindi (sin(3x))′ = 3 cos(3x)</li>
+            <li><i>In x = 0:</i> 3 · cos 0 = 3 · 1 = 3</li>
+            <li><i>Controllo con h = 0,01:</i> (sin(0,03) − sin 0)/0,01 ≈ 0,029996/0,01 ≈ 3,00 ✓</li>
+          </ol></div>
+        <div class="step"><h3>Funzione inversa <span class="tag mem">a memoria</span></h3><p>(f<sup>−1</sup>)′(y) = 1 / f′(x) dove y = f(x). Idea: il grafico dell'inversa è lo specchio rispetto a y = x, e lo specchio scambia "quanto sale" con "quanto va avanti", quindi la pendenza si capovolge. È da qui che vengono (ln x)′ = 1/x e (arctan x)′.</p>
+          <ol class="sv">
+            <li><i>ln è l'inversa di eˣ:</i> y = ln x vuol dire x = eʸ</li>
+            <li><i>Regola:</i> (ln)′(x) = 1/(eʸ)′ = 1/eʸ</li>
+            <li><i>Ma eʸ = x:</i> quindi (ln x)′ = 1/x</li>
+            <li><i>Controllo in x = 2:</i> 1/2 = 0,5; (ln 2,01 − ln 2)/0,01 ≈ (0,69813 − 0,69315)/0,01 ≈ 0,499 ✓</li>
+          </ol></div>
       </div>
       <div class="warn"><b>Errore classico con la catena:</b> (sin(3x))′ = cos(3x) · 3, non cos(3x). Ogni volta che "dentro" non c'è solo x, moltiplica per la derivata di quello che c'è dentro.</div>
     </section>
@@ -1342,16 +1399,32 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione · tutti i calcoli, uno alla volta</div>
+      <div id="video-teoremi-taylor"></div>
+    </section>
+
+    <section class="board">
       <div class="eyebrow">Rolle e Lagrange <span class="tag mem">enunciati a memoria</span> <span class="tag cap">l'idea è facile</span></div>
       <h2>Da qualche parte la pendenza è quella media</h2>
       <div class="math left"><span class="box cop"><b>Rolle.</b> f continua su [a, b], derivabile in (a, b), e f(a) = f(b). Allora esiste c in (a, b) con f′(c) = 0.</span></div>
       <p><b>Idea (facile):</b> parti a una quota e torni alla stessa quota. Da qualche parte hai una cima (o un fondo), e lì la tangente è orizzontale.</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² − 2x su [0, 2]:</i> f(0) = 0 − 0 = 0, f(2) = 4 − 4 = 0, stessa quota ✓</li>
+        <li><i>Derivata:</i> f′(x) = 2x − 2</li>
+        <li><i>Dove fa 0:</i> 2c − 2 = 0 → 2c = 2 → c = 1, che sta in (0, 2) ✓ (è il fondo della parabola: f(1) = 1 − 2 = −1)</li>
+      </ol>
       <div class="math left"><span class="box thief"><b>Lagrange.</b> f continua su [a, b], derivabile in (a, b). Allora esiste c in (a, b) con <span class="fr"><span>f(b) − f(a)</span><span>b − a</span></span> = f′(c).</span></div>
       <p><b>Idea (facile):</b> fai 120 km in un'ora. La velocità media è 120 km/h. In almeno un istante il tachimetro ha segnato esattamente 120. Nel disegno: la secante da A a B (arancione) e, in un punto c, una tangente parallela (blu).</p>
+      <ol class="sv">
+        <li><i>Esempio f(x) = x² su [1, 3]:</i> f(1) = 1, f(3) = 9</li>
+        <li><i>Pendenza media:</i> (9 − 1)/(3 − 1) = 8/2 = 4</li>
+        <li><i>Cerco c:</i> f′(x) = 2x, quindi 2c = 4 → c = 2, che sta in (1, 3) ✓</li>
+      </ol>
       <canvas id="plotLG" aria-label="Teorema di Lagrange"></canvas>
       <div class="controls"><label for="lgB">Sposta b: <input type="range" id="lgB" min="0" max="100" value="80"></label></div>
       <div class="readout" id="lgOut"></div>
       <p><b>Conseguenze</b> <span class="tag mem">a memoria</span>, sono quelle che usi davvero: se f′ &gt; 0 su un intervallo, f è crescente lì; se f′ &lt; 0, è decrescente; se f′ = 0 su tutto un intervallo, f è costante.</p>
+      <p><b>Perché</b> <span class="tag cap">facile, è Lagrange</span>: prendo x₁ &lt; x₂. Lagrange dice f(x₂) − f(x₁) = f′(c) · (x₂ − x₁). Se f′ &gt; 0, allora f′(c) &gt; 0 e x₂ − x₁ &gt; 0, quindi il prodotto è positivo: f(x₂) &gt; f(x₁), cioè f cresce. Esempio: f = x² su [1, 3], f(3) − f(1) = 8 = f′(2) · 2 = 4 · 2 ✓</p>
       <div class="note"><b>Dimostrazioni.</b> Lagrange si dimostra applicando Rolle alla differenza tra f e la retta secante (che vale 0 in a e in b): è corta, <b>capiscila se Albano la chiede</b>. Rolle usa Weierstrass e il fatto che in una cima la derivata è 0 (Fermat): più lunga, <b>a memoria solo se richiesta</b>.</div>
     </section>
 
@@ -1361,6 +1434,23 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <div class="math left"><span class="box cop">Se <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f(x)</span><span>g(x)</span></span> è nella forma 0/0 oppure ∞/∞, e <span class="lim">lim<span>x→x₀</span></span> <span class="fr"><span>f′(x)</span><span>g′(x)</span></span> esiste, allora i due limiti sono uguali.</span></div>
       <p><b>Perché (caso 0/0, facile):</b> vicino a x₀ ogni funzione è quasi la sua tangente. Se f(x₀) = g(x₀) = 0, allora f(x) ≈ f′(x₀)(x − x₀) e g(x) ≈ g′(x₀)(x − x₀). Dividendo, (x − x₀) si semplifica e resta f′/g′. Vale anche x₀ = ±∞.</p>
       <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>sin x</span><span>x</span></span> → forma 0/0 → <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>cos x</span><span>1</span></span> = 1</div>
+      <p>Un esempio dove serve applicarlo due volte, con tutti i calcoli: <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>1 − cos x</span><span>x²</span></span>.</p>
+      <ol class="sv">
+        <li><i>Sostituisco x = 0:</i> sopra 1 − cos 0 = 1 − 1 = 0, sotto 0² = 0: forma 0/0 ✓</li>
+        <li><i>Derivo sopra e sotto, separatamente:</i> (1 − cos x)′ = 0 − (−sin x) = sin x; (x²)′ = 2x. Nuovo limite: sin x / (2x)</li>
+        <li><i>Sostituisco di nuovo:</i> sin 0 / 0 = 0/0, ancora indeterminata</li>
+        <li><i>Derivo ancora:</i> (sin x)′ = cos x; (2x)′ = 2. Nuovo limite: cos x / 2</li>
+        <li><i>Sostituisco:</i> cos 0 / 2 = 1/2. Il limite è <b>1/2</b></li>
+        <li><i>Controllo con x = 0,1:</i> (1 − cos 0,1)/0,01 ≈ 0,0049958/0,01 ≈ 0,4996 ✓</li>
+      </ol>
+      <p>Il caso 0 · ∞: <span class="lim">lim<span>x→0⁺</span></span> x ln x.</p>
+      <ol class="sv">
+        <li><i>Forma:</i> x → 0 e ln x → −∞: forma 0 · ∞, non si può derivare così</li>
+        <li><i>Riscrivo come frazione:</i> x ln x = ln x / (1/x), forma −∞/+∞ ✓</li>
+        <li><i>Derivo:</i> (ln x)′ = 1/x; (1/x)′ = −1/x². Nuovo limite: (1/x)/(−1/x²) = (1/x) · (−x²) = −x</li>
+        <li><i>Limite:</i> −x → 0. Quindi <b>x ln x → 0</b></li>
+        <li><i>Controllo:</i> x = 0,01 → 0,01 · ln 0,01 ≈ 0,01 · (−4,605) ≈ −0,046; x = 0,001 → 0,001 · (−6,908) ≈ −0,0069 ✓</li>
+      </ol>
       <div class="warn"><b>Tre errori classici.</b> 1) Derivi sopra e sotto <b>separatamente</b>, non con la regola del quoziente. 2) Prima controlla che sia davvero 0/0 o ∞/∞: con (x + 1)/x per x → 0 non si può (è 1/0). 3) Con 0 · ∞ o ∞ − ∞ prima riscrivi come frazione: x ln x = ln x / (1/x).</div>
     </section>
 
@@ -1386,6 +1476,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       <h2>Sviluppo di Mac Laurin (Taylor in x₀ = 0)</h2>
       <div class="math left"><span class="box cop">f(x) = f(0) + f′(0) x + <span class="fr"><span>f″(0)</span><span>2</span></span> x² + … + <span class="fr"><span>f<sup>(n)</sup>(0)</span><span>n!</span></span> xⁿ + o(xⁿ) &nbsp; per x → 0</span></div>
       <p><b>o-piccolo</b> <span class="tag cap">da capire</span>: o(xⁿ) vuol dire "un pezzo che, per x → 0, va a 0 più in fretta di xⁿ", cioè <span class="lim">lim<span>x→0</span></span> o(xⁿ)/xⁿ = 0. È l'errore che commetti fermandoti al grado n. Regole: o(xⁿ) + o(xⁿ) = o(xⁿ); x · o(xⁿ) = o(x<sup>n+1</sup>); un termine x<sup>m</sup> con m &gt; n si "mangia" dentro o(xⁿ).</p>
+      <p>Con i numeri: x³ è o(x²), perché x³/x² = x → 0: con x = 0,1 il rapporto è 0,1, con x = 0,01 è 0,01. Invece 5x² non è o(x²): 5x²/x² = 5, non va a 0.</p>
       <p><b>Sviluppi da sapere</b> <span class="tag mem">a memoria</span> (tutti per x → 0):</p>
       <div class="when">
         <div>eˣ = 1 + x + x²/2 + x³/6 + … + xⁿ/n! + o(xⁿ)</div>
@@ -1396,10 +1487,25 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
         <div>arctan x = x − x³/3 + o(x⁴)</div>
       </div>
       <p><b>Perché i coefficienti sono quelli</b> <span class="tag cap">facile per eˣ</span>: tutte le derivate di eˣ in 0 valgono 1, quindi il coefficiente di xⁿ è 1/n!. Per sin e cos le derivate in 0 girano 0, 1, 0, −1: per questo compaiono solo potenze dispari (sin) o pari (cos).</p>
+      <ol class="sv">
+        <li><i>eˣ, derivate in 0:</i> f(0) = e⁰ = 1, f′(0) = e⁰ = 1, f″(0) = 1, … tutte 1</li>
+        <li><i>Coefficienti:</i> 1/0! = 1, 1/1! = 1, 1/2! = 1/2, 1/3! = 1/6, quindi 1 + x + x²/2 + x³/6 + …</li>
+        <li><i>Controllo in x = 0,5:</i> 1 + 0,5 + 0,25/2 + 0,125/6 = 1 + 0,5 + 0,125 + 0,0208 = 1,6458, e e<sup>0,5</sup> ≈ 1,6487 ✓</li>
+        <li><i>sin x, derivate in 0:</i> sin 0 = 0, cos 0 = 1, −sin 0 = 0, −cos 0 = −1: coefficienti 0, 1, 0, −1/3! = −1/6 → x − x³/6</li>
+        <li><i>Controllo in x = 0,5:</i> 0,5 − 0,125/6 = 0,5 − 0,0208 = 0,4792, e sin 0,5 ≈ 0,4794 ✓</li>
+      </ol>
       <div class="steps">
         <div class="step"><h3>Come si usa nei limiti</h3><p>1) Controllo la forma (di solito 0/0). 2) Sviluppo ogni pezzo fino al primo termine che non si cancella. 3) Tengo il termine più basso sopra e sotto, il resto finisce nell'o-piccolo. 4) Faccio il limite per x → 0.</p></div>
       </div>
       <div class="math"><span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − sin x</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x − (x − x³/6 + o(x³))</span><span>x³</span></span> = <span class="lim">lim<span>x→0</span></span> <span class="fr"><span>x³/6 + o(x³)</span><span>x³</span></span> = <span class="fr"><span>1</span><span>6</span></span></div>
+      <ol class="sv">
+        <li><i>Forma:</i> sopra 0 − sin 0 = 0, sotto 0: 0/0</li>
+        <li><i>Sotto c'è x³, sviluppo sin x fino a x³:</i> sin x = x − x³/6 + o(x³)</li>
+        <li><i>Sopra:</i> x − (x − x³/6 + o(x³)) = x − x + x³/6 − o(x³) = x³/6 + o(x³) (il segno dell'o-piccolo non conta)</li>
+        <li><i>Divido per x³:</i> (x³/6)/x³ + o(x³)/x³ = 1/6 + o(x³)/x³</li>
+        <li><i>Limite:</i> o(x³)/x³ → 0, quindi 1/6 + 0 = <b>1/6</b></li>
+        <li><i>Controllo con x = 0,1:</i> (0,1 − 0,0998334)/0,001 = 0,0001666/0,001 ≈ 0,1666 ≈ 1/6 ✓</li>
+      </ol>
     </section>
 
     <section class="board">
@@ -2898,44 +3004,97 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   order.push('continuita-derivata'); NAMES['continuita-derivata'] = '9 Continuità e derivata';
   const LIMH = '<span class="lim">lim<span>h→0</span></span>';
   const DC = [
-    { fns:[x=>x*x/2+0.5], pts:[{x:1,y:1}], t:'Limite sinistro per x → 1⁻ = 1 · limite destro per x → 1⁺ = 1 · f(1) = 1. Tutto uguale: <b>continua</b>.' },
-    { fns:[x=>x<1?x:NaN, x=>x>=1?x+1:NaN], pts:[{x:1,y:1,open:true},{x:1,y:2}], t:'Limite sinistro per x → 1⁻ = 1 · limite destro per x → 1⁺ = 2. Finiti ma diversi: <b>salto, prima specie</b>.' },
-    { fns:[x=>x], pts:[{x:1,y:1,open:true},{x:1,y:2.2}], t:'Limite per x → 1 = 1 (destro e sinistro uguali), ma f(1) = 2,2. Limite ≠ valore: <b>eliminabile</b>. Se ridefinisco f(1) = 1, torna continua.' },
-    { fns:[x=>1/(x-1)], pts:[], t:'Limite sinistro per x → 1⁻ = −∞ · limite destro per x → 1⁺ = +∞. Infiniti: <b>seconda specie</b>.' }
+    { fns:[x=>x*x/2+0.5], pts:[{x:1,y:1}], t:SV(
+      '<i>Funzione:</i> f(x) = x²/2 + 1/2',
+      '<i>Valore:</i> f(1) = 1/2 + 1/2 = 1',
+      '<i>Da sinistra:</i> f(0,9) = 0,81/2 + 0,5 = 0,905; f(0,99) = 0,9801/2 + 0,5 ≈ 0,990 → 1',
+      '<i>Da destra:</i> f(1,1) = 1,21/2 + 0,5 = 1,105; f(1,01) ≈ 1,010 → 1',
+      '<i>Confronto:</i> sinistro 1 = destro 1 = f(1) = 1, quindi <b>continua</b>') },
+    { fns:[x=>x<1?x:NaN, x=>x>=1?x+1:NaN], pts:[{x:1,y:1,open:true},{x:1,y:2}], t:SV(
+      '<i>Funzione:</i> f(x) = x se x &lt; 1, f(x) = x + 1 se x ≥ 1',
+      '<i>Da sinistra (uso x):</i> f(0,9) = 0,9; f(0,99) = 0,99 → 1',
+      '<i>Da destra (uso x + 1):</i> f(1,1) = 2,1; f(1,01) = 2,01 → 2',
+      '<i>Confronto:</i> 1 ≠ 2, finiti ma diversi: <b>salto, prima specie</b> (il salto è alto 2 − 1 = 1)') },
+    { fns:[x=>x], pts:[{x:1,y:1,open:true},{x:1,y:2.2}], t:SV(
+      '<i>Funzione:</i> f(x) = x per x ≠ 1, ma f(1) = 2,2',
+      '<i>Da sinistra:</i> f(0,99) = 0,99 → 1. <i>Da destra:</i> f(1,01) = 1,01 → 1',
+      '<i>Il limite esiste:</i> '+LIMX('1')+' f(x) = 1',
+      '<i>Confronto con il valore:</i> 1 ≠ f(1) = 2,2: <b>eliminabile</b>. Se ridefinisco f(1) = 1, torna continua') },
+    { fns:[x=>1/(x-1)], pts:[], t:SV(
+      '<i>Funzione:</i> f(x) = 1/(x − 1), in x = 1 non esiste (1/0)',
+      '<i>Da sinistra:</i> x = 0,9 → 1/(−0,1) = −10; x = 0,99 → 1/(−0,01) = −100 → −∞',
+      '<i>Da destra:</i> x = 1,1 → 1/0,1 = 10; x = 1,01 → 100 → +∞',
+      '<i>Confronto:</i> limiti infiniti: <b>seconda specie</b>') }
   ];
   const DV = [
-    { f:x=>x*x, x0:1, m:2, xr:[-1,3], yr:[-1.5,6], t:'Il rapporto tende a 2 per h → 0: f′(1) = 2.' },
-    { f:Math.sin, x0:0, m:1, xr:[-3,3], yr:[-1.6,1.6], t:'Il rapporto tende a 1 per h → 0: f′(0) = 1. (È il limite notevole sin h / h del capitolo 8!)' },
-    { f:Math.abs, x0:0, m:null, xr:[-2,2], yr:[-1,2], t:'Con h &gt; 0 il rapporto vale sempre 1, con h &lt; 0 vale sempre −1. Destra e sinistra diverse: il limite per h → 0 non esiste, |x| <b>non è derivabile</b> in 0 (punto angoloso).' }
+    { f:x=>x*x, x0:1, m:2, xr:[-1,3], yr:[-1.5,6], t:h=>SV(
+      '<i>Con questo h:</i> f(1 + h) = ('+it(1+h,3)+')² = '+it((1+h)*(1+h),4)+', f(1) = 1, rapporto = ('+it((1+h)*(1+h),4)+' − 1)/'+it(h,3)+' = '+it(2+h,4),
+      '<i>In generale:</i> (1 + h)² − 1 = 1 + 2h + h² − 1 = 2h + h²',
+      '<i>Divido per h:</i> (2h + h²)/h = 2 + h',
+      '<i>Limite:</i> '+LIMH+' (2 + h) = 2 + 0 = 2, quindi <b>f′(1) = 2</b>') },
+    { f:Math.sin, x0:0, m:1, xr:[-3,3], yr:[-1.6,1.6], t:h=>SV(
+      '<i>Con questo h:</i> (sin('+it(h,3)+') − sin 0)/'+it(h,3)+' = '+it(Math.sin(h),4)+'/'+it(h,3)+' = '+it(Math.sin(h)/h,4),
+      '<i>In generale:</i> (sin(0 + h) − sin 0)/h = (sin h − 0)/h = sin h / h',
+      '<i>Limite notevole (capitolo 8):</i> '+LIMH+' sin h / h = 1, quindi <b>f′(0) = 1</b>') },
+    { f:Math.abs, x0:0, m:null, xr:[-2,2], yr:[-1,2], t:h=>SV(
+      '<i>Con questo h:</i> (|'+it(h,3)+'| − |0|)/'+it(h,3)+' = '+it(Math.abs(h),3)+'/'+it(h,3)+' = '+it(Math.abs(h)/h,0),
+      '<i>h &gt; 0:</i> |h| = h, quindi |h|/h = h/h = 1. Esempio h = 0,5: 0,5/0,5 = 1',
+      '<i>h &lt; 0:</i> |h| = −h, quindi |h|/h = −h/h = −1. Esempio h = −0,5: 0,5/(−0,5) = −1',
+      '<i>Confronto:</i> 1 ≠ −1, il limite per h → 0 non esiste: |x| <b>non è derivabile</b> in 0 (punto angoloso)') }
   ];
   draws['continuita-derivata'] = () => {
     const d = DC[+$('dcS').value];
     plotF($('plotDC'), { xmin:-1, xmax:3, ymin:-3, ymax:4, fns:d.fns.map(f=>({f, color:'--ink', width:2.5})), points:d.pts.map(p=>({...p, color:'--thief'})), vlines:[{x:1, color:'--muted', label:'x₀ = 1'}] });
-    $('dcOut').innerHTML = '<span style="font-size:1rem">'+d.t+'</span>';
+    $('dcOut').innerHTML = d.t;
     const c = DV[+$('dvS').value]; let h = (+$('dvH').value)/100 * 1.5; if (Math.abs(h) < 0.01) h = 0.01;
     const y0 = c.f(c.x0), y1 = c.f(c.x0+h), m = (y1-y0)/h;
     const fns = [{f:c.f, color:'--ink', width:2}, {f:x=>y0+m*(x-c.x0), color:'--thief', width:2}];
     if (c.m!==null) fns.push({f:x=>y0+c.m*(x-c.x0), color:'--cop', dash:true, width:1.5});
     plotF($('plotDV'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1], fns, points:[{x:c.x0,y:y0,color:'--cop'},{x:c.x0+h,y:y1,color:'--thief'}] });
-    $('dvOut').innerHTML = 'h = '+it(h,3)+' · '+FR('f(x₀ + h) − f(x₀)','h')+' = <b class="thief">'+it(m,4)+'</b><br><span style="font-size:1rem">'+c.t+'</span>';
+    $('dvOut').innerHTML = 'h = '+it(h,3)+' · '+FR('f(x₀ + h) − f(x₀)','h')+' = <b class="thief">'+it(m,4)+'</b>'+c.t(h);
   };
   $('dcS').addEventListener('change', () => draws['continuita-derivata']());
   $('dvS').addEventListener('change', () => draws['continuita-derivata']());
   $('dvH').addEventListener('input', () => draws['continuita-derivata']());
 
+  video('continuita-derivata', [
+    { show:'<h3>Continuità e derivata</h3>Continua in x₀: '+LIMX('x₀')+' f(x) = f(x₀)',
+      say:'Continuità e derivata. Una funzione è continua in x zero se il limite per x che tende a x zero di f di x è uguale a f di x zero. In pratica: si disegna senza staccare la penna.' },
+    { show:'Salto: f(x) = x se x &lt; 1, x + 1 se x ≥ 1 · sinistra: 0,9 · 0,99 → 1 · destra: 2,1 · 2,01 → 2',
+      say:'Esempio di salto: f vale x prima di uno e x più uno da uno in poi. Da sinistra: zero virgola nove, zero virgola novantanove, si va a uno. Da destra: due virgola uno, due virgola zero uno, si va a due. Uno diverso da due: discontinuità di prima specie, un salto.' },
+    { show:'Zeri: x³ + x − 1 · f(0) = −1 &lt; 0 · f(1) = 1 + 1 − 1 = 1 &gt; 0 → c tra 0 e 1',
+      say:'Teorema degli zeri. Prendo x al cubo più x meno uno. In zero vale meno uno, negativo. In uno vale uno più uno meno uno, cioè uno, positivo. È continua e cambia segno, quindi tra zero e uno c\'è un punto dove vale zero.' },
+    { show:'f(0,5) = 0,125 + 0,5 − 1 = −0,375 · f(0,75) ≈ 0,422 + 0,75 − 1 = 0,172 → c tra 0,5 e 0,75',
+      say:'Posso anche stringere. In zero virgola cinque: zero virgola centoventicinque più zero virgola cinque meno uno, fa meno zero virgola trecentosettantacinque, negativo. In zero virgola settantacinque fa circa zero virgola diciassette, positivo. Lo zero è tra zero virgola cinque e zero virgola settantacinque.' },
+    { show:'Derivata: rapporto incrementale '+FR('f(x₀ + h) − f(x₀)','h')+' = pendenza della secante',
+      say:'Ora la derivata. Prendo due punti sulla curva: x zero e x zero più h. La pendenza della retta che li unisce è f di x zero più h meno f di x zero, diviso h. Si chiama rapporto incrementale.' },
+    { show:'f(x) = x², x₀ = 1: h = 0,5 → (2,25 − 1)/0,5 = 2,5 · h = 0,1 → (1,21 − 1)/0,1 = 2,1 · h = 0,01 → 2,01',
+      say:'Esempio con x al quadrato in uno. Con h uguale a zero virgola cinque: uno virgola cinque al quadrato è due virgola venticinque, meno uno fa uno virgola venticinque, diviso zero virgola cinque fa due virgola cinque. Con h uguale a zero virgola uno viene due virgola uno. Con zero virgola zero uno, due virgola zero uno. Si avvicina a due.' },
+    { show:'(1 + h)² − 1 = 1 + 2h + h² − 1 = 2h + h² → '+FR('2h + h²','h')+' = 2 + h → 2',
+      say:'Con il calcolo: uno più h al quadrato è uno più due h più h al quadrato. Tolgo uno: resta due h più h al quadrato. Divido per h: due più h. Per h che tende a zero, tende a due. Quindi la derivata di x al quadrato in uno è due.' },
+    { show:'f′(x₀) = '+LIMH+' '+FR('f(x₀ + h) − f(x₀)','h')+' · tangente: y = f(x₀) + f′(x₀)(x − x₀)',
+      say:'Questa è la definizione: la derivata è il limite per h che tende a zero del rapporto incrementale. È la pendenza della tangente. La retta tangente è y uguale f di x zero più f primo di x zero per x meno x zero.' },
+    { show:'x² in 1: y = 1 + 2(x − 1) = 2x − 1 · in x = 1,1: tangente 1,2, curva 1,21',
+      say:'Per x al quadrato in uno: y uguale uno più due per x meno uno, cioè due x meno uno. Controllo: in uno virgola uno la tangente vale uno virgola due e la curva uno virgola ventuno. Quasi uguali.' },
+    { show:'|x| in 0: h = 0,5 → 0,5/0,5 = 1 · h = −0,5 → 0,5/(−0,5) = −1 → non derivabile',
+      say:'Attenzione al valore assoluto di x in zero. Con h positivo, per esempio zero virgola cinque, il rapporto è zero virgola cinque su zero virgola cinque, uno. Con h negativo, meno zero virgola cinque, viene zero virgola cinque su meno zero virgola cinque, meno uno. Destra e sinistra diverse: non è derivabile. È un punto angoloso, anche se la funzione è continua.' },
+    { show:'Derivabile ⇒ continua: f(x₀ + h) − f(x₀) = '+FR('f(x₀ + h) − f(x₀)','h')+' · h → f′(x₀) · 0 = 0',
+      say:'Ultimo teorema: se f è derivabile allora è continua. La differenza f di x zero più h meno f di x zero la scrivo come rapporto incrementale per h. Il rapporto tende alla derivata, h tende a zero, quindi il prodotto tende a zero. Cioè f di x zero più h tende a f di x zero: continuità.' }
+  ]);
+
   guided('continuita-derivata', 'lavagna-continuita-derivata', [
     { h:'Passo 1 · f(3 + h) = (3 + h)² = 9 + 6h + h². Quanto fa f(3 + h) − f(3)?', type:'choice', ans:1,
       opts:['9 + 6h + h²','6h + h²','6h'],
-      ok:'Giusto: f(3) = 9, e il 9 se ne va.', bad:'f(3) = 3² = 9. Togli 9 da 9 + 6h + h².' },
+      ok:'Giusto: f(3) = 3² = 9, e (9 + 6h + h²) − 9 = 6h + h². (Da dove viene 9 + 6h + h²: (3 + h)² = 3² + 2 · 3 · h + h².)', bad:'f(3) = 3² = 9. Togli 9 da 9 + 6h + h².' },
     { h:'Passo 2 · Divido per h: (6h + h²)/h = ?', type:'choice', ans:0,
       opts:['6 + h','6h','6 + h²'],
       ok:'Sì: raccolgo h sopra, h(6 + h)/h = 6 + h. Posso semplificare perché h ≠ 0 (h si avvicina a 0 ma non è 0).', bad:'Raccogli h sopra: h(6 + h).' },
     { h:'Passo 3 · Faccio il limite per h → 0.', type:'nums', ans:[6],
       html:'f′(3) = '+LIMH+' (6 + h) = '+inp('f′(3)'),
-      ok:'Perfetto: f′(3) = 6. La tangente in x₀ = 3 ha pendenza 6.', bad:'Metti h = 0 in 6 + h.' },
+      ok:'Perfetto: 6 + 0 = 6, quindi f′(3) = 6. Controllo con h = 0,1: (3,1² − 9)/0,1 = (9,61 − 9)/0,1 = 6,1, vicino a 6 ✓', bad:'Metti h = 0 in 6 + h.' },
     { h:'Passo 4 · Retta tangente: y = f(3) + f′(3)(x − 3) = 9 + 6(x − 3). Scrivila come y = 6x + q.', type:'nums', ans:[-9],
       html:'y = 6x + '+inp('q'),
-      ok:'Esatto: 9 + 6x − 18 = 6x − 9.', bad:'9 + 6x − 18 = 6x + …' }
+      ok:'Esatto: 9 + 6(x − 3) = 9 + 6x − 18 = 6x − 9. Controllo: in x = 3 dà 18 − 9 = 9 = f(3) ✓', bad:'9 + 6x − 18 = 6x + …' }
   ], '<b>Fatto!</b> f′(3) = '+LIMH+' (6 + h) = 6, tangente y = 6x − 9. Schema della definizione: scrivi f(x₀ + h) − f(x₀), semplifica, dividi per h, fai il limite per h → 0.');
 
   const DISC = ['continua','salto (prima specie)','seconda specie','eliminabile'];
@@ -3001,11 +3160,11 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
   /* ===== capitolo 10: Regole di derivazione ===== */
   order.push('regole-derivazione'); NAMES['regole-derivazione'] = '10 Regole di derivazione';
   const RD = [
-    { f:x=>x*x, d:x=>2*x, xr:[-2.5,2.5], yr:[-5,6], n:'2x' },
-    { f:x=>x*x*x, d:x=>3*x*x, xr:[-2,2], yr:[-6,8], n:'3x²' },
-    { f:Math.sin, d:Math.cos, xr:[-6.3,6.3], yr:[-1.6,1.6], n:'cos x' },
-    { f:Math.exp, d:Math.exp, xr:[-3,2], yr:[-1,7.5], n:'eˣ (uguale a f: il grafico arancione copre quello nero)' },
-    { f:x=>x>0?Math.log(x):NaN, d:x=>x>0?1/x:NaN, xr:[0,5], yr:[-3,4], n:'1/x', pos:true }
+    { f:x=>x*x, d:x=>2*x, xr:[-2.5,2.5], yr:[-5,6], n:'2x', c:x=>'2 · ('+it(x,2)+') = '+it(2*x,3) },
+    { f:x=>x*x*x, d:x=>3*x*x, xr:[-2,2], yr:[-6,8], n:'3x²', c:x=>'3 · ('+it(x,2)+')² = 3 · '+it(x*x,4)+' = '+it(3*x*x,3) },
+    { f:Math.sin, d:Math.cos, xr:[-6.3,6.3], yr:[-1.6,1.6], n:'cos x', c:x=>'cos('+it(x,2)+') = '+it(Math.cos(x),3) },
+    { f:Math.exp, d:Math.exp, xr:[-3,2], yr:[-1,7.5], n:'eˣ (uguale a f: il grafico arancione copre quello nero)', c:x=>'e<sup>'+it(x,2)+'</sup> = '+it(Math.exp(x),3) },
+    { f:x=>x>0?Math.log(x):NaN, d:x=>x>0?1/x:NaN, xr:[0,5], yr:[-3,4], n:'1/x', pos:true, c:x=>'1/'+it(x,2)+' = '+it(1/x,3) }
   ];
   draws['regole-derivazione'] = () => {
     const c = RD[+$('rdS').value], t = (+$('rdX').value)/100;
@@ -3014,10 +3173,38 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     plotF($('plotRD'), { xmin:c.xr[0], xmax:c.xr[1], ymin:c.yr[0], ymax:c.yr[1],
       fns:[{f:c.f, color:'--ink', width:2.5}, {f:c.d, color:'--thief', width:2}, {f:x=>y0+m*(x-x0), color:'--cop', dash:true, width:1.5}],
       points:[{x:x0, y:y0, color:'--cop'}, {x:x0, y:Math.max(c.yr[0], Math.min(c.yr[1], m)), color:'--thief'}], vlines:[{x:x0, color:'--muted'}] });
-    $('rdOut').innerHTML = 'x₀ = '+it(x0,2)+' · pendenza della tangente = <b class="cop">'+it(m,3)+'</b> = f′(x₀) (punto arancione)<br><span style="font-size:1rem">Qui f′(x) = '+c.n+'.</span>';
+    $('rdOut').innerHTML = 'x₀ = '+it(x0,2)+' · pendenza della tangente = <b class="cop">'+it(m,3)+'</b> = f′(x₀) (punto arancione)' + SV(
+      '<i>Regola della tabellina:</i> f′(x) = '+c.n,
+      '<i>Sostituisco x₀ = '+it(x0,2)+':</i> f′(x₀) = '+c.c(x0),
+      '<i>Controllo con il rapporto incrementale, h = 0,01:</i> (f('+it(x0+0.01,2)+') − f('+it(x0,2)+'))/0,01 = ('+it(c.f(x0+0.01),4)+' − '+it(y0,4)+')/0,01 ≈ '+it((c.f(x0+0.01)-y0)/0.01,3)+', quasi uguale ✓');
   };
   $('rdS').addEventListener('change', () => draws['regole-derivazione']());
   $('rdX').addEventListener('input', () => draws['regole-derivazione']());
+
+  video('regole-derivazione', [
+    { show:'<h3>Regole di derivazione</h3>Una tabellina + cinque regole, invece del limite per h → 0',
+      say:'Le regole di derivazione. Con la definizione ogni derivata è un limite lungo. Con una tabellina e cinque regole si fa in un attimo.' },
+    { show:'(xᵃ)′ = a · x<sup>a−1</sup> → (x³)′ = 3x² → in x = 2: 3 · 4 = 12',
+      say:'Prima regola della tabellina: x alla a si deriva in a per x alla a meno uno. Per esempio x al cubo dà tre x al quadrato. In due vale tre per quattro, dodici.' },
+    { show:'Controllo: (2,01³ − 2³)/0,01 = (8,120601 − 8)/0,01 ≈ 12,06 ✓',
+      say:'Controllo con il rapporto incrementale: due virgola zero uno al cubo è otto virgola dodici zero sei zero uno. Tolgo otto, divido per zero virgola zero uno: circa dodici virgola zero sei. Torna.' },
+    { show:'(eˣ)′ = eˣ · (ln x)′ = 1/x · (sin x)′ = cos x · (cos x)′ = −sin x',
+      say:'Le altre da sapere: la derivata di e alla x è e alla x stessa. Logaritmo di x dà uno su x. Seno dà coseno. Coseno dà meno seno.' },
+    { show:'Prodotto: (f · g)′ = f′ · g + f · g′ · (x · eˣ)′ = 1 · eˣ + x · eˣ',
+      say:'Regola del prodotto: derivata del primo per il secondo, più il primo per la derivata del secondo. Per x per e alla x: uno per e alla x più x per e alla x.' },
+    { show:'In x = 1: e + e = 2e ≈ 5,44 · controllo: (1,01 · e<sup>1,01</sup> − e)/0,01 ≈ 5,48 ✓',
+      say:'In uno viene e più e, due e, circa cinque virgola quarantaquattro. Controllo con il rapporto incrementale: circa cinque virgola quarantotto. Giusto. Se avessi moltiplicato solo le derivate avrei avuto e, sbagliato.' },
+    { show:'Quoziente: '+FR('f′ · g − f · g′','g²')+' · ('+FR('x','x + 1')+')′ = '+FR('1 · (x + 1) − x · 1','(x + 1)²')+' = '+FR('1','(x + 1)²'),
+      say:'Regola del quoziente: derivata del sopra per il sotto, meno il sopra per la derivata del sotto, tutto diviso il sotto al quadrato. Per x su x più uno: uno per x più uno, meno x per uno, cioè uno, diviso x più uno al quadrato.' },
+    { show:'Catena: [f(g(x))]′ = f′(g(x)) · g′(x) · (sin(3x))′ = cos(3x) · 3',
+      say:'Regola della catena, per le funzioni composte: derivo quella fuori lasciando dentro com\'è, poi moltiplico per la derivata di quella dentro. Seno di tre x: coseno di tre x, per tre.' },
+    { show:'In x = 0: 3 · cos 0 = 3 · 1 = 3 · controllo: sin(0,03)/0,01 ≈ 3,00 ✓',
+      say:'In zero: tre per coseno di zero, tre per uno, tre. Controllo: seno di zero virgola zero tre diviso zero virgola zero uno fa circa tre. Giusto.' },
+    { show:'Esercizio: (3x + 1)⁵ · fuori u⁵, dentro u = 3x + 1',
+      say:'Esercizio guidato: tre x più uno, alla quinta. Fuori c\'è la potenza quinta, dentro tre x più uno.' },
+    { show:'5(3x + 1)⁴ · 3 = 15(3x + 1)⁴ · f′(0) = 15 · (0 + 1)⁴ = 15 · 1 = 15',
+      say:'Derivo il fuori: cinque per tre x più uno alla quarta. Moltiplico per la derivata del dentro, tre. Viene quindici per tre x più uno alla quarta. In zero: tre per zero più uno fa uno, uno alla quarta fa uno, quindici per uno fa quindici.' }
+  ]);
 
   guided('regole-derivazione', 'lavagna-regole-derivazione', [
     { h:'Passo 1 · È una composta: chi sta fuori e chi sta dentro?', type:'choice', ans:0,
@@ -3031,7 +3218,7 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Esatto: f′(x) = 5(3x + 1)⁴ · 3 = 15(3x + 1)⁴.', bad:'La derivata di 3x è 3, quella di 1 è 0.' },
     { h:'Passo 4 · Calcolo f′(0) = 15 · (3 · 0 + 1)⁴.', type:'nums', ans:[15],
       html:'f′(0) = '+inp('f′(0)'),
-      ok:'Perfetto!', bad:'(0 + 1)⁴ = 1.' }
+      ok:'Perfetto: 3 · 0 + 1 = 1, 1⁴ = 1, 15 · 1 = 15. Controllo con h = 0,01: ((1,03)⁵ − 1⁵)/0,01 ≈ (1,1593 − 1)/0,01 ≈ 15,9, vicino a 15 (con h più piccolo si avvicina ancora) ✓', bad:'(0 + 1)⁴ = 1.' }
   ], '<b>Fatto!</b> f′(x) = 5(3x + 1)⁴ · 3 = 15(3x + 1)⁴, quindi f′(0) = 15. Schema della catena: trovo fuori e dentro, derivo il fuori lasciando dentro uguale, moltiplico per la derivata del dentro.');
 
   EX['regole-derivazione'] = [
@@ -3103,16 +3290,55 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
     cs.forEach(c => fns.push({f:x=>lgf(c)+m*(x-c), color:'--cop', dash:true, width:1.5}));
     plotF($('plotLG'), { xmin:-2.5, xmax:3, ymin:-2, ymax:5, fns,
       points:[{x:LGA,y:ya,color:'--thief',label:'A'},{x:b,y:yb,color:'--thief',label:'B'}, ...cs.map(c=>({x:c,y:lgf(c),color:'--cop',label:'c'}))] });
-    $('lgOut').innerHTML = 'pendenza della secante = '+FR('f(b) − f(a)','b − a')+' = <b class="thief">'+it(m,3)+'</b> · '+(cs.length ? 'f′(c) = <b class="cop">'+it(m,3)+'</b> in c = '+cs.map(c=>it(c,2)).join(' e c = ') : '');
+    $('lgOut').innerHTML = 'pendenza della secante = '+FR('f(b) − f(a)','b − a')+' = <b class="thief">'+it(m,3)+'</b> · '+(cs.length ? 'f′(c) = <b class="cop">'+it(m,3)+'</b> in c = '+cs.map(c=>it(c,2)).join(' e c = ') : '')
+      + SV('<i>La funzione:</i> f(x) = 0,3x³ − x + 1, con a = −2 e b = '+it(b,2),
+        '<i>f(a):</i> 0,3 · (−8) − (−2) + 1 = −2,4 + 2 + 1 = 0,6',
+        '<i>f(b):</i> 0,3 · ('+it(b,2)+')³ − ('+it(b,2)+') + 1 ≈ '+it(yb,3),
+        '<i>Pendenza della secante:</i> ('+it(yb,3)+' − 0,6)/('+it(b,2)+' + 2) = '+it(yb-ya,3)+'/'+it(b-LGA,2)+' ≈ '+it(m,3),
+        '<i>Derivata:</i> f′(x) = 0,9x² − 1',
+        '<i>Cerco c con f′(c) = '+it(m,3)+':</i> 0,9c² − 1 = '+it(m,3)+' → c² = ('+it(m,3)+' + 1)/0,9 = '+it((m+1)/0.9,3)+' → c = ±'+it(Math.sqrt(Math.max(0,(m+1)/0.9)),2),
+        '<i>Tengo solo i c tra a e b:</i> '+(cs.length ? 'c = '+cs.map(c=>it(c,2)).join(' e c = ') : 'nessuno qui (sposta b)'));
     const T = TY[+$('tyS').value], n = +$('tyN').value;
     const P = x => { let s=0; for (let k=0;k<=n;k++) s += T.c(k)*Math.pow(x,k); return (T.dom && !T.dom(x)) ? NaN : s; };
     plotF($('plotTY'), { xmin:T.xr[0], xmax:T.xr[1], ymin:T.yr[0], ymax:T.yr[1], fns:[{f:T.f, color:'--ink', width:2.5}, {f:P, color:'--thief', width:2}] });
     let poly = T.t.slice(0,n+1).filter(s=>s).join(' ').replace(/^\+ /,''); if (!poly) poly = '0';
-    $('tyOut').innerHTML = 'Grado '+n+': <b class="thief">'+poly+'</b><br><span style="font-size:1rem">In x = 0,5: funzione = '+it(T.f(0.5),5)+' · polinomio = '+it(P(0.5),5)+'</span>';
+    const terms = []; for (let k=0;k<=n;k++) if (T.c(k)) terms.push((T.c(k)<0?'− ':'+ ')+it(Math.abs(T.c(k)*Math.pow(0.5,k)),5));
+    $('tyOut').innerHTML = 'Grado '+n+': <b class="thief">'+poly+'</b>' + SV(
+      '<i>Metto x = 0,5 in ogni termine del polinomio:</i> '+(terms.length ? terms.join(' ').replace(/^\+ /,'') : '0'),
+      '<i>Sommo:</i> polinomio = '+it(P(0.5),5),
+      '<i>La funzione vera in 0,5:</i> '+it(T.f(0.5),5),
+      '<i>Errore (la parte o-piccolo):</i> '+it(Math.abs(T.f(0.5)-P(0.5)),5)+'. Alza il grado e guarda come scende');
   };
   $('lgB').addEventListener('input', () => draws['teoremi-taylor']());
   $('tyS').addEventListener('change', () => draws['teoremi-taylor']());
   $('tyN').addEventListener('input', () => draws['teoremi-taylor']());
+
+  video('teoremi-taylor', [
+    { show:'<h3>Rolle, Lagrange, De L\'Hôpital, Taylor</h3>Due teoremi di teoria, due attrezzi per i limiti',
+      say:'Quattro attrezzi: Rolle e Lagrange per la teoria, De L\'Hôpital e Taylor per calcolare i limiti.' },
+    { show:'Rolle: f(a) = f(b) ⇒ f′(c) = 0 · x² − 2x su [0, 2]: f(0) = 0, f(2) = 4 − 4 = 0 · 2c − 2 = 0 → c = 1',
+      say:'Rolle: se una funzione parte e arriva alla stessa quota, da qualche parte la derivata è zero. Esempio: x al quadrato meno due x tra zero e due. In zero vale zero, in due vale quattro meno quattro, zero. La derivata è due x meno due, che fa zero in x uguale a uno.' },
+    { show:'Lagrange: '+FR('f(b) − f(a)','b − a')+' = f′(c) · x² su [1, 3]: '+FR('9 − 1','3 − 1')+' = 4 = 2c → c = 2',
+      say:'Lagrange: da qualche parte la pendenza è uguale a quella media. Con x al quadrato tra uno e tre: nove meno uno, diviso tre meno uno, fa quattro. La derivata due c vale quattro in c uguale a due.' },
+    { show:'Conseguenza: f′ &gt; 0 ⇒ f crescente · f(x₂) − f(x₁) = f′(c) · (x₂ − x₁) &gt; 0',
+      say:'La conseguenza che usi sempre: se la derivata è positiva, la funzione cresce. Perché per Lagrange f di x due meno f di x uno è f primo di c per x due meno x uno, e sono due numeri positivi.' },
+    { show:'De L\'Hôpital: 0/0 o ∞/∞ → '+FR('f′','g′')+' · '+LIMX('0')+' '+FR('1 − cos x','x²')+' : 0/0',
+      say:'De L\'Hôpital: con zero su zero o infinito su infinito, derivo sopra e sotto separatamente. Esempio: uno meno coseno di x su x al quadrato. In zero viene uno meno uno su zero, zero su zero.' },
+    { show:FR('sin x','2x')+' → ancora 0/0 → '+FR('cos x','2')+' → '+FR('cos 0','2')+' = '+FR('1','2'),
+      say:'Derivo: sopra seno di x, sotto due x. Ancora zero su zero. Derivo di nuovo: sopra coseno di x, sotto due. In zero: coseno di zero diviso due, un mezzo.' },
+    { show:'Taylor: eˣ = 1 + x + '+FR('x²','2')+' + '+FR('x³','6')+' + … · in 0,5: 1 + 0,5 + 0,125 + 0,0208 = 1,6458 ≈ 1,6487',
+      say:'Taylor: un polinomio che copia la funzione vicino a zero. Per e alla x: uno più x più x al quadrato mezzi più x al cubo sesti. In zero virgola cinque: uno più zero virgola cinque più zero virgola centoventicinque più zero virgola zero due, uno virgola sei quattro cinque. Il valore vero è uno virgola sei quattro otto. Quasi uguale.' },
+    { show:'sin x = x − '+FR('x³','6')+' + o(x³) · in 0,5: 0,5 − 0,0208 = 0,4792 ≈ 0,4794',
+      say:'Per il seno: x meno x al cubo sesti, più o piccolo di x al cubo. In zero virgola cinque fa zero virgola quattro sette nove due, il vero è zero virgola quattro sette nove quattro.' },
+    { show:'Esercizio: '+LIMX('0')+' '+FR('eˣ − 1 − x','x²')+' · forma '+FR('1 − 1 − 0','0')+' = 0/0',
+      say:'Esercizio: e alla x meno uno meno x, diviso x al quadrato. In zero viene uno meno uno meno zero su zero: zero su zero.' },
+    { show:'Sotto x² → sviluppo fino a x²: (1 + x + '+FR('x²','2')+' + o(x²)) − 1 − x = '+FR('x²','2')+' + o(x²)',
+      say:'Sotto c\'è x al quadrato, quindi sviluppo e alla x fino a x al quadrato: uno più x più x al quadrato mezzi più o piccolo. Tolgo uno e tolgo x: resta x al quadrato mezzi più o piccolo di x al quadrato.' },
+    { show:FR('x²/2 + o(x²)','x²')+' = '+FR('1','2')+' + '+FR('o(x²)','x²')+' → '+FR('1','2')+' + 0 = <b>'+FR('1','2')+'</b>',
+      say:'Divido per x al quadrato: un mezzo più o piccolo di x al quadrato su x al quadrato, che tende a zero. Il limite è un mezzo.' },
+    { show:'Controllo: x = 0,1 → (1,10517 − 1 − 0,1)/0,01 ≈ 0,517',
+      say:'Controllo con x uguale a zero virgola uno: e alla zero virgola uno è uno virgola uno zero cinque uno sette. Tolgo uno virgola uno, divido per zero virgola zero uno: circa zero virgola cinque uno sette. Vicino a un mezzo.' }
+  ]);
 
   guided('teoremi-taylor', 'lavagna-teoremi-taylor', [
     { h:'Passo 1 · Sostituisco x = 0. Che forma esce?', type:'choice', ans:0,
@@ -3120,13 +3346,13 @@ footer { color: var(--muted); font-size: .9rem; text-align: center; }
       ok:'Giusto: sopra e⁰ − 1 − 0 = 0, sotto 0. Forma indeterminata.', bad:'Sopra: e⁰ − 1 − 0. Sotto: 0².' },
     { h:'Passo 2 · Sotto c\'è x², quindi sviluppo eˣ fino a x². Quale?', type:'choice', ans:2,
       opts:['eˣ = 1 + x + o(x)','eˣ = x + x²/2 + o(x²)','eˣ = 1 + x + x²/2 + o(x²)'],
-      ok:'Esatto.', bad:'eˣ = 1 + x + x²/2 + x³/6 + …: fermati a x².' },
+      ok:'Esatto. Mi fermo a x² perché sotto c\'è x²: i termini dopo (x³/6, …) divisi per x² vanno a 0 e finiscono in o(x²).', bad:'eˣ = 1 + x + x²/2 + x³/6 + …: fermati a x².' },
     { h:'Passo 3 · Sopra: (1 + x + x²/2 + o(x²)) − 1 − x = ?', type:'choice', ans:1,
       opts:['x + x²/2 + o(x²)','x²/2 + o(x²)','o(x²)'],
-      ok:'Sì: 1 e x si cancellano, resta x²/2 + o(x²).', bad:'Togli 1 e togli x.' },
+      ok:'Sì: 1 + x + x²/2 + o(x²) − 1 − x = (1 − 1) + (x − x) + x²/2 + o(x²) = x²/2 + o(x²).', bad:'Togli 1 e togli x.' },
     { h:'Passo 4 · Divido per x² e faccio il limite per x → 0. Ricorda: o(x²)/x² → 0.', type:'nums', ans:[0.5],
       html:LIMX('0')+' ('+FR('1','2')+' + '+FR('o(x²)','x²')+') = '+inp('risultato'),
-      ok:'Perfetto: 1/2.', bad:'1/2 + 0 = …' }
+      ok:'Perfetto: (x²/2)/x² = 1/2, o(x²)/x² → 0, quindi 1/2 + 0 = 1/2. Controllo con x = 0,1: (e<sup>0,1</sup> − 1 − 0,1)/0,01 ≈ (1,10517 − 1,1)/0,01 ≈ 0,517 ✓', bad:'1/2 + 0 = …' }
   ], '<b>Fatto!</b> '+LIMX('0')+' (eˣ − 1 − x)/x² = '+LIMX('0')+' (x²/2 + o(x²))/x² = 1/2. Regola d\'oro: sviluppa fino alla potenza che c\'è sotto.');
 
   EX['teoremi-taylor'] = [
