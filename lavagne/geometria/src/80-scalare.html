@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 8 · giorno 15/12 · libro pp. 199-253 (parti indicate)</div>
       <h2>Lunghezze e angoli tra vettori</h2>
-      <p class="big">Finora i vettori si potevano solo sommare e moltiplicare per numeri. Il <b>prodotto scalare</b> aggiunge la geometria: quanto è lungo un vettore, che angolo fanno due vettori, quando sono perpendicolari.</p>
-      <p>Lavoriamo in Rⁿ con il prodotto scalare <b>euclideo</b> (quello standard). Servirà nel capitolo 9 per il teorema spettrale.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">In R³: <b>u = (1, 2, 2)</b> e <b>v = (2, −1, 0)</b> sono perpendicolari? Quanto è lungo u?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Finora i vettori li sai solo sommare e moltiplicare per numeri: non hai una definizione di lunghezza o di angolo. In R² potresti disegnare, ma in R³ è difficile e in R⁴ impossibile.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Il <b>prodotto scalare</b> ⟨x, y⟩: un numero che si calcola con le componenti e dà lunghezze, angoli e perpendicolarità in qualsiasi dimensione.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>⟨u, v⟩ = 1·2 + 2·(−1) + 2·0 = 2 − 2 + 0 = 0</li><li>⟨u, v⟩ = 0 ⇒ u ⊥ v</li><li>‖u‖ = √⟨u, u⟩ = √(1·1 + 2·2 + 2·2) = √(1 + 4 + 4) = √9 = 3</li><li>Funziona anche in R⁴: ⟨(1, 1, 1, 1), (1, −1, 1, −1)⟩ = 1 − 1 + 1 − 1 = 0</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>⟨x, y⟩ = x₁·y₁ + … + x<sub>n</sub>·y<sub>n</sub>, &nbsp; ‖x‖ = √⟨x, x⟩, &nbsp; cos θ = ⟨x, y⟩ / (‖x‖·‖y‖).</p><span class="why easy">perché: facile, in R² ‖x‖ è il teorema di Pitagora</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Perpendicolarità, lunghezze, angoli.</li><li>Proiezione su una retta e Gram-Schmidt.</li><li>Complemento ortogonale W<sup>⊥</sup>.</li></ul>
+      
     </section>
 
     <section class="board">

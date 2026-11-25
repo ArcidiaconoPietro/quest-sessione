@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 7 · giorno 11/12 · libro pp. 151-170</div>
       <h2>I vettori che non cambiano direzione</h2>
-      <p class="big">Quasi tutti i vettori, quando applichi A, cambiano direzione. Alcuni speciali restano sulla loro retta: vengono solo allungati, accorciati o ribaltati. Si chiamano <b>autovettori</b>, e il numero per cui vengono moltiplicati è l'<b>autovalore</b>.</p>
-      <p>Se trovi abbastanza autovettori da fare una base, nella base di autovettori la matrice diventa <b>diagonale</b>. All'esame è quasi sempre un esercizio aperto: "dire se A è diagonalizzabile e trovare M".</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Con <b>A = <span class="mx c2"><span>2</span><span>1</span><span>1</span><span>2</span></span></b> calcola <b>A¹⁰·(1, 0)</b>.</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Sai solo fare il prodotto righe per colonne: dovresti moltiplicare dieci volte, con numeri che crescono a ogni passo. Lungo e pieno di occasioni di errore.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Gli <b>autovettori</b>: vettori v con A·v = λ·v. Su di loro A fa solo "moltiplica per λ", quindi A¹⁰·v = λ¹⁰·v, senza prodotti di matrici.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>A·(1, 1) = (2 + 1, 1 + 2) = (3, 3) = 3·(1, 1)</li><li>A·(1, −1) = (2 − 1, 1 − 2) = (1, −1) = 1·(1, −1)</li><li>(1, 0) = (1/2)·(1, 1) + (1/2)·(1, −1)</li><li>A¹⁰·(1, 0) = (1/2)·3¹⁰·(1, 1) + (1/2)·1¹⁰·(1, −1)</li><li>3¹⁰ = 59049 ⇒ = ((59049 + 1)/2, (59049 − 1)/2) = (29525, 29524)</li><li>Come trovarli: det(A − λ·I) = (2 − λ)² − 1 = 0 ⇒ 2 − λ = ±1 ⇒ λ = 1, λ = 3</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>A·v = λ·v, v ≠ 0. &nbsp; Autovalori: det(A − λ·I) = 0. &nbsp; Autospazio: V<sub>λ</sub> = ker(A − λ·I).<br>Diagonalizzabile ⇔ per ogni λ, mg(λ) = ma(λ).</p><span class="why easy">perché: facile, A·v = λ·v ⇔ (A − λ·I)·v = 0 con v ≠ 0 ⇔ det(A − λ·I) = 0</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Esercizio aperto: "A è diagonalizzabile? Trova M e D".</li><li>Potenze grandi di una matrice.</li><li>Quiz su autovalori con parametro.</li></ul>
+      <p class="exam">Se trovi abbastanza autovettori da fare una base, nella base di autovettori la matrice diventa <b>diagonale</b>. All'esame è quasi sempre un esercizio aperto: "dire se A è diagonalizzabile e trovare M".</p>
     </section>
 
     <section class="board">

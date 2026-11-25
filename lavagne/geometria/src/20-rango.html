@@ -3,8 +3,16 @@
     <section class="board">
       <div class="eyebrow">Capitolo 2 · giorno 24/11 · libro pp. 54-55 e 65-70</div>
       <h2>Contare le direzioni: dimensione e rango</h2>
-      <p class="big">La <b>dimensione</b> di uno spazio dice quante direzioni indipendenti ha, cioè quanti numeri liberi servono per descrivere un suo elemento. Una retta per l'origine ha dimensione 1, un piano per l'origine 2, R³ ha dimensione 3.</p>
-      <p>Il <b>rango</b> di una matrice dice quante delle sue colonne sono "davvero diverse" (indipendenti). Con queste due parole rispondi a quasi tutte le domande d'esame su sottospazi e sistemi: "quanto vale dim W?", "quante soluzioni?", "sono una base?".</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">I tre vettori <b>(1, 2, 3), (2, 4, 7), (3, 6, 10)</b> sono una base di R³? E quanti di loro servono davvero?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Con il capitolo 1 dovresti scrivere a·v₁ + b·v₂ + c·v₃ = 0 e risolvere un sistema 3 × 3 ogni volta. Con 5 vettori di R⁴ diventa lunghissimo, e comunque non ti dice <b>quanti</b> vettori sono utili.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>Il <b>rango</b>: metti i vettori come righe di una matrice, fai Gauss e conti i <b>pivot</b>. Il numero di pivot è il numero di vettori indipendenti.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li><span class="mx c3"><span>1</span><span>2</span><span>3</span><span>2</span><span>4</span><span>7</span><span>3</span><span>6</span><span>10</span></span></li><li>R2 ← R2 − 2·R1: (2 − 2, 4 − 4, 7 − 6) = (0, 0, 1)</li><li>R3 ← R3 − 3·R1: (3 − 3, 6 − 6, 10 − 9) = (0, 0, 1)</li><li>R3 ← R3 − R2: (0, 0, 1 − 1) = (0, 0, 0)</li><li>2 pivot ⇒ rk = 2 &lt; 3 ⇒ non è una base</li><li>Infatti (1, 2, 3) + (2, 4, 7) = (1 + 2, 2 + 4, 3 + 7) = (3, 6, 10)</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>rk A = numero di pivot dopo Gauss = numero di righe (o colonne) indipendenti.<br>n vettori di Kⁿ sono una base ⇔ rk = n.</p><span class="why easy">perché: facile, Gauss non cambia lo Span delle righe e le righe nulle non contano</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>"Questi vettori sono una base?" e "sono indipendenti?".</li><li>"Quanto vale dim Span(…)?": è il rango.</li><li>Quante soluzioni ha un sistema (lo usi in Rouché-Capelli).</li></ul>
+      <p class="exam">Il <b>rango</b> di una matrice dice quante delle sue colonne sono "davvero diverse" (indipendenti). Con queste due parole rispondi a quasi tutte le domande d'esame su sottospazi e sistemi: "quanto vale dim W?", "quante soluzioni?", "sono una base?".</p>
     </section>
 
     <section class="board">

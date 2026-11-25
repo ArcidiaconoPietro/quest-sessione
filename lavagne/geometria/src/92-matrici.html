@@ -3,7 +3,16 @@
     <section class="board">
       <div class="eyebrow">Ripasso 2 · da usare quando serve</div>
       <h2>Prodotto, trasposta, inversa</h2>
-      <p class="big">Nel registro c'è una lacuna precisa: la <b>formula dell'inversa 2 × 2</b>. Qui la ripassi con un calcolatore che fa ogni passaggio, poi impari l'inversa delle 3 × 3 con Gauss-Jordan.</p>
+      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Devi risolvere <b>3x + y = b₁, 4x + 2y = b₂</b> per tanti termini noti: (5, 6), (1, 0), (0, 1)… Devi rifare Gauss ogni volta?</p></div>
+      <h3>Perché con quello che sai non ci riesci</h3>
+      <p>Con Gauss sì: ogni nuovo b è un nuovo sistema da risolvere da capo.</p>
+      <h3>Lo strumento nuovo</h3>
+      <p>L'<b>inversa</b> A⁻¹: la calcoli una volta, poi x = A⁻¹·b per ogni b, con un solo prodotto.</p>
+      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>A = <span class="mx c2"><span>3</span><span>1</span><span>4</span><span>2</span></span>, det A = 3·2 − 1·4 = 2</li><li>A⁻¹ = (1/2)·<span class="mx c2"><span>2</span><span>−1</span><span>−4</span><span>3</span></span> = <span class="mx c2"><span>1</span><span>−1/2</span><span>−2</span><span>3/2</span></span></li><li>b = (5, 6): x = 1·5 + (−1/2)·6 = 5 − 3 = 2, &nbsp; y = −2·5 + (3/2)·6 = −10 + 9 = −1</li><li>Verifica: 3·2 + (−1) = 5 ✓, &nbsp; 4·2 + 2·(−1) = 6 ✓</li><li>b = (1, 0): x = 1, y = −2 → 3 − 2 = 1 ✓, 4 − 4 = 0 ✓</li></ol></div>
+      <div class="def"><b>La formula da usare</b><p>A⁻¹ = (1/det A)·<span class="mx c2"><span>d</span><span>−b</span><span>−c</span><span>a</span></span> per A = <span class="mx c2"><span>a</span><span>b</span><span>c</span><span>d</span></span>, det A ≠ 0. &nbsp; A·x = b ⇒ x = A⁻¹·b.</p><span class="why easy">perché: facile, moltiplica A per quella matrice: viene (a·d − b·c)·I, quindi dividi per det</span></div>
+      <h3>Che casi risolvi così</h3>
+      <ul><li>Inversa 2 × 2 nel quiz.</li><li>Inversa 3 × 3 con Gauss-Jordan.</li><li>Sistemi n × n con det ≠ 0.</li></ul>
+      
     </section>
 
     <section class="board">
