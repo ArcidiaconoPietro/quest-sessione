@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-spettrale"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Il cerchio diventa un'ellisse</h2>
       <p>Il cerchio grigio ha raggio 1; A lo trasforma nella curva viola. Se A è simmetrica (b = c) la curva è un'<b>ellisse</b> e i suoi assi sono le rette verdi degli autovettori: <b>perpendicolari</b>. Le semi-lunghezze degli assi sono |λ₁| e |λ₂|. Prova a rendere b ≠ c: le rette verdi non sono più perpendicolari.</p>
@@ -45,7 +53,7 @@
       <div class="eyebrow">La ricetta, un passo alla volta</div>
       <h2>A = ${M([[1,1,1],[1,1,1],[1,1,1]])}$: trova M ortogonale</h2>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Autovalori</h3><p>rk A = 1, quindi ker A ha dimensione 3 − 1 = 2: λ = 0 con mg = 2. tr A = 3 = somma degli autovalori = 0 + 0 + λ₃ ⇒ λ₃ = 3.</p><p>p<sub>A</sub>(λ) = −λ²·(λ − 3).</p></div>
+        <div class="step"><h3>Passo 1 · Autovalori</h3><p>Le tre righe sono uguali: R2 ← R2 − R1 = (0, 0, 0) e R3 ← R3 − R1 = (0, 0, 0). Resta una riga non nulla: rk A = 1.</p><p>λ = 0: V<sub>0</sub> = ker(A − 0·I) = ker A, dimensione 3 − rk A = 3 − 1 = 2. Quindi 0 è autovalore con mg = 2 (e allora ma ≥ 2).</p><p>Altro autovalore: provo il vettore (1, 1, 1). A·(1, 1, 1) = (1 + 1 + 1, 1 + 1 + 1, 1 + 1 + 1) = (3, 3, 3) = 3·(1, 1, 1). Quindi λ = 3 è autovalore.</p><p>p<sub>A</sub> ha grado 3: radici 0, 0, 3. p<sub>A</sub>(λ) = −λ²·(λ − 3). (Controllo: la somma degli autovalori 0 + 0 + 3 = 3 è uguale a tr A = 1 + 1 + 1 = 3.)</p></div>
         <div class="step"><h3>Passo 2 · Autospazio di λ = 3</h3><p>A·(1, 1, 1) = (3, 3, 3): V<sub>3</sub> = Span((1, 1, 1)). Normalizzo: (1/√3)·(1, 1, 1).</p></div>
         <div class="step"><h3>Passo 3 · Autospazio di λ = 0</h3><p>V<sub>0</sub> = ker A = { x + y + z = 0 }. Base dal sistema: (−1, 1, 0), (−1, 0, 1). Non sono ortogonali (prodotto = 1).</p></div>
         <div class="step"><h3>Passo 4 · Gram-Schmidt dentro V<sub>0</sub></h3><p>È proprio la ricetta del capitolo 8: (1/√2)·(−1, 1, 0) e (1/√6)·(−1, −1, 2).</p><p>Sono automaticamente ortogonali a (1, 1, 1) (teorema, punto 2).</p></div>

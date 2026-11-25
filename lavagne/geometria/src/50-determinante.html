@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-determinante"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Il determinante è un'area</h2>
       <p>Il quadratino di lato 1 (area 1) diventa il parallelogramma viola, costruito sulle due colonne di A. La sua area è |det A| = |a·d − b·c|. Muovi le entrate finché le due frecce finiscono sulla stessa retta: l'area diventa 0, cioè det A = 0.</p>
@@ -37,6 +45,7 @@
           <li>Matrice triangolare ⇒ det = <b>prodotto della diagonale</b> (Prop. 3.3.3).</li>
           <li>Una riga nulla, o due righe uguali o proporzionali ⇒ det = 0.</li>
         </ul>
+        <details class="whybox"><summary>Le regole viste su una 2 × 2, con i conti</summary><p>Parto da A = ${M([[1,2],[3,4]])}$: det A = 1·4 − 2·3 = 4 − 6 = −2.</p><p><b>Scambio</b> le righe: det ${M([[3,4],[1,2]])}$ = 3·2 − 4·1 = 6 − 4 = 2 = −(−2). Il segno cambia.</p><p><b>Moltiplico</b> la riga 1 per 5: det ${M([[5,10],[3,4]])}$ = 5·4 − 10·3 = 20 − 30 = −10 = 5·(−2). Il det si moltiplica per 5.</p><p><b>Aggiungo</b> a R2 il multiplo −3·R1: R2 = (3 − 3·1, 4 − 3·2) = (0, −2). det ${M([[1,2],[0,-2]])}$ = 1·(−2) − 2·0 = −2. Non cambia.</p><p><b>Triangolare</b>: quest'ultima ha sotto la diagonale solo 0, e infatti det = 1·(−2) = prodotto della diagonale.</p></details>
         <p>Quindi: riduci a scala usando solo scambi e "aggiungi un multiplo"; det A = (−1)<sup>numero di scambi</sup> · prodotto dei pivot.</p>
       </div>
       <div class="def"><b>Le formule da quiz</b>

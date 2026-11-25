@@ -1,0 +1,36 @@
+<script>
+Lav.video('scalare', 'video-scalare', [
+  { h:'1. Prodotto scalare e norma', steps:[
+    { m:'⟨x, y⟩ = x₁·y₁ + x₂·y₂ + … + x<sub>n</sub>·y<sub>n</sub>', s:'Il prodotto scalare di due vettori si fa moltiplicando le componenti nello stesso posto e sommando tutto. Il risultato è un numero.' },
+    { m:'⟨(1, 2, 3), (4, −1, 0)⟩ = 1·4 + 2·(−1) + 3·0 = 4 − 2 + 0 = 2', s:'Esempio: uno per quattro fa quattro, due per meno uno fa meno due, tre per zero fa zero. Quattro meno due più zero fa due.' },
+    { m:'‖x‖ = √⟨x, x⟩; &nbsp; ‖(3, 4)‖ = √(3·3 + 4·4) = √(9 + 16) = √25 = 5', s:'La norma, cioè la lunghezza, è la radice del prodotto scalare del vettore con se stesso. Per tre quattro: tre per tre fa nove, quattro per quattro fa sedici, la somma è venticinque e la radice è cinque. È il teorema di Pitagora.' }
+  ]},
+  { h:'2. Angolo tra due vettori', steps:[
+    { m:'cos θ = ⟨x, y⟩ / (‖x‖·‖y‖)', s:'Il coseno dell\'angolo tra due vettori è il prodotto scalare diviso il prodotto delle lunghezze. Questa formula va saputa a memoria.' },
+    { m:'x = (1, 0), y = (1, 1): ⟨x, y⟩ = 1·1 + 0·1 = 1', s:'Esempio: uno zero e uno uno. Prodotto scalare: uno per uno più zero per uno, cioè uno.' },
+    { m:'‖x‖ = √(1 + 0) = 1, &nbsp; ‖y‖ = √(1 + 1) = √2', s:'Lunghezze: la prima è radice di uno, cioè uno. La seconda è radice di uno più uno, radice di due.' },
+    { m:'cos θ = 1/(1·√2) = 1/√2 = √2/2 ⇒ θ = π/4', s:'Coseno: uno diviso radice di due, che è radice di due mezzi. L\'angolo con questo coseno è pi greco quarti, quarantacinque gradi.' },
+    { m:'⟨x, y⟩ = 0 ⇔ cos θ = 0 ⇔ θ = π/2: ortogonali', s:'Se il prodotto scalare è zero, il coseno è zero e l\'angolo è retto: i vettori si dicono ortogonali.' }
+  ]},
+  { h:'3. Proiezione su una retta', steps:[
+    { m:'proj<sub>w</sub>(v) = (⟨v, w⟩ / ⟨w, w⟩)·w', s:'La proiezione di v sulla retta di w è w moltiplicato per il numero: prodotto scalare di v con w, diviso prodotto scalare di w con se stesso.' },
+    { m:'Perché: cerco c con ⟨v − c·w, w⟩ = 0 ⇒ ⟨v, w⟩ − c·⟨w, w⟩ = 0 ⇒ c = ⟨v, w⟩/⟨w, w⟩', s:'Il motivo: voglio che quello che avanza, v meno c per w, sia perpendicolare a w. Impongo prodotto scalare zero, uso la linearità, e ricavo c.' },
+    { m:'v = (2, 3), w = (1, 1): ⟨v, w⟩ = 2 + 3 = 5, &nbsp; ⟨w, w⟩ = 1 + 1 = 2', s:'Esempio: v due tre, w uno uno. Prodotto scalare di v e w: due più tre, cinque. Di w con se stesso: uno più uno, due.' },
+    { m:'proj = (5/2)·(1, 1) = (5/2, 5/2)', s:'La proiezione è cinque mezzi per uno uno: cinque mezzi, cinque mezzi.' }
+  ]},
+  { h:'4. Gram-Schmidt su (1, 1, 0), (1, 0, 1)', steps:[
+    { m:'w₁ = v₁ = (1, 1, 0)', s:'Gram-Schmidt trasforma una base in una base di vettori perpendicolari. Il primo lo tengo com\'è: w uno uguale v uno.' },
+    { m:'⟨w₁, w₁⟩ = 1·1 + 1·1 + 0·0 = 2; &nbsp; ⟨v₂, w₁⟩ = 1·1 + 0·1 + 1·0 = 1', s:'Mi servono due prodotti scalari. w uno con se stesso: uno più uno più zero, due. v due con w uno: uno più zero più zero, uno.' },
+    { m:'w₂ = v₂ − (1/2)·w₁ = (1, 0, 1) − (1/2, 1/2, 0)', s:'Al secondo vettore tolgo la sua proiezione su w uno: un mezzo volte w uno, cioè un mezzo, un mezzo, zero.' },
+    { m:'= (1 − 1/2, 0 − 1/2, 1 − 0) = (1/2, −1/2, 1)', s:'Sottraggo componente per componente: uno meno un mezzo fa un mezzo, zero meno un mezzo fa meno un mezzo, uno meno zero fa uno.' },
+    { m:'Controllo: ⟨w₂, w₁⟩ = (1/2)·1 + (−1/2)·1 + 1·0 = 1/2 − 1/2 + 0 = 0 ✓', s:'Controllo: il prodotto scalare tra w due e w uno fa un mezzo meno un mezzo più zero, cioè zero. Sono perpendicolari.' },
+    { m:'Normalizzo: ‖w₁‖ = √2 ⇒ (1/√2)·(1, 1, 0); &nbsp; 2·w₂ = (1, −1, 2), ‖(1, −1, 2)‖ = √(1 + 1 + 4) = √6', s:'Per avere lunghezza uno divido ogni vettore per la sua norma. w uno ha norma radice di due. Per w due conviene prima moltiplicare per due, così diventa uno meno uno due, che ha norma radice di uno più uno più quattro, radice di sei.' },
+    { m:'Base ortonormale: (1/√2)·(1, 1, 0), &nbsp; (1/√6)·(1, −1, 2)', s:'La base ortonormale è un fratto radice di due per uno uno zero, e uno fratto radice di sei per uno meno uno due.' }
+  ]},
+  { h:'5. Il complemento ortogonale', steps:[
+    { m:'W<sup>⊥</sup> = { v : ⟨v, w⟩ = 0 per ogni w ∈ W }', s:'Il complemento ortogonale di W sono tutti i vettori perpendicolari a ogni vettore di W.' },
+    { m:'W = Span((1, 1, 1)): ⟨(x, y, z), (1, 1, 1)⟩ = x + y + z = 0', s:'Se W è generato da uno uno uno, basta imporre il prodotto scalare con uno uno uno uguale a zero: x più y più z uguale zero.' },
+    { m:'dim W<sup>⊥</sup> = n − dim W = 3 − 1 = 2', s:'La dimensione è n meno la dimensione di W: tre meno uno, due. È un piano.' }
+  ]}
+]);
+</script>

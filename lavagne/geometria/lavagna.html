@@ -153,6 +153,19 @@ ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column
 .next a { color: var(--u); }
 footer { color: var(--muted); font-size: .9rem; text-align: center; }
 @media (prefers-reduced-motion: no-preference) { .reveal { animation: up .35s ease-out; } @keyframes up { from { transform: translateY(6px); opacity: .4 } to { transform: none; opacity: 1 } } }
+
+/* videolezione (player comune) */
+:root { --thief: var(--u); }
+.video .vboard { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 220px; max-height: 440px; overflow-y: auto; }
+.video .vstep { padding: 8px 10px; margin: 4px 0; border-left: 3px solid transparent; opacity: .55; line-height: 1.7; }
+.video .vstep.cur { opacity: 1; border-left-color: var(--thief); background: var(--board); border-radius: 6px; }
+.video .vstep h3 { margin: 0; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+.video .vhint { color: var(--muted); }
+.video .vsub { min-height: 3em; font-size: 1rem; color: var(--ink); margin: 10px 0 6px; }
+.video .vctl button { flex: 1; }
+.video .vcount { color: var(--muted); font-size: .9rem; }
+
+.video .vboard .mx span { color: inherit; }
 </style>
 
 <div class="wrap">
@@ -461,6 +474,62 @@ window.Lav = (function(){
     setP(0); onDraw(ch, draw);
   }
 
+
+  /* ---------------- videolezione ---------------- */
+  // scenes: [{show: html sulla lavagna, say: testo letto dalla voce (parole, niente simboli)}]
+  function vplayer(ch, scenes){
+    const box = $('video-'+ch); if (!box) return;
+    box.className = 'video';
+    box.innerHTML = '<div class="vboard" aria-live="polite"></div><p class="vsub"></p>'
+      + '<div class="row vctl"><button data-vb aria-label="Passo indietro">⟨ Indietro</button><button class="primary" data-vp>▶ Avvia</button><button data-vn aria-label="Passo avanti">Avanti ⟩</button></div>'
+      + '<div class="controls"><span class="vcount"></span><label>Voce <input type="checkbox" data-vv checked></label>'
+      + '<label>Velocità <select data-vs><option value="0.85">lenta</option><option value="1" selected>normale</option><option value="1.15">veloce</option></select></label></div>';
+    const board = box.querySelector('.vboard'), sub = box.querySelector('.vsub'), cnt = box.querySelector('.vcount');
+    const bP = box.querySelector('[data-vp]'), vv = box.querySelector('[data-vv]'), vs = box.querySelector('[data-vs]');
+    const synth = window.speechSynthesis;
+    let i = -1, playing = false, timer = null, token = 0;
+    const voice = () => { try { const v = synth.getVoices(); return v.find(x=>/^it/i.test(x.lang)) || null; } catch(e){ return null; } };
+    if (!synth) { vv.checked = false; vv.disabled = true; }
+    const stop = () => { token++; clearTimeout(timer); try { synth && synth.cancel(); } catch(e){} };
+    const render = () => {
+      board.innerHTML = scenes.slice(0, i+1).map((sc,k)=>'<div class="vstep'+(k===i?' cur':'')+'">'+sc.show+'</div>').join('') || '<p class="vhint">Premi ▶ Avvia: ogni calcolo compare uno alla volta e la voce lo spiega. Puoi fermarti e tornare indietro quando vuoi.</p>';
+      sub.textContent = i>=0 ? scenes[i].say : '';
+      cnt.textContent = 'Passo '+Math.max(0,i+1)+' di '+scenes.length;
+      const cur = board.querySelector('.cur'); if (cur) board.scrollTop = cur.offsetTop - board.offsetTop - 8;
+    };
+    const after = (t) => { if (!playing || t!==token) return; if (i < scenes.length-1) { timer = setTimeout(()=>{ if (t===token) { i++; render(); speak(); } }, 700); } else { playing = false; bP.textContent = '↺ Ricomincia'; } };
+    const speak = () => {
+      const t = ++token, txt = scenes[i].say, rate = +vs.value;
+      if (vv.checked && synth){
+        try { synth.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'it-IT'; u.rate = rate; const v = voice(); if (v) u.voice = v;
+          const t0 = Date.now(), minT = txt.length*55/rate; const done = () => { const left = minT - (Date.now()-t0); if (left > 300) timer = setTimeout(()=>after(t), left); else after(t); };
+          u.onend = done; u.onerror = done; synth.speak(u);
+          // rete di sicurezza: se la voce non parte, vado avanti a tempo
+          timer = setTimeout(()=>{ if (t===token && !synth.speaking) after(t); }, 1500 + txt.length*90/rate);
+        } catch(e){ timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate); }
+      } else timer = setTimeout(()=>after(t), 1200 + txt.length*60/rate);
+    };
+    bP.onclick = () => {
+      if (playing){ playing = false; stop(); bP.textContent = '▶ Continua'; return; }
+      if (i >= scenes.length-1) i = -1;
+      playing = true; bP.textContent = '⏸ Pausa';
+      if (i < 0) i = 0; render(); speak();
+    };
+    box.querySelector('[data-vn]').onclick = () => { if (i < scenes.length-1){ stop(); i++; render(); if (playing) speak(); else if (vv.checked) { playing = false; speakOnce(); } } };
+    box.querySelector('[data-vb]').onclick = () => { if (i > 0){ stop(); i--; render(); if (playing) speak(); else if (vv.checked) speakOnce(); } };
+    const speakOnce = () => { if (!synth) return; try { synth.cancel(); const u = new SpeechSynthesisUtterance(scenes[i].say); u.lang='it-IT'; u.rate=+vs.value; const v=voice(); if (v) u.voice=v; synth.speak(u); } catch(e){} };
+    vv.onchange = () => { if (!vv.checked) { try { synth && synth.cancel(); } catch(e){} } };
+    window.addEventListener('hashchange', () => { if (playing){ playing=false; stop(); bP.textContent='▶ Continua'; } });
+    render();
+  }
+
+
+  // copia del player comune (lavagne-comune/video-player.js); qui le scene arrivano raggruppate per titolo
+  function video(ch, _id, groups){
+    const scenes = [];
+    groups.forEach(g => g.steps.forEach((st, k) => scenes.push({ show: (k===0 ? '<h3>'+g.h+'</h3>' : '') + (st.m||''), say: st.s || plain(st.m||'') })));
+    vplayer(ch, scenes);
+  }
   /* ---------- navigazione, indice, copia risultati ---------- */
   const LAB = { ok:'giusto', 'ok-dopo':'giusto dopo errore o aiuto', errore:'sbagliato', 'soluzione vista':'guardato la soluzione' };
   const plain = h => { const t=document.createElement('div'); t.innerHTML=h; return t.textContent.replace(/\s+/g,' ').trim(); };
@@ -503,7 +572,7 @@ window.Lav = (function(){
       matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>redraw((location.hash||'#indice').slice(1))); } catch(e){}
     show();
   }
-  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lab, transform, init };
+  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lab, transform, video, init };
 })();
 </script>
   <!-- ================= CAPITOLO 1 · SPAZI VETTORIALI ================= -->
@@ -514,6 +583,14 @@ window.Lav = (function(){
       <p class="big">Serve a usare <b>un solo linguaggio</b> per cose che sembrano diverse: le frecce nel piano, le soluzioni di un sistema omogeneo, i polinomi, le matrici. Hanno tutte due operazioni: le puoi <b>sommare</b> e le puoi <b>moltiplicare per un numero</b>.</p>
       <p>Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-spazi"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -735,6 +812,68 @@ window.Lav = (function(){
   ].map(e => Object.assign(e, { q:e.q.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), sol:e.sol.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s))), opts:e.opts && e.opts.map(o=>o.replace(/\$\{M\((\[.*?\])\)\}\$/g,(_,s)=>M(JSON.parse(s)))) })));
 })();
 </script>
+<script>
+Lav.video('spazi', 'vid-spazi', [
+  { h:'1. Che cos\'è un sottospazio', steps:[
+    { m:'W ⊆ V è un <b>sottospazio</b> se valgono tre cose:', s:'Partiamo dalla definizione. Un sottoinsieme W di uno spazio vettoriale V è un sottospazio se valgono tre condizioni.' },
+    { m:'① 0 ∈ W', s:'Prima condizione: il vettore nullo deve stare in W.' },
+    { m:'② u, w ∈ W ⇒ u + w ∈ W', s:'Seconda: se prendo due vettori di W e li sommo, il risultato deve restare in W. Si dice chiuso per somma.' },
+    { m:'③ w ∈ W, λ ∈ K ⇒ λ·w ∈ W', s:'Terza: se moltiplico un vettore di W per un numero qualsiasi, il risultato deve restare in W. Si dice chiuso per prodotto per scalare.' },
+    { m:'Basta che una delle tre sia falsa ⇒ <b>non</b> è un sottospazio.', s:'Per dire di no basta trovare una sola condizione che non vale, con un esempio con i numeri.' }
+  ]},
+  { h:'2. W = {(x, y, z) ∈ R³ : x + y = 2z}', steps:[
+    { m:'① Zero: x = y = z = 0 ⇒ 0 + 0 = 2·0 ⇒ 0 = 0 ✓', s:'Controllo lo zero. Metto zero al posto di x, y e z: a sinistra zero più zero fa zero, a destra due per zero fa zero. Zero uguale zero è vero, quindi lo zero sta in W.' },
+    { m:'② Prendo u = (x₁, y₁, z₁) e w = (x₂, y₂, z₂) in W:', s:'Per la somma prendo due vettori generici di W, u e w.' },
+    { m:'x₁ + y₁ = 2z₁ &nbsp; e &nbsp; x₂ + y₂ = 2z₂', s:'Stare in W vuol dire che per ognuno vale l\'equazione: x uno più y uno uguale due z uno, e x due più y due uguale due z due.' },
+    { m:'u + w = (x₁ + x₂, y₁ + y₂, z₁ + z₂)', s:'La somma si fa componente per componente.' },
+    { m:'(x₁ + x₂) + (y₁ + y₂) = (x₁ + y₁) + (x₂ + y₂) = 2z₁ + 2z₂ = 2·(z₁ + z₂) ✓', s:'Controllo l\'equazione sulla somma. Riordino: x uno più y uno, più x due più y due. Il primo pezzo vale due z uno, il secondo due z due. Raccolgo il due: due per z uno più z due. È proprio due volte la terza componente della somma, quindi la somma sta in W.' },
+    { m:'③ λ·u = (λx₁, λy₁, λz₁): &nbsp; λx₁ + λy₁ = λ·(x₁ + y₁) = λ·2z₁ = 2·(λz₁) ✓', s:'Per il prodotto: lambda per u ha componenti lambda x uno, lambda y uno, lambda z uno. Raccolgo lambda: lambda per x uno più y uno, che vale lambda per due z uno, cioè due per lambda z uno. L\'equazione vale, quindi anche lambda per u sta in W.' },
+    { m:'Tutte e tre vere ⇒ W è un sottospazio di R³.', s:'Le tre condizioni sono vere, quindi W è un sottospazio.' }
+  ]},
+  { h:'3. U = {(x, y, z) ∈ R³ : x + y = 2}', steps:[
+    { m:'① Zero: 0 + 0 = 2 ⇒ 0 = 2 ✗', s:'Stesso controllo per U. Metto zero: zero più zero fa zero, ma l\'equazione chiede due. Zero uguale due è falso.' },
+    { m:'0 ∉ U ⇒ U <b>non</b> è un sottospazio.', s:'Lo zero non sta in U, quindi U non è un sottospazio. Il motivo è il termine noto 2: quando c\'è un numero da solo diverso da zero, lo zero non soddisfa l\'equazione.' }
+  ]},
+  { h:'4. Un controesempio: x·y = 0 in R²', steps:[
+    { m:'(1, 0): 1·0 = 0 ✓ &nbsp; (0, 1): 0·1 = 0 ✓', s:'Prendo l\'insieme dei punti con x per y uguale zero. Il punto uno zero ci sta, perché uno per zero fa zero. Anche zero uno ci sta.' },
+    { m:'(1, 0) + (0, 1) = (1 + 0, 0 + 1) = (1, 1)', s:'Li sommo componente per componente: viene uno uno.' },
+    { m:'1·1 = 1 ≠ 0 ⇒ (1, 1) ∉ W ✗', s:'Per uno uno il prodotto fa uno, che è diverso da zero. Quindi la somma non sta nell\'insieme: non è chiuso per somma, non è un sottospazio.' },
+    { m:'Regola: prodotti tra incognite, quadrati, ≥ ⇒ cerca un controesempio.', s:'Quando vedi prodotti tra le incognite, quadrati o disuguaglianze, quasi sempre non è un sottospazio: cerca due vettori come questi.' }
+  ]},
+  { h:'5. Combinazioni lineari e Span', steps:[
+    { m:'Span(v₁, v₂) = { a·v₁ + b·v₂ : a, b ∈ R }', s:'Lo Span di due vettori è l\'insieme di tutte le loro combinazioni: a per v uno più b per v due, con a e b numeri qualsiasi.' },
+    { m:'Esempio: 2·(1, 0, 1) + 3·(0, 1, 1)', s:'Facciamo un esempio di combinazione: due volte uno zero uno, più tre volte zero uno uno.' },
+    { m:'= (2·1, 2·0, 2·1) + (3·0, 3·1, 3·1) = (2, 0, 2) + (0, 3, 3)', s:'Prima moltiplico ogni componente per il suo numero: due zero due, e zero tre tre.' },
+    { m:'= (2 + 0, 0 + 3, 2 + 3) = (2, 3, 5)', s:'Poi sommo componente per componente: due, tre, cinque. Quindi due tre cinque sta nello Span di quei due vettori.' }
+  ]},
+  { h:'6. Indipendenti o dipendenti?', steps:[
+    { m:'v₁, …, v<sub>k</sub> indipendenti ⇔ (λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 ⇒ tutti i λ = 0)', s:'Dei vettori sono indipendenti se l\'unico modo di combinarli per ottenere zero è usare tutti coefficienti zero.' },
+    { m:'(1, 2, 3) e (2, 4, 6): &nbsp; 2·1 = 2, 2·2 = 4, 2·3 = 6', s:'Guardo uno due tre e due quattro sei. Due per uno fa due, due per due fa quattro, due per tre fa sei.' },
+    { m:'⇒ (2, 4, 6) = 2·(1, 2, 3) ⇒ 2·(1, 2, 3) − 1·(2, 4, 6) = (0, 0, 0)', s:'Quindi il secondo è il doppio del primo. Allora due volte il primo meno una volta il secondo fa zero.' },
+    { m:'Coefficienti 2 e −1, non nulli ⇒ <b>dipendenti</b>.', s:'Ho trovato una combinazione uguale a zero con coefficienti due e meno uno, che non sono zero. Quindi sono dipendenti.' },
+    { m:'(1, 0, 1), (0, 1, 1): &nbsp; a·(1, 0, 1) + b·(0, 1, 1) = (a, b, a + b)', s:'Ora uno zero uno e zero uno uno. Faccio la combinazione generica: viene a, b, a più b.' },
+    { m:'= (0, 0, 0) ⇒ prima componente a = 0, seconda b = 0', s:'Se deve fare zero, la prima componente dice a uguale zero e la seconda dice b uguale zero.' },
+    { m:'Solo a = b = 0 ⇒ <b>indipendenti</b>.', s:'L\'unica possibilità è a e b zero: sono indipendenti.' }
+  ]},
+  { h:'7. Base di W = {x − y + 2t = 0} ⊆ R⁴', steps:[
+    { m:'x − y + 2t = 0 ⇒ x = y − 2t', s:'Ricavo x: porto meno y e più due t dall\'altra parte cambiando il segno. x uguale y meno due t.' },
+    { m:'Parametri liberi: y, z, t &nbsp; (z non compare ⇒ libera)', s:'Le altre incognite, y, z e t, sono libere. z non compare proprio nell\'equazione, quindi può essere qualsiasi numero.' },
+    { m:'(x, y, z, t) = (y − 2t, y, z, t)', s:'Scrivo il vettore generico di W mettendo al posto di x quello che ho ricavato.' },
+    { m:'= (y, y, 0, 0) + (0, 0, z, 0) + (−2t, 0, 0, t)', s:'Lo spezzo in tre pezzi: uno con solo y, uno con solo z, uno con solo t. Dove un parametro non c\'è, metto zero.' },
+    { m:'= y·(1, 1, 0, 0) + z·(0, 0, 1, 0) + t·(−2, 0, 0, 1)', s:'Da ogni pezzo raccolgo il suo parametro. Restano tre vettori fissi.' },
+    { m:'Base: (1, 1, 0, 0), (0, 0, 1, 0), (−2, 0, 0, 1) &nbsp; ⇒ dim W = 3', s:'Questi tre vettori generano W, perché ogni vettore di W si scrive così. Sono indipendenti, perché ognuno ha un uno nel posto del suo parametro dove gli altri hanno zero. Quindi sono una base e la dimensione è tre.' },
+    { m:'Controllo: 4 incognite − 1 equazione = 3 ✓', s:'Controllo veloce: quattro incognite meno un\'equazione fa tre. Torna.' }
+  ]},
+  { h:'8. L\'esercizio guidato: x − 2y + z = 0', steps:[
+    { m:'Zero: 0 − 2·0 + 0 = 0 ✓ &nbsp; equazione lineare omogenea ⇒ sottospazio', s:'Lo zero ci sta: zero meno due per zero più zero fa zero. Ed è un\'equazione lineare omogenea, quindi W è un sottospazio.' },
+    { m:'x − 2y + z = 0 ⇒ z = −x + 2y', s:'Ricavo z: tolgo x a entrambi i membri e aggiungo due y. z uguale meno x più due y.' },
+    { m:'(x, y, z) = (x, y, −x + 2y)', s:'Vettore generico: x, y, e al posto di z metto meno x più due y.' },
+    { m:'= (x, 0, −x) + (0, y, 2y)', s:'Spezzo: il pezzo con x è x, zero, meno x. Il pezzo con y è zero, y, due y.' },
+    { m:'= x·(1, 0, −1) + y·(0, 1, 2)', s:'Raccolgo x dal primo e y dal secondo.' },
+    { m:'Base (1, 0, −1), (0, 1, 2) ⇒ dim W = 2 = 3 − 1', s:'La base è uno zero meno uno e zero uno due. La dimensione è due, e infatti tre incognite meno un\'equazione fa due. W è un piano che passa per l\'origine.' }
+  ]}
+]);
+</script>
   <!-- ================= CAPITOLO 2 · RANGO E DIMENSIONE ================= -->
   <div class="chapter" data-ch="rango" data-title="2 · Rango e dimensione" data-date="24/11" data-full="Rango, dimensione, estrazione e completamento" data-src="Libro pp. 54-55, 65-70 · Foglio 5" hidden>
     <section class="board">
@@ -745,9 +884,18 @@ window.Lav = (function(){
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-rango"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>In R² tre vettori sono sempre troppi</h2>
       <p>dim R² = 2: due vettori indipendenti bastano già a raggiungere tutto il piano. Un terzo vettore <span class="cw">w</span> si scrive <b>sempre</b> con i primi due, quindi tre vettori di R² sono sempre dipendenti. Muovi w e guarda i due numeri che lo costruiscono.</p>
+      <details class="whybox"><summary>Il conto con dei numeri</summary><p>u = (2, 1), v = (−1, 2), w = (3, 4). Cerco a, b con a·u + b·v = w: a·(2, 1) + b·(−1, 2) = (2a − b, a + 2b) = (3, 4). Equazioni: 2a − b = 3 e a + 2b = 4. Dalla prima b = 2a − 3. Sostituisco nella seconda: a + 2·(2a − 3) = 4, cioè a + 4a − 6 = 4, cioè 5a = 10, quindi a = 2. Poi b = 2·2 − 3 = 1. Verifica: 2·(2, 1) + 1·(−1, 2) = (4 − 1, 2 + 2) = (3, 4) ✓. Quindi 2·u + 1·v − 1·w = 0 con coefficienti non nulli: u, v, w sono dipendenti. Lo stesso conto funziona con qualsiasi w, perché il sistema 2 × 2 ha det = 2·2 − (−1)·1 = 5 ≠ 0 e quindi ha sempre una soluzione.</p></details>
       <canvas id="cv-tre" aria-label="Tre vettori nel piano: w scritto come combinazione di u e v"></canvas>
       <div class="controls">
         <label>w, prima componente <input type="range" id="tr-x" min="-4" max="4" step="0.5" value="3"> <b id="tr-xv"></b></label>
@@ -913,6 +1061,49 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('rango', 'video-rango', [
+  { h:'1. Che cos\'è il rango', steps:[
+    { m:'rk A = numero di pivot dopo Gauss', s:'Il rango di una matrice è il numero di pivot che restano dopo averla ridotta a scala con Gauss. Il pivot è il primo numero diverso da zero di ogni riga non nulla.' },
+    { m:'rk A = dim Span(colonne di A) = dim Span(righe di A)', s:'Il rango dice anche quante colonne indipendenti ci sono, cioè la dimensione dello Span delle colonne. Ed è uguale al numero di righe indipendenti.' }
+  ]},
+  { h:'2. Gauss su A = '+M([[1,2,0],[2,4,1],[1,2,1]]), steps:[
+    { m:'R2 ← R2 − 2·R1: (2 − 2·1, 4 − 2·2, 1 − 2·0) = (0, 0, 1)', s:'Voglio uno zero sotto il primo pivot, che è l\'uno in alto a sinistra. Alla riga due tolgo due volte la riga uno. Due meno due per uno fa zero. Quattro meno due per due fa zero. Uno meno due per zero fa uno. La nuova riga due è zero zero uno.' },
+    { m:'R3 ← R3 − R1: (1 − 1, 2 − 2, 1 − 0) = (0, 0, 1)', s:'Alla riga tre tolgo la riga uno. Uno meno uno fa zero, due meno due fa zero, uno meno zero fa uno. La nuova riga tre è zero zero uno.' },
+    { m:M([[1,2,0],[0,0,1],[0,0,1]]), s:'Ecco la matrice dopo i primi due passaggi.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 0 − 0, 1 − 1) = (0, 0, 0)', s:'Le righe due e tre sono uguali. Alla riga tre tolgo la riga due: viene tutta zero.' },
+    { m:M([[1,2,0],[0,0,1],[0,0,0]])+' &nbsp; pivot in colonna 1 e colonna 3', s:'Matrice a scala. Il primo pivot è l\'uno nella colonna uno, il secondo è l\'uno nella colonna tre. La terza riga è nulla.' },
+    { m:'2 pivot ⇒ rk A = 2', s:'Due pivot, quindi il rango è due.' }
+  ]},
+  { h:'3. Dimensione e base di uno Span', steps:[
+    { m:'W = Span((1, 2, 1), (2, 4, 2), (0, 1, 1))', s:'Le colonne della matrice di prima sono i vettori uno due uno, due quattro due, zero uno uno. W è il loro Span.' },
+    { m:'dim W = rk = 2', s:'La dimensione di W è il rango della matrice con questi vettori in colonna: due.' },
+    { m:'Base = colonne <b>originali</b> con pivot: (1, 2, 1), (0, 1, 1)', s:'Per la base prendo le colonne di partenza che hanno il pivot: la prima e la terza. Attenzione, quelle originali, non quelle ridotte.' },
+    { m:'Infatti (2, 4, 2) = 2·(1, 2, 1): 2·1 = 2, 2·2 = 4, 2·1 = 2', s:'E in effetti la seconda colonna è il doppio della prima: due per uno fa due, due per due fa quattro, due per uno fa due. Per questo era di troppo.' }
+  ]},
+  { h:'4. Dallo Span all\'equazione cartesiana', steps:[
+    { m:'(x, y, z) = a·(1, 2, 1) + b·(0, 1, 1) = (a, 2a + b, a + b)', s:'Un vettore di W è a volte il primo più b volte il secondo. Calcolo componente per componente: a, due a più b, a più b.' },
+    { m:'x = a, &nbsp; y = 2a + b, &nbsp; z = a + b', s:'Quindi x è a, y è due a più b, z è a più b.' },
+    { m:'a = x; &nbsp; da z = a + b: b = z − a = z − x', s:'Elimino i parametri. Dalla prima, a è uguale a x. Dalla terza, b è z meno a, cioè z meno x.' },
+    { m:'y = 2a + b = 2x + (z − x) = 2x − x + z = x + z', s:'Sostituisco nella seconda: y uguale due x più z meno x, cioè x più z.' },
+    { m:'x − y + z = 0', s:'Porto tutto a sinistra: x meno y più z uguale zero. È l\'equazione di W.' },
+    { m:'Controllo: (1, 2, 1) → 1 − 2 + 1 = 0 ✓ &nbsp; (0, 1, 1) → 0 − 1 + 1 = 0 ✓', s:'Controllo con i due vettori della base. Uno meno due più uno fa zero. Zero meno uno più uno fa zero. Torna.' }
+  ]},
+  { h:'5. Completare a una base di R³', steps:[
+    { m:'Ho (1, 1, 0), (0, 1, 1). Aggiungo e₁, e₂, e₃ in colonna:', s:'Voglio completare uno uno zero e zero uno uno a una base di R tre. Li metto in colonna e accodo i vettori della base canonica.' },
+    { m:M([[1,0,1,0,0],[1,1,0,1,0],[0,1,0,0,1]]), s:'Questa è la matrice con cinque colonne.' },
+    { m:'R2 ← R2 − R1: (1 − 1, 1 − 0, 0 − 1, 1 − 0, 0 − 0) = (0, 1, −1, 1, 0)', s:'Alla riga due tolgo la riga uno, numero per numero: zero, uno, meno uno, uno, zero.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 1 − 1, 0 − (−1), 0 − 1, 1 − 0) = (0, 0, 1, −1, 1)', s:'Alla riga tre tolgo la nuova riga due: zero, zero, zero meno meno uno che fa più uno, meno uno, uno.' },
+    { m:M([[1,0,1,0,0],[0,1,-1,1,0],[0,0,1,-1,1]])+' &nbsp; pivot nelle colonne 1, 2, 3', s:'I pivot sono nelle colonne uno, due e tre.' },
+    { m:'Base: (1, 1, 0), (0, 1, 1), (1, 0, 0)', s:'Prendo le colonne originali uno, due e tre: i miei due vettori più e uno. Sono tre vettori indipendenti in R tre, quindi sono una base.' }
+  ]},
+  { h:'6. Il teorema da ricordare', steps:[
+    { m:'Sistema omogeneo A·x = 0 in n incognite: dim soluzioni = n − rk A', s:'Ultima cosa: per un sistema omogeneo, la dimensione delle soluzioni è il numero di incognite meno il rango.' },
+    { m:'Esempio: 2 equazioni indipendenti in 5 incognite ⇒ 5 − 2 = 3', s:'Esempio: due equazioni indipendenti in cinque incognite. Il rango è due, quindi le soluzioni hanno dimensione cinque meno due, cioè tre.' }
+  ]}
+]); })();
+</script>
   <!-- ================= CAPITOLO 3 · SOMMA, INTERSEZIONE, GRASSMANN, COORDINATE ================= -->
   <div class="chapter" data-ch="grassmann" data-title="3 · Somma e Grassmann" data-date="27/11" data-full="Intersezione, somma, Grassmann, coordinate" data-src="Libro pp. 57-60, 64-65, 70-73 · esercizi pp. 75-78 · Fogli 6-7" hidden>
     <section class="board">
@@ -921,6 +1112,14 @@ window.Lav = (function(){
       <p class="big">Hai due sottospazi U e W dello stesso spazio V. Ti chiedi: cosa hanno <b>in comune</b> (l'intersezione U ∩ W)? Cosa ottieni <b>mettendoli insieme</b> (la somma U + W)? La formula di Grassmann lega le quattro dimensioni, così spesso ne calcoli tre e la quarta viene gratis.</p>
       <p>Nello stesso giorno ci sono le <b>coordinate</b>: come si scrive un vettore usando una base che non è quella canonica.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-grassmann"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1090,6 +1289,46 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+Lav.video('grassmann', 'video-grassmann', [
+  { h:'1. Somma e intersezione', steps:[
+    { m:'U ∩ W = vettori che stanno in U <b>e</b> in W', s:'L\'intersezione di U e W sono i vettori che stanno in tutti e due.' },
+    { m:'U + W = { u + w : u ∈ U, w ∈ W } = Span(generatori di U e di W)', s:'La somma U più W sono tutti i vettori che si scrivono come un vettore di U più uno di W. Si ottiene mettendo insieme i generatori di U e quelli di W.' },
+    { m:'Grassmann: dim(U + W) = dim U + dim W − dim(U ∩ W)', s:'La formula di Grassmann lega le quattro dimensioni: la dimensione della somma è dim U più dim W meno la dimensione dell\'intersezione.' },
+    { m:'Perché il "−": i vettori di U ∩ W li conto due volte', s:'Il meno serve perché la parte in comune la conterei due volte, una dentro U e una dentro W.' }
+  ]},
+  { h:'2. Esempio guidato: U = {x + y + z = 0}, W = Span((1, 1, 1))', steps:[
+    { m:'dim U = 3 incognite − 1 equazione = 2', s:'U è dato da un\'equazione in tre incognite: dimensione tre meno uno, cioè due. È un piano.' },
+    { m:'dim W = 1 &nbsp; (un vettore non nullo)', s:'W è generato da un solo vettore diverso da zero: dimensione uno. È una retta.' },
+    { m:'Vettore generico di W: t·(1, 1, 1) = (t, t, t)', s:'Per l\'intersezione prendo il vettore generico di W: t, t, t.' },
+    { m:'In U? &nbsp; t + t + t = 0 ⇒ 3t = 0 ⇒ t = 0', s:'Lo metto nell\'equazione di U: t più t più t fa tre t, che deve essere zero. Divido per tre: t uguale zero.' },
+    { m:'U ∩ W = {(0, 0, 0)} ⇒ dim(U ∩ W) = 0', s:'L\'unico vettore comune è lo zero. L\'intersezione ha dimensione zero.' },
+    { m:'dim(U + W) = 2 + 1 − 0 = 3 = dim R³ ⇒ U + W = R³', s:'Grassmann: due più uno meno zero fa tre. Tre è la dimensione di R tre, quindi la somma è tutto R tre.' },
+    { m:'U ∩ W = {0} e U + W = R³ ⇒ R³ = U ⊕ W', s:'Intersezione solo zero e somma uguale a tutto lo spazio: la somma è diretta, R tre è U somma diretta W.' }
+  ]},
+  { h:'3. Esempio in R⁴: U ⊆ W', steps:[
+    { m:'U = Span((1, 0, 1, 0), (0, 1, 0, 1)), &nbsp; W = {x − z = 0}', s:'Ora in R quattro: U generato da due vettori, W dato da un\'equazione.' },
+    { m:'a·(1, 0, 1, 0) + b·(0, 1, 0, 1) = (a, b, a, b) = 0 ⇒ a = 0, b = 0 ⇒ dim U = 2', s:'Controllo che i generatori di U siano indipendenti: la combinazione dà a, b, a, b. Se è zero, a e b sono zero. Quindi dim U è due.' },
+    { m:'dim W = 4 − 1 = 3', s:'W: quattro incognite meno un\'equazione, dimensione tre.' },
+    { m:'Vettore generico di U: (a, b, a, b) ⇒ x = a, z = a', s:'Il vettore generico di U ha x uguale a e z uguale a.' },
+    { m:'x − z = a − a = 0 ✓ per ogni a, b ⇒ U ⊆ W', s:'Nell\'equazione di W: a meno a fa zero, sempre. Quindi ogni vettore di U sta in W.' },
+    { m:'U ∩ W = U ⇒ dim = 2; &nbsp; dim(U + W) = 2 + 3 − 2 = 3', s:'L\'intersezione è U stesso, dimensione due. Grassmann: due più tre meno due fa tre. Infatti U più W è W.' }
+  ]},
+  { h:'4. Le coordinate in una base', steps:[
+    { m:'B = ((1, 1), (1, −1)), &nbsp; v = (5, 1). Cerco λ₁, λ₂:', s:'Le coordinate di un vettore in una base sono i numeri che servono per scriverlo con i vettori della base. Base uno uno, uno meno uno. Vettore cinque uno.' },
+    { m:'λ₁·(1, 1) + λ₂·(1, −1) = (λ₁ + λ₂, λ₁ − λ₂) = (5, 1)', s:'Lambda uno per uno uno più lambda due per uno meno uno fa lambda uno più lambda due, lambda uno meno lambda due.' },
+    { m:'λ₁ + λ₂ = 5 &nbsp; e &nbsp; λ₁ − λ₂ = 1', s:'Uguaglio componente per componente: due equazioni.' },
+    { m:'Sommo: 2λ₁ = 6 ⇒ λ₁ = 3', s:'Sommo le due equazioni: i lambda due si cancellano e resta due lambda uno uguale sei. Quindi lambda uno è tre.' },
+    { m:'3 + λ₂ = 5 ⇒ λ₂ = 2', s:'Sostituisco nella prima: tre più lambda due uguale cinque, quindi lambda due è due.' },
+    { m:'Verifica: 3·(1, 1) + 2·(1, −1) = (3 + 2, 3 − 2) = (5, 1) ✓ &nbsp; [v]<sub>B</sub> = (3, 2)', s:'Verifica: tre per uno uno più due per uno meno uno fa cinque uno. Le coordinate sono tre e due.' }
+  ]},
+  { h:'5. Un trucco da quiz', steps:[
+    { m:'U, W ⊆ R⁵ con dim U = dim W = 3', s:'Domanda tipo quiz: due sottospazi di R cinque, ognuno di dimensione tre.' },
+    { m:'dim(U ∩ W) = 3 + 3 − dim(U + W) = 6 − dim(U + W)', s:'Da Grassmann ricavo l\'intersezione: sei meno la dimensione della somma.' },
+    { m:'dim(U + W) ≤ 5 ⇒ dim(U ∩ W) ≥ 6 − 5 = 1', s:'La somma sta dentro R cinque, quindi ha dimensione al massimo cinque. Allora l\'intersezione ha dimensione almeno uno: non è mai solo lo zero.' }
+  ]}
+]);
+</script>
   <!-- ================= CAPITOLO 4 · APPLICAZIONI LINEARI ================= -->
   <div class="chapter" data-ch="lineari" data-title="4 · Applicazioni lineari" data-date="1/12" data-full="Applicazioni lineari, nucleo, immagine, matrice associata" data-src="Libro p. 92 e pp. 115-134 (salta 4.3.4 Hom) · Fogli 7-8" hidden>
     <section class="board">
@@ -1098,6 +1337,14 @@ window.Lav = (function(){
       <p class="big">Un'applicazione lineare è una funzione tra spazi vettoriali che "va d'accordo" con le due operazioni: l'immagine di una somma è la somma delle immagini, l'immagine di un multiplo è il multiplo dell'immagine.</p>
       <p>Il motivo per cui ti interessano: <b>ogni applicazione lineare è una matrice</b>, e viceversa. Così domande come "f è iniettiva?" o "quanto è grande l'immagine?" diventano conti di rango, che sai già fare.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-lineari"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1248,6 +1495,42 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('lineari', 'video-lineari', [
+  { h:'1. Applicazione lineare', steps:[
+    { m:'f: V → W lineare ⇔ f(u + v) = f(u) + f(v) &nbsp; e &nbsp; f(λ·v) = λ·f(v)', s:'Una funzione tra spazi vettoriali è lineare se rispetta la somma e il prodotto per un numero.' },
+    { m:'Conseguenza: f(0) = f(0·v) = 0·f(v) = 0', s:'Conseguenza: una lineare manda sempre zero in zero. Infatti zero è zero per v, e allora f di zero è zero per f di v, cioè zero.' },
+    { m:'f(x, y) = (x + 1, y): f(0, 0) = (0 + 1, 0) = (1, 0) ≠ (0, 0) ⇒ non lineare', s:'Esempio: f di x y uguale x più uno, y. In zero zero vale uno zero, che non è zero. Quindi non è lineare.' },
+    { m:'L<sub>A</sub>(x) = A·x è sempre lineare', s:'Moltiplicare per una matrice è sempre lineare. Per le funzioni da R n a R m è anche l\'unico modo.' }
+  ]},
+  { h:'2. Nucleo e immagine', steps:[
+    { m:'ker f = { v : f(v) = 0 }', s:'Il nucleo è l\'insieme dei vettori che f manda in zero.' },
+    { m:'Im f = { f(v) : v ∈ V }; &nbsp; Im L<sub>A</sub> = Span(colonne di A)', s:'L\'immagine sono tutti i risultati di f. Per L A è lo Span delle colonne di A, perché A per x è x uno per la prima colonna più x due per la seconda, e così via.' },
+    { m:'Teorema della dimensione: dim ker f + dim Im f = dim V', s:'Il teorema della dimensione: la dimensione del nucleo più quella dell\'immagine è la dimensione dello spazio di partenza.' },
+    { m:'iniettiva ⇔ ker f = {0}; &nbsp; suriettiva ⇔ Im f = W', s:'f è iniettiva se il nucleo è solo lo zero, ed è suriettiva se l\'immagine è tutto lo spazio di arrivo.' }
+  ]},
+  { h:'3. Esempio: A = '+M([[1,1,2],[0,1,1],[1,2,3]]), steps:[
+    { m:'R3 ← R3 − R1: (1 − 1, 2 − 1, 3 − 2) = (0, 1, 1)', s:'Gauss. Alla riga tre tolgo la riga uno: uno meno uno fa zero, due meno uno fa uno, tre meno due fa uno.' },
+    { m:'R3 ← R3 − R2: (0 − 0, 1 − 1, 1 − 1) = (0, 0, 0)', s:'Ora la riga tre è uguale alla riga due. La tolgo: viene zero zero zero.' },
+    { m:M([[1,1,2],[0,1,1],[0,0,0]])+' &nbsp; pivot in colonna 1 e 2 ⇒ rk A = 2', s:'Pivot nelle colonne uno e due: rango due.' },
+    { m:'Im L<sub>A</sub> = Span((1, 0, 1), (1, 1, 2)), dim Im = 2 &lt; 3 ⇒ non suriettiva', s:'L\'immagine è lo Span delle colonne originali uno e due. Ha dimensione due, meno di tre, quindi L A non è suriettiva.' },
+    { m:'Nucleo, riga 2: y + z = 0 ⇒ y = −z', s:'Per il nucleo risolvo A per x uguale zero dalla matrice ridotta. Riga due: y più z uguale zero, quindi y uguale meno z.' },
+    { m:'Riga 1: x + y + 2z = 0 ⇒ x = −y − 2z = −(−z) − 2z = z − 2z = −z', s:'Riga uno: x più y più due z uguale zero, quindi x uguale meno y meno due z. Metto y uguale meno z: meno meno z fa più z, meno due z, risultato meno z.' },
+    { m:'z = t: (x, y, z) = (−t, −t, t) = t·(−1, −1, 1)', s:'Chiamo z uguale t. Il vettore è meno t, meno t, t, cioè t volte meno uno meno uno uno.' },
+    { m:'ker L<sub>A</sub> = Span((−1, −1, 1)), dim 1 ⇒ non iniettiva', s:'Il nucleo ha dimensione uno, quindi non è solo zero: L A non è iniettiva.' },
+    { m:'Controllo: 1 + 2 = 3 = dim R³ ✓', s:'Controllo con il teorema: uno più due fa tre. Torna.' }
+  ]},
+  { h:'4. Matrice della derivata su R₂[x]', steps:[
+    { m:'f(p) = p′, base B = (1, x, x²)', s:'Ora una lineare tra polinomi: f di p è la derivata di p. Uso la base uno, x, x quadro.' },
+    { m:'f(1) = 0, &nbsp; f(x) = 1, &nbsp; f(x²) = 2x', s:'Calcolo f sui vettori della base. La derivata di uno è zero, di x è uno, di x quadro è due x.' },
+    { m:'0 → (0, 0, 0); &nbsp; 1 → (1, 0, 0); &nbsp; 2x → (0, 2, 0)', s:'Scrivo i risultati in coordinate. Zero ha coordinate zero zero zero. Uno è uno per uno: uno zero zero. Due x è due per x: zero due zero.' },
+    { m:'[f]<sup>B</sup><sub>B</sub> = '+M([[0,1,0],[0,0,2],[0,0,0]]), s:'Metto le coordinate in colonna, nell\'ordine: ecco la matrice di f.' },
+    { m:'p = 3 + 5x + 4x² → (3, 5, 4); &nbsp; M·(3, 5, 4) = (0·3 + 1·5 + 0·4, 0·3 + 0·5 + 2·4, 0) = (5, 8, 0)', s:'Controllo con un polinomio: tre più cinque x più quattro x quadro ha coordinate tre cinque quattro. La matrice per questo vettore dà cinque, otto, zero.' },
+    { m:'(5, 8, 0) → 5 + 8x = p′ ✓', s:'Cinque otto zero è il polinomio cinque più otto x. E la derivata di p è proprio cinque più due per quattro x, cioè cinque più otto x.' }
+  ]}
+]); })();
+</script>
   <!-- ================= CAPITOLO 5 · DETERMINANTE ================= -->
   <div class="chapter" data-ch="determinante" data-title="5 · Determinante" data-date="4/12" data-full="Determinante: Laplace, Gauss, Binet, inversa" data-src="Libro pp. 93-104 e 107-108 · esercizi pp. 111-114" hidden>
     <section class="board">
@@ -1256,6 +1539,14 @@ window.Lav = (function(){
       <p class="big">Il determinante det A è un solo numero, calcolato da una matrice <b>quadrata</b> A ∈ M(n, n, K). La cosa più importante che dice: <b>det A ≠ 0 ⇔ A è invertibile</b> ⇔ le colonne sono una base ⇔ rk A = n.</p>
       <p>Geometricamente (in R²) è il fattore per cui L<sub>A</sub> moltiplica le aree, col segno meno se ribalta il piano. All'esame serve per invertibilità, rango con parametro e, dal 8/12, per autovalori.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-determinante"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1287,6 +1578,7 @@ window.Lav = (function(){
           <li>Matrice triangolare ⇒ det = <b>prodotto della diagonale</b> (Prop. 3.3.3).</li>
           <li>Una riga nulla, o due righe uguali o proporzionali ⇒ det = 0.</li>
         </ul>
+        <details class="whybox"><summary>Le regole viste su una 2 × 2, con i conti</summary><p>Parto da A = ${M([[1,2],[3,4]])}$: det A = 1·4 − 2·3 = 4 − 6 = −2.</p><p><b>Scambio</b> le righe: det ${M([[3,4],[1,2]])}$ = 3·2 − 4·1 = 6 − 4 = 2 = −(−2). Il segno cambia.</p><p><b>Moltiplico</b> la riga 1 per 5: det ${M([[5,10],[3,4]])}$ = 5·4 − 10·3 = 20 − 30 = −10 = 5·(−2). Il det si moltiplica per 5.</p><p><b>Aggiungo</b> a R2 il multiplo −3·R1: R2 = (3 − 3·1, 4 − 3·2) = (0, −2). det ${M([[1,2],[0,-2]])}$ = 1·(−2) − 2·0 = −2. Non cambia.</p><p><b>Triangolare</b>: quest'ultima ha sotto la diagonale solo 0, e infatti det = 1·(−2) = prodotto della diagonale.</p></details>
         <p>Quindi: riduci a scala usando solo scambi e "aggiungi un multiplo"; det A = (−1)<sup>numero di scambi</sup> · prodotto dei pivot.</p>
       </div>
       <div class="def"><b>Le formule da quiz</b>
@@ -1402,6 +1694,40 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('determinante', 'video-determinante', [
+  { h:'1. Determinante 2 × 2', steps:[
+    { m:'det '+M([['a','b'],['c','d']])+' = a·d − b·c', s:'Il determinante di una due per due è a per d meno b per c: diagonale principale meno l\'altra diagonale.' },
+    { m:'det '+M([[3,1],[4,2]])+' = 3·2 − 1·4 = 6 − 4 = 2', s:'Esempio: tre per due fa sei, uno per quattro fa quattro, sei meno quattro fa due.' },
+    { m:'|det A| = area del parallelogramma costruito sulle colonne', s:'Il valore assoluto del determinante è l\'area del parallelogramma che ha le colonne come lati. Se è zero, le colonne stanno sulla stessa retta.' }
+  ]},
+  { h:'2. Laplace su A = '+M([[2,0,1],[1,3,2],[1,1,2]]), steps:[
+    { m:'Sviluppo lungo la riga 1, segni + − +', s:'Per una tre per tre uso Laplace lungo la prima riga. I segni seguono la scacchiera: più, meno, più.' },
+    { m:'a₁₁ = 2: tolgo riga 1 e colonna 1 → det '+M([[3,2],[1,2]])+' = 3·2 − 2·1 = 6 − 2 = 4', s:'Primo termine: a uno uno vale due. Tolgo riga uno e colonna uno, resta tre due, uno due. Il suo determinante è tre per due meno due per uno: sei meno due, quattro.' },
+    { m:'Contributo: +2·4 = 8', s:'Contributo del primo termine: più due per quattro, otto.' },
+    { m:'a₁₂ = 0 ⇒ contributo −0·(…) = 0', s:'Secondo termine: a uno due è zero, quindi contribuisce zero e non serve calcolare il minore.' },
+    { m:'a₁₃ = 1: tolgo riga 1 e colonna 3 → det '+M([[1,3],[1,1]])+' = 1·1 − 3·1 = 1 − 3 = −2', s:'Terzo termine: a uno tre vale uno. Tolgo riga uno e colonna tre, resta uno tre, uno uno. Determinante: uno per uno meno tre per uno, cioè uno meno tre, meno due.' },
+    { m:'Contributo: +1·(−2) = −2', s:'Contributo: più uno per meno due, meno due.' },
+    { m:'det A = 8 + 0 − 2 = 6', s:'Sommo: otto più zero meno due fa sei.' }
+  ]},
+  { h:'3. Lo stesso determinante con Gauss', steps:[
+    { m:'Regole: scambio ⇒ segno cambia; aggiungo un multiplo ⇒ non cambia; triangolare ⇒ prodotto della diagonale', s:'Con Gauss uso tre regole. Uno scambio di righe cambia il segno. Aggiungere a una riga un multiplo di un\'altra non cambia niente. Una matrice triangolare ha come determinante il prodotto della diagonale.' },
+    { m:'Scambio R1 ↔ R2: '+M([[1,3,2],[2,0,1],[1,1,2]])+' &nbsp; (segno −)', s:'Per avere un uno come pivot scambio la riga uno e la riga due. Mi segno che il determinante ha cambiato segno.' },
+    { m:'R2 ← R2 − 2·R1: (2 − 2, 0 − 6, 1 − 4) = (0, −6, −3)', s:'Alla riga due tolgo due volte la riga uno: due meno due zero, zero meno sei meno sei, uno meno quattro meno tre.' },
+    { m:'R3 ← R3 − R1: (1 − 1, 1 − 3, 2 − 2) = (0, −2, 0)', s:'Alla riga tre tolgo la riga uno: zero, meno due, zero.' },
+    { m:'R3 ← R3 − (1/3)·R2: (0, −2 − (1/3)·(−6), 0 − (1/3)·(−3)) = (0, −2 + 2, 0 + 1) = (0, 0, 1)', s:'Alla riga tre tolgo un terzo della riga due. Meno due meno un terzo per meno sei fa meno due più due, zero. Zero meno un terzo per meno tre fa più uno.' },
+    { m:M([[1,3,2],[0,-6,-3],[0,0,1]])+' &nbsp; prodotto della diagonale = 1·(−6)·1 = −6', s:'Matrice triangolare: il prodotto della diagonale è uno per meno sei per uno, meno sei.' },
+    { m:'1 scambio ⇒ det A = −(−6) = 6 ✓', s:'C\'è stato uno scambio, quindi cambio segno: meno meno sei fa sei. Uguale a Laplace.' }
+  ]},
+  { h:'4. Le proprietà con i numeri', steps:[
+    { m:'Binet: det(A·B) = det A · det B; &nbsp; det A = 2, det B = 5 ⇒ det(A·B) = 10', s:'Binet: il determinante di un prodotto è il prodotto dei determinanti. Con due e cinque viene dieci.' },
+    { m:'det(λ·A) = λⁿ·det A: n = 3, λ = 3, det A = 2 ⇒ 3·3·3·2 = 27·2 = 54', s:'Attenzione: tre per A moltiplica per tre ognuna delle tre righe, quindi il determinante si moltiplica per tre tre volte. Tre alla terza fa ventisette, per due fa cinquantaquattro. Non sei.' },
+    { m:'det(A⁻¹) = 1/det A: da det A · det A⁻¹ = det I = 1', s:'Il determinante dell\'inversa è uno diviso il determinante di A, perché per Binet il loro prodotto è il determinante dell\'identità, che è uno.' },
+    { m:'A invertibile ⇔ det A ≠ 0', s:'E la regola più usata: A è invertibile se e solo se il determinante non è zero. Il segno non conta.' }
+  ]}
+]); })();
+</script>
   <!-- ================= CAPITOLO 6 · CAMBIO DI BASE E POLINOMIO CARATTERISTICO ================= -->
   <div class="chapter" data-ch="caratteristico" data-title="6 · Cambio di base" data-date="8/12" data-full="Cambio di base, similitudine, traccia, polinomio caratteristico" data-src="Libro pp. 135-141 e p. 156 (Def. 5.1.22)" hidden>
     <section class="board">
@@ -1410,6 +1736,14 @@ window.Lav = (function(){
       <p class="big">Un endomorfismo f: V → V ha una matrice diversa per ogni base che scegli. Alcune basi danno matrici brutte, altre danno matrici bellissime (diagonali). Qui impari come si passa da una base all'altra e quali numeri <b>non cambiano</b> mai: determinante, traccia, rango e polinomio caratteristico.</p>
       <p>È il ponte verso il capitolo 7: le radici del polinomio caratteristico sono gli autovalori, e servono a trovare la base "bella".</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-caratteristico"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1538,6 +1872,41 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('caratteristico', 'video-caratteristico', [
+  { h:'1. Matrice di cambiamento di base', steps:[
+    { m:'[id]<sup>B</sup><sub>C</sub>: colonna j = coordinate di v<sub>j</sub> rispetto a C', s:'La matrice di cambiamento di base da B a C ha nella colonna j le coordinate del j-esimo vettore di B scritte nella base C.' },
+    { m:'B = ((1, 2), (0, 1)), C = canonica ⇒ M = '+M([[1,0],[2,1]]), s:'Se C è la base canonica, le colonne sono proprio i vettori di B: uno due, e zero uno.' },
+    { m:'[v]<sub>B</sub> = (1, 1) ⇒ [v]<sub>C</sub> = M·(1, 1) = (1·1 + 0·1, 2·1 + 1·1) = (1, 3)', s:'Se un vettore ha coordinate uno uno in B, nella base canonica è M per uno uno: uno per uno più zero per uno fa uno; due per uno più uno per uno fa tre. Quindi uno tre.' },
+    { m:'Verifica: 1·(1, 2) + 1·(0, 1) = (1, 3) ✓', s:'Verifica diretta: una volta uno due più una volta zero uno fa uno tre.' }
+  ]},
+  { h:'2. Un endomorfismo in un\'altra base', steps:[
+    { m:'A = '+M([[2,1],[1,2]])+', nuova base B = ((1, 1), (1, −1))', s:'Prendo A due uno, uno due, e la nuova base uno uno e uno meno uno.' },
+    { m:'A·(1, 1) = (2·1 + 1·1, 1·1 + 2·1) = (3, 3)', s:'Calcolo A sul primo vettore: due per uno più uno per uno fa tre, uno per uno più due per uno fa tre. Risultato tre tre.' },
+    { m:'(3, 3) = 3·(1, 1) + 0·(1, −1) → coordinate (3, 0)', s:'Tre tre è tre volte uno uno più zero volte uno meno uno. Coordinate tre zero.' },
+    { m:'A·(1, −1) = (2·1 + 1·(−1), 1·1 + 2·(−1)) = (2 − 1, 1 − 2) = (1, −1)', s:'Sul secondo vettore: due meno uno fa uno, uno meno due fa meno uno. Risultato uno meno uno.' },
+    { m:'(1, −1) = 0·(1, 1) + 1·(1, −1) → coordinate (0, 1)', s:'È zero volte il primo più una volta il secondo: coordinate zero uno.' },
+    { m:'[f]<sup>B</sup><sub>B</sub> = '+M([[3,0],[0,1]])+' &nbsp; diagonale!', s:'Metto le coordinate in colonna: tre zero, zero uno. È diagonale. Nella base B la funzione allunga il primo vettore di tre e lascia fermo il secondo.' },
+    { m:'Controllo invarianti: tr A = 2 + 2 = 4 = 3 + 1; &nbsp; det A = 4 − 1 = 3 = 3·1 ✓', s:'Controllo: la traccia di A è quattro, come tre più uno. Il determinante di A è quattro meno uno, tre, come tre per uno. Matrici simili hanno stessa traccia e stesso determinante.' }
+  ]},
+  { h:'3. Polinomio caratteristico di A = '+M([[4,1],[2,3]]), steps:[
+    { m:'p<sub>A</sub>(λ) = det(A − λ·I) = det '+M([['4 − λ',1],[2,'3 − λ']]), s:'Il polinomio caratteristico è il determinante di A meno lambda per l\'identità: tolgo lambda dalla diagonale.' },
+    { m:'= (4 − λ)·(3 − λ) − 1·2', s:'Determinante due per due: quattro meno lambda per tre meno lambda, meno uno per due.' },
+    { m:'(4 − λ)(3 − λ) = 12 − 4λ − 3λ + λ² = λ² − 7λ + 12', s:'Sviluppo il prodotto: quattro per tre fa dodici, quattro per meno lambda fa meno quattro lambda, meno lambda per tre fa meno tre lambda, meno lambda per meno lambda fa lambda quadro.' },
+    { m:'p<sub>A</sub>(λ) = λ² − 7λ + 12 − 2 = λ² − 7λ + 10', s:'Tolgo il due: lambda quadro meno sette lambda più dieci.' },
+    { m:'Scorciatoia 2 × 2: λ² − (tr A)·λ + det A; &nbsp; tr A = 7, det A = 12 − 2 = 10 ✓', s:'Per le due per due c\'è la scorciatoia: lambda quadro meno traccia per lambda più determinante. La traccia è sette e il determinante è dieci: torna.' },
+    { m:'Δ = 49 − 40 = 9, √Δ = 3, &nbsp; λ = (7 ± 3)/2', s:'Radici: delta è quarantanove meno quaranta, nove. Radice di nove è tre. Lambda è sette più o meno tre, diviso due.' },
+    { m:'λ₁ = 4/2 = 2, &nbsp; λ₂ = 10/2 = 5', s:'Sette meno tre fa quattro, diviso due fa due. Sette più tre fa dieci, diviso due fa cinque.' }
+  ]},
+  { h:'4. Triangolari e trappola', steps:[
+    { m:'A triangolare ⇒ p<sub>A</sub>(λ) = (a₁₁ − λ)·(a₂₂ − λ)·…', s:'Se A è triangolare, anche A meno lambda I è triangolare, e il suo determinante è il prodotto della diagonale. Le radici sono i numeri sulla diagonale.' },
+    { m:M([[1,4,5],[0,2,6],[0,0,2]])+' ⇒ (1 − λ)(2 − λ)(2 − λ): radici 1, 2, 2', s:'Esempio: diagonale uno, due, due. Le radici sono uno e due, con due che compare due volte.' },
+    { m:'Simili ⇒ stessi tr, det, p<sub>A</sub>. &nbsp; Il contrario NO: '+M([[1,1],[0,1]])+' e I', s:'Attenzione: matrici simili hanno gli stessi invarianti, ma il contrario è falso. Uno uno, zero uno e l\'identità hanno stessa traccia, due, e stesso determinante, uno, ma non sono simili.' },
+    { m:'M⁻¹·I·M = M⁻¹·M = I per ogni M', s:'Il motivo: qualsiasi cambio di base applicato all\'identità dà ancora l\'identità. Quindi l\'unica matrice simile all\'identità è l\'identità stessa.' }
+  ]}
+]); })();
+</script>
   <!-- ================= CAPITOLO 7 · AUTOVALORI E DIAGONALIZZAZIONE ================= -->
   <div class="chapter" data-ch="autovalori" data-title="7 · Autovalori" data-date="11/12" data-full="Autovalori, autovettori, autospazi, diagonalizzabilità" data-src="Libro cap. 5, pp. 151-170" hidden>
     <section class="board">
@@ -1546,6 +1915,14 @@ window.Lav = (function(){
       <p class="big">Quasi tutti i vettori, quando applichi A, cambiano direzione. Alcuni speciali restano sulla loro retta: vengono solo allungati, accorciati o ribaltati. Si chiamano <b>autovettori</b>, e il numero per cui vengono moltiplicati è l'<b>autovalore</b>.</p>
       <p>Se trovi abbastanza autovettori da fare una base, nella base di autovettori la matrice diventa <b>diagonale</b>. All'esame è quasi sempre un esercizio aperto: "dire se A è diagonalizzabile e trovare M".</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-autovalori"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1689,6 +2066,41 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('autovalori', 'video-autovalori', [
+  { h:'1. Autovalori e autovettori', steps:[
+    { m:'A·v = λ·v &nbsp; con v ≠ 0', s:'Un autovettore è un vettore v diverso da zero che, moltiplicato per A, resta sulla sua retta: A per v è lambda per v. Il numero lambda è l\'autovalore.' },
+    { m:'A·v = λ·v ⇔ A·v − λ·I·v = 0 ⇔ (A − λ·I)·v = 0', s:'Porto tutto a sinistra: A per v meno lambda per v uguale zero. Scrivo lambda per v come lambda per I per v e raccolgo v: A meno lambda I, per v, uguale zero.' },
+    { m:'Esiste v ≠ 0 ⇔ A − λ·I non invertibile ⇔ det(A − λ·I) = 0', s:'Questo sistema omogeneo ha una soluzione diversa da zero solo se la matrice A meno lambda I non è invertibile, cioè se il suo determinante è zero.' },
+    { m:'Autovalori = radici di p<sub>A</sub>(λ) = det(A − λ·I)', s:'Quindi gli autovalori sono le radici del polinomio caratteristico.' },
+    { m:'V<sub>λ</sub> = ker(A − λ·I), &nbsp; mg(λ) = dim V<sub>λ</sub> = n − rk(A − λ·I)', s:'Gli autovettori di lambda, insieme allo zero, formano l\'autospazio: il nucleo di A meno lambda I. La sua dimensione si chiama molteplicità geometrica, ed è n meno il rango di A meno lambda I.' }
+  ]},
+  { h:'2. Diagonalizzare A = '+M([[2,1],[1,2]]), steps:[
+    { m:'p<sub>A</sub>(λ) = (2 − λ)(2 − λ) − 1·1 = 4 − 4λ + λ² − 1 = λ² − 4λ + 3', s:'Polinomio caratteristico: due meno lambda al quadrato meno uno per uno. Due meno lambda al quadrato fa quattro meno quattro lambda più lambda quadro. Tolgo uno: lambda quadro meno quattro lambda più tre.' },
+    { m:'Δ = 16 − 12 = 4, √Δ = 2, λ = (4 ± 2)/2 ⇒ λ = 1, λ = 3', s:'Delta: sedici meno dodici fa quattro, radice due. Lambda è quattro più o meno due, diviso due: uno e tre.' },
+    { m:'λ = 1: A − I = '+M([[1,1],[1,1]])+' ⇒ x + y = 0 ⇒ y = −x', s:'Per lambda uguale uno tolgo uno dalla diagonale: uno uno, uno uno. Il sistema dice x più y uguale zero, quindi y uguale meno x.' },
+    { m:'(x, −x) = x·(1, −1) ⇒ V<sub>1</sub> = Span((1, −1))', s:'Il vettore è x, meno x, cioè x per uno meno uno. Autospazio di uno: Span di uno meno uno.' },
+    { m:'λ = 3: A − 3I = '+M([[-1,1],[1,-1]])+' ⇒ −x + y = 0 ⇒ y = x', s:'Per lambda uguale tre tolgo tre: meno uno uno, uno meno uno. Il sistema dice meno x più y uguale zero, quindi y uguale x.' },
+    { m:'(x, x) = x·(1, 1) ⇒ V<sub>3</sub> = Span((1, 1))', s:'Il vettore è x, x, cioè x per uno uno. Autospazio di tre: Span di uno uno.' },
+    { m:'M = '+M([[1,1],[-1,1]])+', &nbsp; D = '+M([[1,0],[0,3]])+', &nbsp; M⁻¹·A·M = D', s:'M ha in colonna gli autovettori, D ha sulla diagonale gli autovalori nello stesso ordine: prima colonna con uno, seconda con tre.' },
+    { m:'Verifica: A·(1, −1) = (2 − 1, 1 − 2) = (1, −1) = 1·(1, −1) ✓; &nbsp; A·(1, 1) = (3, 3) = 3·(1, 1) ✓', s:'Verifica: A per uno meno uno dà uno meno uno, cioè una volta se stesso. A per uno uno dà tre tre, cioè tre volte se stesso.' }
+  ]},
+  { h:'3. Il criterio: mg = ma', steps:[
+    { m:'ma(λ) = quante volte λ è radice; &nbsp; 1 ≤ mg(λ) ≤ ma(λ)', s:'La molteplicità algebrica è quante volte lambda è radice del polinomio. La geometrica è sempre almeno uno e al massimo l\'algebrica.' },
+    { m:'Diagonalizzabile ⇔ radici tutte in K e mg(λ) = ma(λ) per ogni λ', s:'A è diagonalizzabile se tutte le radici stanno nel campo e per ogni autovalore la geometrica è uguale all\'algebrica.' },
+    { m:'Se ma = 1 ⇒ 1 ≤ mg ≤ 1 ⇒ mg = 1 automaticamente', s:'Se un autovalore ha molteplicità algebrica uno, la geometrica è schiacciata tra uno e uno, quindi è uno. Bisogna controllare solo gli autovalori con molteplicità due o più.' }
+  ]},
+  { h:'4. Guidato: A = '+M([[1,1,0],[0,1,0],[0,0,2]]), steps:[
+    { m:'Triangolare ⇒ p<sub>A</sub>(λ) = (1 − λ)(1 − λ)(2 − λ)', s:'A è triangolare, quindi il polinomio è il prodotto della diagonale meno lambda: uno meno lambda, uno meno lambda, due meno lambda.' },
+    { m:'λ = 1 con ma = 2; &nbsp; λ = 2 con ma = 1', s:'Uno compare due volte, quindi ha molteplicità algebrica due. Due compare una volta.' },
+    { m:'A − 1·I: diagonale (1 − 1, 1 − 1, 2 − 1) = (0, 0, 1) ⇒ '+M([[0,1,0],[0,0,0],[0,0,1]]), s:'Controllo solo lambda uguale uno. Tolgo uno dalla diagonale: zero, zero, uno. Ecco A meno I.' },
+    { m:'Righe non nulle (0, 1, 0), (0, 0, 1), indipendenti ⇒ rk = 2', s:'Ci sono due righe non nulle e indipendenti: il rango è due.' },
+    { m:'mg(1) = 3 − 2 = 1 ≠ 2 = ma(1)', s:'Molteplicità geometrica: tre meno due, uno. Ma l\'algebrica è due. Sono diverse.' },
+    { m:'⇒ A <b>non</b> è diagonalizzabile', s:'Quindi A non è diagonalizzabile: per l\'autovalore uno manca un autovettore.' }
+  ]}
+]); })();
+</script>
   <!-- ================= CAPITOLO 8 · PRODOTTO SCALARE ================= -->
   <div class="chapter" data-ch="scalare" data-title="8 · Prodotto scalare" data-date="15/12" data-full="Prodotto scalare, norma, angoli, ortogonalità, Gram-Schmidt" data-src="Libro pp. 199-201, 205-206, 229-230, 239-253" hidden>
     <section class="board">
@@ -1697,6 +2109,14 @@ window.Lav = (function(){
       <p class="big">Finora i vettori si potevano solo sommare e moltiplicare per numeri. Il <b>prodotto scalare</b> aggiunge la geometria: quanto è lungo un vettore, che angolo fanno due vettori, quando sono perpendicolari.</p>
       <p>Lavoriamo in Rⁿ con il prodotto scalare <b>euclideo</b> (quello standard). Servirà nel capitolo 9 per il teorema spettrale.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-scalare"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1729,13 +2149,13 @@ window.Lav = (function(){
         <p class="math">cos θ = ⟨x, y⟩ / (‖x‖ · ‖y‖), &nbsp; θ ∈ [0, π]</p>
         <span class="why mem">perché: a memoria</span>
         <details class="whybox"><summary>Da dove viene</summary><p>In R² è il teorema del coseno (Carnot). In Rⁿ si usa come <b>definizione</b> dell'angolo, e funziona grazie alla disuguaglianza di Cauchy-Schwarz |⟨x, y⟩| ≤ ‖x‖·‖y‖, che garantisce un numero tra −1 e 1. Ricorda la formula.</p></details>
-        <p>Segno di ⟨x, y⟩: positivo ⇒ angolo acuto; zero ⇒ retto; negativo ⇒ ottuso.</p>
+        <p>Segno di ⟨x, y⟩: positivo ⇒ angolo acuto; zero ⇒ retto; negativo ⇒ ottuso. Perché: ‖x‖ &gt; 0 e ‖y‖ &gt; 0, quindi cos θ ha lo stesso segno di ⟨x, y⟩. In [0, π] il coseno è positivo per θ &lt; π/2, vale 0 per θ = π/2, è negativo per θ &gt; π/2.</p>
       </div>
       <div class="def"><b>Ortogonalità</b>
-        <p>x e y sono <b>ortogonali</b> (x ⊥ y) se ⟨x, y⟩ = 0. Vettori non nulli a due a due ortogonali sono sempre <b>linearmente indipendenti</b>.</p>
+        <p>x e y sono <b>ortogonali</b> (x ⊥ y) se ⟨x, y⟩ = 0. Vettori non nulli a due a due ortogonali sono sempre <b>linearmente indipendenti</b>.</p><details class="whybox"><summary>Il conto (con 2 vettori)</summary><p>⟨v, w⟩ = 0, v ≠ 0, w ≠ 0. Suppongo a·v + b·w = 0. Faccio il prodotto scalare con v: ⟨a·v + b·w, v⟩ = a·⟨v, v⟩ + b·⟨w, v⟩ = a·⟨v, v⟩ + b·0 = a·⟨v, v⟩. Ma è anche ⟨0, v⟩ = 0. Quindi a·⟨v, v⟩ = 0, e ⟨v, v⟩ = ‖v‖² &gt; 0, quindi a = 0. Uguale con w: b = 0. Allora sono indipendenti.</p></details>
         <p>W ⊆ Rⁿ sottospazio. Il suo <b>ortogonale</b> è W<sup>⊥</sup> = { v ∈ Rⁿ : ⟨v, w⟩ = 0 per ogni w ∈ W }.</p>
         <p class="math">dim W<sup>⊥</sup> = n − dim W</p>
-        <p>In pratica: se W = Span(w₁, …, w<sub>k</sub>), allora W<sup>⊥</sup> è dato dal sistema ⟨v, w₁⟩ = 0, …, ⟨v, w<sub>k</sub>⟩ = 0. Esempio: W = Span((1, 1, 1)) in R³ ⇒ W<sup>⊥</sup> = { x + y + z = 0 }.</p>
+        <p>In pratica: se W = Span(w₁, …, w<sub>k</sub>), allora W<sup>⊥</sup> è dato dal sistema ⟨v, w₁⟩ = 0, …, ⟨v, w<sub>k</sub>⟩ = 0. Esempio: W = Span((1, 1, 1)) in R³. v = (x, y, z) ∈ W<sup>⊥</sup> ⇔ ⟨(x, y, z), (1, 1, 1)⟩ = 0 ⇔ x·1 + y·1 + z·1 = 0 ⇔ x + y + z = 0. Quindi W<sup>⊥</sup> = { x + y + z = 0 }.</p>
         <span class="why easy">dim: facile</span>
         <details class="whybox"><summary>Perché</summary><p>W<sup>⊥</sup> è il nucleo della matrice k × n con righe w₁, …, w<sub>k</sub> (base di W), che ha rango k = dim W. Teorema della dimensione: n − k.</p></details>
       </div>
@@ -1844,6 +2264,42 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+Lav.video('scalare', 'video-scalare', [
+  { h:'1. Prodotto scalare e norma', steps:[
+    { m:'⟨x, y⟩ = x₁·y₁ + x₂·y₂ + … + x<sub>n</sub>·y<sub>n</sub>', s:'Il prodotto scalare di due vettori si fa moltiplicando le componenti nello stesso posto e sommando tutto. Il risultato è un numero.' },
+    { m:'⟨(1, 2, 3), (4, −1, 0)⟩ = 1·4 + 2·(−1) + 3·0 = 4 − 2 + 0 = 2', s:'Esempio: uno per quattro fa quattro, due per meno uno fa meno due, tre per zero fa zero. Quattro meno due più zero fa due.' },
+    { m:'‖x‖ = √⟨x, x⟩; &nbsp; ‖(3, 4)‖ = √(3·3 + 4·4) = √(9 + 16) = √25 = 5', s:'La norma, cioè la lunghezza, è la radice del prodotto scalare del vettore con se stesso. Per tre quattro: tre per tre fa nove, quattro per quattro fa sedici, la somma è venticinque e la radice è cinque. È il teorema di Pitagora.' }
+  ]},
+  { h:'2. Angolo tra due vettori', steps:[
+    { m:'cos θ = ⟨x, y⟩ / (‖x‖·‖y‖)', s:'Il coseno dell\'angolo tra due vettori è il prodotto scalare diviso il prodotto delle lunghezze. Questa formula va saputa a memoria.' },
+    { m:'x = (1, 0), y = (1, 1): ⟨x, y⟩ = 1·1 + 0·1 = 1', s:'Esempio: uno zero e uno uno. Prodotto scalare: uno per uno più zero per uno, cioè uno.' },
+    { m:'‖x‖ = √(1 + 0) = 1, &nbsp; ‖y‖ = √(1 + 1) = √2', s:'Lunghezze: la prima è radice di uno, cioè uno. La seconda è radice di uno più uno, radice di due.' },
+    { m:'cos θ = 1/(1·√2) = 1/√2 = √2/2 ⇒ θ = π/4', s:'Coseno: uno diviso radice di due, che è radice di due mezzi. L\'angolo con questo coseno è pi greco quarti, quarantacinque gradi.' },
+    { m:'⟨x, y⟩ = 0 ⇔ cos θ = 0 ⇔ θ = π/2: ortogonali', s:'Se il prodotto scalare è zero, il coseno è zero e l\'angolo è retto: i vettori si dicono ortogonali.' }
+  ]},
+  { h:'3. Proiezione su una retta', steps:[
+    { m:'proj<sub>w</sub>(v) = (⟨v, w⟩ / ⟨w, w⟩)·w', s:'La proiezione di v sulla retta di w è w moltiplicato per il numero: prodotto scalare di v con w, diviso prodotto scalare di w con se stesso.' },
+    { m:'Perché: cerco c con ⟨v − c·w, w⟩ = 0 ⇒ ⟨v, w⟩ − c·⟨w, w⟩ = 0 ⇒ c = ⟨v, w⟩/⟨w, w⟩', s:'Il motivo: voglio che quello che avanza, v meno c per w, sia perpendicolare a w. Impongo prodotto scalare zero, uso la linearità, e ricavo c.' },
+    { m:'v = (2, 3), w = (1, 1): ⟨v, w⟩ = 2 + 3 = 5, &nbsp; ⟨w, w⟩ = 1 + 1 = 2', s:'Esempio: v due tre, w uno uno. Prodotto scalare di v e w: due più tre, cinque. Di w con se stesso: uno più uno, due.' },
+    { m:'proj = (5/2)·(1, 1) = (5/2, 5/2)', s:'La proiezione è cinque mezzi per uno uno: cinque mezzi, cinque mezzi.' }
+  ]},
+  { h:'4. Gram-Schmidt su (1, 1, 0), (1, 0, 1)', steps:[
+    { m:'w₁ = v₁ = (1, 1, 0)', s:'Gram-Schmidt trasforma una base in una base di vettori perpendicolari. Il primo lo tengo com\'è: w uno uguale v uno.' },
+    { m:'⟨w₁, w₁⟩ = 1·1 + 1·1 + 0·0 = 2; &nbsp; ⟨v₂, w₁⟩ = 1·1 + 0·1 + 1·0 = 1', s:'Mi servono due prodotti scalari. w uno con se stesso: uno più uno più zero, due. v due con w uno: uno più zero più zero, uno.' },
+    { m:'w₂ = v₂ − (1/2)·w₁ = (1, 0, 1) − (1/2, 1/2, 0)', s:'Al secondo vettore tolgo la sua proiezione su w uno: un mezzo volte w uno, cioè un mezzo, un mezzo, zero.' },
+    { m:'= (1 − 1/2, 0 − 1/2, 1 − 0) = (1/2, −1/2, 1)', s:'Sottraggo componente per componente: uno meno un mezzo fa un mezzo, zero meno un mezzo fa meno un mezzo, uno meno zero fa uno.' },
+    { m:'Controllo: ⟨w₂, w₁⟩ = (1/2)·1 + (−1/2)·1 + 1·0 = 1/2 − 1/2 + 0 = 0 ✓', s:'Controllo: il prodotto scalare tra w due e w uno fa un mezzo meno un mezzo più zero, cioè zero. Sono perpendicolari.' },
+    { m:'Normalizzo: ‖w₁‖ = √2 ⇒ (1/√2)·(1, 1, 0); &nbsp; 2·w₂ = (1, −1, 2), ‖(1, −1, 2)‖ = √(1 + 1 + 4) = √6', s:'Per avere lunghezza uno divido ogni vettore per la sua norma. w uno ha norma radice di due. Per w due conviene prima moltiplicare per due, così diventa uno meno uno due, che ha norma radice di uno più uno più quattro, radice di sei.' },
+    { m:'Base ortonormale: (1/√2)·(1, 1, 0), &nbsp; (1/√6)·(1, −1, 2)', s:'La base ortonormale è un fratto radice di due per uno uno zero, e uno fratto radice di sei per uno meno uno due.' }
+  ]},
+  { h:'5. Il complemento ortogonale', steps:[
+    { m:'W<sup>⊥</sup> = { v : ⟨v, w⟩ = 0 per ogni w ∈ W }', s:'Il complemento ortogonale di W sono tutti i vettori perpendicolari a ogni vettore di W.' },
+    { m:'W = Span((1, 1, 1)): ⟨(x, y, z), (1, 1, 1)⟩ = x + y + z = 0', s:'Se W è generato da uno uno uno, basta imporre il prodotto scalare con uno uno uno uguale a zero: x più y più z uguale zero.' },
+    { m:'dim W<sup>⊥</sup> = n − dim W = 3 − 1 = 2', s:'La dimensione è n meno la dimensione di W: tre meno uno, due. È un piano.' }
+  ]}
+]);
+</script>
   <!-- ================= CAPITOLO 9 · TEOREMA SPETTRALE ================= -->
   <div class="chapter" data-ch="spettrale" data-title="9 · Teorema spettrale" data-date="18/12" data-full="Basi ortonormali e teorema spettrale" data-src="Libro pp. 219-221, 352-355" hidden>
     <section class="board">
@@ -1852,6 +2308,14 @@ window.Lav = (function(){
       <p class="big">Nel capitolo 7 hai visto che non tutte le matrici sono diagonalizzabili. Il teorema spettrale dice che le matrici reali <b>simmetriche</b> (<sup>t</sup>A = A) lo sono <b>sempre</b>, e in più gli autovettori si possono scegliere <b>perpendicolari</b> tra loro e di lunghezza 1.</p>
       <p>Unisce i capitoli 7 (autovalori) e 8 (prodotto scalare, Gram-Schmidt). All'esame: "trovare M ortogonale con <sup>t</sup>M·A·M diagonale".</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-spettrale"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -1891,7 +2355,7 @@ window.Lav = (function(){
       <div class="eyebrow">La ricetta, un passo alla volta</div>
       <h2>A = ${M([[1,1,1],[1,1,1],[1,1,1]])}$: trova M ortogonale</h2>
       <div class="steps" data-recipe>
-        <div class="step"><h3>Passo 1 · Autovalori</h3><p>rk A = 1, quindi ker A ha dimensione 3 − 1 = 2: λ = 0 con mg = 2. tr A = 3 = somma degli autovalori = 0 + 0 + λ₃ ⇒ λ₃ = 3.</p><p>p<sub>A</sub>(λ) = −λ²·(λ − 3).</p></div>
+        <div class="step"><h3>Passo 1 · Autovalori</h3><p>Le tre righe sono uguali: R2 ← R2 − R1 = (0, 0, 0) e R3 ← R3 − R1 = (0, 0, 0). Resta una riga non nulla: rk A = 1.</p><p>λ = 0: V<sub>0</sub> = ker(A − 0·I) = ker A, dimensione 3 − rk A = 3 − 1 = 2. Quindi 0 è autovalore con mg = 2 (e allora ma ≥ 2).</p><p>Altro autovalore: provo il vettore (1, 1, 1). A·(1, 1, 1) = (1 + 1 + 1, 1 + 1 + 1, 1 + 1 + 1) = (3, 3, 3) = 3·(1, 1, 1). Quindi λ = 3 è autovalore.</p><p>p<sub>A</sub> ha grado 3: radici 0, 0, 3. p<sub>A</sub>(λ) = −λ²·(λ − 3). (Controllo: la somma degli autovalori 0 + 0 + 3 = 3 è uguale a tr A = 1 + 1 + 1 = 3.)</p></div>
         <div class="step"><h3>Passo 2 · Autospazio di λ = 3</h3><p>A·(1, 1, 1) = (3, 3, 3): V<sub>3</sub> = Span((1, 1, 1)). Normalizzo: (1/√3)·(1, 1, 1).</p></div>
         <div class="step"><h3>Passo 3 · Autospazio di λ = 0</h3><p>V<sub>0</sub> = ker A = { x + y + z = 0 }. Base dal sistema: (−1, 1, 0), (−1, 0, 1). Non sono ortogonali (prodotto = 1).</p></div>
         <div class="step"><h3>Passo 4 · Gram-Schmidt dentro V<sub>0</sub></h3><p>È proprio la ricetta del capitolo 8: (1/√2)·(−1, 1, 0) e (1/√6)·(−1, −1, 2).</p><p>Sono automaticamente ortogonali a (1, 1, 1) (teorema, punto 2).</p></div>
@@ -1961,6 +2425,36 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('spettrale', 'video-spettrale', [
+  { h:'1. Il teorema spettrale', steps:[
+    { m:'A ∈ M(n, n, R) simmetrica (<sup>t</sup>A = A)', s:'Prendo una matrice reale simmetrica, cioè uguale alla sua trasposta.' },
+    { m:'⇒ autovalori tutti reali', s:'Primo: tutti i suoi autovalori sono numeri reali.' },
+    { m:'⇒ autovettori di autovalori diversi sono ortogonali', s:'Secondo: autovettori di autovalori diversi sono perpendicolari tra loro.' },
+    { m:'⇒ esiste M ortogonale con <sup>t</sup>M·A·M = D diagonale', s:'Terzo: esiste una matrice ortogonale M che la diagonalizza. Ortogonale vuol dire che l\'inversa è la trasposta, quindi non serve calcolare l\'inversa.' },
+    { m:'Punto 2: λ·⟨v, w⟩ = ⟨A·v, w⟩ = ⟨v, A·w⟩ = μ·⟨v, w⟩ ⇒ (λ − μ)·⟨v, w⟩ = 0', s:'Il punto due si dimostra in una riga. Lambda per il prodotto scalare di v e w è uguale al prodotto scalare di A v con w. Perché A è simmetrica, è uguale a quello di v con A w, che è mu per il prodotto scalare. Porto a sinistra: lambda meno mu, per il prodotto scalare, uguale zero.' },
+    { m:'λ ≠ μ ⇒ ⟨v, w⟩ = 0', s:'Se lambda e mu sono diversi, lambda meno mu non è zero, quindi il prodotto scalare deve essere zero.' }
+  ]},
+  { h:'2. Guidato: A = '+M([[2,1],[1,2]]), steps:[
+    { m:'tr A = 2 + 2 = 4, det A = 2·2 − 1·1 = 3 ⇒ p<sub>A</sub>(λ) = λ² − 4λ + 3', s:'Traccia quattro, determinante quattro meno uno, tre. Il polinomio è lambda quadro meno quattro lambda più tre.' },
+    { m:'Δ = 16 − 12 = 4 ⇒ λ = (4 ± 2)/2 ⇒ λ = 1, λ = 3', s:'Delta quattro, radice due. Lambda uguale quattro più o meno due diviso due: uno e tre.' },
+    { m:'V<sub>1</sub> = Span((1, −1)), &nbsp; V<sub>3</sub> = Span((1, 1))', s:'Gli autospazi li abbiamo calcolati nel capitolo sette: uno meno uno per lambda uno, uno uno per lambda tre.' },
+    { m:'⟨(1, −1), (1, 1)⟩ = 1·1 + (−1)·1 = 1 − 1 = 0 ✓', s:'Controllo che siano perpendicolari: uno per uno più meno uno per uno fa zero. Sì, come dice il teorema.' },
+    { m:'‖(1, −1)‖ = √(1 + 1) = √2, &nbsp; ‖(1, 1)‖ = √2', s:'Le loro lunghezze sono entrambe radice di due.' },
+    { m:'M = (1/√2)·'+M([[1,1],[-1,1]])+', &nbsp; <sup>t</sup>M·A·M = '+M([[1,0],[0,3]]), s:'Divido ogni vettore per radice di due e li metto in colonna: prima quello di uno, poi quello di tre. M è ortogonale e trasposta di M per A per M dà la diagonale uno, tre.' }
+  ]},
+  { h:'3. Un autospazio di dimensione 2: A con tutti 1', steps:[
+    { m:'A = '+M([[1,1,1],[1,1,1],[1,1,1]])+': R2 − R1 = 0, R3 − R1 = 0 ⇒ rk A = 1', s:'Ora la matrice tre per tre con tutti uno. Le righe sono uguali: tolgo la prima alle altre e vengono zero. Resta una riga, rango uno.' },
+    { m:'V<sub>0</sub> = ker A, dim = 3 − 1 = 2 ⇒ λ = 0 con mg = 2', s:'Il nucleo di A ha dimensione tre meno uno, due. Quindi zero è autovalore con molteplicità geometrica due.' },
+    { m:'A·(1, 1, 1) = (1 + 1 + 1, 1 + 1 + 1, 1 + 1 + 1) = (3, 3, 3) = 3·(1, 1, 1)', s:'Provo uno uno uno: ogni riga somma tre uno, quindi viene tre tre tre, cioè tre volte uno uno uno. Allora tre è autovalore.' },
+    { m:'V<sub>0</sub> = {x + y + z = 0}: base dal sistema (−1, 1, 0), (−1, 0, 1)', s:'Il nucleo è il piano x più y più z uguale zero. Dal sistema ricavo due vettori: meno uno uno zero e meno uno zero uno.' },
+    { m:'⟨(−1, 1, 0), (−1, 0, 1)⟩ = 1 + 0 + 0 = 1 ≠ 0 ⇒ serve Gram-Schmidt', s:'Ma il loro prodotto scalare è uno, non zero: non sono perpendicolari. Dentro lo stesso autospazio il teorema non lo garantisce, quindi uso Gram-Schmidt.' },
+    { m:'w₂ = (−1, 0, 1) − (1/2)·(−1, 1, 0) = (−1 + 1/2, 0 − 1/2, 1) = (−1/2, −1/2, 1)', s:'Il coefficiente è uno diviso due. Tolgo un mezzo per meno uno uno zero: meno uno più un mezzo fa meno un mezzo, zero meno un mezzo fa meno un mezzo, uno resta uno.' },
+    { m:'Normalizzati: (1/√2)(−1, 1, 0), (1/√6)(−1, −1, 2), (1/√3)(1, 1, 1)', s:'Normalizzo tutti: il primo diviso radice di due, il secondo moltiplicato per due e diviso radice di sei, e uno uno uno diviso radice di tre. Questi tre sono le colonne di M.' }
+  ]}
+]); })();
+</script>
   <!-- ================= RIPASSO 1 · SISTEMI LINEARI ================= -->
   <div class="chapter" data-ch="sistemi" data-title="R1 · Sistemi lineari" data-date="ripasso" data-full="Ripasso: sistemi lineari, Gauss, Rouché-Capelli, sistemi con parametro" data-src="Libro cap. 1-2 e Teorema di Rouché-Capelli" hidden>
     <section class="board">
@@ -1968,6 +2462,14 @@ window.Lav = (function(){
       <h2>Sistemi lineari e Rouché-Capelli</h2>
       <p class="big">Quasi ogni esercizio di Geometria finisce in un sistema lineare: nuclei, autospazi, intersezioni, coordinate. Qui ripassi il metodo completo e i sistemi <b>con un parametro k</b>, dove c'è la trappola che hai già incontrato: <b>dividere per un'espressione che può valere 0</b>.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-sistemi"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -2086,6 +2588,38 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('sistemi', 'video-sistemi', [
+  { h:'1. Rouché-Capelli', steps:[
+    { m:'A·x = b, matrice completa (A | b)', s:'Un sistema lineare si scrive A per x uguale b. La matrice completa è A con b aggiunto come ultima colonna.' },
+    { m:'Soluzioni ⇔ rk A = rk(A | b)', s:'Il teorema di Rouché-Capelli: il sistema ha soluzioni se e solo se il rango di A è uguale al rango della completa.' },
+    { m:'Se sì: n − rk A parametri liberi', s:'Quando ha soluzioni, queste dipendono da n meno il rango parametri liberi, dove n è il numero di incognite.' },
+    { m:'Riga (0, 0, 0 | 2) dopo Gauss ⇒ 0 = 2 ⇒ nessuna soluzione', s:'In pratica: se dopo Gauss trovi una riga di zeri con un numero diverso da zero a destra, quella riga dice zero uguale due, impossibile.' }
+  ]},
+  { h:'2. Sistema con parametro k', steps:[
+    { m:'x + y + z = 1 <br>x + 2y + z = 2 <br>x + y + k·z = 3', s:'Discuto questo sistema al variare del numero k.' },
+    { m:M([[1,1,1,'| 1'],[1,2,1,'| 2'],[1,1,'k','| 3']]), s:'Scrivo la matrice completa.' },
+    { m:'R2 ← R2 − R1: (1 − 1, 2 − 1, 1 − 1 | 2 − 1) = (0, 1, 0 | 1)', s:'Alla riga due tolgo la riga uno: zero, uno, zero, e a destra due meno uno, uno.' },
+    { m:'R3 ← R3 − R1: (1 − 1, 1 − 1, k − 1 | 3 − 1) = (0, 0, k − 1 | 2)', s:'Alla riga tre tolgo la riga uno: zero, zero, k meno uno, e a destra tre meno uno, due.' },
+    { m:M([[1,1,1,'| 1'],[0,1,0,'| 1'],[0,0,'k − 1','| 2']]), s:'Ecco la matrice a scala. L\'ultimo pivot è k meno uno, che dipende da k.' },
+    { m:'Prima di dividere per k − 1: è zero per k = 1 ⇒ caso a parte!', s:'Qui c\'è la trappola: vorrei dividere per k meno uno, ma per k uguale uno vale zero e non si può dividere. Quel caso si studia da solo.' }
+  ]},
+  { h:'3. Caso k = 1', steps:[
+    { m:'k − 1 = 0 ⇒ terza riga (0, 0, 0 | 2): 0 = 2', s:'Con k uguale uno la terza riga diventa zero zero zero, e a destra due. Dice zero uguale due.' },
+    { m:'rk A = 2, &nbsp; rk(A | b) = 3', s:'Il rango di A è due, perché ci sono due righe non nulle a sinistra. Il rango della completa è tre, perché c\'è anche il due.' },
+    { m:'2 ≠ 3 ⇒ nessuna soluzione', s:'I ranghi sono diversi: per k uguale uno il sistema non ha soluzioni.' }
+  ]},
+  { h:'4. Caso k ≠ 1', steps:[
+    { m:'rk A = rk(A | b) = 3 = n ⇒ una sola soluzione', s:'Con k diverso da uno, k meno uno non è zero, quindi ci sono tre pivot: i due ranghi sono tre, uguali al numero di incognite. Una sola soluzione.' },
+    { m:'Riga 3: (k − 1)·z = 2 ⇒ z = 2/(k − 1)', s:'Dalla riga tre: k meno uno per z uguale due. Ora posso dividere: z uguale due fratto k meno uno.' },
+    { m:'Riga 2: y = 1', s:'Dalla riga due: y uguale uno.' },
+    { m:'Riga 1: x = 1 − y − z = 1 − 1 − 2/(k − 1) = −2/(k − 1)', s:'Dalla riga uno: x uguale uno meno y meno z. Uno meno uno fa zero, resta meno due fratto k meno uno.' },
+    { m:'k = 3: z = 2/2 = 1, y = 1, x = −2/2 = −1', s:'Esempio con k uguale tre: z è due diviso due, uno. y è uno. x è meno due diviso due, meno uno.' },
+    { m:'Verifica: −1 + 1 + 1 = 1 ✓; &nbsp; −1 + 2 + 1 = 2 ✓; &nbsp; −1 + 1 + 3·1 = 3 ✓', s:'Verifico nelle tre equazioni. Meno uno più uno più uno fa uno. Meno uno più due più uno fa due. Meno uno più uno più tre fa tre. Tutto giusto.' }
+  ]}
+]); })();
+</script>
   <!-- ================= RIPASSO 2 · MATRICI E INVERSA ================= -->
   <div class="chapter" data-ch="matrici" data-title="R2 · Matrici e inversa" data-date="ripasso" data-full="Ripasso: prodotto di matrici, trasposta, inversa 2 × 2 e con Gauss-Jordan" data-src="Libro cap. 1 e 2 (matrici, inversa)" hidden>
     <section class="board">
@@ -2093,6 +2627,14 @@ window.Lav = (function(){
       <h2>Prodotto, trasposta, inversa</h2>
       <p class="big">Nel registro c'è una lacuna precisa: la <b>formula dell'inversa 2 × 2</b>. Qui la ripassi con un calcolatore che fa ogni passaggio, poi impari l'inversa delle 3 × 3 con Gauss-Jordan.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-matrici"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un calcolatore</div>
@@ -2219,6 +2761,36 @@ window.Lav = (function(){
   ]);
 })();
 </script>
+<script>
+(function(){ const { M } = Lav;
+Lav.video('matrici', 'video-matrici', [
+  { h:'1. Prodotto righe per colonne', steps:[
+    { m:M([[1,2],[0,1]])+' · '+M([[3,0],[1,2]]), s:'Moltiplico queste due matrici. Ogni casella del risultato è una riga della prima per una colonna della seconda.' },
+    { m:'(1,1): riga 1 · colonna 1 = 1·3 + 2·1 = 3 + 2 = 5', s:'Casella riga uno colonna uno: riga uno è uno due, colonna uno è tre uno. Uno per tre più due per uno: tre più due, cinque.' },
+    { m:'(1,2): riga 1 · colonna 2 = 1·0 + 2·2 = 0 + 4 = 4', s:'Riga uno per colonna due, che è zero due: uno per zero più due per due, quattro.' },
+    { m:'(2,1): riga 2 · colonna 1 = 0·3 + 1·1 = 0 + 1 = 1', s:'Riga due, zero uno, per colonna uno: zero per tre più uno per uno, uno.' },
+    { m:'(2,2): riga 2 · colonna 2 = 0·0 + 1·2 = 0 + 2 = 2', s:'Riga due per colonna due: zero per zero più uno per due, due.' },
+    { m:'Risultato '+M([[5,4],[1,2]]), s:'Il risultato è cinque quattro, uno due.' }
+  ]},
+  { h:'2. Inversa 2 × 2 di A = '+M([[3,1],[4,2]]), steps:[
+    { m:'A⁻¹ = (1/det A)·'+M([['d','−b'],['−c','a']]), s:'Formula: scambio i due numeri sulla diagonale, cambio segno agli altri due, e divido tutto per il determinante.' },
+    { m:'det A = 3·2 − 1·4 = 6 − 4 = 2 ≠ 0 ⇒ invertibile', s:'Determinante: tre per due meno uno per quattro, sei meno quattro, due. Non è zero, quindi A è invertibile.' },
+    { m:'Scambio la diagonale: 3 e 2 → '+M([[2,1],[4,3]]), s:'Scambio tre e due sulla diagonale.' },
+    { m:'Cambio segno agli altri: '+M([[2,-1],[-4,3]]), s:'Uno diventa meno uno e quattro diventa meno quattro, restando al loro posto.' },
+    { m:'Divido per 2: 2/2 = 1, −1/2, −4/2 = −2, 3/2 ⇒ A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']]), s:'Divido ogni numero per due: due mezzi fa uno, meno uno mezzo resta meno un mezzo, meno quattro mezzi fa meno due, tre mezzi resta tre mezzi.' },
+    { m:'Controllo (1,1): 3·1 + 1·(−2) = 3 − 2 = 1 ✓; &nbsp; (1,2): 3·(−1/2) + 1·(3/2) = −3/2 + 3/2 = 0 ✓', s:'Controllo A per A inversa. Prima casella: tre per uno più uno per meno due, uno. Seconda: tre per meno un mezzo più uno per tre mezzi, meno tre mezzi più tre mezzi, zero. Come l\'identità.' }
+  ]},
+  { h:'3. Inversa con Gauss-Jordan', steps:[
+    { m:'(A | I) → mosse di riga → (I | A⁻¹)', s:'Per matrici più grandi scrivo A e accanto l\'identità. Faccio mosse di riga finché a sinistra c\'è l\'identità: a destra trovo l\'inversa.' },
+    { m:M([[3,1,'| 1',0],[4,2,'| 0',1]]), s:'Rifaccio la stessa A con questo metodo.' },
+    { m:'R2 ← R2 − (4/3)·R1: (4 − 4, 2 − 4/3 | 0 − 4/3, 1 − 0) = (0, 2/3 | −4/3, 1)', s:'Alla riga due tolgo quattro terzi della riga uno. Quattro meno quattro fa zero, due meno quattro terzi fa due terzi, a destra zero meno quattro terzi e uno meno zero.' },
+    { m:'R2 ← R2 · (3/2): (0, 1 | −2, 3/2)', s:'Moltiplico la riga due per tre mezzi per avere il pivot uguale a uno: due terzi per tre mezzi fa uno, meno quattro terzi per tre mezzi fa meno due, uno per tre mezzi fa tre mezzi.' },
+    { m:'R1 ← R1 − 1·R2: (3, 0 | 1 + 2, 0 − 3/2) = (3, 0 | 3, −3/2)', s:'Alla riga uno tolgo la riga due per fare zero sopra il pivot: tre resta tre, uno meno uno fa zero, a destra uno meno meno due fa tre, zero meno tre mezzi fa meno tre mezzi.' },
+    { m:'R1 ← R1 · (1/3): (1, 0 | 1, −1/2)', s:'Divido la riga uno per tre: uno, zero, uno, meno un mezzo.' },
+    { m:'A⁻¹ = '+M([[1,'−1/2'],[-2,'3/2']])+' ✓ uguale alla formula', s:'A destra leggo uno, meno un mezzo, meno due, tre mezzi. È la stessa inversa trovata con la formula.' }
+  ]}
+]); })();
+</script>
   <!-- ================= RIPASSO 3 · NUMERI COMPLESSI ================= -->
   <div class="chapter" data-ch="complessi" data-title="R3 · Numeri complessi" data-date="ripasso" data-full="Ripasso: numeri complessi, forma esponenziale, quadrante, equazioni" data-src="Libro cap. 1 (numeri complessi) e Foglio 4" hidden>
     <section class="board">
@@ -2226,6 +2798,14 @@ window.Lav = (function(){
       <h2>Numeri complessi senza trappole</h2>
       <p class="big">Nel quiz c'è quasi sempre una domanda sui complessi. Le radici n-esime le sai già. Gli errori del 18/11 erano: <b>prodotto</b> (i² = −1 dimenticato), <b>inverso</b> (diviso per |z| invece di |z|²), <b>quadrante</b> sbagliato nell'argomento, e<sup>iπ</sup> = −1, e le <b>equazioni di secondo grado</b> con coefficienti complessi. Qui c'è un esercizio per ognuno.</p>
     </section>
+
+    <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-complessi"></div>
+    </section>
+
 
     <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
@@ -2356,6 +2936,43 @@ window.Lav = (function(){
     { id:'e9', type:'choice', q:'Quante soluzioni ha z⁵ = 1 in C?', opts:['1','2','5'], a:2, hint:'Radici n-esime.', sol:'5: i vertici di un pentagono regolare sul cerchio di raggio 1.' }
   ]);
 })();
+</script>
+<script>
+Lav.video('complessi', 'video-complessi', [
+  { h:'1. Il prodotto, con tutti e 4 i pezzi', steps:[
+    { m:'(3 + 2i)·(1 − i)', s:'Moltiplico tre più due i per uno meno i. Ogni pezzo del primo va moltiplicato per ogni pezzo del secondo: quattro prodotti.' },
+    { m:'= 3·1 + 3·(−i) + 2i·1 + 2i·(−i)', s:'Tre per uno, tre per meno i, due i per uno, due i per meno i.' },
+    { m:'= 3 − 3i + 2i − 2i²', s:'Fanno: tre, meno tre i, più due i, meno due i quadro.' },
+    { m:'i² = −1 ⇒ −2i² = −2·(−1) = +2', s:'Ora uso i quadro uguale meno uno. Meno due per meno uno fa più due. È qui che nasce il segno che l\'altra volta mancava.' },
+    { m:'= 3 + 2 + (−3 + 2)·i = 5 − i', s:'Raccolgo: parte reale tre più due, cinque. Parte immaginaria meno tre più due, meno uno. Risultato cinque meno i.' }
+  ]},
+  { h:'2. L\'inverso: diviso |z|², senza radice', steps:[
+    { m:'z = 2 − i ⇒ z̄ = 2 + i', s:'Voglio l\'inverso di due meno i. Il coniugato si ottiene cambiando segno alla parte immaginaria: due più i.' },
+    { m:'|z|² = 2² + (−1)² = 4 + 1 = 5', s:'Il modulo al quadrato è due al quadrato più meno uno al quadrato: quattro più uno, cinque. Senza radice.' },
+    { m:'z⁻¹ = z̄ / |z|² = (2 + i)/5 = 2/5 + (1/5)·i', s:'L\'inverso è il coniugato diviso il modulo al quadrato: due più i fratto cinque, cioè due quinti più un quinto i.' },
+    { m:'Verifica: (2 − i)(2 + i) = 4 + 2i − 2i − i² = 4 − (−1) = 5 ⇒ 5/5 = 1 ✓', s:'Verifica: due meno i per due più i fa quattro più due i meno due i meno i quadro. Le i si cancellano, meno i quadro fa più uno, totale cinque. Diviso cinque fa uno.' }
+  ]},
+  { h:'3. Argomento: prima il quadrante', steps:[
+    { m:'z = −1 − i: &nbsp; a = −1 &lt; 0, &nbsp; b = −1 &lt; 0 ⇒ III quadrante', s:'Prendo meno uno meno i. La parte reale è negativa e anche quella immaginaria: siamo nel terzo quadrante, l\'angolo sta tra pi greco e tre pi greco mezzi.' },
+    { m:'r = |z| = √((−1)² + (−1)²) = √(1 + 1) = √2', s:'Il modulo è la radice di meno uno al quadrato più meno uno al quadrato: radice di due.' },
+    { m:'cos θ = a/r = −1/√2, &nbsp; sin θ = b/r = −1/√2', s:'Coseno: a diviso r, meno uno fratto radice di due. Seno: b diviso r, anche meno uno fratto radice di due.' },
+    { m:'Angolo di riferimento π/4; nel III quadrante: θ = π + π/4 = 5π/4', s:'Il valore uno fratto radice di due corrisponde a pi greco quarti. Ma siamo nel terzo quadrante, quindi aggiungo pi greco: cinque pi greco quarti.' },
+    { m:'z = √2·e<sup>i5π/4</sup>', s:'Forma esponenziale: radice di due per e alla i cinque pi greco quarti.' }
+  ]},
+  { h:'4. Potenze con De Moivre', steps:[
+    { m:'(r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>inθ</sup>', s:'Per la potenza: il modulo va elevato alla n e l\'angolo va moltiplicato per n.' },
+    { m:'z⁴ = (√2)⁴·e<sup>i·4·5π/4</sup> = (√2)⁴·e<sup>i5π</sup>', s:'Elevo alla quarta: radice di due alla quarta, e quattro per cinque pi greco quarti fa cinque pi greco.' },
+    { m:'(√2)⁴ = (√2)²·(√2)² = 2·2 = 4', s:'Radice di due alla quarta: radice di due al quadrato fa due, due per due fa quattro.' },
+    { m:'5π = π + 4π (due giri) ⇒ e<sup>i5π</sup> = e<sup>iπ</sup> = −1', s:'Cinque pi greco è pi greco più quattro pi greco, e quattro pi greco sono due giri completi che non cambiano niente. Quindi è come pi greco, ed e alla i pi greco vale meno uno.' },
+    { m:'z⁴ = 4·(−1) = −4', s:'Risultato: quattro per meno uno, meno quattro.' },
+    { m:'Controllo: z² = (−1 − i)² = 1 + 2i + i² = 1 + 2i − 1 = 2i; &nbsp; z⁴ = (2i)² = 4i² = −4 ✓', s:'Controllo in forma algebrica: z al quadrato fa uno più due i più i quadro, cioè due i. Al quadrato ancora: quattro i quadro, meno quattro. Torna.' }
+  ]},
+  { h:'5. Secondo grado in C', steps:[
+    { m:'z² + 2z + 2 = 0: &nbsp; Δ = 2² − 4·1·2 = 4 − 8 = −4', s:'Equazione z quadro più due z più due. Delta: due al quadrato meno quattro per uno per due, quattro meno otto, meno quattro.' },
+    { m:'Radici quadrate di −4: (2i)² = 4i² = −4 ⇒ ±2i', s:'In C delta negativo va bene. Le radici quadrate di meno quattro sono due i e meno due i, perché due i al quadrato fa quattro i quadro, meno quattro.' },
+    { m:'z = (−2 ± 2i)/2 = −1 ± i', s:'Formula: meno due più o meno due i, diviso due. Viene meno uno più i e meno uno meno i.' }
+  ]}
+]);
 </script>
   <footer>Lavagna di Geometria · tutor di Geometria e Algebra T · i tuoi risultati restano salvati solo in questo browser.</footer>
 </div>

@@ -8,6 +8,14 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-scalare"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>Prodotto scalare, angolo, proiezione</h2>
       <p>Muovi u (blu) e w (arancione). Il segmento viola è la <b>proiezione</b> di u sulla retta di w. Quando u e w sono perpendicolari, ⟨u, w⟩ = 0 e la proiezione sparisce.</p>
@@ -38,13 +46,13 @@
         <p class="math">cos θ = ⟨x, y⟩ / (‖x‖ · ‖y‖), &nbsp; θ ∈ [0, π]</p>
         <span class="why mem">perché: a memoria</span>
         <details class="whybox"><summary>Da dove viene</summary><p>In R² è il teorema del coseno (Carnot). In Rⁿ si usa come <b>definizione</b> dell'angolo, e funziona grazie alla disuguaglianza di Cauchy-Schwarz |⟨x, y⟩| ≤ ‖x‖·‖y‖, che garantisce un numero tra −1 e 1. Ricorda la formula.</p></details>
-        <p>Segno di ⟨x, y⟩: positivo ⇒ angolo acuto; zero ⇒ retto; negativo ⇒ ottuso.</p>
+        <p>Segno di ⟨x, y⟩: positivo ⇒ angolo acuto; zero ⇒ retto; negativo ⇒ ottuso. Perché: ‖x‖ &gt; 0 e ‖y‖ &gt; 0, quindi cos θ ha lo stesso segno di ⟨x, y⟩. In [0, π] il coseno è positivo per θ &lt; π/2, vale 0 per θ = π/2, è negativo per θ &gt; π/2.</p>
       </div>
       <div class="def"><b>Ortogonalità</b>
-        <p>x e y sono <b>ortogonali</b> (x ⊥ y) se ⟨x, y⟩ = 0. Vettori non nulli a due a due ortogonali sono sempre <b>linearmente indipendenti</b>.</p>
+        <p>x e y sono <b>ortogonali</b> (x ⊥ y) se ⟨x, y⟩ = 0. Vettori non nulli a due a due ortogonali sono sempre <b>linearmente indipendenti</b>.</p><details class="whybox"><summary>Il conto (con 2 vettori)</summary><p>⟨v, w⟩ = 0, v ≠ 0, w ≠ 0. Suppongo a·v + b·w = 0. Faccio il prodotto scalare con v: ⟨a·v + b·w, v⟩ = a·⟨v, v⟩ + b·⟨w, v⟩ = a·⟨v, v⟩ + b·0 = a·⟨v, v⟩. Ma è anche ⟨0, v⟩ = 0. Quindi a·⟨v, v⟩ = 0, e ⟨v, v⟩ = ‖v‖² &gt; 0, quindi a = 0. Uguale con w: b = 0. Allora sono indipendenti.</p></details>
         <p>W ⊆ Rⁿ sottospazio. Il suo <b>ortogonale</b> è W<sup>⊥</sup> = { v ∈ Rⁿ : ⟨v, w⟩ = 0 per ogni w ∈ W }.</p>
         <p class="math">dim W<sup>⊥</sup> = n − dim W</p>
-        <p>In pratica: se W = Span(w₁, …, w<sub>k</sub>), allora W<sup>⊥</sup> è dato dal sistema ⟨v, w₁⟩ = 0, …, ⟨v, w<sub>k</sub>⟩ = 0. Esempio: W = Span((1, 1, 1)) in R³ ⇒ W<sup>⊥</sup> = { x + y + z = 0 }.</p>
+        <p>In pratica: se W = Span(w₁, …, w<sub>k</sub>), allora W<sup>⊥</sup> è dato dal sistema ⟨v, w₁⟩ = 0, …, ⟨v, w<sub>k</sub>⟩ = 0. Esempio: W = Span((1, 1, 1)) in R³. v = (x, y, z) ∈ W<sup>⊥</sup> ⇔ ⟨(x, y, z), (1, 1, 1)⟩ = 0 ⇔ x·1 + y·1 + z·1 = 0 ⇔ x + y + z = 0. Quindi W<sup>⊥</sup> = { x + y + z = 0 }.</p>
         <span class="why easy">dim: facile</span>
         <details class="whybox"><summary>Perché</summary><p>W<sup>⊥</sup> è il nucleo della matrice k × n con righe w₁, …, w<sub>k</sub> (base di W), che ha rango k = dim W. Teorema della dimensione: n − k.</p></details>
       </div>

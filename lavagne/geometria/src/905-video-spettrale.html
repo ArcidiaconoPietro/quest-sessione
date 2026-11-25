@@ -1,0 +1,30 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('spettrale', 'video-spettrale', [
+  { h:'1. Il teorema spettrale', steps:[
+    { m:'A ∈ M(n, n, R) simmetrica (<sup>t</sup>A = A)', s:'Prendo una matrice reale simmetrica, cioè uguale alla sua trasposta.' },
+    { m:'⇒ autovalori tutti reali', s:'Primo: tutti i suoi autovalori sono numeri reali.' },
+    { m:'⇒ autovettori di autovalori diversi sono ortogonali', s:'Secondo: autovettori di autovalori diversi sono perpendicolari tra loro.' },
+    { m:'⇒ esiste M ortogonale con <sup>t</sup>M·A·M = D diagonale', s:'Terzo: esiste una matrice ortogonale M che la diagonalizza. Ortogonale vuol dire che l\'inversa è la trasposta, quindi non serve calcolare l\'inversa.' },
+    { m:'Punto 2: λ·⟨v, w⟩ = ⟨A·v, w⟩ = ⟨v, A·w⟩ = μ·⟨v, w⟩ ⇒ (λ − μ)·⟨v, w⟩ = 0', s:'Il punto due si dimostra in una riga. Lambda per il prodotto scalare di v e w è uguale al prodotto scalare di A v con w. Perché A è simmetrica, è uguale a quello di v con A w, che è mu per il prodotto scalare. Porto a sinistra: lambda meno mu, per il prodotto scalare, uguale zero.' },
+    { m:'λ ≠ μ ⇒ ⟨v, w⟩ = 0', s:'Se lambda e mu sono diversi, lambda meno mu non è zero, quindi il prodotto scalare deve essere zero.' }
+  ]},
+  { h:'2. Guidato: A = '+M([[2,1],[1,2]]), steps:[
+    { m:'tr A = 2 + 2 = 4, det A = 2·2 − 1·1 = 3 ⇒ p<sub>A</sub>(λ) = λ² − 4λ + 3', s:'Traccia quattro, determinante quattro meno uno, tre. Il polinomio è lambda quadro meno quattro lambda più tre.' },
+    { m:'Δ = 16 − 12 = 4 ⇒ λ = (4 ± 2)/2 ⇒ λ = 1, λ = 3', s:'Delta quattro, radice due. Lambda uguale quattro più o meno due diviso due: uno e tre.' },
+    { m:'V<sub>1</sub> = Span((1, −1)), &nbsp; V<sub>3</sub> = Span((1, 1))', s:'Gli autospazi li abbiamo calcolati nel capitolo sette: uno meno uno per lambda uno, uno uno per lambda tre.' },
+    { m:'⟨(1, −1), (1, 1)⟩ = 1·1 + (−1)·1 = 1 − 1 = 0 ✓', s:'Controllo che siano perpendicolari: uno per uno più meno uno per uno fa zero. Sì, come dice il teorema.' },
+    { m:'‖(1, −1)‖ = √(1 + 1) = √2, &nbsp; ‖(1, 1)‖ = √2', s:'Le loro lunghezze sono entrambe radice di due.' },
+    { m:'M = (1/√2)·'+M([[1,1],[-1,1]])+', &nbsp; <sup>t</sup>M·A·M = '+M([[1,0],[0,3]]), s:'Divido ogni vettore per radice di due e li metto in colonna: prima quello di uno, poi quello di tre. M è ortogonale e trasposta di M per A per M dà la diagonale uno, tre.' }
+  ]},
+  { h:'3. Un autospazio di dimensione 2: A con tutti 1', steps:[
+    { m:'A = '+M([[1,1,1],[1,1,1],[1,1,1]])+': R2 − R1 = 0, R3 − R1 = 0 ⇒ rk A = 1', s:'Ora la matrice tre per tre con tutti uno. Le righe sono uguali: tolgo la prima alle altre e vengono zero. Resta una riga, rango uno.' },
+    { m:'V<sub>0</sub> = ker A, dim = 3 − 1 = 2 ⇒ λ = 0 con mg = 2', s:'Il nucleo di A ha dimensione tre meno uno, due. Quindi zero è autovalore con molteplicità geometrica due.' },
+    { m:'A·(1, 1, 1) = (1 + 1 + 1, 1 + 1 + 1, 1 + 1 + 1) = (3, 3, 3) = 3·(1, 1, 1)', s:'Provo uno uno uno: ogni riga somma tre uno, quindi viene tre tre tre, cioè tre volte uno uno uno. Allora tre è autovalore.' },
+    { m:'V<sub>0</sub> = {x + y + z = 0}: base dal sistema (−1, 1, 0), (−1, 0, 1)', s:'Il nucleo è il piano x più y più z uguale zero. Dal sistema ricavo due vettori: meno uno uno zero e meno uno zero uno.' },
+    { m:'⟨(−1, 1, 0), (−1, 0, 1)⟩ = 1 + 0 + 0 = 1 ≠ 0 ⇒ serve Gram-Schmidt', s:'Ma il loro prodotto scalare è uno, non zero: non sono perpendicolari. Dentro lo stesso autospazio il teorema non lo garantisce, quindi uso Gram-Schmidt.' },
+    { m:'w₂ = (−1, 0, 1) − (1/2)·(−1, 1, 0) = (−1 + 1/2, 0 − 1/2, 1) = (−1/2, −1/2, 1)', s:'Il coefficiente è uno diviso due. Tolgo un mezzo per meno uno uno zero: meno uno più un mezzo fa meno un mezzo, zero meno un mezzo fa meno un mezzo, uno resta uno.' },
+    { m:'Normalizzati: (1/√2)(−1, 1, 0), (1/√6)(−1, −1, 2), (1/√3)(1, 1, 1)', s:'Normalizzo tutti: il primo diviso radice di due, il secondo moltiplicato per due e diviso radice di sei, e uno uno uno diviso radice di tre. Questi tre sono le colonne di M.' }
+  ]}
+]); })();
+</script>

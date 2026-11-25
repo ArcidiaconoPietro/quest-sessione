@@ -8,9 +8,18 @@
     </section>
 
     <section class="board">
+      <div class="eyebrow">Videolezione</div>
+      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
+      <div id="video-rango"></div>
+    </section>
+
+
+    <section class="board">
       <div class="eyebrow">L'idea con un disegno</div>
       <h2>In R² tre vettori sono sempre troppi</h2>
       <p>dim R² = 2: due vettori indipendenti bastano già a raggiungere tutto il piano. Un terzo vettore <span class="cw">w</span> si scrive <b>sempre</b> con i primi due, quindi tre vettori di R² sono sempre dipendenti. Muovi w e guarda i due numeri che lo costruiscono.</p>
+      <details class="whybox"><summary>Il conto con dei numeri</summary><p>u = (2, 1), v = (−1, 2), w = (3, 4). Cerco a, b con a·u + b·v = w: a·(2, 1) + b·(−1, 2) = (2a − b, a + 2b) = (3, 4). Equazioni: 2a − b = 3 e a + 2b = 4. Dalla prima b = 2a − 3. Sostituisco nella seconda: a + 2·(2a − 3) = 4, cioè a + 4a − 6 = 4, cioè 5a = 10, quindi a = 2. Poi b = 2·2 − 3 = 1. Verifica: 2·(2, 1) + 1·(−1, 2) = (4 − 1, 2 + 2) = (3, 4) ✓. Quindi 2·u + 1·v − 1·w = 0 con coefficienti non nulli: u, v, w sono dipendenti. Lo stesso conto funziona con qualsiasi w, perché il sistema 2 × 2 ha det = 2·2 − (−1)·1 = 5 ≠ 0 e quindi ha sempre una soluzione.</p></details>
       <canvas id="cv-tre" aria-label="Tre vettori nel piano: w scritto come combinazione di u e v"></canvas>
       <div class="controls">
         <label>w, prima componente <input type="range" id="tr-x" min="-4" max="4" step="0.5" value="3"> <b id="tr-xv"></b></label>

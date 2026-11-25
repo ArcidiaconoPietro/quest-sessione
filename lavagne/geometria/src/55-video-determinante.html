@@ -1,0 +1,34 @@
+<script>
+(function(){ const { M } = Lav;
+Lav.video('determinante', 'video-determinante', [
+  { h:'1. Determinante 2 × 2', steps:[
+    { m:'det '+M([['a','b'],['c','d']])+' = a·d − b·c', s:'Il determinante di una due per due è a per d meno b per c: diagonale principale meno l\'altra diagonale.' },
+    { m:'det '+M([[3,1],[4,2]])+' = 3·2 − 1·4 = 6 − 4 = 2', s:'Esempio: tre per due fa sei, uno per quattro fa quattro, sei meno quattro fa due.' },
+    { m:'|det A| = area del parallelogramma costruito sulle colonne', s:'Il valore assoluto del determinante è l\'area del parallelogramma che ha le colonne come lati. Se è zero, le colonne stanno sulla stessa retta.' }
+  ]},
+  { h:'2. Laplace su A = '+M([[2,0,1],[1,3,2],[1,1,2]]), steps:[
+    { m:'Sviluppo lungo la riga 1, segni + − +', s:'Per una tre per tre uso Laplace lungo la prima riga. I segni seguono la scacchiera: più, meno, più.' },
+    { m:'a₁₁ = 2: tolgo riga 1 e colonna 1 → det '+M([[3,2],[1,2]])+' = 3·2 − 2·1 = 6 − 2 = 4', s:'Primo termine: a uno uno vale due. Tolgo riga uno e colonna uno, resta tre due, uno due. Il suo determinante è tre per due meno due per uno: sei meno due, quattro.' },
+    { m:'Contributo: +2·4 = 8', s:'Contributo del primo termine: più due per quattro, otto.' },
+    { m:'a₁₂ = 0 ⇒ contributo −0·(…) = 0', s:'Secondo termine: a uno due è zero, quindi contribuisce zero e non serve calcolare il minore.' },
+    { m:'a₁₃ = 1: tolgo riga 1 e colonna 3 → det '+M([[1,3],[1,1]])+' = 1·1 − 3·1 = 1 − 3 = −2', s:'Terzo termine: a uno tre vale uno. Tolgo riga uno e colonna tre, resta uno tre, uno uno. Determinante: uno per uno meno tre per uno, cioè uno meno tre, meno due.' },
+    { m:'Contributo: +1·(−2) = −2', s:'Contributo: più uno per meno due, meno due.' },
+    { m:'det A = 8 + 0 − 2 = 6', s:'Sommo: otto più zero meno due fa sei.' }
+  ]},
+  { h:'3. Lo stesso determinante con Gauss', steps:[
+    { m:'Regole: scambio ⇒ segno cambia; aggiungo un multiplo ⇒ non cambia; triangolare ⇒ prodotto della diagonale', s:'Con Gauss uso tre regole. Uno scambio di righe cambia il segno. Aggiungere a una riga un multiplo di un\'altra non cambia niente. Una matrice triangolare ha come determinante il prodotto della diagonale.' },
+    { m:'Scambio R1 ↔ R2: '+M([[1,3,2],[2,0,1],[1,1,2]])+' &nbsp; (segno −)', s:'Per avere un uno come pivot scambio la riga uno e la riga due. Mi segno che il determinante ha cambiato segno.' },
+    { m:'R2 ← R2 − 2·R1: (2 − 2, 0 − 6, 1 − 4) = (0, −6, −3)', s:'Alla riga due tolgo due volte la riga uno: due meno due zero, zero meno sei meno sei, uno meno quattro meno tre.' },
+    { m:'R3 ← R3 − R1: (1 − 1, 1 − 3, 2 − 2) = (0, −2, 0)', s:'Alla riga tre tolgo la riga uno: zero, meno due, zero.' },
+    { m:'R3 ← R3 − (1/3)·R2: (0, −2 − (1/3)·(−6), 0 − (1/3)·(−3)) = (0, −2 + 2, 0 + 1) = (0, 0, 1)', s:'Alla riga tre tolgo un terzo della riga due. Meno due meno un terzo per meno sei fa meno due più due, zero. Zero meno un terzo per meno tre fa più uno.' },
+    { m:M([[1,3,2],[0,-6,-3],[0,0,1]])+' &nbsp; prodotto della diagonale = 1·(−6)·1 = −6', s:'Matrice triangolare: il prodotto della diagonale è uno per meno sei per uno, meno sei.' },
+    { m:'1 scambio ⇒ det A = −(−6) = 6 ✓', s:'C\'è stato uno scambio, quindi cambio segno: meno meno sei fa sei. Uguale a Laplace.' }
+  ]},
+  { h:'4. Le proprietà con i numeri', steps:[
+    { m:'Binet: det(A·B) = det A · det B; &nbsp; det A = 2, det B = 5 ⇒ det(A·B) = 10', s:'Binet: il determinante di un prodotto è il prodotto dei determinanti. Con due e cinque viene dieci.' },
+    { m:'det(λ·A) = λⁿ·det A: n = 3, λ = 3, det A = 2 ⇒ 3·3·3·2 = 27·2 = 54', s:'Attenzione: tre per A moltiplica per tre ognuna delle tre righe, quindi il determinante si moltiplica per tre tre volte. Tre alla terza fa ventisette, per due fa cinquantaquattro. Non sei.' },
+    { m:'det(A⁻¹) = 1/det A: da det A · det A⁻¹ = det I = 1', s:'Il determinante dell\'inversa è uno diviso il determinante di A, perché per Binet il loro prodotto è il determinante dell\'identità, che è uno.' },
+    { m:'A invertibile ⇔ det A ≠ 0', s:'E la regola più usata: A è invertibile se e solo se il determinante non è zero. Il segno non conta.' }
+  ]}
+]); })();
+</script>

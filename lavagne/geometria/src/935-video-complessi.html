@@ -1,0 +1,37 @@
+<script>
+Lav.video('complessi', 'video-complessi', [
+  { h:'1. Il prodotto, con tutti e 4 i pezzi', steps:[
+    { m:'(3 + 2i)·(1 − i)', s:'Moltiplico tre più due i per uno meno i. Ogni pezzo del primo va moltiplicato per ogni pezzo del secondo: quattro prodotti.' },
+    { m:'= 3·1 + 3·(−i) + 2i·1 + 2i·(−i)', s:'Tre per uno, tre per meno i, due i per uno, due i per meno i.' },
+    { m:'= 3 − 3i + 2i − 2i²', s:'Fanno: tre, meno tre i, più due i, meno due i quadro.' },
+    { m:'i² = −1 ⇒ −2i² = −2·(−1) = +2', s:'Ora uso i quadro uguale meno uno. Meno due per meno uno fa più due. È qui che nasce il segno che l\'altra volta mancava.' },
+    { m:'= 3 + 2 + (−3 + 2)·i = 5 − i', s:'Raccolgo: parte reale tre più due, cinque. Parte immaginaria meno tre più due, meno uno. Risultato cinque meno i.' }
+  ]},
+  { h:'2. L\'inverso: diviso |z|², senza radice', steps:[
+    { m:'z = 2 − i ⇒ z̄ = 2 + i', s:'Voglio l\'inverso di due meno i. Il coniugato si ottiene cambiando segno alla parte immaginaria: due più i.' },
+    { m:'|z|² = 2² + (−1)² = 4 + 1 = 5', s:'Il modulo al quadrato è due al quadrato più meno uno al quadrato: quattro più uno, cinque. Senza radice.' },
+    { m:'z⁻¹ = z̄ / |z|² = (2 + i)/5 = 2/5 + (1/5)·i', s:'L\'inverso è il coniugato diviso il modulo al quadrato: due più i fratto cinque, cioè due quinti più un quinto i.' },
+    { m:'Verifica: (2 − i)(2 + i) = 4 + 2i − 2i − i² = 4 − (−1) = 5 ⇒ 5/5 = 1 ✓', s:'Verifica: due meno i per due più i fa quattro più due i meno due i meno i quadro. Le i si cancellano, meno i quadro fa più uno, totale cinque. Diviso cinque fa uno.' }
+  ]},
+  { h:'3. Argomento: prima il quadrante', steps:[
+    { m:'z = −1 − i: &nbsp; a = −1 &lt; 0, &nbsp; b = −1 &lt; 0 ⇒ III quadrante', s:'Prendo meno uno meno i. La parte reale è negativa e anche quella immaginaria: siamo nel terzo quadrante, l\'angolo sta tra pi greco e tre pi greco mezzi.' },
+    { m:'r = |z| = √((−1)² + (−1)²) = √(1 + 1) = √2', s:'Il modulo è la radice di meno uno al quadrato più meno uno al quadrato: radice di due.' },
+    { m:'cos θ = a/r = −1/√2, &nbsp; sin θ = b/r = −1/√2', s:'Coseno: a diviso r, meno uno fratto radice di due. Seno: b diviso r, anche meno uno fratto radice di due.' },
+    { m:'Angolo di riferimento π/4; nel III quadrante: θ = π + π/4 = 5π/4', s:'Il valore uno fratto radice di due corrisponde a pi greco quarti. Ma siamo nel terzo quadrante, quindi aggiungo pi greco: cinque pi greco quarti.' },
+    { m:'z = √2·e<sup>i5π/4</sup>', s:'Forma esponenziale: radice di due per e alla i cinque pi greco quarti.' }
+  ]},
+  { h:'4. Potenze con De Moivre', steps:[
+    { m:'(r·e<sup>iθ</sup>)ⁿ = rⁿ·e<sup>inθ</sup>', s:'Per la potenza: il modulo va elevato alla n e l\'angolo va moltiplicato per n.' },
+    { m:'z⁴ = (√2)⁴·e<sup>i·4·5π/4</sup> = (√2)⁴·e<sup>i5π</sup>', s:'Elevo alla quarta: radice di due alla quarta, e quattro per cinque pi greco quarti fa cinque pi greco.' },
+    { m:'(√2)⁴ = (√2)²·(√2)² = 2·2 = 4', s:'Radice di due alla quarta: radice di due al quadrato fa due, due per due fa quattro.' },
+    { m:'5π = π + 4π (due giri) ⇒ e<sup>i5π</sup> = e<sup>iπ</sup> = −1', s:'Cinque pi greco è pi greco più quattro pi greco, e quattro pi greco sono due giri completi che non cambiano niente. Quindi è come pi greco, ed e alla i pi greco vale meno uno.' },
+    { m:'z⁴ = 4·(−1) = −4', s:'Risultato: quattro per meno uno, meno quattro.' },
+    { m:'Controllo: z² = (−1 − i)² = 1 + 2i + i² = 1 + 2i − 1 = 2i; &nbsp; z⁴ = (2i)² = 4i² = −4 ✓', s:'Controllo in forma algebrica: z al quadrato fa uno più due i più i quadro, cioè due i. Al quadrato ancora: quattro i quadro, meno quattro. Torna.' }
+  ]},
+  { h:'5. Secondo grado in C', steps:[
+    { m:'z² + 2z + 2 = 0: &nbsp; Δ = 2² − 4·1·2 = 4 − 8 = −4', s:'Equazione z quadro più due z più due. Delta: due al quadrato meno quattro per uno per due, quattro meno otto, meno quattro.' },
+    { m:'Radici quadrate di −4: (2i)² = 4i² = −4 ⇒ ±2i', s:'In C delta negativo va bene. Le radici quadrate di meno quattro sono due i e meno due i, perché due i al quadrato fa quattro i quadro, meno quattro.' },
+    { m:'z = (−2 ± 2i)/2 = −1 ± i', s:'Formula: meno due più o meno due i, diviso due. Viene meno uno più i e meno uno meno i.' }
+  ]}
+]);
+</script>
