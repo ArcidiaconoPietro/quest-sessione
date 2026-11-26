@@ -1,0 +1,31 @@
+{
+  "materia": "geometria",
+  "aggiornato": "2026-11-21T19:00",
+  "giorni": {
+    "2026-11-08": "fatto",
+    "2026-11-10": "fatto",
+    "2026-11-13": "fatto",
+    "2026-11-17": "fatto",
+    "2026-11-20": "da_fare"
+  },
+  "argomenti": [
+    { "nome": "Sistemi lineari, Gauss, Gauss-Jordan", "giorno": "2026-11-08", "stato": "fatto", "sicurezza": 3 },
+    { "nome": "Rango, Rouché-Capelli con parametro", "giorno": "2026-11-10", "stato": "fatto", "sicurezza": 2 },
+    { "nome": "Matrici, prodotto, inversa, det 2x2", "giorno": "2026-11-13", "stato": "fatto", "sicurezza": 2 },
+    { "nome": "Polinomi e numeri complessi", "giorno": "2026-11-17", "stato": "da_ripassare", "sicurezza": 2 },
+    { "nome": "Radici n-esime dei complessi", "giorno": "2026-11-17", "stato": "fatto", "sicurezza": 3 },
+    { "nome": "Spazi vettoriali, sottospazi, span (pp. 43-54)", "giorno": "2026-11-20", "stato": "da_fare", "sicurezza": 1 },
+    { "nome": "Trasposta, simmetriche, indipendenza e basi (pp. 56-57, 60-64, 73-74)", "giorno": "2026-11-20", "stato": "da_fare", "sicurezza": 1 },
+    { "nome": "Quiz Foglio 4", "giorno": "2026-11-20", "stato": "da_fare", "sicurezza": 1 },
+    { "nome": "Quiz Foglio 2 (unico quiz dei Fogli 1-3)", "giorno": "2026-11-22", "stato": "da_fare", "sicurezza": 1 }
+  ],
+  "errori": [
+    { "testo": "Calcoli frettolosi nel prodotto di complessi", "volte": 1, "ultimo": "2026-11-18", "risolto": false },
+    { "testo": "Inverso di z: divide per |z| invece che per |z|^2", "volte": 1, "ultimo": "2026-11-18", "risolto": false },
+    { "testo": "Forma polare/esponenziale: non controlla il quadrante (segno di a e b)", "volte": 1, "ultimo": "2026-11-18", "risolto": false },
+    { "testo": "Segni quando isola un'incognita o nelle potenze (es. e^(i pi) = -1)", "volte": 2, "ultimo": "2026-11-18", "risolto": false },
+    { "testo": "Parametri: dividere senza discutere il caso denominatore = 0", "volte": 1, "ultimo": "2026-11-17", "risolto": false }
+  ],
+  "prossimo_passo": "Domenica 22/11: recuperare il 20/11 (scheda complessi 01, spazi vettoriali pp. 43-54, quiz Foglio 4), poi quiz Foglio 2. Basi e indipendenza anche martedì 24/11 se non ci stanno.",
+  "ultima_sessione": { "data": "2026-11-20", "minuti": 0, "fatto": "Sessione 17:30 prevista ma non svolta col tutor: nessuna risposta ricevuta" }
+}

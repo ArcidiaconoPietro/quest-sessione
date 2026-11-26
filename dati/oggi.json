@@ -1,0 +1,9 @@
+{
+  "data": "2026-11-21",
+  "messaggio": "Sabato di recupero: Analisi passa alle serie, Fondamenti si sblocca con la diagnostica.",
+  "piano": [
+    { "materia": "analisi", "cosa": "16/11 Serie numeriche: geometrica, armonica, confronto, rapporto, radice", "file": "STUDIO GIORNO PER GIORNO/2026-11-16 (file 00 + lavagne)", "minuti": 90 },
+    { "materia": "fondamenti", "cosa": "Scheda 01 diagnostica se non fatta ieri, altrimenti recupero mirato di 11/11 e 18/11", "file": "CERVELLO/schede/fondamenti_01_diagnostica.md", "minuti": 60 }
+  ],
+  "schede": ["fondamenti_01_diagnostica.md"]
+}

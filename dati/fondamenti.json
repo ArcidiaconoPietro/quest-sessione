@@ -1,0 +1,92 @@
+{
+  "materia": "fondamenti",
+  "aggiornato": "2026-11-21T19:00",
+  "giorni": {
+    "2026-11-11": "da_fare",
+    "2026-11-14": "da_fare",
+    "2026-11-18": "da_fare"
+  },
+  "argomenti": [
+    {
+      "nome": "Introduzione, algoritmi, grammatiche, tipi (slide 01a-04)",
+      "giorno": "2026-11-11",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Espressioni e conversioni di tipo (04b)",
+      "giorno": "2026-11-14",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Input/output, if, cicli, preprocessore (06a-07c)",
+      "giorno": "2026-11-18",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Complemento a 2 (scritto, es. 2)",
+      "giorno": "2026-11-11",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Funzioni (08)",
+      "giorno": "2026-11-21",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Ricorsione, puntatori, parametri per riferimento (09a-10b)",
+      "giorno": "2026-11-25",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Progetti su più file (11a-11b)",
+      "giorno": "2026-11-28",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Array, stringhe, strutture (12a-12d)",
+      "giorno": "2026-12-02",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "enum e matrici (13-14)",
+      "giorno": "2026-12-05",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "File di testo e binari (15-16b)",
+      "giorno": "2026-12-09",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Liste con list.h/list.c (18)",
+      "giorno": "2026-12-12",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Ordinamento e allocazione dinamica (19-20)",
+      "giorno": "2026-12-16",
+      "stato": "da_fare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Prima prova al PC a tempo",
+      "giorno": "2026-12-19",
+      "stato": "da_fare",
+      "sicurezza": 1
+    }
+  ],
+  "errori": [],
+  "prossimo_passo": "Scheda 01 diagnostica (45 min, carta e penna), poi recupero mirato di 11/11 e 18/11 solo sulle cose non sapute.",
+  "ultima_sessione": null
+}
