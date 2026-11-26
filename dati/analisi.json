@@ -1,0 +1,158 @@
+{
+  "materia": "analisi",
+  "aggiornato": "2026-11-26T00:55",
+  "giorni": {
+    "2026-11-09": "fatto",
+    "2026-11-12": "fatto",
+    "2026-11-14": "parziale",
+    "2026-11-16": "fatto",
+    "2026-11-19": "da_fare"
+  },
+  "argomenti": [
+    {
+      "nome": "Logica, insiemi, funzioni, induzione, binomio, Bernoulli",
+      "giorno": "2026-11-09",
+      "stato": "fatto",
+      "sicurezza": 3
+    },
+    {
+      "nome": "Maggioranti, sup/inf, max/min",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 2
+    },
+    {
+      "nome": "Definizione di limite con epsilon",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 2
+    },
+    {
+      "nome": "Algebra dei limiti",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 2
+    },
+    {
+      "nome": "Forme indeterminate, termine dominante",
+      "giorno": "2026-11-12",
+      "stato": "da_ripassare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Gerarchia degli infiniti",
+      "giorno": "2026-11-12",
+      "stato": "da_ripassare",
+      "sicurezza": 2
+    },
+    {
+      "nome": "Equivalenze asintotiche",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 2
+    },
+    {
+      "nome": "o-piccolo",
+      "giorno": "2026-11-12",
+      "stato": "in_corso",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Monotonia e limitatezza",
+      "giorno": "2026-11-12",
+      "stato": "da_ripassare",
+      "sicurezza": 1
+    },
+    {
+      "nome": "Permanenza del segno, confronto, carabinieri",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 3
+    },
+    {
+      "nome": "Radici n-esime, Nepero, criterio del rapporto, sottosuccessioni/BW",
+      "giorno": "2026-11-12",
+      "stato": "fatto",
+      "sicurezza": 3
+    },
+    {
+      "nome": "Serie numeriche",
+      "giorno": "2026-11-16",
+      "stato": "fatto",
+      "sicurezza": 2
+    },
+    {
+      "nome": "Serie con parametro",
+      "giorno": "2026-11-19",
+      "stato": "da_fare",
+      "sicurezza": 1
+    }
+  ],
+  "errori": [
+    {
+      "testo": "Confonde \"cresce\" con \"va a +infinito\" (n/(n+1) cresce ma tende a 1)",
+      "volte": 2,
+      "ultimo": "2026-11-19",
+      "risolto": false
+    },
+    {
+      "testo": "Sup/max e inf/min: usa infinito come massimo, non controlla se il valore è assunto",
+      "volte": 1,
+      "ultimo": "2026-11-19",
+      "risolto": false
+    },
+    {
+      "testo": "Gerarchia degli infiniti: n^n batte n!, ogni n^a con a>0 batte ln n",
+      "volte": 2,
+      "ultimo": "2026-11-19",
+      "risolto": false
+    },
+    {
+      "testo": "Monotonia col metodo differenza: cerca zeri fuori dominio, confonde \"non si annulla\" con \"positivo\"",
+      "volte": 2,
+      "ultimo": "2026-11-19",
+      "risolto": false
+    },
+    {
+      "testo": "Radici n-esime di somme (es. ⁿ√(7ⁿ+n)): sbaglia la scelta dei due carabinieri, giuste solo dopo aiuto. Da ripassare",
+      "volte": 4,
+      "ultimo": "2026-11-24",
+      "risolto": false
+    },
+    {
+      "testo": "Serie geometrica: somma 1/(1−q) e caso q>1 (diverge); serie 1/n^p con p frazionario (1/√n: p=1/2 ≤ 1, diverge). Giuste solo dopo errore/aiuto",
+      "volte": 3,
+      "ultimo": "2026-11-26",
+      "risolto": false
+    }
+  ],
+  "prossimo_passo": "Ripasso 5 min: geometrica (somma 1/(1−q), q>1 diverge) e 1/n^p con p=1/2. Poi cap. 7: confronto asintotico, Leibniz, serie con parametro (blocco 19/11).",
+  "ultima_sessione": {
+    "data": "2026-11-26",
+    "fatto": "Cap. 6 serie: guidato 5/5 (2 dopo aiuto) ed esercizi 8/8 (3 dopo errore o aiuto)",
+    "umore": "studia di notte, costante"
+  },
+  "sessioni": [
+    {
+      "data": "2026-11-24",
+      "esercizi_tentati": 14,
+      "esercizi_giusti": 14,
+      "lasciati": 0,
+      "nota": "Cap. 1-3: tutti giusti, ma 4 sulle radici n-esime solo dopo un errore o con aiuto"
+    },
+    {
+      "data": "2026-11-25",
+      "esercizi_tentati": 8,
+      "esercizi_giusti": 8,
+      "lasciati": 0,
+      "nota": "Cap. 4 rapporto e cap. 5 sottosuccessioni tutti giusti al primo colpo"
+    },
+    {
+      "data": "2026-11-26",
+      "esercizi_tentati": 13,
+      "esercizi_giusti": 13,
+      "lasciati": 0,
+      "nota": "Cap. 6 serie: tutto giusto, ma 5 su 13 dopo errore o aiuto (geometrica, criterio da scegliere, 1/√n)"
+    }
+  ]
+}

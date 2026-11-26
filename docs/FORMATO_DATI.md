@@ -1,15 +1,14 @@
 # Formato dati del Cervello (per la dashboard Quest Sessione)
 
-Versione del 24 novembre 2026 (aggiunti `sessioni` nei file materia e `profilo.json`). Vale per tutti i tutor e per il Cervello centrale.
+Versione del 26 novembre 2026: **i JSON ora stanno sul repo git**, non più sul Mac (prima: 24/11, aggiunti `sessioni` e `profilo.json`). Vale per tutti i tutor e per il Cervello centrale.
 
 ## Idea in breve
 
-I file `.md` del Cervello restano come sono (li leggono i tutor e Pietro).
-Accanto, ogni tutor tiene **un file JSON tutto suo**, sempre con la stessa forma, che la dashboard sa leggere:
+I file `.md` del Cervello restano come sono, sul Mac in `UNIVERSITA/CERVELLO/` (li leggono i tutor e Pietro).
+I file JSON per la dashboard invece stanno **sul repo git** `ArcidiaconoPietro/quest-sessione`, nella cartella `dati/` del branch `main`. Ogni autore ha **un file JSON tutto suo**, sempre con la stessa forma:
 
 ```
-CERVELLO/
-├── analisi.md  geometria.md  fondamenti.md  profilo.md  schede/   ← come adesso
+quest-sessione (repo git, branch main)
 └── dati/
     ├── analisi.json      ← lo scrive SOLO il tutor di Analisi
     ├── geometria.json    ← lo scrive SOLO il tutor di Geometria
@@ -17,6 +16,8 @@ CERVELLO/
     ├── oggi.json         ← lo scrive SOLO il Cervello centrale (coordinatore)
     └── profilo.json      ← lo scrive SOLO il Cervello centrale (coordinatore)
 ```
+
+La cartella `CERVELLO/dati/` sul Mac non si usa più: non scriverci (Pietro vuole i materiali generati su git, non sul suo PC). Il repo è pubblico: niente dati personali oltre all'andamento dello studio (niente email, telefoni, indirizzi).
 
 Un file per autore: così due chat non si sovrascrivono mai a vicenda.
 
@@ -78,7 +79,7 @@ Una riga per ogni sessione fatta davvero con Pietro. Si scrive solo quello che s
 La dashboard da qui calcola da sola: minuti e giorni di studio degli ultimi 7 giorni, esercizi l'ora, percentuale di esercizi giusti, esercizi lasciati, media della concentrazione.
 
 - I giorni misti (es. "Analisi + Fondamenti") li segnano entrambi i tutor, ognuno per la sua parte.
-- Il tutor riscrive il file intero a fine sessione (non aggiunge pezzi in fondo) e controlla che sia JSON valido, per esempio con `python3 -m json.tool dati/analisi.json`.
+- Il tutor riscrive il file intero a fine sessione (non aggiunge pezzi in fondo) e controlla che sia JSON valido, per esempio con `python3 -m json.tool dati/analisi.json`. Poi lo salva su git (vedi "Come si salva su git").
 - Il tutor aggiorna anche il suo `.md` come sempre: il JSON è il riassunto per la dashboard, il `.md` resta il registro completo.
 
 ## File del Cervello centrale: `dati/oggi.json`
@@ -151,15 +152,29 @@ Regole:
 
 Il file si riscrive intero e si controlla con `python3 -m json.tool dati/profilo.json`.
 
+## Come si salva su git (per tutor e Cervello centrale)
+
+1. Collega il repo `ArcidiaconoPietro/quest-sessione` alla chat con accesso in scrittura (push).
+2. Prendi la versione più recente di `main` e leggi il tuo file `dati/<tuo-file>.json` da lì (non da una copia vecchia).
+3. Riscrivi **solo il tuo file** e controllalo con `python3 -m json.tool`.
+4. Fai un commit che tocca solo quel file, con un messaggio tipo `dati: analisi, sessione del 26/11`, e fai push **direttamente su `main`**. Sono solo dati, non serve una PR.
+5. Se il push su `main` viene rifiutato, apri una PR piccola con solo quel file e chiedi a Pietro di scrivere "merge" nel thread: senza il suo "merge" scritto non si unisce.
+
+Non toccare i file degli altri autori, `index.html` o le lavagne in questo commit.
+
 ## Come arriva alla dashboard
 
-Nella scheda **Missione** c'è il pulsante **📥 Aggiorna dal Cervello** (solo per Pietro).
-- Su Chrome o Edge: la prima volta si sceglie la cartella `CERVELLO` (o `CERVELLO/dati`). Il browser la ricorda e poi aggiorna da solo a ogni apertura del sito.
-- Su Safari: a ogni clic si selezionano i file `.json` dentro `CERVELLO/dati` (ora sono 5, con `profilo.json`).
+La dashboard legge da sola i file `dati/*.json` dal repo, senza far scegliere cartelle:
+- all'apertura del sito e poi ogni 2 minuti;
+- quando Pietro preme **📥 Aggiorna dal Cervello** (scheda Missione o Profilo).
 
-I dati vengono salvati su Supabase in `studio_settings` con le chiavi `brain:analisi`, `brain:geometria`, `brain:fondamenti`, `brain:oggi`, `brain:profilo`. Così li vedono anche il telefono e Barbie. Nessuna tabella nuova, nessun dato esistente toccato.
+Prima prova `raw.githubusercontent.com/.../main/dati/` (si aggiorna pochi minuti dopo il push), poi la copia pubblicata col sito. Quindi dopo un push possono servire 1-5 minuti prima di vedere i dati nuovi.
 
-A fine sessione il tutor ricorda a Pietro: "apri la dashboard e premi Aggiorna dal Cervello" (su Chrome basta aprirla).
+I dati letti vengono salvati anche su Supabase in `studio_settings` con le chiavi `brain:analisi`, `brain:geometria`, `brain:fondamenti`, `brain:oggi`, `brain:profilo` (solo quando la dashboard è aperta da Pietro). Nessuna tabella nuova, nessun dato esistente toccato. Le spunte manuali di Pietro restano nel browser/Supabase come prima.
+
+Alternativa nascosta: **Maiusc + clic** sul pulsante apre ancora la scelta della cartella o dei file `.json` (come prima), se un giorno servisse caricare file a mano.
+
+A fine sessione il tutor dice a Pietro solo: "ho salvato i dati su git, la dashboard si aggiorna da sola tra qualche minuto".
 
 ## Cosa mostra la dashboard
 

@@ -549,7 +549,7 @@ async function initSB(){
     st.data.filter(r=>!r.key.startsWith('rem:')&&!r.key.startsWith('brain:')).forEach(r=>S.settings[r.key]=r.value);
     online=true;setSync('on','sincronizzato');$('#banner').classList.remove('show');
     saveLocal();renderAll();
-    if(STU()&&!brainAutoTried){brainAutoTried=true;brainAuto()}
+    brainFetch(true);
   }catch(err){
     online=false;setSync('off','offline');
     const b=$('#banner');
@@ -558,6 +558,7 @@ async function initSB(){
       :'⚠️ Non riesco a leggere i dati dal database. Controlla la connessione e ricarica la pagina.';
     b.classList.add('show');
     console.warn('Supabase:',err);
+    brainFetch(true);
   }
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ROLE)initSB()});
@@ -783,12 +784,11 @@ function renderCatchup(){
   $('#cuYes').onclick=markPast;
   $('#cuNo').onclick=async()=>{S.settings.catchup_done='1';saveLocal();renderCatchup();if(online)await sb.from('studio_settings').upsert({key:'catchup_done',value:'1'})};
 }
-/* ---------- cervello (dati dei tutor in CERVELLO/dati) ---------- */
+/* ---------- cervello (dati dei tutor in dati/ sul repo git) ---------- */
 const BRAIN_SUBJ={geo:'geometria',ana:'analisi',fon:'fondamenti'};
 const BRAIN_FILES=['analisi','geometria','fondamenti','oggi','profilo'];
 const BRAIN_K={geometria:'geo',analisi:'ana',fondamenti:'fon'};
 const SUBJ_INFO={geo:{n:'Geometria',c:'var(--geo)'},ana:{n:'Analisi',c:'var(--ana)'},fon:{n:'Fondamenti',c:'var(--fon)'}};
-let brainAutoTried=false;
 // materie di un giorno: i giorni misti (es. "Analisi + Fondamenti") contano per entrambe
 function brainKeysOf(d){const k=subj(d).k;if(SUBJ_INFO[k])return [k];if(k!=='mix'||isExam(d))return [];
   const s=(d.subject||'').toLowerCase();return ['geo','ana','fon'].filter(x=>s.includes(BRAIN_SUBJ[x]))}
@@ -824,9 +824,9 @@ function renderBrain(){
   ['ana','geo','fon'].forEach(k=>{const b=S.brain[BRAIN_SUBJ[k]];if(!b)return;
     h+=`<div class="bsub" style="--c:${SUBJ_INFO[k].c}"><b>${SUBJ_INFO[k].n} · ${esc(brainStatusTxt(k))}</b><span>${esc(b.prossimo_passo||'')}</span></div>`});
   const last=brainLast();
-  h+=`<div class="bfoot">${STU()?'<button class="btn ghost" id="brainSync">📥 Aggiorna dal Cervello</button>':''}<span>${last?'Ultimo aggiornamento dei tutor: '+esc(ago(last)):''}</span></div>`;
+  h+=`<div class="bfoot">${STU()?'<button class="btn ghost" id="brainSync" title="Legge i dati dei tutor dal repo git (Maiusc+clic: da una cartella)">📥 Aggiorna dal Cervello</button>':''}<span>${last?'Ultimo aggiornamento dei tutor: '+esc(ago(last)):''}</span></div>`;
   el.innerHTML=h;
-  const bs=$('#brainSync');if(bs)bs.onclick=brainImport;
+  const bs=$('#brainSync');if(bs)bs.onclick=e=>e.shiftKey?brainImport():brainFetch(false);
 }
 function renderFreqErrors(){
   const L=[];
@@ -843,7 +843,27 @@ function renderSupBrain(){
     return `<tr style="--c:${SUBJ_INFO[k].c}"><td><span class="dotc"></span>${SUBJ_INFO[k].n}</td><td>${esc(brainStatusTxt(k))}</td><td class="hm" style="color:var(--mute)">${u?esc(parseD(u.data).toLocaleDateString('it-IT',{day:'numeric',month:'short'}))+(u.minuti?' · '+esc(u.minuti)+' min':'')+(u.fatto?' · '+esc(u.fatto):''):'—'}</td></tr>`}).join('');
   $('#supBrain').innerHTML=rows?`<tr><th>Materia</th><th>Rispetto al piano</th><th class="hm">Ultima sessione</th></tr>`+rows:`<tr><td style="color:var(--mute);border:0">Ancora nessun dato dai tutor.</td></tr>`;
 }
-// --- lettura file: cartella ricordata (Chrome/Edge) oppure scelta dei file (Safari)
+// --- lettura dal repo git: i tutor salvano i JSON in dati/ su main, la dashboard li legge da sola
+// prima raw.githubusercontent (si aggiorna in pochi minuti dopo il commit), poi la copia pubblicata col sito
+const GIT_RAW='https://raw.githubusercontent.com/ArcidiaconoPietro/quest-sessione/main/dati/';
+let brainFetching=null;
+async function brainFetchOne(f){
+  for(const u of [GIT_RAW+f+'.json?t='+Date.now(),'dati/'+f+'.json']){
+    try{const r=await fetch(u,{cache:'no-store'});if(r.ok)return await r.text()}catch(_){}
+  }
+  return null;
+}
+function brainFetch(quiet){
+  if(brainFetching)return brainFetching;
+  brainFetching=(async()=>{
+    if(!quiet)toast('🧠 Leggo i dati dei tutor da git…');
+    const out={};
+    await Promise.all(BRAIN_FILES.map(async f=>{const t=await brainFetchOne(f);if(t!=null)out[f]=t}));
+    await brainSave(out,quiet);
+  })().finally(()=>{brainFetching=null});
+  return brainFetching;
+}
+// --- alternativa nascosta (Maiusc+clic sul pulsante): cartella ricordata (Chrome/Edge) oppure scelta dei file (Safari)
 const idb=(mode,fn)=>new Promise((res,rej)=>{const r=indexedDB.open('quest-cervello',1);r.onupgradeneeded=()=>r.result.createObjectStore('h');r.onsuccess=()=>{const tx=r.result.transaction('h',mode);const q=fn(tx.objectStore('h'));tx.oncomplete=()=>res(q&&q.result);tx.onerror=()=>rej(tx.error)};r.onerror=()=>rej(r.error)});
 const getHandle=()=>idb('readonly',s=>s.get('dir')).catch(()=>null);
 const putHandle=h=>idb('readwrite',s=>s.put(h,'dir')).catch(()=>{});
@@ -870,10 +890,6 @@ $('#brainFiles').onchange=async e=>{
   for(const f of e.target.files){const n=f.name.replace(/\.json$/i,'').toLowerCase();if(BRAIN_FILES.includes(n))out[n]=await f.text()}
   brainSave(out);
 };
-async function brainAuto(){
-  // se il browser ricorda gia' la cartella con il permesso, aggiorna da solo all'apertura
-  try{const dir=await getHandle();if(dir&&dir.queryPermission&&(await dir.queryPermission({mode:'read'}))==='granted')brainSave(await readDir(dir),true)}catch(_){}
-}
 async function brainSave(files,quiet){
   const ok=[],bad=[],rows=[];
   for(const [n,txt] of Object.entries(files)){
@@ -883,14 +899,14 @@ async function brainSave(files,quiet){
     S.brain[n]=j;ok.push(n);if(!same)rows.push({key:'brain:'+n,value:JSON.stringify(j)});
   }
   saveLocal();renderAll();
-  if(online&&rows.length){const {error}=await sb.from('studio_settings').upsert(rows);if(error){console.warn(error);toast('⚠️ Letto, ma non salvato online');return}}
+  if(online&&STU()&&rows.length){const {error}=await sb.from('studio_settings').upsert(rows);if(error){console.warn(error);toast('⚠️ Letto, ma non salvato online');return}}
   if(quiet&&!rows.length&&!bad.length)return;
-  if(!ok.length&&!bad.length){toast('🤔 Nessun file del Cervello trovato. Scegli la cartella CERVELLO/dati.');return}
+  if(!ok.length&&!bad.length){if(!quiet)toast('🤔 Nessun file del Cervello trovato in dati/ sul repo.');return}
   toast(bad.length?`⚠️ File non validi: ${bad.join(', ')}${ok.length?' · ok: '+ok.join(', '):''}`:`🧠 Cervello aggiornato: ${ok.join(', ')}`);
 }
 
 
-/* ---------- profilo dello studente (CERVELLO/dati/profilo.json + misure automatiche) ---------- */
+/* ---------- profilo dello studente (dati/profilo.json sul repo git + misure automatiche) ---------- */
 const BRAIN_SUBJ_FILES=['analisi','geometria','fondamenti'];
 // parametri conosciuti: nome, icona e colore; profilo.json puo' aggiungerne altri
 const PROF_P={
@@ -951,7 +967,7 @@ function renderProfilo(){
   const el=$('#profilo');if(!el)return;
   const pr=S.brain.profilo||PROF_SEED;const M=profMetrics();
   if(!pr){
-    el.innerHTML=`<div class="card"><div class="h">🧬 Il tuo profilo</div><div style="font-size:14px;color:var(--mute);line-height:1.5">Il Cervello non ha ancora scritto il tuo profilo (<code>CERVELLO/dati/profilo.json</code>). Quando c'è, premi <b>📥 Aggiorna dal Cervello</b> nella scheda Missione.</div></div>`;
+    el.innerHTML=`<div class="card"><div class="h">🧬 Il tuo profilo</div><div style="font-size:14px;color:var(--mute);line-height:1.5">Il Cervello non ha ancora scritto il tuo profilo (<code>dati/profilo.json</code> sul repo git). Quando c'è, premi <b>📥 Aggiorna dal Cervello</b> nella scheda Missione.</div></div>`;
     return;
   }
   const st=(pr.storico||[]).slice().sort((a,b)=>a.data<b.data?-1:1);
@@ -978,9 +994,9 @@ function renderProfilo(){
     </div>`}).join('')+`</div>`;
   const list=(t,L)=>`<div class="card"><div class="h">${t}</div><ul>${(L||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li style="color:var(--mute)">—</li>'}</ul></div>`;
   h+=`<div class="plists">${list('💪 Punti di forza',pr.punti_forza)}${list('🧠 Come impari meglio',pr.come_impari)}${list('🚨 Segnali di allarme',pr.allarmi)}</div>`;
-  h+=STU()?`<div class="brain" style="margin-top:14px"><div class="bfoot"><button class="btn ghost" id="profSync">📥 Aggiorna dal Cervello</button><span>Legge anche <code>profilo.json</code> dalla cartella CERVELLO/dati.</span></div></div>`:'';
+  h+=STU()?`<div class="brain" style="margin-top:14px"><div class="bfoot"><button class="btn ghost" id="profSync">📥 Aggiorna dal Cervello</button><span>Legge anche <code>profilo.json</code> dal repo git (cartella <code>dati/</code>).</span></div></div>`:'';
   el.innerHTML=h;
-  const b=$('#profSync');if(b)b.onclick=brainImport;
+  const b=$('#profSync');if(b)b.onclick=e=>e.shiftKey?brainImport():brainFetch(false);
 }
 
 /* ---------- reminders & supervision ---------- */
