@@ -598,9 +598,10 @@ function totals(){
 }
 function examDates(){
   return [
-    {k:'geo',n:'Geometria e Algebra T',e:'📐',c:'var(--geo)',date:'2027-01-11',info:'ore 9:30 · Aula Magna Fisica'},
-    {k:'ana',n:'Analisi Matematica T-1',e:'∫',c:'var(--ana)',date:'2027-01-25',info:'ore 10:00'},
-    {k:'fon',n:'Fondamenti di Informatica T',e:'💻',c:'var(--fon)',date:S.settings.fon_date||'',info:S.settings.fon_date?'':'data da verificare su AlmaEsami'},
+    {k:'ing',n:'Inglese B2 (idoneità)',e:'🇬🇧',c:'var(--mix)',date:'2026-12-21',info:'ore 9:00 · Lab. C, via Irnerio 46'},
+    {k:'ana',n:'Analisi Matematica T-1',e:'∫',c:'var(--ana)',date:'2027-01-08',info:'riserva 25/01 o 08/02'},
+    {k:'fon',n:'Fondamenti di Informatica T',e:'💻',c:'var(--fon)',date:'2027-01-21',info:'riserva 11/02'},
+    {k:'geo',n:'Geometria e Algebra T',e:'📐',c:'var(--geo)',date:'2027-01-26',info:'riserva 12/02'},
   ];
 }
 
@@ -687,7 +688,7 @@ function renderBosses(){
     return `<div class="boss ${dead?'dead':''}" style="--c:${b.c}">
       <div class="row"><div class="ic">${b.e}</div><div><div class="nm">${esc(b.n)}</div><div class="dt">${b.date?esc(parseD(b.date).toLocaleDateString('it-IT',{day:'numeric',month:'long'})):'📅 ?'} ${b.info?'· '+esc(b.info):''}</div></div>
       <div class="cd">${left===null?'<b>?</b><small>da fissare</small>':dead?'<b>✓</b><small>fatto</small>':`<b>${left}</b><small>${left===1?'giorno':'giorni'}</small>`}</div></div>
-      <div class="hp"><div class="lab"><span>HP boss</span><span class="mono">${doneN}/${days.length} livelli · ${hp}%</span></div><div class="bar"><div style="width:${hp}%"></div></div></div>
+      ${days.length?`<div class="hp"><div class="lab"><span>HP boss</span><span class="mono">${doneN}/${days.length} livelli · ${hp}%</span></div><div class="bar"><div style="width:${hp}%"></div></div></div>`:''}
       ${brainBadge(b.k)}
     </div>`}).join('');
 }
