@@ -95,6 +95,21 @@ p { margin: 0; }
 .solve ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
 .solve li { overflow-x: auto; }
 .exam { color: var(--muted); font-size: .95rem; }
+/* lezioni lente */
+.lesson { display: flex; flex-direction: column; gap: 12px; }
+.lbar { display: flex; align-items: center; gap: 12px; font-size: .9rem; color: var(--muted); font-weight: 700; }
+.lprog { flex: 1; height: 8px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+.lprog i { display: block; height: 100%; background: var(--ok); border-radius: 99px; transition: width .3s; }
+.lstep.done { opacity: .78; }
+.lstep .lt { display: flex; flex-direction: column; gap: 8px; }
+.lstep .lt p { margin: 0; overflow-x: auto; }
+.lq .math { overflow-x: auto; }
+.lq { background: var(--soft); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.lq > b { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.known { border: 1.5px dashed var(--line); border-radius: 10px; padding: 10px 14px; }
+.known > b { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.book { font-size: .95rem; color: var(--muted); }
+.divider { text-align: center; color: var(--muted); font-weight: 700; padding: 8px 0; }
 details.whybox { border-left: 3px solid var(--ok); padding-left: 12px; }
 details.whybox summary { cursor: pointer; color: var(--ok); font-weight: 700; font-size: .95rem; }
 details.whybox > *:not(summary) { margin-top: 6px; }

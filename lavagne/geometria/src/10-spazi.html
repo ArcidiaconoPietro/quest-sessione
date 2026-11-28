@@ -2,22 +2,72 @@
   <div class="chapter" data-ch="spazi" data-title="1 · Spazi vettoriali" data-date="20/11" data-full="Spazi vettoriali, sottospazi, span, basi" data-src="Libro pp. 43-54, 56-57, 60-64, 73-74 · Foglio 4" hidden>
     <section class="board">
       <div class="eyebrow">Capitolo 1 · giorno 20/11 · libro pp. 43-54, 56-57, 60-64, 73-74</div>
-      <h2>Spazi vettoriali: cose che si sommano e si allungano</h2>
-      <div class="prob"><b>Un caso che non sai ancora risolvere</b><p class="big">Risolvi il sistema <b>x + y − z = 0</b> (una equazione, tre incognite). Le soluzioni sono infinite. Come le scrivi <b>tutte</b> in poco spazio? E perché con <b>x + y − z = 1</b> lo stesso trucco non funziona?</p></div>
-      <h3>Perché con quello che sai non ci riesci</h3>
-      <p>Con Gauss sai arrivare a "infinite soluzioni", ma non hai un modo per <b>descriverle tutte</b> con pochi vettori, e non hai un criterio per capire che cosa cambia quando a destra c'è 1 invece di 0.</p>
-      <h3>Lo strumento nuovo</h3>
-      <p>Due parole nuove. Lo <b>Span</b> di alcuni vettori è l'insieme di tutte le loro combinazioni λ·u + μ·v: con 2 vettori descrivi infinite soluzioni. Un <b>sottospazio</b> è un insieme che contiene 0 ed è chiuso per somme e multipli: solo i sottospazi si possono scrivere come Span.</p>
-      <div class="solve"><b>Il caso risolto, passo per passo</b><ol><li>x + y − z = 0 ⇒ z = x + y</li><li>(x, y, z) = (x, y, x + y) = (x, 0, x) + (0, y, y)</li><li>= x·(1, 0, 1) + y·(0, 1, 1)</li><li>Soluzioni = Span((1, 0, 1), (0, 1, 1))</li><li>Con = 1: (0, 0, 0) → 0 + 0 − 0 = 0 ≠ 1 ⇒ 0 non è soluzione</li><li>(1, 0, 0) e (0, 1, 0) sono soluzioni; somma (1, 1, 0): 1 + 1 − 0 = 2 ≠ 1</li><li>⇒ non è un sottospazio ⇒ non si scrive come Span</li></ol></div>
-      <div class="def"><b>La formula da usare</b><p>W ⊆ V è un sottospazio ⇔ ① 0 ∈ W, ② u, w ∈ W ⇒ u + w ∈ W, ③ w ∈ W, λ ∈ K ⇒ λ·w ∈ W.<br>Span(v₁, …, v<sub>k</sub>) = { λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> : λ₁, …, λ<sub>k</sub> ∈ K }.</p><span class="why easy">perché: facile, sono le operazioni che usi per costruire le combinazioni</span></div>
-      <h3>Che casi risolvi così</h3>
-      <ul><li>Quiz: "quale di questi insiemi è un sottospazio?" (prima prova se contiene 0).</li><li>Scrivere tutte le soluzioni di un sistema <b>omogeneo</b> (= 0) come Span di pochi vettori.</li><li>Trovare una base di un sottospazio dato con equazioni.</li></ul>
-      <p class="exam">Quello che impari qui (sottospazio, span, indipendenza, base) lo riusi in <b>tutto</b> il resto del corso. All'esame arriva subito nel quiz: "quale di questi insiemi è un sottospazio?" (Foglio 4, domande 2, 4 e 10).</p>
+      <h2>Spazi vettoriali, da zero</h2>
+      <p class="big">Questo capitolo è <b>tutto nuovo</b>: nessuna di queste parole la conosci già, ed è normale. Lo facciamo con calma, in <b>6 lezioni piccole</b>, nello stesso ordine del libro.</p>
+      <h3>Come si usa</h3>
+      <ol>
+        <li>Fai una lezione alla volta. Ogni lezione mostra <b>un passo alla volta</b>: leggi, e passi avanti solo quando hai capito.</li>
+        <li>Molti passi hanno un <b>controllo veloce</b> (una domanda piccola). Finché non rispondi giusto, non si va avanti.</li>
+        <li>Se un passo non è chiaro premi <b>Non ho capito</b>: te lo rispiego in un altro modo.</li>
+        <li>Finita la lezione, leggi le pagine del libro indicate (file 00 nella cartella del 20/11): ritrovi le stesse cose.</li>
+        <li>Dopo le 6 lezioni: videolezione di ripasso, ricette, esercizio guidato ed esercizi del Foglio 4.</li>
+      </ol>
+      <p class="exam">Una lezione richiede circa 10-15 minuti. Meglio due lezioni capite bene che sei di corsa.</p>
     </section>
 
     <section class="board">
+      <div class="eyebrow">Lezione 1 di 6 · libro pp. 43-46</div>
+      <h2>Vettori di R² e di Rⁿ</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>il piano cartesiano dal liceo: un punto è (x, y).</p></div>
+      <div id="lesson-spazi-1"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 43-46.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lezione 2 di 6 · libro pp. 46-50</div>
+      <h2>Che cos'è uno spazio vettoriale</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>la lezione 1, la somma di polinomi dal liceo, le matrici del 13/11.</p></div>
+      <div id="lesson-spazi-2"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 46-50.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lezione 3 di 6 · libro pp. 50-52</div>
+      <h2>Sottospazi</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>le lezioni 1-2 e la retta y = 2x dal liceo.</p></div>
+      <div id="lesson-spazi-3"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 50-52.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lezione 4 di 6 · libro pp. 52-54</div>
+      <h2>Combinazioni lineari e Span</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>somma e multipli (lezione 1), sottospazi (lezione 3), i sistemi con Gauss (10/11).</p></div>
+      <div id="lesson-spazi-4"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 52-54.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lezione 5 di 6 · libro pp. 56-57 e 73-74</div>
+      <h2>Trasposta e matrici speciali</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>le matrici del 13/11 e il test del sottospazio (lezione 3).</p></div>
+      <div id="lesson-spazi-5"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 56-57 e 73-74.</p>
+    </section>
+
+    <section class="board">
+      <div class="eyebrow">Lezione 6 di 6 · libro pp. 60-64</div>
+      <h2>Vettori indipendenti e basi</h2>
+      <div class="known"><b>Cosa ti serve sapere già</b><p>lo Span (lezione 4) e Gauss con i pivot (10/11).</p></div>
+      <div id="lesson-spazi-6"></div>
+      <p class="book">Dopo questa lezione leggi sul libro le pp. 60-64.</p>
+    </section>
+
+    <div class="divider">— Finite le 6 lezioni: ripasso ed esercizi —</div>
+
+    <section class="board">
       <div class="eyebrow">Videolezione</div>
-      <h2>Rifacciamo tutto, un calcolo alla volta</h2>
+      <h2>Ripasso: rifacciamo tutto, un calcolo alla volta</h2>
       <p>Premi <b>Avvia</b>: sulla lavagna compare un calcolo alla volta e la voce lo spiega. Puoi mettere in pausa, tornare indietro o saltare a una scena. Se la voce non parte, il testo sotto la lavagna dice le stesse cose.</p>
       <div id="video-spazi"></div>
     </section>

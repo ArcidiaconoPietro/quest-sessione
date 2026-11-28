@@ -1,0 +1,230 @@
+<script>
+/* Capitolo 1 spiegato da zero: 6 lezioni lente, nell'ordine del libro (pp. 43-64, 73-74). */
+(function(){ const { M } = Lav;
+
+Lav.lesson('spazi', 1, 'Vettori di R² e di Rⁿ', [
+  { h:'Un punto è una coppia di numeri',
+    t:'<p>Questo lo sai dal liceo. Nel piano cartesiano un punto si scrive con <b>due numeri</b> tra parentesi: (x, y).</p><p>Il primo numero, x, dice quanto vai <b>a destra</b> (a sinistra se è negativo). Il secondo, y, dice quanto vai <b>in su</b> (in giù se è negativo).</p><p>Esempio: (3, 1) è il punto 3 a destra e 1 in su rispetto all\'origine (0, 0).</p>',
+    alt:'Pensa a una mappa a quadretti. (3, 1) vuol dire: parti dall\'angolo (0, 0), conta 3 quadretti verso destra, poi 1 quadretto verso l\'alto.',
+    q:{ type:'nums', text:'Il punto (2, 5): di quanto è in su?', labels:['in su di'], a:5 }, ok:'Giusto: il secondo numero, 5, dice quanto è in su.' },
+
+  { h:'Lo stesso punto visto come freccia',
+    t:'<p>Disegna una freccia che parte dall\'origine (0, 0) e arriva nel punto (3, 1). Questa freccia si chiama <b>vettore</b>.</p><p>Punto o freccia, i numeri sono gli stessi: (3, 1). Il libro (p. 44) dice che puoi pensarlo nei due modi, come ti fa comodo.</p>',
+    alt:'Il punto è "dove arrivi". La freccia è "il viaggio dall\'origine fino a lì". Per descriverli bastano gli stessi due numeri.' },
+
+  { h:'Sommare due vettori',
+    t:'<p>Una formica parte da (0, 0). Prima si sposta di (3, 1): 3 a destra, 1 in su. Poi si sposta di (1, 2): 1 a destra, 2 in su. Dove arriva?</p><p>In tutto è andata a destra di 3 + 1 = 4 e in su di 1 + 2 = 3. Arriva in (4, 3).</p><p>Questa è la <b>somma di vettori</b>: sommi i primi numeri tra loro e i secondi numeri tra loro.</p><p class="math">(3, 1) + (1, 2) = (3 + 1, 1 + 2) = (4, 3)</p>',
+    alt:'Non si moltiplica niente e non si mescolano i posti: primo con primo, secondo con secondo. (a, b) + (c, d) = (a + c, b + d).',
+    q:{ type:'nums', text:'(2, 0) + (1, 4) = ( ? , ? )', labels:['primo','secondo'], a:[3,4] }, ok:'Giusto: 2 + 1 = 3 e 0 + 4 = 4, quindi (3, 4).' },
+
+  { h:'Moltiplicare un vettore per un numero',
+    t:'<p>Se la formica fa lo spostamento (3, 1) <b>due volte</b>, va a destra di 3 + 3 = 6 e in su di 1 + 1 = 2. Cioè 2·(3, 1) = (6, 2).</p><p>Regola: moltiplichi <b>ogni</b> numero del vettore per quel numero.</p><p class="math">2·(3, 1) = (2·3, 2·1) = (6, 2)</p><p>La freccia diventa lunga il doppio, nella stessa direzione. Il numero che moltiplica si chiama <b>scalare</b> (p. 46).</p>',
+    alt:'Moltiplicare per 2 vuol dire "fai lo stesso spostamento due volte". Per 3 tre volte. Per 1/2 metà strada.',
+    q:{ type:'nums', text:'3·(1, −2) = ( ? , ? )', labels:['primo','secondo'], a:[3,-6] }, ok:'Giusto: 3·1 = 3 e 3·(−2) = −6.' },
+
+  { h:'Se lo scalare è negativo',
+    t:'<p>−1·(3, 1) = (−1·3, −1·1) = (−3, −1). La freccia ha la stessa lunghezza ma punta dalla parte <b>opposta</b>: si ribalta.</p><p>−2·(3, 1) = (−6, −2): lunga il doppio e ribaltata.</p>',
+    alt:'Il segno meno vuol dire "torna indietro". (3, 1) va a destra e su; (−3, −1) va a sinistra e giù della stessa quantità.',
+    q:{ type:'choice', text:'Quanto fa −2·(1, 1)?', opts:['(2, 2)','(−2, −2)','(−1, −1)'], a:1 }, ok:'Giusto: −2·1 = −2 due volte.' },
+
+  { h:'Con tre numeri: lo spazio R³',
+    t:'<p>Nello spazio un punto ha tre numeri (x, y, z): il terzo dice quanto sei in alto. L\'insieme di tutti questi punti si chiama <b>R³</b>. Quello dei punti del piano si chiama <b>R²</b>.</p><p>Le regole sono identiche, solo con un numero in più:</p><p class="math">(1, 2, 3) + (0, 1, −1) = (1 + 0, 2 + 1, 3 + (−1)) = (1, 3, 2)</p><p class="math">2·(1, 2, 3) = (2·1, 2·2, 2·3) = (2, 4, 6)</p>',
+    alt:'R² = coppie di numeri, R³ = terne di numeri. Somma e prodotto per scalare si fanno sempre posto per posto.',
+    q:{ type:'nums', text:'(1, 0, 2) + (2, 2, 2) = ( ? , ? , ? )', labels:['1°','2°','3°'], a:[3,2,4] }, ok:'Giusto: 1 + 2 = 3, 0 + 2 = 2, 2 + 2 = 4.' },
+
+  { h:'Rⁿ: liste di n numeri',
+    t:'<p>Il libro va oltre: <b>Rⁿ</b> è l\'insieme delle liste di n numeri reali. Per esempio (−1, 5, −2, 5) ha 4 numeri, quindi sta in R⁴.</p><p>R⁴ non si può disegnare (il nostro cervello vede al massimo 3 dimensioni), ma i conti sono gli stessi: posto per posto.</p><p>Il simbolo <b>∈</b> si legge "appartiene a": (−1, 5, −2, 5) ∈ R⁴.</p>',
+    alt:'Il numero piccolo in alto (², ³, ⁴, ⁿ) conta quanti numeri ci sono nella lista. Tutto qui.',
+    q:{ type:'choice', text:'(1, 2, 3, 4) ∈ ?', opts:['R²','R³','R⁴'], a:2 }, ok:'Giusto: 4 numeri, quindi R⁴.' },
+
+  { h:'Il vettore zero',
+    t:'<p>Il vettore con tutti zeri, (0, 0) in R² o (0, 0, 0) in R³, è l\'<b>origine</b>. Si scrive anche solo 0.</p><p>Sommarlo non cambia niente: (5, −3) + (0, 0) = (5 + 0, −3 + 0) = (5, −3). È come lo 0 tra i numeri.</p><p>E il vettore −v ha tutti i segni cambiati: v + (−v) = 0. Esempio: (5, −3) + (−5, 3) = (0, 0).</p>',
+    alt:'Lo spostamento (0, 0) vuol dire "stai fermo". Fermarsi non cambia dove arrivi.',
+    q:{ type:'nums', text:'(4, −1) + ( ? , ? ) = (0, 0)', labels:['primo','secondo'], a:[-4,1] }, ok:'Giusto: (4, −1) + (−4, 1) = (0, 0).' },
+
+  { h:'Riassunto della lezione 1',
+    t:'<ul><li>Un vettore di Rⁿ è una lista di n numeri, per esempio (3, 1) ∈ R².</li><li>Si sommano posto per posto: (3, 1) + (1, 2) = (4, 3).</li><li>Si moltiplicano per un numero (scalare) posto per posto: 2·(3, 1) = (6, 2).</li><li>Lo zero è (0, …, 0).</li></ul><p>Queste due operazioni, <b>somma</b> e <b>prodotto per scalare</b>, sono il cuore di tutto il capitolo.</p>' }
+]);
+
+Lav.lesson('spazi', 2, 'Che cos\'è uno spazio vettoriale', [
+  { h:'Sommare due polinomi',
+    t:'<p>Dal liceo sai sommare due polinomi: sommi i termini dello stesso grado.</p><p class="math">(x² + 2x − 3) + (2x² − x + 1)</p><p>x² + 2x² = 3x², &nbsp; 2x − x = x, &nbsp; −3 + 1 = −2.</p><p class="math">= 3x² + x − 2</p>',
+    alt:'Metti in colonna i termini simili: x² con x², x con x, numeri con numeri. Poi somma ogni colonna.',
+    q:{ type:'nums', text:'(x² + 1) + (3x² + 4): coefficiente di x² e termine noto?', labels:['x²','numero'], a:[4,5] }, ok:'Giusto: 1 + 3 = 4 e 1 + 4 = 5, cioè 4x² + 5.' },
+
+  { h:'Un polinomio è una lista di numeri',
+    t:'<p>Scrivi solo i coefficienti, in ordine: prima x², poi x, poi il numero.</p><p>x² + 2x − 3 → (1, 2, −3). &nbsp; 2x² − x + 1 → (2, −1, 1).</p><p>Ora somma come vettori della lezione 1:</p><p class="math">(1, 2, −3) + (2, −1, 1) = (1 + 2, 2 + (−1), −3 + 1) = (3, 1, −2)</p><p>(3, 1, −2) → 3x² + x − 2. <b>È lo stesso risultato</b> del passo 1.</p>',
+    alt:'Un polinomio di grado 2 è fatto da tre numeri. Sommarli è sommare tre numeri con tre numeri, posto per posto: esattamente come in R³.',
+    q:{ type:'nums', text:'Coefficienti di 4x² − 5 (attento: manca il termine con x)', labels:['x²','x','numero'], a:[4,0,-5] }, ok:'Giusto: il termine con x manca, quindi il suo coefficiente è 0. (4, 0, −5).' },
+
+  { h:'Polinomio per un numero',
+    t:'<p class="math">3·(x² − 2) = 3x² − 6</p><p>Con i coefficienti: x² − 2 → (1, 0, −2), e 3·(1, 0, −2) = (3·1, 3·0, 3·(−2)) = (3, 0, −6) → 3x² − 6. Di nuovo uguale.</p>',
+    q:{ type:'nums', text:'2·(x² + x): coefficienti?', labels:['x²','x','numero'], a:[2,2,0] }, ok:'Giusto: 2x² + 2x, cioè (2, 2, 0).' },
+
+  { h:'Le matrici fanno lo stesso',
+    t:'<p>Le matrici le hai viste il 13/11. Due matrici della stessa taglia si sommano posto per posto, proprio come i vettori, solo che i numeri sono in tabella invece che in fila (p. 50).</p><p class="math">'+M([[1,2],[3,4]])+' + '+M([[0,1],[1,0]])+' = '+M([['1 + 0','2 + 1'],['3 + 1','4 + 0']])+' = '+M([[1,3],[4,4]])+'</p><p>E per un numero: 2·'+M([[1,2],[3,4]])+' = '+M([[2,4],[6,8]])+'.</p>',
+    alt:'Una matrice 2 × 2 sono 4 numeri. Scritti in fila sarebbero un vettore di R⁴: le operazioni sono le stesse.',
+    q:{ type:'nums', text:M([[1,0],[2,5]])+' + '+M([[3,1],['−2',0]])+': quanto vale il numero in basso a sinistra?', labels:['basso a sinistra'], a:0 }, ok:'Giusto: 2 + (−2) = 0.' },
+
+  { h:'L\'idea nuova: lo spazio vettoriale',
+    t:'<p>Frecce, polinomi, matrici: oggetti diversi, ma con le <b>stesse due operazioni</b>, somma e prodotto per un numero, e le stesse regole (c\'è lo zero, puoi scambiare l\'ordine della somma, ecc.).</p><p>Un insieme di oggetti così si chiama <b>spazio vettoriale</b>, e i suoi oggetti si chiamano <b>vettori</b>, anche quando sono polinomi o matrici (p. 47).</p>',
+    alt:'"Vettore" nel corso non vuol dire più solo "freccia". Vuol dire: qualcosa che puoi sommare con un altro dello stesso tipo e moltiplicare per un numero.',
+    q:{ type:'choice', text:'In questo corso "vettore" vuol dire:', opts:['solo una freccia','un oggetto che si somma e si moltiplica per un numero','solo una lista di numeri'], a:1 }, ok:'Giusto. Frecce, liste, polinomi e matrici sono tutti vettori.' },
+
+  { h:'Perché conviene',
+    t:'<p>Se dimostri una regola usando solo somma e prodotto per numero, quella regola vale <b>insieme</b> per frecce, polinomi, matrici e funzioni. La impari una volta sola.</p><p>I quattro esempi del libro (pp. 47-50): Kⁿ (liste di n numeri), K[x] (polinomi), F(X, K) (funzioni), M(m, n, K) (matrici m × n).</p>' },
+
+  { h:'Che cos\'è K',
+    t:'<p>K è l\'insieme dei numeri per cui puoi moltiplicare: si chiama <b>campo</b>. Nel corso è quasi sempre R, a volte C (i complessi).</p><p>Campo vuol dire: puoi fare + − × ÷ (tranne dividere per 0). Gli interi Z non sono un campo, perché 1 ÷ 2 = 1/2 non è un intero.</p>',
+    alt:'Quando leggi K, pensa "R". Il libro scrive K solo per dire che vale anche con altri numeri.',
+    q:{ type:'choice', text:'Q, i numeri razionali (le frazioni), è un campo?', opts:['Sì: frazione diviso frazione (non zero) è ancora una frazione','No'], a:0 }, ok:'Giusto: per esempio (1/2) ÷ (3/4) = 4/6 = 2/3, ancora una frazione.' },
+
+  { h:'Gli assiomi: non a memoria',
+    t:'<p>A p. 47 il libro elenca 5 regole (assiomi). <span class="why easy">perché: facile</span> sono le regole dei numeri che usi da sempre, come λ·(v + w) = λ·v + λ·w (il prodotto si distribuisce). Non vanno imparate a memoria: basta l\'idea.</p><p>Una cosa da sapere: lo <b>zero</b> di ogni spazio. In R² è (0, 0). Nei polinomi è il polinomio 0. Nelle matrici 2 × 2 è la matrice con tutti zeri.</p>',
+    q:{ type:'choice', text:'Lo zero di M(2, 2, R), le matrici 2 × 2:', opts:['il numero 0', M([[0,0],[0,0]]), M([[1,0],[0,1]])], a:1 }, ok:'Giusto: la matrice di tutti zeri. (1, 0, 0, 1) è l\'identità, che è un\'altra cosa.' },
+
+  { h:'Riassunto della lezione 2',
+    t:'<ul><li>Spazio vettoriale = insieme di oggetti che si sommano e si moltiplicano per numeri, con le regole solite.</li><li>Esempi: Rⁿ, polinomi, matrici, funzioni.</li><li>K = i numeri usati (quasi sempre R).</li><li>Ogni spazio ha il suo zero.</li></ul>' }
+]);
+
+Lav.lesson('spazi', 3, 'Sottospazi', [
+  { h:'Un pezzo di R²',
+    t:'<p>Prendi solo i punti di R² con <b>y = 2x</b> (la retta del liceo). Chiamo W questo insieme. Alcuni suoi punti: (0, 0), (1, 2), (2, 4), (−1, −2). In ognuno il secondo numero è il doppio del primo.</p><p>W è un <b>sottoinsieme</b> di R²: alcuni vettori di R², non tutti. Si scrive W ⊆ R².</p>',
+    alt:'Per sapere se un punto (a, b) sta in W, controlla se b = 2·a.',
+    q:{ type:'choice', text:'(3, 6) sta in W = {y = 2x}?', opts:['Sì','No'], a:0 }, ok:'Giusto: 6 = 2·3.' },
+
+  { h:'La domanda: con le operazioni resto dentro?',
+    t:'<p>Sommo due punti di W: (1, 2) + (2, 4) = (1 + 2, 2 + 4) = (3, 6). Controllo: 6 = 2·3, sì, sono ancora in W.</p><p>Moltiplico un punto di W: 5·(1, 2) = (5, 10). Controllo: 10 = 2·5, sì, ancora in W.</p><p>Sembra che con somma e prodotto per numero <b>non si esca mai</b> da W.</p>',
+    q:{ type:'nums', text:'(−1, −2) + (2, 4) = ( ? , ? )', labels:['primo','secondo'], a:[1,2] }, ok:'Giusto: (1, 2), e 2 = 2·1: ancora in W.' },
+
+  { h:'La definizione di sottospazio',
+    t:'<p>W ⊆ V è un <b>sottospazio</b> se valgono tre cose (p. 50):</p><ol><li><b>0 ∈ W</b>: lo zero sta in W.</li><li>Se v e w stanno in W, anche <b>v + w</b> sta in W.</li><li>Se v sta in W e λ è un numero, anche <b>λ·v</b> sta in W.</li></ol><p>Detto semplice: dentro W puoi sommare e moltiplicare senza mai uscire. Così W è a sua volta uno spazio vettoriale, più piccolo.</p>',
+    alt:'Pensa a W come a una stanza: un sottospazio è una stanza dalla quale somme e multipli non ti fanno mai uscire, e che contiene l\'origine.' },
+
+  { h:'Dimostro che y = 2x è un sottospazio',
+    t:'<p>Prima con esempi, ora per <b>tutti</b> i punti. Un punto qualsiasi di W è (a, 2a).</p><p>① Zero: (0, 0) ha 0 = 2·0. ✓</p><p>② Somma: (a, 2a) + (b, 2b) = (a + b, 2a + 2b) = (a + b, 2·(a + b)). Il secondo è il doppio del primo. ✓</p><p>③ Multiplo: λ·(a, 2a) = (λa, λ·2a) = (λa, 2·(λa)). Il secondo è il doppio del primo. ✓</p><p>Quindi W è un sottospazio di R².</p>',
+    alt:'Nel passo ② ho solo raccolto il 2: 2a + 2b = 2·(a + b). Nel passo ③ ho solo cambiato l\'ordine del prodotto: λ·2a = 2·λa.',
+    q:{ type:'choice', text:'−3·(1, 2) = (−3, −6). Sta in W?', opts:['Sì, −6 = 2·(−3)','No'], a:0 }, ok:'Giusto.' },
+
+  { h:'Ora la retta y = 2x + 1',
+    t:'<p>Chiamo U = {(x, y) ∈ R² : y = 2x + 1}. È parallela a W, ma più in alto di 1.</p><p>Controllo lo zero: metto x = 0 e y = 0. Viene 0 = 2·0 + 1, cioè 0 = 1: <b>falso</b>.</p><p>Lo zero non sta in U, quindi la regola ① è falsa: <b>U non è un sottospazio</b>. Ho già finito.</p><p>Il libro lo dice a p. 52: una retta che non passa per l\'origine non è un sottospazio.</p>',
+    q:{ type:'choice', text:'U = {y = 2x + 1} contiene (0, 0)?', opts:['Sì','No'], a:1 }, ok:'Giusto: 0 ≠ 1.' },
+
+  { h:'Attenzione: lo zero non basta',
+    t:'<p>Prendi gli assi: Z = {(x, y) ∈ R² : x·y = 0}. Contiene (0, 0), perché 0·0 = 0.</p><p>Contiene (1, 0), perché 1·0 = 0, e (0, 1), perché 0·1 = 0.</p><p>Ma la loro somma (1, 0) + (0, 1) = (1, 1) dà 1·1 = 1 ≠ 0: <b>non sta in Z</b>. La regola ② è falsa: Z non è un sottospazio.</p><p>Trucco: <b>prima prova lo zero</b>. Se manca, è no. Se c\'è, devi controllare anche ② e ③.</p>',
+    alt:'Un solo esempio che non funziona (si chiama controesempio) basta per dire "no". Per dire "sì" invece devi controllare per tutti i vettori, come al passo 4.',
+    q:{ type:'choice', text:'{(x, y) ∈ R² : x·y = 0} è un sottospazio?', opts:['Sì, contiene lo zero','No: (1, 0) + (0, 1) esce'], a:1 }, ok:'Giusto.' },
+
+  { h:'La scorciatoia: sistemi omogenei',
+    t:'<p>Un sistema si dice <b>omogeneo</b> se a destra ha tutti zeri, per esempio x + y − z = 0.</p><p>Le soluzioni di un sistema omogeneo sono <b>sempre</b> un sottospazio (Prop. 2.2.2, p. 51). <span class="why easy">perché: facile</span></p><p>① (0, 0, 0): 0 + 0 − 0 = 0 ✓. &nbsp; ② Se due vettori danno 0, la somma dà 0 + 0 = 0 ✓. &nbsp; ③ Se un vettore dà 0, λ volte dà λ·0 = 0 ✓.</p><p>Se invece a destra c\'è un numero diverso da 0 (come y = 2x + 1), lo zero non è soluzione: no.</p>',
+    q:{ type:'choice', text:'Quale di questi è un sottospazio di R³?', opts:['{x + y = 2z}','{x + y = 2}','{x² = y}'], a:0 }, ok:'Giusto: x + y − 2z = 0 è omogenea. x + y = 2 non contiene lo zero; x² non è lineare (prova (1, 1, 0) e 2·(1, 1, 0)).' },
+
+  { h:'Riassunto della lezione 3',
+    t:'<ul><li>Sottospazio: contiene 0, chiuso per somma, chiuso per multipli.</li><li>Prima prova lo zero: se manca, è no.</li><li>Equazioni lineari con tutti = 0 ⇒ sempre sì.</li><li>Per dire no basta un controesempio.</li><li>Ogni V ha sempre i sottospazi {0} e V (p. 51).</li></ul>' }
+]);
+
+Lav.lesson('spazi', 4, 'Combinazioni lineari e Span', [
+  { h:'Costruire con due mattoni',
+    t:'<p>Hai due vettori di R³: v₁ = (1, 0, 0) e v₂ = (0, 1, 0). Puoi moltiplicarli per numeri e sommarli. Riesci a costruire (2, 3, 0)?</p><p>Prova: 2·v₁ + 3·v₂ = 2·(1, 0, 0) + 3·(0, 1, 0) = (2, 0, 0) + (0, 3, 0) = (2, 3, 0). Sì.</p><p>Un vettore costruito così, λ₁·v₁ + λ₂·v₂, si chiama <b>combinazione lineare</b> di v₁ e v₂ (p. 52).</p>',
+    alt:'Combinazione lineare = "un po\' di v₁ più un po\' di v₂". I numeri λ₁ e λ₂ dicono quanto di ognuno.',
+    q:{ type:'nums', text:'4·v₁ + (−1)·v₂ = ( ? , ? , ? )', labels:['1°','2°','3°'], a:[4,-1,0] }, ok:'Giusto: (4, 0, 0) + (0, −1, 0) = (4, −1, 0).' },
+
+  { h:'Che cosa si costruisce, in generale',
+    t:'<p>Con numeri qualsiasi λ₁, λ₂:</p><p class="math">λ₁·(1, 0, 0) + λ₂·(0, 1, 0) = (λ₁, 0, 0) + (0, λ₂, 0) = (λ₁, λ₂, 0)</p><p>I primi due numeri li scegli come vuoi. Il terzo è <b>sempre 0</b>.</p>' },
+
+  { h:'(1, 1, 1) si può costruire?',
+    t:'<p>Dovrebbe essere (λ₁, λ₂, 0) = (1, 1, 1). Il terzo numero dovrebbe essere 0 e anche 1: impossibile.</p><p>Quindi (1, 1, 1) <b>non</b> si costruisce con v₁ e v₂.</p>',
+    q:{ type:'choice', text:'(5, −2, 0) si costruisce con v₁ e v₂?', opts:['Sì: 5·v₁ + (−2)·v₂','No'], a:0 }, ok:'Giusto: il terzo numero è 0.' },
+
+  { h:'Lo Span',
+    t:'<p>L\'insieme di <b>tutto</b> quello che costruisci con v₁, …, v<sub>k</sub> si chiama <b>Span(v₁, …, v<sub>k</sub>)</b>, o "sottospazio generato" (p. 53).</p><p class="math">Span(v₁, …, v<sub>k</sub>) = { λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> : λ₁, …, λ<sub>k</sub> ∈ K }</p><p>Nel nostro esempio Span((1, 0, 0), (0, 1, 0)) = tutti i (λ₁, λ₂, 0) = il piano "pavimento" z = 0.</p>',
+    alt:'Span = "tutti i vettori che riesco a fare con questi mattoni". Una lista corta di vettori descrive un insieme infinito.' },
+
+  { h:'Lo Span è sempre un sottospazio',
+    t:'<p>Prop. 2.2.4 (p. 53). <span class="why easy">perché: facile</span></p><p>① 0 = 0·v₁ + 0·v₂: ci sta. ② Sommando due combinazioni ottieni una combinazione: (2·v₁ + 3·v₂) + (4·v₁ − 1·v₂) = (2 + 4)·v₁ + (3 − 1)·v₂ = 6·v₁ + 2·v₂. ③ Un multiplo di una combinazione è una combinazione: 5·(2·v₁ + 3·v₂) = 10·v₁ + 15·v₂.</p>',
+    q:{ type:'nums', text:'(2·v₁ + 3·v₂) + (1·v₁ + 1·v₂) = ?·v₁ + ?·v₂', labels:['v₁','v₂'], a:[3,4] }, ok:'Giusto: 2 + 1 = 3 e 3 + 1 = 4.' },
+
+  { h:'Lo Span di un vettore solo',
+    t:'<p>Span((1, 2)) = tutti i t·(1, 2) = tutti i (t, 2t), con t numero qualsiasi.</p><p>Il secondo numero è il doppio del primo: è la retta <b>y = 2x</b> della lezione 3! (p. 54)</p>',
+    q:{ type:'nums', text:'Con t = −2: t·(1, 2) = ( ? , ? )', labels:['primo','secondo'], a:[-2,-4] }, ok:'Giusto: (−2, −4), e −4 = 2·(−2).' },
+
+  { h:'Quando non si vede a occhio: un sistema',
+    t:'<p>(3, 5) sta in Span((1, 1), (1, 2))? Cerco due numeri a, b con a·(1, 1) + b·(1, 2) = (3, 5).</p><p>A sinistra: (a, a) + (b, 2b) = (a + b, a + 2b). Uguaglio posto per posto: <b>a + b = 3</b> e <b>a + 2b = 5</b>.</p><p>Tolgo la prima dalla seconda: (a + 2b) − (a + b) = 5 − 3, cioè b = 2. Poi a = 3 − b = 3 − 2 = 1.</p><p>Verifica: 1·(1, 1) + 2·(1, 2) = (1 + 2, 1 + 4) = (3, 5) ✓. Sì, ci sta.</p><p>Se il sistema non avesse soluzioni, il vettore <b>non</b> starebbe nello Span.</p>',
+    alt:'"Sta nello Span?" vuol dire "esistono i numeri a, b?". Trovare numeri incogniti = risolvere un sistema, cosa che sai già fare (10/11).',
+    q:{ type:'nums', text:'(4, 6) = a·(1, 1) + b·(1, 2). Trova a e b.', labels:['a','b'], a:[2,2] }, ok:'Giusto: a + b = 4, a + 2b = 6, quindi b = 2 e a = 2. Verifica: (2 + 2, 2 + 4) = (4, 6).' },
+
+  { h:'Due modi di scrivere un sottospazio',
+    t:'<p>Il piano z = 0 si può scrivere con un\'<b>equazione</b> (forma cartesiana): {z = 0}. Oppure come <b>Span</b> (forma parametrica): Span((1, 0, 0), (0, 1, 0)). È lo stesso insieme (p. 54).</p><p>Da equazione a Span: x + y − z = 0 ⇒ z = x + y ⇒ (x, y, z) = (x, y, x + y) = (x, 0, x) + (0, y, y) = x·(1, 0, 1) + y·(0, 1, 1). Quindi è Span((1, 0, 1), (0, 1, 1)).</p>',
+    q:{ type:'choice', text:'{z = 0} in R³ è uguale a:', opts:['Span((1, 0, 0), (0, 1, 0))','Span((0, 0, 1))','Span((1, 1, 1))'], a:0 }, ok:'Giusto: sono tutti i (λ₁, λ₂, 0).' },
+
+  { h:'Riassunto della lezione 4',
+    t:'<ul><li>Combinazione lineare: λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub>.</li><li>Span = tutte le combinazioni lineari. È sempre un sottospazio.</li><li>"w sta nello Span?" ⇒ scrivi il sistema e risolvilo.</li><li>Un sottospazio si scrive con equazioni oppure come Span.</li></ul>' }
+]);
+
+Lav.lesson('spazi', 5, 'Trasposta e matrici speciali', [
+  { h:'La diagonale principale',
+    t:'<p>In una matrice quadrata (stesso numero di righe e colonne) la <b>diagonale principale</b> sono i numeri da in alto a sinistra a in basso a destra (p. 56).</p><p>In '+M([[1,2],[3,4]])+' la diagonale è 1 e 4.</p>',
+    q:{ type:'choice', text:'La diagonale di '+M([[5,0,1],[2,7,3],[4,6,9]])+' è:', opts:['5, 7, 9','1, 7, 4','5, 2, 4'], a:0 }, ok:'Giusto.' },
+
+  { h:'La trasposta',
+    t:'<p>La trasposta <sup>t</sup>A si ottiene <b>scambiando righe e colonne</b>: la prima riga diventa la prima colonna, la seconda riga la seconda colonna (p. 73).</p><p class="math">A = '+M([[1,2,3],[4,5,6]])+' &nbsp; ⇒ &nbsp; <sup>t</sup>A = '+M([[1,4],[2,5],[3,6]])+'</p><p>A è 2 × 3 (2 righe, 3 colonne), <sup>t</sup>A è 3 × 2.</p>',
+    alt:'Leggi la prima riga di A, 1 2 3, e scrivila in verticale: è la prima colonna di <sup>t</sup>A. Poi fai lo stesso con la seconda riga.',
+    q:{ type:'nums', text:'A = '+M([[2,1],['−1',0],[5,7]])+'. Prima riga di <sup>t</sup>A?', labels:['1°','2°','3°'], a:[2,-1,5] }, ok:'Giusto: la prima colonna di A, 2, −1, 5, diventa la prima riga.' },
+
+  { h:'Simmetrica',
+    t:'<p>A è <b>simmetrica</b> se <sup>t</sup>A = A: è "a specchio" rispetto alla diagonale. Il numero in riga 1 colonna 2 è uguale a quello in riga 2 colonna 1, e così via.</p><p>Esempio: '+M([[1,7],[7,3]])+'. Il 7 sopra la diagonale è uguale al 7 sotto.</p>',
+    q:{ type:'choice', text:'Quale è simmetrica?', opts:[M([[1,2],[3,1]]), M([[0,5],[5,2]])], a:1 }, ok:'Giusto: sopra la diagonale c\'è 5 e sotto c\'è 5. Nella prima invece 2 ≠ 3.' },
+
+  { h:'Antisimmetrica, diagonale, triangolare',
+    t:'<p><b>Antisimmetrica</b>: <sup>t</sup>A = −A, cioè il numero sotto la diagonale è l\'opposto di quello sopra. Esempio '+M([[0,1],['−1',0]])+'. Sulla diagonale ci sono solo 0: un numero a uguale al suo opposto −a dà 2a = 0, quindi a = 0.</p><p><b>Diagonale</b>: tutti 0 fuori dalla diagonale, es. '+M([[2,0],[0,'−1']])+'. <b>Triangolare superiore</b>: tutti 0 sotto la diagonale, es. '+M([[1,9],[0,2]])+'. <b>Inferiore</b>: tutti 0 sopra.</p>' },
+
+  { h:'Le simmetriche sono un sottospazio',
+    t:'<p>Uso il test della lezione 3 sulle matrici 2 × 2 simmetriche (p. 56).</p><p>① La matrice tutta 0 è simmetrica ✓.</p><p>② Somma: '+M([[1,7],[7,3]])+' + '+M([[0,2],[2,5]])+' = '+M([[1,9],[9,8]])+': il 9 sopra è uguale al 9 sotto ✓.</p><p>③ Multiplo: 3·'+M([[1,7],[7,3]])+' = '+M([[3,21],[21,9]])+' ✓.</p>',
+    q:{ type:'choice', text:'Le matrici simmetriche n × n sono un sottospazio di M(n, n)?', opts:['Sì','No'], a:0 }, ok:'Giusto. Allo stesso modo lo sono diagonali, triangolari e antisimmetriche (Prop. 2.2.10).' },
+
+  { h:'Ogni matrice = simmetrica + antisimmetrica',
+    t:'<p>Trucco di p. 74, fatto anche nella lezione 8. A = '+M([[1,2],[0,3]])+', <sup>t</sup>A = '+M([[1,0],[2,3]])+'.</p><p>S = (A + <sup>t</sup>A)/2: A + <sup>t</sup>A = '+M([['1 + 1','2 + 0'],['0 + 2','3 + 3']])+' = '+M([[2,2],[2,6]])+', diviso 2 = '+M([[1,1],[1,3]])+' (simmetrica).</p><p>N = (A − <sup>t</sup>A)/2: A − <sup>t</sup>A = '+M([['1 − 1','2 − 0'],['0 − 2','3 − 3']])+' = '+M([[0,2],['−2',0]])+', diviso 2 = '+M([[0,1],['−1',0]])+' (antisimmetrica).</p><p>Verifica: S + N = '+M([['1 + 0','1 + 1'],['1 − 1','3 + 0']])+' = '+M([[1,2],[0,3]])+' = A ✓.</p>',
+    q:{ type:'nums', text:'A = '+M([[4,6],[2,1]])+'. Il numero in alto a destra di S = (A + <sup>t</sup>A)/2?', labels:['in alto a destra'], a:4 }, ok:'Giusto: (6 + 2)/2 = 8/2 = 4.' },
+
+  { h:'Riassunto della lezione 5',
+    t:'<ul><li><sup>t</sup>A: righe ↔ colonne.</li><li>Simmetrica: <sup>t</sup>A = A. Antisimmetrica: <sup>t</sup>A = −A.</li><li>Simmetriche, antisimmetriche, diagonali, triangolari sono sottospazi.</li><li>A = (A + <sup>t</sup>A)/2 + (A − <sup>t</sup>A)/2.</li><li><span class="why mem">a memoria</span> <sup>t</sup>(A·B) = <sup>t</sup>B·<sup>t</sup>A: l\'ordine si inverte.</li></ul>' }
+]);
+
+Lav.lesson('spazi', 6, 'Vettori indipendenti e basi', [
+  { h:'Un vettore di troppo',
+    t:'<p>Span((1, 0), (0, 1), (1, 1)) è tutto R². Ma (1, 1) = (1, 0) + (0, 1): lo costruisci già con gli altri due. Non aggiunge niente, è <b>di troppo</b>.</p><p>Vettori in cui uno è costruibile con gli altri si dicono <b>linearmente dipendenti</b> (p. 60).</p>',
+    alt:'Se un mattone si può fare incollando gli altri mattoni, non ti serve: puoi buttarlo e costruisci le stesse cose.' },
+
+  { h:'La definizione con lo zero',
+    t:'<p>Porto tutto a sinistra: (1, 0) + (0, 1) − (1, 1) = (1 + 0 − 1, 0 + 1 − 1) = (0, 0).</p><p>Ho una combinazione con numeri <b>non tutti zero</b> (1, 1, −1) che fa 0. Questa è la definizione del libro:</p><p><b>v₁, …, v<sub>k</sub> sono dipendenti</b> se λ₁·v₁ + … + λ<sub>k</sub>·v<sub>k</sub> = 0 con λ non tutti nulli.</p>',
+    q:{ type:'nums', text:'2·(1, 2) − 1·(2, 4) = ( ? , ? )', labels:['primo','secondo'], a:[0,0] }, ok:'Giusto: (2 − 2, 4 − 4) = (0, 0), con numeri 2 e −1 non nulli: (1, 2) e (2, 4) sono dipendenti.' },
+
+  { h:'Indipendenti',
+    t:'<p>Sono <b>indipendenti</b> se l\'unico modo di fare 0 è con tutti i numeri uguali a 0.</p><p>Esempio (1, 0) e (0, 1): λ₁·(1, 0) + λ₂·(0, 1) = (λ₁, λ₂). Perché sia (0, 0) serve λ₁ = 0 e λ₂ = 0. Nessun altro modo: <b>indipendenti</b>.</p>',
+    alt:'Indipendenti = nessuno è di troppo, nessuno si costruisce con gli altri.' },
+
+  { h:'Con due vettori è facile',
+    t:'<p>Due vettori sono dipendenti esattamente quando <b>uno è multiplo dell\'altro</b> (p. 60).</p><p>(1, 2) e (3, 6): (3, 6) = 3·(1, 2), dipendenti. (1, 2) e (2, 1): per passare da 1 a 2 moltiplichi per 2, ma 2·2 = 4 ≠ 1: non sono multipli, indipendenti.</p>',
+    q:{ type:'choice', text:'(2, −1) e (−4, 2) sono:', opts:['dipendenti: (−4, 2) = −2·(2, −1)','indipendenti'], a:0 }, ok:'Giusto: −2·2 = −4 e −2·(−1) = 2.' },
+
+  { h:'Con tre vettori non si vede a occhio',
+    t:'<p>v₁ = (1, 1, 0), v₂ = (0, 1, 1), v₃ = (1, 0, −1) (p. 61). A coppie non sono multipli. Eppure:</p><p class="math">v₁ − v₂ − v₃ = (1 − 0 − 1, 1 − 1 − 0, 0 − 1 − (−1)) = (0, 0, 0)</p><p>Sono dipendenti. Serve un metodo sicuro.</p>' },
+
+  { h:'Il metodo: colonne e Gauss',
+    t:'<p>Metti i vettori come <b>colonne</b> di una matrice e fai Gauss (lo sai dal 10/11). Conta i <b>pivot</b>. Se i pivot sono tanti quanti i vettori: indipendenti. Se sono meno: dipendenti.</p><p>(1, 2) e (3, 6): '+M([[1,3],[2,6]])+'. R2 ← R2 − 2·R1: (2 − 2·1, 6 − 2·3) = (0, 0). Resta '+M([[1,3],[0,0]])+': 1 pivot, 2 vettori ⇒ dipendenti.</p>',
+    alt:'Un pivot è il primo numero non zero di una riga dopo Gauss. Ogni pivot è "una direzione davvero nuova".',
+    q:{ type:'nums', text:'(1, 2) e (0, 1): '+M([[1,0],[2,1]])+'. Dopo R2 ← R2 − 2·R1, quanti pivot?', labels:['pivot'], a:2 }, ok:'Giusto: R2 diventa (0, 1). Due pivot, due vettori: indipendenti.' },
+
+  { h:'Base',
+    t:'<p>Dei vettori sono <b>generatori</b> di V se il loro Span è tutto V. Sono una <b>base</b> se sono generatori <b>e</b> indipendenti: bastano per arrivare ovunque e nessuno è di troppo.</p><p>Esempio: e₁ = (1, 0), e₂ = (0, 1) sono la <b>base canonica</b> di R². Ogni (x, y) = x·e₁ + y·e₂, per esempio (3, 5) = 3·(1, 0) + 5·(0, 1).</p>',
+    q:{ type:'choice', text:'(1, 0), (0, 1), (1, 1) sono una base di R²?', opts:['Sì','No: generano, ma (1, 1) è di troppo'], a:1 }, ok:'Giusto: non sono indipendenti.' },
+
+  { h:'In una base, un solo modo',
+    t:'<p>Con una base, ogni vettore si scrive in <b>un solo modo</b>. Con la base (1, 1), (1, 2), nella lezione 4 abbiamo trovato (3, 5) = 1·(1, 1) + 2·(1, 2), e non c\'è un\'altra coppia di numeri che funzioni (il sistema aveva una sola soluzione).</p><p>I numeri 1 e 2 si chiamano <b>coordinate</b> di (3, 5) in quella base (lo vedi meglio nel capitolo 3).</p>' },
+
+  { h:'Riassunto della lezione 6',
+    t:'<ul><li>Dipendenti: c\'è una combinazione = 0 con numeri non tutti nulli (uno è di troppo).</li><li>Due vettori: dipendenti ⇔ multipli.</li><li>Metodo: vettori in colonna, Gauss, numero di pivot = numero di vettori ⇔ indipendenti.</li><li>Base = generatori + indipendenti.</li></ul><p>Ora sei pronto per le ricette, il guidato e gli esercizi più sotto.</p>' }
+]);
+
+})();
+</script>
