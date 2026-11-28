@@ -79,12 +79,28 @@ Lav.lesson('spazi', 2, 'Che cos\'è uno spazio vettoriale', [
     alt:'Quando leggi K, pensa "R". Il libro scrive K solo per dire che vale anche con altri numeri.',
     q:{ type:'choice', text:'Q, i numeri razionali (le frazioni), è un campo?', opts:['Sì: frazione diviso frazione (non zero) è ancora una frazione','No'], a:0 }, ok:'Giusto: per esempio (1/2) ÷ (3/4) = 4/6 = 2/3, ancora una frazione.' },
 
-  { h:'Gli assiomi: non a memoria',
-    t:'<p>A p. 47 il libro elenca 5 regole (assiomi). <span class="why easy">perché: facile</span> sono le regole dei numeri che usi da sempre, come λ·(v + w) = λ·v + λ·w (il prodotto si distribuisce). Non vanno imparate a memoria: basta l\'idea.</p><p>Una cosa da sapere: lo <b>zero</b> di ogni spazio. In R² è (0, 0). Nei polinomi è il polinomio 0. Nelle matrici 2 × 2 è la matrice con tutti zeri.</p>',
+  { h:'Le 5 regole (assiomi), una per una',
+    t:'<p>A p. 47 il libro dice: V è uno spazio vettoriale se somma e prodotto per scalare rispettano 5 regole. Le vedi qui con v = (3, 1), w = (1, 2) di R². Non c\'è niente di nuovo: sono le regole dei numeri che usi da sempre, applicate posto per posto.</p>'
+      +'<p><b>Regola 1 · La somma funziona come tra numeri.</b> Dentro ci sono quattro cose:</p>'
+      +'<p>a) L\'ordine non conta: (3, 1) + (1, 2) = (4, 3) e (1, 2) + (3, 1) = (4, 3).</p>'
+      +'<p>b) Le parentesi non contano: ((1, 0) + (0, 1)) + (2, 2) = (1, 1) + (2, 2) = (3, 3), e (1, 0) + ((0, 1) + (2, 2)) = (1, 0) + (2, 3) = (3, 3).</p>'
+      +'<p>c) C\'è lo zero: (3, 1) + (0, 0) = (3, 1).</p>'
+      +'<p>d) Ogni vettore ha l\'opposto: (3, 1) + (−3, −1) = (0, 0).</p>'
+      +'<p><b>Regola 2 · λ·(v + w) = λ·v + λ·w</b> (il numero si distribuisce sui vettori). 2·((3, 1) + (1, 2)) = 2·(4, 3) = (8, 6). E 2·(3, 1) + 2·(1, 2) = (6, 2) + (2, 4) = (8, 6). Uguali.</p>'
+      +'<p><b>Regola 3 · (λ + μ)·v = λ·v + μ·v</b> (il vettore si distribuisce sui numeri). (2 + 3)·(1, 2) = 5·(1, 2) = (5, 10). E 2·(1, 2) + 3·(1, 2) = (2, 4) + (3, 6) = (5, 10). Uguali.</p>'
+      +'<p><b>Regola 4 · (λ·μ)·v = λ·(μ·v)</b> (moltiplicare per 6 è come moltiplicare per 3 e poi per 2). (2·3)·(1, 2) = 6·(1, 2) = (6, 12). E 2·(3·(1, 2)) = 2·(3, 6) = (6, 12). Uguali.</p>'
+      +'<p><b>Regola 5 · 1·v = v</b> (moltiplicare per 1 non cambia niente). 1·(3, 1) = (3, 1).</p>'
+      +'<p><span class="why easy">perché: facile</span> Valgono in R² perché valgono per ogni singolo numero: 2·(3 + 1) = 2·3 + 2·1, e così via, posto per posto.</p>'
+      +'<p><b>Vanno sapute?</b> Basta l\'idea: "somma e prodotto per numero si comportano come con i numeri". Non c\'è da impararle a memoria parola per parola, e all\'esame non si chiede di verificarle tutte. Quello che si chiede sempre è il test del sottospazio, che vedi nella lezione 3.</p>',
+    alt:'Le 5 regole dicono solo: "con i vettori puoi fare i conti come con i numeri". Puoi cambiare l\'ordine della somma, mettere le parentesi dove vuoi, c\'è lo zero, c\'è l\'opposto, puoi distribuire le moltiplicazioni, e moltiplicare per 1 non fa niente.',
+    q:{ type:'nums', text:'Regola 3 con i numeri: (1 + 2)·(2, 1) = 1·(2, 1) + 2·(2, 1) = ( ? , ? )', labels:['primo','secondo'], a:[6,3] }, ok:'Giusto: da una parte 3·(2, 1) = (6, 3), dall\'altra (2, 1) + (4, 2) = (6, 3).' },
+
+  { h:'Lo zero di ogni spazio',
+    t:'<p>La regola 1c dice che ogni spazio ha il suo <b>zero</b>. In R² è (0, 0). Nei polinomi è il polinomio 0. Nelle matrici 2 × 2 è la matrice con tutti zeri.</p>',
     q:{ type:'choice', text:'Lo zero di M(2, 2, R), le matrici 2 × 2:', opts:['il numero 0', M([[0,0],[0,0]]), M([[1,0],[0,1]])], a:1 }, ok:'Giusto: la matrice di tutti zeri. (1, 0, 0, 1) è l\'identità, che è un\'altra cosa.' },
 
   { h:'Riassunto della lezione 2',
-    t:'<ul><li>Spazio vettoriale = insieme di oggetti che si sommano e si moltiplicano per numeri, con le regole solite.</li><li>Esempi: Rⁿ, polinomi, matrici, funzioni.</li><li>K = i numeri usati (quasi sempre R).</li><li>Ogni spazio ha il suo zero.</li></ul>' }
+    t:'<ul><li>Spazio vettoriale = insieme di oggetti che si sommano e si moltiplicano per numeri, con le regole solite.</li><li>Esempi: Rⁿ, polinomi, matrici, funzioni.</li><li>K = i numeri usati (quasi sempre R).</li><li>Le 5 regole: con i vettori fai i conti come con i numeri (basta l\'idea).</li><li>Ogni spazio ha il suo zero.</li></ul>' }
 ]);
 
 Lav.lesson('spazi', 3, 'Sottospazi', [
