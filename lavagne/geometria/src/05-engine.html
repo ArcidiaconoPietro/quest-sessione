@@ -128,6 +128,65 @@ window.Lav = (function(){
     });
   }
 
+
+  /* ---------- lezione lenta: un passo alla volta, con controllo ---------- */
+  // step: {h, t, alt, q:{type:'choice'|'nums', opts, labels, a}, ok}
+  const lessons = {};        // ch -> [{n, title, steps}]
+  function lesson(ch, n, title, steps){
+    (lessons[ch] = lessons[ch] || []).push({ n, title, steps });
+    const box = $('lesson-'+ch+'-'+n); if (!box) return;
+    const key = 'l-'+ch+'-'+n, st = store.get(key);
+    st.err = st.err || [];
+    const save = () => store.set(key, st);
+    box.className = 'lesson';
+    const bar = document.createElement('div'); bar.className = 'lbar';
+    const list = document.createElement('div'); list.className = 'steps';
+    box.append(bar, list);
+    const els = steps.map((s, i) => {
+      const d = document.createElement('div'); d.className = 'step lstep'; d.hidden = true;
+      let q = '';
+      if (s.q && s.q.type === 'choice') q = '<div class="lq"><b>Controllo veloce</b><div class="math left">'+(s.q.text||'')+'</div><div class="choice">'+s.q.opts.map((o,j)=>'<button data-j="'+j+'">'+o+'</button>').join('')+'</div></div>';
+      else if (s.q) q = '<div class="lq"><b>Controllo veloce</b><div class="math left">'+(s.q.text||'')+'</div><div class="row">'+s.q.labels.map(l=>'<span>'+l+' '+inp(l,'4.5em')+'</span>').join('')+'<button data-c>Controlla</button></div></div>';
+      d.innerHTML = '<h3>Passo '+(i+1)+' di '+steps.length+' · '+s.h+'</h3><div class="lt">'+s.t+'</div>'
+        + (s.alt ? '<div class="note lalt" hidden><b>Detto in un altro modo.</b> '+s.alt+'</div>' : '')
+        + q + '<span class="feedback"></span>'
+        + '<div class="row lnav">'+(s.alt?'<button data-alt>Non ho capito</button>':'')+'<button class="primary" data-go>'+(s.q?'Avanti':'Ho capito, avanti')+'</button></div>';
+      list.appendChild(d); return d;
+    });
+    const fin = document.createElement('div'); fin.className = 'note reveal lfin'; fin.hidden = true;
+    fin.innerHTML = '<b>Lezione finita.</b> Ora leggi sul libro le pagine indicate qui sopra: ci trovi le stesse cose, scritte dal professore. <button data-again>Ricomincia la lezione</button>';
+    list.appendChild(fin);
+    const paint = () => {
+      const at = Math.min(st.at||0, steps.length);
+      els.forEach((d,i) => { d.hidden = i > at; d.classList.toggle('done', i < at); const g = d.querySelector('[data-go]'); g.hidden = i < at; });
+      fin.hidden = at < steps.length;
+      bar.innerHTML = '<span>'+(at >= steps.length ? 'Fatto: '+steps.length+' passi su '+steps.length : 'Passo '+(at+1)+' di '+steps.length)+'</span><span class="lprog"><i style="width:'+Math.round(100*at/steps.length)+'%"></i></span>';
+      nav();
+    };
+    const solved = {};
+    els.forEach((d, i) => {
+      const s = steps[i], fb = d.querySelector('.feedback'), go = d.querySelector('[data-go]');
+      if (s.q) go.disabled = !((st.at||0) > i);
+      const right = () => { solved[i] = true; go.disabled = false; say(fb, true, s.ok || 'Giusto. Premi Avanti.'); };
+      const wrong = () => { if (!st.err.includes(i+1)) { st.err.push(i+1); save(); } say(fb, false, 'Non ancora. '+(s.alt ? 'Premi "Non ho capito": lo spiego in un altro modo.' : 'Rileggi il passo con calma.')); };
+      d.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+        d.querySelectorAll('[data-j]').forEach(x=>x.classList.remove('right','wrong'));
+        if (+b.dataset.j === s.q.a) { b.classList.add('right'); right(); } else { b.classList.add('wrong'); wrong(); }
+      });
+      const c = d.querySelector('[data-c]');
+      if (c) c.onclick = () => {
+        const vals = [...d.querySelectorAll('input')].map(x=>num(x.value)), ans = Array.isArray(s.q.a) ? s.q.a : [s.q.a];
+        if (vals.some(isNaN)) { say(fb, false, 'Scrivi un numero in ogni casella (i negativi così: -3).'); return; }
+        vals.every((v,k)=>same(v,ans[k])) ? right() : wrong();
+      };
+      const al = d.querySelector('[data-alt]');
+      if (al) al.onclick = () => { d.querySelector('.lalt').hidden = false; st.alt = st.alt || []; if (!st.alt.includes(i+1)) { st.alt.push(i+1); save(); } };
+      go.onclick = () => { st.at = Math.max(st.at||0, i+1); save(); paint(); const nx = els[i+1] || fin; nx.classList.add('reveal'); };
+    });
+    fin.querySelector('[data-again]').onclick = () => { st.at = 0; save(); paint(); els.forEach(d => { const g = d.querySelector('[data-go]'); if (steps[els.indexOf(d)].q) g.disabled = true; d.querySelector('.feedback').textContent=''; }); box.scrollIntoView({behavior:'smooth', block:'start'}); };
+    paint();
+  }
+
   /* ---------- esercizi da solo ---------- */
   // e: {id, q, type:'num'|'nums'|'choice', a, opts, labels, hint, sol, src}
   function exercises(ch, list){
@@ -365,6 +424,7 @@ window.Lav = (function(){
         const g = store.get('g-'+ch), e = store.get('e-'+ch), lines = ['Lavagna Geometria, capitolo "'+title+'":'];
         const gk = Object.keys(g).filter(k=>/^g\d+$/.test(k)).sort((a,b)=>a.slice(1)-b.slice(1));
         lines.push('Esercizio guidato: '+(gk.length ? gk.map(k=>'passo '+k.slice(1)+' '+(LAB[g[k]]||g[k])).join('; ') : 'non fatto'));
+        (lessons[ch]||[]).forEach(L => { const s = store.get('l-'+ch+'-'+L.n), at = Math.min(s.at||0, L.steps.length); lines.push('Lezione '+L.n+' ('+L.title+'): '+at+' passi su '+L.steps.length+(s.err&&s.err.length ? ', sbagliato al primo colpo il controllo dei passi '+s.err.join(', ') : '')+(s.alt&&s.alt.length ? ', chiesto "non ho capito" ai passi '+s.alt.join(', ') : '')); });
         (exList[ch]||[]).forEach((x,i) => lines.push('Esercizio '+(i+1)+' ('+plain(x.q).slice(0,90)+'): '+(LAB[e[x.id]]||'non fatto')+(e[x.id+'_aiuto']?', aperto aiuto':'')));
         const txt = lines.join('\n'); ta.value = txt; ta.hidden = false;
         const fallback = () => { ta.focus(); ta.select(); say(fb, true, 'Testo selezionato: copialo e incollalo in chat.'); };
@@ -380,6 +440,6 @@ window.Lav = (function(){
       matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>redraw((location.hash||'#indice').slice(1))); } catch(e){}
     show();
   }
-  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lab, transform, video, init };
+  return { $, css, store, F, it, num, inp, M, V, Board, onDraw, redraw, guided, exercises, lesson, lessons, lab, transform, video, init };
 })();
 </script>
